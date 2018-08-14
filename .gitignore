@@ -1,0 +1,4 @@
+ts-config.json
+*.lock
+*.bat
+vendor/*

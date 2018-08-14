@@ -1,0 +1,40 @@
+<?php
+namespace tsframe\controller;
+
+use tsframe\exception\AccessException;
+use tsframe\Http;
+use tsframe\module\Meta;
+use tsframe\module\user\User;
+use tsframe\module\user\SingleUser;
+use tsframe\module\user\UserAccess;
+use tsframe\module\user\SocialLogin;
+use tsframe\utils\io\Validator;
+
+/**
+ * @route GET|POST /dashboard/social-login
+ */
+class SocialLoginController extends AbstractController{
+	public function response(){
+		$currentUser = User::current();
+		$data = Validator::post(false)
+						->name('token')
+						 ->required()
+					  	 ->minLength(1)
+						 ->assert();
+
+		$login = new SocialLogin($data['token']);
+		
+		if(!$currentUser->isAuthorized()){
+			$user = $login->getUser();
+			$user->createSession();
+			Http::redirect('/dashboard/');
+		} else {
+			try{
+				$login->saveUserMeta($currentUser);
+				Http::redirect('/dashboard/user/me/edit?social=success');
+			} catch(AccessException $e){
+				Http::redirect('/dashboard/user/me/edit?social=fail');
+			}
+		}
+	}
+}

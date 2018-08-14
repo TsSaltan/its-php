@@ -1,0 +1,49 @@
+<?$this->incHeader()?>
+<?$this->incNavbar()?>
+<?use tsframe\module\user\UserAccess;?>
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><?=$this->title?></h1>
+                </div>
+            </div>
+
+            <div class="row">
+                    <div class="col-lg-12">
+                        <?$colors = [
+                            0 => 'panel-default',
+                            1 => 'panel-primary',
+                            2 => 'panel-success',
+                            4 => 'panel-danger',
+                        ];?>
+                        <div class="panel tabbed-panel <?=$colors[$selectUser->get('access')]?>">
+                            <div class="panel-heading clearfix">
+                                <div class="panel-title pull-left"><b><?=$selectUser->get('login')?></b></div>
+                                <div class="pull-right">
+                                    <p style='margin: 5px;'><?=$selectUser->get('accessText')?></p>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                ID: <?=$selectUser->get('id')?>
+                            </div>
+                            <div class="panel-footer">
+                                <?if(UserAccess::checkCurrentUser('user.edit') || $self):?><a href="/dashboard/user/<?=$selectUser->get('id')?>/edit" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i> Редактировать</a><?endif?>
+                            </div>
+                        </div>
+                        <!-- /.panel -->
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+
+                </div>
+                <!-- /.row -->
+
+            <!-- ... Your content goes here ... -->
+
+        </div>
+    </div>
+
+<?$this->incFooter()?>

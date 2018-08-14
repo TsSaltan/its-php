@@ -1,0 +1,8 @@
+RemoveHandler .php .phtml .php3
+RemoveType .php .phtml .php3
+php_flag engine off
+
+<Files *.php>
+    # Deny from all
+    Require all denied
+</Files>
