@@ -1,5 +1,13 @@
 {
-	"name":"TsSaltan/ts-framework",
+	"name":"ts.saltan/ts-framework",
+	"description": "PHP framework",
+    "type": "framework",
+    "authors": [
+        {
+            "name": "Ts.Saltan",
+            "email": "tssaltan@gmail.com"
+        }
+    ],
     "version":"0.0.0.1",
     "require": {
     	"php":">=7.1",
