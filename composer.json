@@ -1,7 +1,7 @@
 {
-	"name":"tssaltan/ts-framework",
-	"description": "PHP framework",
-    "type": "package",
+    "name": "tssaltan/ts-framework",
+    "description": "PHP framework",
+    "type": "framework",
     "authors": [
         {
             "name": "Ts.Saltan",
@@ -18,8 +18,5 @@
 	        "tsframe\\": "ts-framework/"
 	    },
 	    "files": ["ts-init.php"]
-	},
-	"config": {
-    	"vendor-dir": "./"
-  	}
+	}
 }
