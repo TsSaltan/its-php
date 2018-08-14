@@ -1,7 +1,7 @@
 {
 	"name":"ts.saltan/ts-framework",
 	"description": "PHP framework",
-    "type": "framework",
+    "type": "package",
     "authors": [
         {
             "name": "Ts.Saltan",
