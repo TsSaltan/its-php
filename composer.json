@@ -14,9 +14,12 @@
         "altorouter/altorouter": "1.1.0"
     },
     "autoload": {
-	    "psr-0": {
-	        "NS\\": "ts-framework/"
+	    "psr-4": {
+	        "tsframe\\": "ts-framework/"
 	    },
 	    "files": ["ts-init.php"]
-	}
+	},
+	"config": {
+    	"vendor-dir": "./"
+  	},
 }
