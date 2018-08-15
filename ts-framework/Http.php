@@ -1,6 +1,8 @@
 <?php
 namespace tsframe;
 
+use tsframe\Hook;
+
 class Http{
 
 	const CODE_OK = 			200;
@@ -18,6 +20,7 @@ class Http{
 	const TYPE_JSON = 'application/json';
 
 	public static function sendBody(string $body, int $code = 200, string $type = 'text/html', string $charset = 'utf-8', array $headers = []){
+		Hook::call('http.send', [&$body, &$headers]);
 		header('Content-type: ' . $type . '; charset=' . $charset, $code);
 		foreach ($headers as $key => $value) {
 			header($key . ': ' . $value);

@@ -13,6 +13,8 @@ class Hook{
 	 * app.install
 	 * menu.render (string $menuName, MenuItem $menu): void
 	 * menu.render.$menuName (MenuItem $menu): void
+	 * http.send (string &$body, array &$headers): void
+	 * database.query (Query $dbQuery)
 	 */
 	protected static $hooks = [];
 

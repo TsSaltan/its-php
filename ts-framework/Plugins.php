@@ -13,9 +13,9 @@ class Plugins{
 	public static function load(){
 		$list = self::getList();
 		foreach ($list as $plugin) {
-			require $plugin;
 			$parent = dirname($plugin);
 			Autoload::addRoot($parent);
+			require $plugin;
 			self::$loaded[basename($parent)] = $parent;
 		}
 

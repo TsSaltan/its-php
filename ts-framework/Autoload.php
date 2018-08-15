@@ -56,7 +56,7 @@ class Autoload{
 			return;
 		}
 
-		throw new AutoloadException('Class "'. $className .'" does not loaded', 404, [
+		throw new AutoloadException('Class "'. $className .'" does not loaded from paths:' . implode('; ', self::$paths), 404, [
 			'className' => $className,
 			'paths' => self::$paths
 		]);
