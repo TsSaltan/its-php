@@ -3,6 +3,7 @@ namespace tsframe\module\database;
 
 use tsframe\exceptions\DatabaseException;
 use tsframe\module\database\Database;
+use tsframe\Hook;
 
 define('TYPE_INT', \PDO::PARAM_INT);
 define('TYPE_STRING', \PDO::PARAM_STR);
@@ -17,9 +18,11 @@ class Query{
 	}
 
 	public function exec($vars = false){
+		Hook::call('database.query', [$this]);
+
 		if(is_array($vars))$this->sth->execute($vars);
 		else $this->sth->execute();
-			
+		
 		return $this;
 	}
 
