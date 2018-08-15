@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?=$this->_title?></title>
+    <title><?=$this->title?></title>
 
     <?$this->js('ts-client/frame.js', 'ts-client/user.js')?>
 
@@ -21,7 +21,10 @@
         "css/startmin.css",
         "css/bootstrap-social.css",
         "css/morris.css",
-        "css/font-awesome.min.css")?>
+        "css/font-awesome.min.css",
+        "css/dataTables/dataTables.bootstrap.css",
+        "css/dataTables/dataTables.responsive.css"
+    )?>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,9 +34,6 @@
     <![endif]-->
 
 
-    <!-- DataTables CSS -->
-    <?$this->css('css/dataTables/dataTables.bootstrap.css', 'css/dataTables/dataTables.responsive.css')?>
-    
     <!-- jQuery -->
     <?$this->js("js/jquery.min.js")?>
 

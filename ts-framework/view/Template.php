@@ -26,7 +26,7 @@ class Template{
 	 * Полный путь к файлу шаблона
 	 * @var string
 	 */
-	protected $file;
+	// protected $file;
 
 	/**
 	 * Переменные для шаблона
@@ -37,7 +37,7 @@ class Template{
 	public function __construct(string $part, string $name){
 		$this->part = $part;
 		$this->name = $name;
-		$this->file = TemplateRoot::getTemplateFile($part, $name);
+		// $this->file = TemplateRoot::getTemplateFile($part, $name);
 	}
 
 	/**
@@ -67,7 +67,10 @@ class Template{
 
 		ob_start();
 			extract($this->vars);
-			require($this->file);
+			$tplFiles = TemplateRoot::getTemplateFiles($this->part, $this->name);
+			foreach($tplFiles as $tplFile){
+				require($tplFile);
+			}
 		return ob_get_clean();
 	}
 
@@ -97,7 +100,8 @@ class Template{
 			// Абсолютные ссылки оставляем без изменения
 		} else {
 			try{
-				$file = TemplateRoot::findFile($this->part, $path);
+				$files = TemplateRoot::findFiles($this->part, $path);
+				$file = $files[0];
 			} catch (TemplateException $e){
 				$file = $path;
 			}
@@ -123,9 +127,11 @@ class Template{
 	 */
 	protected function inc(string $name){
 		try{
-			$file = TemplateRoot::getIncludeFile($this->part, $name);
+			$tplFiles = TemplateRoot::getIncludeFiles($this->part, $name);
 			extract($this->vars);
-			require $file;
+			foreach($tplFiles as $tplFile){
+				require $tplFile;
+			}
 			Hook::call('template.include', [$name, $this]);
 		} catch (TemplateException $e){
 
@@ -142,5 +148,9 @@ class Template{
 			$pageName = strtolower(substr($name, 3));
 			$this->inc($pageName);
 		}
+	}
+
+	public function hook(string $name, array $params = []){
+		return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
 	}
 }

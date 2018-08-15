@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                ID: <?=$selectUser->get('id')?>
+                                <?$this->hook('user.profile', [$selectUser])?>
                             </div>
                             <div class="panel-footer">
                                 <?if(UserAccess::checkCurrentUser('user.edit') || $self):?><a href="/dashboard/user/<?=$selectUser->get('id')?>/edit" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i> Редактировать</a><?endif?>

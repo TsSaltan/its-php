@@ -4,6 +4,7 @@ namespace tsframe\view;
 use tsframe\exception\TemplateException;
 use tsframe\utils\io\Filter;
 use tsframe\module\menu\Menu;
+use PHPHtmlParser\Dom;
 
 class HtmlTemplate extends Template {
 	protected function css(){

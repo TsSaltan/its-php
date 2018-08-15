@@ -27,36 +27,41 @@ class TemplateRoot{
 	/**
 	 * @throws TemplateException
 	 */
-	public static function getTemplateFile(string $part, string $path): string {
-		return self::findFile($part, $path, self::TPL_EXT);
+	public static function getTemplateFiles(string $part, string $path): array {
+		return self::findFiles($part, $path, self::TPL_EXT);
 	}
 
 	/**
 	 * @throws TemplateException
 	 */
-	public static function getIncludeFile(string $part, string $path): string {
-		return self::findFile($part, $path, self::INC_EXT);
+	public static function getIncludeFiles(string $part, string $path): array {
+		return self::findFiles($part, $path, self::INC_EXT);
 	}
 
 	/**
 	 * @throws TemplateException
 	 */
-	public static function findFile(string $part, string $path, string $ext = null): string {
+	public static function findFiles(string $part, string $path, string $ext = null): array {
+		$files = [];
 		$roots = array_merge((self::$roots[$part] ?? []), self::$roots[self::DEFAULT]);
 
 		foreach($roots as $root){
 			$filePath = $root . $path . $ext;
 			Log::add(['path' => $filePath, 'exists' => file_exists($filePath)]);
 			if(file_exists($filePath)){
-				return $filePath;
+				$files[] = $filePath;
 			}
 		}
 
-		throw new TemplateException("Template does not found", 500, [
-			'part' => $part,
-			'path' => $path,
-			'ext' => $ext,
-			'roots' => self::$roots,
-		]);
+		if(sizeof($files) == 0){
+			throw new TemplateException("Template file does not found", 500, [
+				'part' => $part,
+				'path' => $path,
+				'ext' => $ext,
+				'roots' => self::$roots,
+			]);
+		}
+		
+		return $files;
 	}
 }
