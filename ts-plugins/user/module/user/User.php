@@ -4,6 +4,7 @@ namespace tsframe\module\user;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\Config;
+use tsframe\Cache;
 
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
@@ -79,18 +80,14 @@ class User{
 		return $users;
 	}	
 
-	protected static $current = null;
-
 	/**
 	 * Возвращает текущего пользователя
 	 * @return SingleUser
 	 */
 	public static function current() : SingleUser {
-		if(is_null(self::$current)){
-			self::$current = SingleUser::current();
-		}
-		
-		return self::$current;
+		return Cache::variable('currentUser', function(){
+			return SingleUser::current();
+		});
 	}
 
 	public static function getPasswordHash(string $login, ?string $password) : string {

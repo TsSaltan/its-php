@@ -48,7 +48,10 @@ class SingleUser{
 		return new self(-1);
 	}	
 
-	public static function current(){
+	/**
+	 * Use User::current() instead this method!
+	 */
+	public static function current(): SingleUser {
 		if(isset($_COOKIE[self::SESSION_KEY])){
 			$data = Database::prepare('SELECT * FROM `sessions` WHERE `key` = :key AND `expires` > CURRENT_TIMESTAMP')
 					->bind('key', $_COOKIE[self::SESSION_KEY])
