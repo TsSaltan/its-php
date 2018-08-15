@@ -8,8 +8,10 @@ use tsframe\Config;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\User;
+use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
+use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.load', function(){
@@ -93,3 +95,10 @@ function generateRandomString(int $length){
 
 	return substr($string, 0, $length);
 }
+
+Hook::register('template.dashboard.user.profile', function(Template $tpl, SingleUser $user){
+	?>
+	User ID: <b><?=$user->get('id')?></b>
+	<?
+	//ID: 
+});

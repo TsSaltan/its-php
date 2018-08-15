@@ -88,7 +88,7 @@ class SingleUser{
 	public function set(string $key, $value) : bool {
 		if($key == 'password'){
 			// Для пароля генерируем хеш
-			$value = User::getPasswordHash($this->login, $value);
+			$value = User::getPasswordHash($value);
 		}
 		elseif($key == 'id' || !property_exists($this, $key)){
 			// ID и несуществующие поля не меняем

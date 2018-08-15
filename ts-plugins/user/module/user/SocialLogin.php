@@ -100,9 +100,13 @@ HTML;
 
 		$exists = true;
 		$nickname = null;
+		
 		while($exists){
 			$nickname = current($nicknames);
+			next($nicknames);
+
 			$exists = User::exists(['login' => $nickname]);
+			var_dump(['nick' => $nickname, 'result' => $exists]);
 		}
 
 		$email = $this->data['email'] ?? $this->data['identity'] . '@' . $this->data['network'];

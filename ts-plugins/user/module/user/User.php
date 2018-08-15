@@ -12,7 +12,7 @@ class User{
 		$uid = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`, `password`) VALUES (:login, :email, :access, :password)')
 				->bind('login', $login)
 				->bind('email', $email)
-				->bind('password', self::getPasswordHash($login, $password))
+				->bind('password', self::getPasswordHash($password))
 				->bind('access', $access)
 				->exec()
 				->lastInsertId();
@@ -65,7 +65,7 @@ class User{
 		}
 		foreach ($params as $key => $value) {
 			if($key == 'password' && isset($params['login'])){
-				$value = self::getPasswordHash($params['login'], $value);
+				$value = self::getPasswordHash($value);
 			}
 
 			$query->bind($key, $value);
@@ -90,8 +90,8 @@ class User{
 		});
 	}
 
-	public static function getPasswordHash(string $login, ?string $password) : string {
+	public static function getPasswordHash(string $password) : string {
 		$salt = Config::get('appId');
-		return hash('sha512', $password . $salt . $login);
+		return hash('sha512', $password . $salt);
 	}
 }
