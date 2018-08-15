@@ -3,7 +3,7 @@ namespace tsframe\module\user;
 
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
-
+use tsframe\Config;
 
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
