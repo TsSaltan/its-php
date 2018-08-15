@@ -95,13 +95,13 @@ class Router{
 		$redirects = [];
 		
 		foreach ($docs as $doc) {
-			if(preg_match_all('#^([A-Z\|]+)\s+([^\n\s]+)$#Ui', $doc, $matches)){
+			if(preg_match_all('#([A-Z\|]+?)\s+([^\n\s]+?)#Ui', $doc, $matches)){
 				foreach ($matches[0] as $key => $value) {
 					$routes[] = [ $matches[1][$key], $matches[2][$key] ];
 				}
 			}		
 
-			if(preg_match_all('#^([A-Z\|]+)\s+([^\s]+)\s*-\>\s*([^\n\s]+)$#Ui', $doc, $matches)){
+			if(preg_match_all('#([A-Z\|]+?)\s+([^\s]+?)\s*-\>\s*([^\n\s]+?)#Ui', $doc, $matches)){
 				foreach ($matches[0] as $key => $value) {
 					$redirects[] = [ $matches[1][$key], $matches[2][$key], $matches[3][$key] ];
 				}
