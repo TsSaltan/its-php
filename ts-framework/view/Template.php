@@ -125,7 +125,7 @@ class Template{
 	 * Include resource file
 	 * @param string $name
 	 */
-	protected function inc(string $name){
+	public function inc(string $name){
 		try{
 			$tplFiles = TemplateRoot::getIncludeFiles($this->part, $name);
 			extract($this->vars);
