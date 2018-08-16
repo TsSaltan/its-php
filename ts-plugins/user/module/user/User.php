@@ -3,33 +3,33 @@ namespace tsframe\module\user;
 
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
+use tsframe\module\Crypto;
 use tsframe\Config;
 use tsframe\Cache;
 
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		$access = is_null($access) ? UserAccess::getAccess('user.onRegister') : $access;
-		$uid = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`, `password`) VALUES (:login, :email, :access, :password)')
+		$uid = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
 				->bind('login', $login)
 				->bind('email', $email)
-				->bind('password', self::getPasswordHash($password))
+				//->bind('password', self::getPasswordHash($password))
 				->bind('access', $access)
 				->exec()
 				->lastInsertId();
 
-		return new SingleUser($uid, $login, $email, $access);
+		$user = new SingleUser($uid, $login, $email, $access);
+		$user->set('password', $password);
+
+		return $user;
 	}
 
 	public static function login(string $loginOrMail, string $password) : SingleUser {
-		$user = Database::prepare('SELECT * FROM `users` WHERE `login` = :login OR `email` = :login')
-				->bind('login', $loginOrMail)
-				->exec()
-				->fetch();
+		$users = self::get(['login' => $loginOrMail, 'email' => $loginOrMail], 'OR');
 
-		if(isset($user[0])){
-			$pHash = self::getPasswordHash($user[0]['login'], $password);
-			if($pHash == $user[0]['password']){
-				return new SingleUser($user[0]['id'], $user[0]['login'], $user[0]['email'], $user[0]['access']);
+		foreach($users as $user){
+			if(self::getPasswordHash($user->get('id'), $password) == $user->get('password')){
+				return $user;
 			}
 		}
 
@@ -64,8 +64,8 @@ class User{
 			$query = Database::prepare('SELECT * FROM `users`');
 		}
 		foreach ($params as $key => $value) {
-			if($key == 'password' && isset($params['login'])){
-				$value = self::getPasswordHash($value);
+			if($key == 'password' && isset($params['id'])){
+				$value = self::getPasswordHash($params['id'], $value);
 			}
 
 			$query->bind($key, $value);
@@ -74,7 +74,7 @@ class User{
 		$result = $query->exec()->fetch();
 		$users = [];
 		foreach ($result as $user) {
-			$users[] = new SingleUser($user['id'], $user['login'], $user['email'], $user['access']);
+			$users[] = new SingleUser($user['id'], $user['login'], $user['email'], $user['access'], $user['password']);
 		}
 
 		return $users;
@@ -90,8 +90,10 @@ class User{
 		});
 	}
 
-	public static function getPasswordHash(string $password) : string {
-		$salt = Config::get('appId');
-		return hash('sha512', $password . $salt);
+	public static function getPasswordHash(int $userId, string $password) : string {
+		/*$salt = Config::get('appId');
+		return hash('sha512', $password . $salt);*/
+
+		return Crypto::saltHash($userId . $password, 'sha512');
 	}
 }

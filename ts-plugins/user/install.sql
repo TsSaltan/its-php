@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `login` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `access` int(11) NOT NULL DEFAULT '0',
-  `password` varchar(255) NOT NULL,
+  `password` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

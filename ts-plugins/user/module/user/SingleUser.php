@@ -40,6 +40,12 @@ class SingleUser{
 	protected $login;
 
 	/**
+	 * Хеш от пароля
+	 * @var string
+	 */
+	protected $password;
+
+	/**
 	 * @var string
 	 */
 	protected $email;
@@ -65,11 +71,12 @@ class SingleUser{
 		return self::unauthorized();
 	}
 
-	public function __construct(int $uid, string $login = null, string $email = null, int $access = UserAccess::Guest){
+	public function __construct(int $uid, string $login = null, string $email = null, int $access = UserAccess::Guest, string $password = null){
 		$this->id = $uid;
 		$this->login = $login;
 		$this->email = $email;
 		$this->access = $access;
+		$this->password = $password;
 
 		if(is_null($this->login)){
 			$this->update();
@@ -88,7 +95,7 @@ class SingleUser{
 	public function set(string $key, $value) : bool {
 		if($key == 'password'){
 			// Для пароля генерируем хеш
-			$value = User::getPasswordHash($value);
+			$value = User::getPasswordHash($this->id, $value);
 		}
 		elseif($key == 'id' || !property_exists($this, $key)){
 			// ID и несуществующие поля не меняем
@@ -115,6 +122,7 @@ class SingleUser{
 			$this->login = $data[0]['login'];
 			$this->email = $data[0]['email'];
 			$this->access = $data[0]['access'];
+			$this->password = $data[0]['password'];
 		}		
 	}
 

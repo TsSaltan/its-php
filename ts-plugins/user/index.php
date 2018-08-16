@@ -2,7 +2,8 @@
 /**
  * Система пользователей + авторизация
  *
- * @hook 'user.edit' (array &$configTabs = ['tabName' => 'tabContent'])
+ * @hook 'template.dashboard.user.edit' (array &$configTabs = ['tabName' => 'tabContent'])
+ * @hook 'template.dashboard.user.profile' (Template $tpl, SingleUser $user)
  */
 namespace tsframe;
 
@@ -17,7 +18,7 @@ use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('database');
+	Plugins::required('database', 'crypto');
 
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
@@ -78,29 +79,11 @@ Hook::registerOnce('app.install', function(){
 		Config::set('access.user.delete', 4); 		// Редактирование пользователей
 		Config::set('access.user.editAccess', 4);	// Редактирование уровня доступа
 	}
-
-	if(Config::get('appId') == null){
-		Config::set('appId', generateRandomString(32));
-	}
 });
 
-function generateRandomString(int $length){
-	if (function_exists("random_bytes")) {
-	    $bytes = random_bytes(ceil($length / 2));
-	    $string = bin2hex($bytes);
-	} else if (function_exists("openssl_random_pseudo_bytes")) {
-		$bytes = openssl_random_pseudo_bytes($length);
-		$string = base64_encode($bytes);
-	} else {
-		$string = sha1(uniqid(time()));
-	}
-
-	return substr($string, 0, $length);
-}
 
 Hook::register('template.dashboard.user.profile', function(Template $tpl, SingleUser $user){
 	?>
 	User ID: <b><?=$user->get('id')?></b>
 	<?
-	//ID: 
 });

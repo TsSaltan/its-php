@@ -13,7 +13,7 @@
 
             <div class="row">
                     <?$configTabs = [
-                        'Основные настройки' => function() use ($selectUser, $self){
+                        'Основные настройки' => function() use ($user, $selectUser, $self){
                             uiAlert();
                             ?>
                             <form role="form" onsubmit="tsUser.edit(this); return false;">
@@ -106,13 +106,13 @@
                             <?
                         },
 
-                        'Социальные сети' => function() use ($social, $selectUser) {
+                        'Социальные сети' => function() use ($self, $social, $selectUser) {
                             showAlerts();
                             ?>
 
                             <div class="panel-body col-lg-6">
                                 <div class="col-lg-12">
-                                    <?if(isset($this->vars['socialLogin'])):?>
+                                    <?if($self && isset($this->vars['socialLogin'])):?>
                                     <h3>Привязать аккаунт</h3>
                                     <div class="form-group">
                                         <label>Выберите социальную сеть</label>
@@ -153,7 +153,8 @@
                         }
                     ];
                     $this->hook('user.edit', [&$configTabs]);
-                    uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs);
+                    $viewNum = (isset($socialTab) && $socialTab) ? 3 : 0;
+                    uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs, $viewNum);
                     ?>
 
                 </div>
