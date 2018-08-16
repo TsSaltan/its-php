@@ -152,15 +152,12 @@
 
                         }
                     ];
-                    $this->hook('user.edit', [$configTabs]);
+                    $this->hook('user.edit', [&$configTabs]);
                     uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs);
                     ?>
 
                 </div>
                 <!-- /.row -->
-
-            <!-- ... Your content goes here ... -->
-
         </div>
     </div>
 

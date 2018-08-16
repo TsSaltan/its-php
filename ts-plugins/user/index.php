@@ -1,6 +1,8 @@
 <?
 /**
  * Система пользователей + авторизация
+ *
+ * @hook 'user.edit' (array &$configTabs = ['tabName' => 'tabContent'])
  */
 namespace tsframe;
 
