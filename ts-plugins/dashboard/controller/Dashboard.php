@@ -12,9 +12,11 @@ use tsframe\module\testing\TestEngine;
  * @route GET /dashboard -> /dashboard/
  * 
  * @route GET /dashboard/
- * @route GET /dashboard/[login:action]
+ * @route GET /dashboard/[login|logout:action]
  */
 class Dashboard extends AbstractController{
+	use ActionToMethodTrait;
+
 	/**
 	 * Vars for template
 	 * @var array
@@ -36,7 +38,8 @@ class Dashboard extends AbstractController{
 		} elseif($this->currentUser->isAuthorized() && $action == 'login'){
 			Http::redirect('/dashboard/');
 		}
-
+ 		
+ 		// @todo redirects
 			/*if(isset($_GET['redirect'])){
 				setcookie('RE', $_GET['redirect'], time() + 60*60, '/');
 				$this->vars['alert']['info'] = 'Необходимо авторизоваться!';
@@ -53,26 +56,15 @@ class Dashboard extends AbstractController{
 		}*/
 	}
 
+	public function getLogout(){
+		$this->currentUser->closeSession(true);
+		return Http::redirect('/dashboard/');
+	}
+
 	public function response(){
+		$this->callActionMethod();
+
 		$action = $this->getAction();
-
-
-
-		switch ($action) {
-
-
-			/*case 'meta':
-				$this->vars['meta'] = new Meta(0);
-				break;
-				*/
-
-			default:
-				if(!isset($this->vars['title'])){
-					$this->vars['title'] = 'Панель управления';
-				}
-				break;
-		}
-			
 
 		$tpl = new HtmlTemplate('dashboard', $action);
 		$tpl->vars($this->vars);
@@ -82,7 +74,7 @@ class Dashboard extends AbstractController{
 	}
 
 	// f.e. action tests/new -> template tests_new
-	protected function getAction() : string {
-		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? 'index');
+	protected function getAction(string $default = 'index') : string {
+		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? $default);
 	}
 }

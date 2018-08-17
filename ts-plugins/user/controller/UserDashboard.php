@@ -23,93 +23,102 @@ use tsframe\exception\RouteException;
  * @route GET /dashboard/user/[i:user_id]/[profile|edit|delete:action]
  */ 
 class UserDashboard extends Dashboard {
+	/**
+	 * Selected self-user
+	 * @var boolean
+	 */
+	protected $self;
+
+	/**
+	 * Selected user
+	 * @var SingleUser
+	 */
+	protected $selectUser;
+
+	public function getUserList(){
+		UserAccess::assert($this->currentUser, 'user.list');
+		$this->vars['title'] = 'Список пользователей';
+		$this->vars['userList'] = new Paginator(User::get(), 10);
+	}
+
+	public function getUserEdit(){
+		if($this->self){
+			UserAccess::assert($this->currentUser, 'user.self');
+			$this->vars['title'] = 'Редактирование профиля';
+
+			$meta = $this->currentUser->getMeta();
+
+			// Если у пользователя стоит временный пароль, отобразим сообщение
+			$tempPass = $meta->get('temp_password');
+			if(strlen($tempPass) > 1){
+				$this->vars['tempPass'] = $tempPass;
+			}
+
+			// Если пользователь перенаправлен со страницы соц. логина
+			if(isset($_GET['social'])){
+				if($_GET['social'] == 'success'){
+					$this->vars['alert']['success'][] = 'Социальная сеть добавлена';
+				} else {
+					$this->vars['alert']['danger'][] = 'Ошибка при добавлении социальной сети, возможно она уже где-то используется.';
+				}
+
+				// Включим таб со страницой соц сетей
+				Hook::register('template.dashboard.user.edit', function($tpl, &$configTabs, &$activeTab){
+					$activeTab = 3;
+				});
+			}
+
+			$this->vars['socialLogin'] = SocialLogin::getWidgetCode();
+		} else {
+			UserAccess::assert($this->currentUser, 'user.edit');
+			$this->vars['title'] = 'Редактирование пользователя №' . $this->selectUser->get('id');
+		}
+
+		$this->vars['social'] = SocialLogin::getUserAccounts($this->selectUser);
+	}
+
+	public function getUserDelete(){
+		$this->vars['title'] = 'Удаление пользователя';
+		UserAccess::assert($this->currentUser, ($this->self ? 'user.self' : 'user.delete'));
+	}
+
+	public function getUserProfile(){
+		if($this->self){
+			UserAccess::assert($this->currentUser, 'user.self');
+			$this->vars['title'] = 'Ваш профиль';
+		} else {
+			UserAccess::assert($this->currentUser, 'user.view');
+			$this->vars['title'] = 'Профиль пользователя';
+		}
+	}
+
+
 	public function response(){
 		$action = $this->getAction();
-		$user = User::current();
 
-		if(isset($this->params['action']) && $this->params['action'] == 'logout'){
-			$user->closeSession(true);
-			return Http::redirect('/dashboard/');
-		}
-		elseif(isset($this->params['action']) && $this->params['action'] == 'list'){
-			UserAccess::assert($user, 'user.list');
-			$this->params['action'] = 'user_list';
-			$this->vars['title'] = 'Список пользователей';
-			$this->vars['userList'] = new Paginator(User::get(), 10);	
-			return parent::response();
+		if(isset($this->params['user_id'])) {
+			$this->self = $this->params['user_id'] == 'me' || $this->params['user_id'] == $this->currentUser->get('id');
 
-		} elseif(isset($this->params['user_id'])) {
-			$self = $this->params['user_id'] == 'me' || $this->params['user_id'] == $user->get('id');
-
-			if(!$self){
+			if(!$this->self){
 				$select = User::get(['id' => $this->params['user_id']]);
 				if(!isset($select[0])){
 					throw new RouteException('Invalid user id: ' . $this->params['user_id']);
 				}
-				$selectUser = $select[0];
+				$this->selectUser = $select[0];
 			} else {
-				$selectUser = User::current();
+				$this->selectUser = User::current();
 			}
 
-			$this->vars['selectUser'] = $selectUser;	
-			$this->vars['self'] = $self;	
-
-			switch ($this->params['action'] ?? 'profile') {
-				case 'edit':
-					if($self){
-						UserAccess::assert($user, 'user.self');
-						$this->vars['title'] = 'Редактирование профиля';
-
-						$meta = new Meta('user', $user->get('id'));
-						$tempPass = $meta->get('temp_password');
-						if(strlen($tempPass) > 1){
-							$this->vars['tempPass'] = $tempPass;
-						}
-
-						$this->vars['socialLogin'] = SocialLogin::getWidgetCode();
-
-						if(isset($_GET['social'])){
-							if($_GET['social'] == 'success'){
-								$this->vars['alert']['success'][] = 'Социальная сеть добавлена';
-							} else {
-								$this->vars['alert']['danger'][] = 'Ошибка при добавлении социальной сети, возможно она уже где-то используется.';
-							}
-
-							Hook::register('template.dashboard.user.edit', function($tpl, &$configTabs, &$activeTab){
-								$activeTab = 3;
-							});
-						}
-					} else {
-						UserAccess::assert($user, 'user.edit');
-						$this->vars['title'] = 'Редактирование пользователя №' . $selectUser->get('id');
-					}
-
-					$this->vars['social'] = SocialLogin::getUserAccounts($selectUser);
-					$this->params['action'] = 'user_edit';
-					return parent::response();				
-
-				case 'delete':
-					if($self) UserAccess::assert($user, 'user.self');
-					else UserAccess::assert($user, 'user.delete');
-					$this->params['action'] = 'user_delete';
-					$this->vars['title'] = 'Удаление пользователя';
-					return parent::response();			
-
-				case 'profile':
-					if($self){
-						UserAccess::assert($user, 'user.self');
-						$this->vars['title'] = 'Ваш профиль';
-					}
-					else {
-						UserAccess::assert($user, 'user.view');
-						$this->vars['title'] = 'Профиль пользователя';
-					}
-					$this->params['action'] = 'user_profile';
-					return parent::response();			
-
-			}
+			$this->vars['selectUser'] = $this->selectUser;	
+			$this->vars['self'] = $this->self;	
 		}
-		
-		throw new RouteException('Invalid user route');
+
+		//$this->callActionMethod();
+
+		return parent::response();
+	}
+
+	protected function getAction(string $default = 'profile') : string {
+		return 'user_' . parent::getAction($default);
 	}
 }
