@@ -4,6 +4,8 @@
  *
  * @hook 'template.dashboard.user.edit' (Template $tpl, array &$configTabs = ['tabName' => 'tabContent'], int &$activeTab)
  * @hook 'template.dashboard.user.profile' (Template $tpl, SingleUser $user)
+ * @hook 'user.login' (SingleUser $user)
+ * @hook 'user.register' (SingleUser $user)
  */
 namespace tsframe;
 
@@ -17,6 +19,9 @@ use tsframe\module\user\SocialLogin;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
+/**
+ * Загрузка плагина
+ */
 Hook::registerOnce('plugin.load', function(){
 	Plugins::required('database', 'crypto');
 

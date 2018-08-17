@@ -5,6 +5,7 @@ use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\module\Crypto;
 use tsframe\Config;
+use tsframe\Hook;
 use tsframe\Cache;
 
 class User{
@@ -19,7 +20,7 @@ class User{
 
 		$user = new SingleUser($uid, $login, $email, $access);
 		$user->set('password', $password); // Пароль устанавливается отдельно, чтоб сгенерировался его хеш
-
+		Hook::call('user.register', [$user]);
 		return $user;
 	}
 
@@ -28,6 +29,7 @@ class User{
 
 		foreach($users as $user){
 			if(self::getPasswordHash($user->get('id'), $password) == $user->get('password')){
+				Hook::call('user.login', [$user]);
 				return $user;
 			}
 		}
