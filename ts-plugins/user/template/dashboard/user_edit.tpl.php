@@ -1,7 +1,7 @@
 <?use tsframe\module\user\UserAccess;?>
 <?$this->incHeader()?>
 <?$this->incNavbar()?>
-<?uiTabPanel()?>
+
     <!-- Page Content -->
     <div id="page-wrapper">
         <div class="container-fluid">

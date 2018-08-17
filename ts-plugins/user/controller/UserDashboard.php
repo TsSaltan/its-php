@@ -96,7 +96,7 @@ class UserDashboard extends Dashboard {
 	public function response(){
 		$action = $this->getAction();
 
-		if(isset($this->params['user_id'])) {
+		if(isset($this->params['user_id'])){
 			$this->self = $this->params['user_id'] == 'me' || $this->params['user_id'] == $this->currentUser->get('id');
 
 			if(!$this->self){
