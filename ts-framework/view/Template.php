@@ -23,10 +23,16 @@ class Template{
 	protected $name;
 
 	/**
+	 * Полный путь к файлу шаблона
+	 * @var string
+	 */
+	// protected $file;
+
+	/**
 	 * Переменные для шаблона
 	 * @var array
 	 */
-	public $vars = [];
+	protected $vars = [];
 
 	public function __construct(string $part, string $name){
 		$this->part = $part;
