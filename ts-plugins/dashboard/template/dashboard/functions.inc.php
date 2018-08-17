@@ -4,7 +4,7 @@ $that = $this;
 
 function showAlerts(){
     global $that;
-    if(!isset($that->alert) || !is_array($that->alert)) return;
+    if(!is_array($that->alert)) return;
     foreach($that->alert as $type => $messages){
         $messages = is_array($messages) ? $messages : [$messages];
         foreach ($messages as $message) {

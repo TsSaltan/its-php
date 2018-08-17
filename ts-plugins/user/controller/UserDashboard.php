@@ -3,6 +3,7 @@ namespace tsframe\controller;
 
 use tsframe\Http;
 use tsframe\module\Meta;
+use tsframe\Hook;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
@@ -68,12 +69,15 @@ class UserDashboard extends Dashboard {
 						$this->vars['socialLogin'] = SocialLogin::getWidgetCode();
 
 						if(isset($_GET['social'])){
-							$this->vars['socialTab'] = true;
 							if($_GET['social'] == 'success'){
-								$this->vars['alert']['success'] = 'Социальная сеть добавлена';
+								$this->vars['alert']['success'][] = 'Социальная сеть добавлена';
 							} else {
-								$this->vars['alert']['danger'] = 'Ошибка при добавлении социальной сети, возможно она уже где-то используется.';
+								$this->vars['alert']['danger'][] = 'Ошибка при добавлении социальной сети, возможно она уже где-то используется.';
 							}
+
+							Hook::register('template.dashboard.user.edit', function($tpl, &$configTabs, &$activeTab){
+								$activeTab = 3;
+							});
 						}
 					} else {
 						UserAccess::assert($user, 'user.edit');

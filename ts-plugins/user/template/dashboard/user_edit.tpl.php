@@ -152,9 +152,10 @@
 
                         }
                     ];
-                    $this->hook('user.edit', [&$configTabs]);
-                    $viewNum = (isset($socialTab) && $socialTab) ? 3 : 0;
-                    uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs, $viewNum);
+
+                    $activeTab = 0;
+                    $this->hook('user.edit', [&$configTabs, &$activeTab]);
+                    uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs, $activeTab);
                     ?>
 
                 </div>
