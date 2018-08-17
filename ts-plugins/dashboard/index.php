@@ -1,6 +1,8 @@
 <?
 /**
  * Dashboard: админ-панель
+ *
+ * @hook template.dashboard.index
  */
 namespace tsframe;
 

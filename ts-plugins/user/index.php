@@ -2,7 +2,7 @@
 /**
  * Система пользователей + авторизация
  *
- * @hook 'template.dashboard.user.edit' (Template $tpl, array &$configTabs = ['tabName' => 'tabContent'])
+ * @hook 'template.dashboard.user.edit' (Template $tpl, array &$configTabs = ['tabName' => 'tabContent'], int &$activeTab)
  * @hook 'template.dashboard.user.profile' (Template $tpl, SingleUser $user)
  */
 namespace tsframe;

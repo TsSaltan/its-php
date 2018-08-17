@@ -5,13 +5,13 @@
     <div id="page-wrapper">
         <div class="container-fluid">
 
-            <div class="row">
+            <!--div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Hello, <b><?=$this->login?></b></h1>
                 </div>
-            </div>
+            </div-->
 
-            <!-- ... Your content goes here ... -->
+            <?$this->hook('index')?>
 
         </div>
     </div>
