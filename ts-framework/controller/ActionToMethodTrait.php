@@ -12,6 +12,7 @@ trait ActionToMethodTrait{
 	function callActionMethod(bool $repeat = false){
 		$request = $this->getRequestMethod();
 		$action = (method_exists($this, 'getAction')) ? $this->getAction() : $this->params['action'];
+		//$action = $this->params['action'];
 
 		$methodName = strtolower($request) . str_replace(['-','_'], '', $action);
 		if(method_exists($this, $methodName)){

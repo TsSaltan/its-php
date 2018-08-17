@@ -23,6 +23,12 @@ class Template{
 	protected $name;
 
 	/**
+	 * Полный путь к файлу шаблона
+	 * @var string
+	 */
+	// protected $file;
+
+	/**
 	 * Переменные для шаблона
 	 * @var array
 	 */
@@ -50,10 +56,6 @@ class Template{
 
 	public function __get(string $varName){
 		return $this->vars[$varName] ?? null ;
-	}
-
-	public function __set(string $varName, $value){
-		return $this->var($varName, $value);
 	}
 
 	/**
