@@ -18,7 +18,7 @@
                                 <p class='text'></p>
                             </div>
 
-                            <form role="form" onsubmit="tsUser.query('delete', this); $(sessions).hide(); return false;">
+                            <form role="form" onsubmit="tsUser.query('delete', this); return false;">
                                 <div class="panel-heading clearfix">
                                     <div class="panel-title pull-left">Удаление профиля</div>
                                 </div>
