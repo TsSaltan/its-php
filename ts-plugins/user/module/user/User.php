@@ -13,13 +13,12 @@ class User{
 		$uid = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
 				->bind('login', $login)
 				->bind('email', $email)
-				//->bind('password', self::getPasswordHash($password))
 				->bind('access', $access)
 				->exec()
 				->lastInsertId();
 
 		$user = new SingleUser($uid, $login, $email, $access);
-		$user->set('password', $password);
+		$user->set('password', $password); // Пароль устанавливается отдельно, чтоб сгенерировался его хеш
 
 		return $user;
 	}
@@ -63,6 +62,7 @@ class User{
 		} else {
 			$query = Database::prepare('SELECT * FROM `users`');
 		}
+
 		foreach ($params as $key => $value) {
 			if($key == 'password' && isset($params['id'])){
 				$value = self::getPasswordHash($params['id'], $value);
@@ -91,9 +91,6 @@ class User{
 	}
 
 	public static function getPasswordHash(int $userId, string $password) : string {
-		/*$salt = Config::get('appId');
-		return hash('sha512', $password . $salt);*/
-
 		return Crypto::saltHash($userId . $password, 'sha512');
 	}
 }
