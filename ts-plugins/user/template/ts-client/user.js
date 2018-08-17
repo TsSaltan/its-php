@@ -67,6 +67,11 @@ var tsResponse = {
         if(response.error && response.code){
             type = 'danger';
             switch(response.code){
+                case 1:
+                    // Авторизация не нужна
+                    window.location.reload();
+                    break;                
+
                 case 10:
                     this.setNotifyText(form, 'Пользователь с такими данными уже зарегистрирован', type);
                     break;
@@ -95,7 +100,7 @@ var tsResponse = {
                     this.setNotifyText(form, 'Невозможно закрыть сессии', type);
                     break;  
 
-                case 16:
+                case 17:
                     this.setNotifyText(form, 'Невозможно удалить пользователя', type);
                     break;              
 

@@ -37,13 +37,13 @@ class UserAJAX extends AbstractAJAXController{
 				case 'user/login':
 				case 'user/register':
 					if($user->isAuthorized()){
-						return $this->sendError('You already authorized');
+						return $this->sendError('You already authorized', 1);
 					}
 					break;
 
 				default:
 					if(!$user->isAuthorized()){
-						return $this->sendError('Auth required');
+						return $this->sendError('Auth required', 0);
 					}
 			}
 
