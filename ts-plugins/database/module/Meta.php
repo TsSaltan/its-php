@@ -2,7 +2,6 @@
 namespace tsframe\module;
 
 use tsframe\module\database\Database;
-use tsframe\utils\io\Filter;
 
 class Meta{
 
@@ -43,7 +42,7 @@ class Meta{
 	}
 
 	public function get(string $key){
-		return Filter::of( ($this->data[$key] ?? null) )->withoutXSS()->withoutQuotes()->getData();
+		return $this->data[$key] ?? null;
 	}
 
 	public function getData(): array {
