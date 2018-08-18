@@ -31,6 +31,11 @@ class Cash{
 		return new self(User::current());
 	}
 
+	public static function ofUserId(int $userId){
+		$user = new SingleUser($userId);
+		return new self($user);
+	}
+
 	public function __construct(SingleUser $user){
 		$this->user = $user;
 		$this->getBalance(true);
@@ -40,7 +45,7 @@ class Cash{
 	 * @return string
 	 */
 	public function getBalance(bool $update = false): string {
-		if(!$this->user->isAuthorized()) return '0';
+		if(!$this->user->isAuthorized()) return '-0';
 		
 		if($this->balance === '0' || $update){
 			$data = Database::prepare('SELECT * FROM `cash` WHERE `owner` = :userId')
@@ -68,13 +73,13 @@ class Cash{
 					->fetch();
 	}
 
-	private function setBalance(){
-		if(!$this->user->isAuthorized()) return null;
-		Database::prepare('UPDATE `cash` SET `balance` = :balance WHERE `owner` = :userId')
+	private function setBalance(): bool {
+		if(!$this->user->isAuthorized()) return false;
+		return Database::prepare('UPDATE `cash` SET `balance` = :balance WHERE `owner` = :userId')
 					->bind(':userId', $this->user->get('id'))
 					->bind(':balance', $this->balance)
 					->exec()
-					->fetch();	
+					->affectedRows() > 0;	
 	}
 
 	/**

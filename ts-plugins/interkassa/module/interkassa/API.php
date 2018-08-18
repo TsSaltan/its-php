@@ -23,15 +23,12 @@ class API{
 		return json_decode(curl_exec($ch), true);
 	}
 
-	public static function checkPayment(array $data) {
+	public static function checkPayment(array $data): bool {
+		if(!isset($data['ik_sign'])) return false;
+
+		$recipeSign = $data['ik_sign'];
 		$sign = self::genSign($data);
-		$data['ik_sign'] = $sign;
-		$ch = curl_init('https://sci.interkassa.com/');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $result = curl_exec($ch);
-        return $result;
+		return $sign == $recipeSign;
 	}
 
 	protected static function genSign(array $data){

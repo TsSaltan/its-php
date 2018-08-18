@@ -42,12 +42,12 @@ class Payment{
 			<input type="hidden" name="ik_cur" value="$this->currency" />
 			<input type="hidden" name="ik_desc" value="$this->description" />
 
-			<input type="hidden" name="ik_suc_u" value="$successUri" />
+			<!--input type="hidden" name="ik_suc_u" value="$successUri" />
 			<input type="hidden" name="ik_suc_m" value="post" />
 			<input type="hidden" name="ik_fal_u" value="$failUri" />
 			<input type="hidden" name="ik_fal_m" value="post" />
 			<input type="hidden" name="ik_pnd_u" value="$pendingUri" />
-			<input type="hidden" name="ik_pnd_m" value="post" />
+			<input type="hidden" name="ik_pnd_m" value="post" /-->
 		    <input type="submit" value="Оплатить">
 		</form>
 HTML;

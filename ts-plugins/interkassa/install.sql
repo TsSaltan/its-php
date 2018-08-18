@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS `cash_log` (
 	`timestamp` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL , 
 	UNIQUE KEY `id` (`id`)
 ) ENGINE = InnoDB;
+
+ALTER TABLE `cash_log` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
