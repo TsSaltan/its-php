@@ -40,7 +40,7 @@ class Cash{
 	 * @return string
 	 */
 	public function getBalance(bool $update = false): string {
-		if(!$this->user->isAuthorized()) return null;
+		if(!$this->user->isAuthorized()) return '0';
 		
 		if($this->balance === '0' || $update){
 			$data = Database::prepare('SELECT * FROM `cash` WHERE `owner` = :userId')
