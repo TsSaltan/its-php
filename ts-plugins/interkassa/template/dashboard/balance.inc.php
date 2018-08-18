@@ -23,7 +23,6 @@
                 </thead>
                 <tbody>
                     <?foreach ($this->vars['balanceHistory'] as $i => $item):?>
-                        # code...
                     <tr>
                         <td><?=($i+1)?></td>
                         <td style='color:<?=($item['balance'] < 0) ? 'red' : 'green'?>'><?=$item['balance']?></td>
