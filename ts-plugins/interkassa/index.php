@@ -40,7 +40,7 @@ class CashInstaller {
 	}
 
 	public static function addMenuTop(MenuItem $menu){
-		$menu->add(new MenuItem('Баланс: ' . self::$cash->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => '/dashboard/user/me/edit?balance', 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
+		$menu->add(new MenuItem('Баланс: ' . self::$cash->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
 	}
 
 	public static function addEditTab(Template $tpl, array &$configTabs, int &$activeTab){
