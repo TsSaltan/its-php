@@ -31,7 +31,8 @@ class Router{
 	 * @throws RouteException
 	 */
 	public static function findController() : AbstractController {
-		self::$router = new AltoRouter([], App::getBasePath());
+		$routerBase = substr(App::getBasePath(), 1);
+		self::$router = new AltoRouter([], $routerBase);
 		
 		$routers = Reflect::getClasses(__NAMESPACE__ . '\\controller');
 

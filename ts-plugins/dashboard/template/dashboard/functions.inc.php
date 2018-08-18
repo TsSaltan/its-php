@@ -26,6 +26,6 @@ function uiAlert(string $message = null, string $type='primary'){
 function jsFrame(){
     global $that;
     $that->js('ts-client/frame.js', 'ts-client/user.js');
-    ?><script type="text/javascript">tsFrame.basePath = <?=json_encode($that->makeURI(\tsframe\App::getBasePath()))?>;</script><?
+    ?><script type="text/javascript">tsFrame.basePath = <?=json_encode(\tsframe\App::getBasePath())?>;</script><?
 }
 

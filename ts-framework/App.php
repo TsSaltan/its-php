@@ -17,7 +17,7 @@ class App{
 	 * Путь к директории на сервере, откуда будет брать начало роутер, ссылки и т.д.
 	 * @var string
 	 */
-	protected static $basePath = '';
+	protected static $basePath = '/';
 
 	/**
 	 * Возможность установить базовую директорию для работы скрипта
@@ -28,10 +28,10 @@ class App{
 	public static function setBasePath(string $path){
 		$path = str_replace(['\\', '|'], '/', $path);
 
-		// Без слэша в начале
-		if(substr($path, 0, 1) == '/') $path = substr($path, 1);
+		// Cлэш в начале
+		if(substr($path, 0, 1) != '/') $path = '/' . $path;
 
-		// Но слэш в конце
+		// Cлэш в конце
 		if(substr($path, -1, 1) != '/') $path .= '/';
 
 		self::$basePath = $path;

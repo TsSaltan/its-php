@@ -40,6 +40,8 @@ var tsFrame = {
 			var x = tsFrame.ajax.xhr();
 
 			url = tsFrame.basePath + url;
+			url = url.replace(/\/\//, '/');
+			
 			if(method == 'GET'){
 				url = url + (data.length ? '?' + data : '');
 			}
