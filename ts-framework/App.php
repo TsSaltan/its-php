@@ -22,11 +22,11 @@ class App{
 	public static function setBasePath(string $path){
 		$path = str_replace(['\\', '|'], '/', $path);
 
-		// Слэш в начале
-		if(substr($path, 0, 1) != '/') $path = '/' . $path;
+		// Без слэша в начале
+		if(substr($path, 0, 1) == '/') $path = substr($path, 1);
 
-		// Но без слэша в конце
-		if(substr($path, -1, 1) != '/') $path = substr($path, 0, -1);
+		// Но слэш в конце
+		if(substr($path, -1, 1) != '/') $path .= '/';
 
 		self::$basePath = $path;
 	}

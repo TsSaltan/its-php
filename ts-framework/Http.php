@@ -73,7 +73,7 @@ class Http{
 	 */
 	public static function makeURI(string $uri): string {
 		if(substr($uri, 0, 1) == '/'){
-			return App::getBasePath() . $uri;
+			return App::getBasePath() . substr($uri, 1);
 		}
 
 		return $uri;
