@@ -3,6 +3,8 @@
  */
 
 var tsFrame = {
+	basePath: '',
+
 	ajax: {
 		xhr: function(){
 			if (typeof XMLHttpRequest !== 'undefined') {
@@ -36,6 +38,8 @@ var tsFrame = {
 			}
 			
 			var x = tsFrame.ajax.xhr();
+
+			url = tsFrame.basePath + url;
 			if(method == 'GET'){
 				url = url + (data.length ? '?' + data : '');
 			}

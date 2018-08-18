@@ -11,7 +11,7 @@
 
     <title><?=$this->title?></title>
 
-    <?$this->js('ts-client/frame.js', 'ts-client/user.js')?>
+    <?jsFrame()?>
 
     <!-- Bootstrap Core CSS -->
     <?$this->css(

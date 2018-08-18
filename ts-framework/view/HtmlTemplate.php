@@ -7,13 +7,13 @@ use tsframe\module\menu\Menu;
 use PHPHtmlParser\Dom;
 
 class HtmlTemplate extends Template {
-	protected function css(){
+	public function css(){
 		foreach(func_get_args() as $arg){
 			echo '<link rel="stylesheet" type="text/css" href="'. $this->getURI($arg) .'">' . "\n";
 		}
 	}
 
-	protected function js(){
+	public function js(){
 		foreach(func_get_args() as $arg){
 			echo '<script src="'. $this->getURI($arg) .'"></script>' . "\n";
 		}
