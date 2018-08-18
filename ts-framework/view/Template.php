@@ -2,6 +2,7 @@
 namespace tsframe\view;
 
 use tsframe\App;
+use tsframe\Http;
 use tsframe\Hook;
 use tsframe\exception\TemplateException;
 
@@ -152,5 +153,9 @@ class Template{
 
 	public function hook(string $name, array $params = []){
 		return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
+	}
+
+	public function makeURI($uri){
+		return Http::makeURI($uri);
 	}
 }

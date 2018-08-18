@@ -34,9 +34,9 @@ class Dashboard extends AbstractController{
 		$action = $this->getAction();
 		$this->currentUser = User::current();
 		if(!$this->currentUser->isAuthorized() && $action != 'login'){
-			Http::redirect('/dashboard/login');
+			Http::redirect(Http::makeURI('/dashboard/login'));
 		} elseif($this->currentUser->isAuthorized() && $action == 'login'){
-			Http::redirect('/dashboard/');
+			Http::redirect(Http::makeURI('/dashboard/'));
 		}
  		
  		// @todo redirects
@@ -58,7 +58,7 @@ class Dashboard extends AbstractController{
 
 	public function getLogout(){
 		$this->currentUser->closeSession(true);
-		return Http::redirect('/dashboard/');
+		return Http::redirect(Http::makeURI('/dashboard/'));
 	}
 
 	public function response(){

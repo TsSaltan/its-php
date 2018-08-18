@@ -21,8 +21,8 @@ Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');	
 
 	Menu::create('dashboard-sidebar')
-		->add(new MenuItem('Профиль', ['url' => '/dashboard/', 'fa' => 'user', 'access' => UserAccess::User]));
+		->add(new MenuItem('Профиль', ['url' => Http::makeURI('/dashboard/'), 'fa' => 'user', 'access' => UserAccess::User]));
 
 	Menu::create('dashboard-top')
-		->add(new MenuItem('Выход', ['url' => '/dashboard/logout', 'fa' => 'sign-out', 'access' => UserAccess::User]));
+		->add(new MenuItem('Выход', ['url' => Http::makeURI('/dashboard/logout'), 'fa' => 'sign-out', 'access' => UserAccess::User]));
 });

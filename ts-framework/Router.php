@@ -31,7 +31,7 @@ class Router{
 	 * @throws RouteException
 	 */
 	public static function findController() : AbstractController {
-		self::$router = new AltoRouter;
+		self::$router = new AltoRouter([], App::getBasePath());
 		
 		$routers = Reflect::getClasses(__NAMESPACE__ . '\\controller');
 
@@ -43,7 +43,7 @@ class Router{
 			if(sizeof($routes->redirects) > 0){
 				foreach ($routes->redirects as $route) {
 					self::$router->map($route[0], $route[1], function() use ($route){
-						Http::redirect($route[2]);
+						Http::redirect(Http::makeURI($route[2]));
 					});
 				}
 			}

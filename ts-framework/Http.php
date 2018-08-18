@@ -61,4 +61,13 @@ class Http{
 
 		return 'text/html';
 	}
+
+	/**
+	 * Сгенерировать ссылку с учётом basePath
+	 * @param  string $uri
+	 * @return string
+	 */
+	public static function makeURI(string $uri): string {
+		return App::getBasePath() . $uri;
+	}
 }

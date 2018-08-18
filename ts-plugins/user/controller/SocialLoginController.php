@@ -27,13 +27,13 @@ class SocialLoginController extends AbstractController{
 		if(!$currentUser->isAuthorized()){
 			$user = $login->getUser();
 			$user->createSession();
-			Http::redirect('/dashboard/');
+			Http::redirect(Http::makeURI('/dashboard/'));
 		} else {
 			try{
 				$login->saveUserMeta($currentUser);
-				Http::redirect('/dashboard/user/me/edit?social=success');
+				Http::redirect(Http::makeURI('/dashboard/user/me/edit?social=success'));
 			} catch(AccessException $e){
-				Http::redirect('/dashboard/user/me/edit?social=fail');
+				Http::redirect(Http::makeURI('/dashboard/user/me/edit?social=fail'));
 			}
 		}
 	}

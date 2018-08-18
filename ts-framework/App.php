@@ -14,6 +14,21 @@ class App{
 	}
 
 	/**
+	 * Путь к директории на сервере, откуда будет брать начало роутер, ссылки и т.д.
+	 * @var string
+	 */
+	protected static $basePath = '';
+
+	public static function setBasePath(string $path){
+		if(substr($path, -1) != '/') $path .= '/';
+		self::$basePath = $path;
+	}
+
+	public static function getBasePath(): string {
+		return self::$basePath;
+	}
+
+	/**
 	 * Запуск приложения
 	 */
 	public static function start(){
