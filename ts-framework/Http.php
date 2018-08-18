@@ -66,8 +66,16 @@ class Http{
 	 * Сгенерировать ссылку с учётом basePath
 	 * @param  string $uri
 	 * @return string
+	 *
+	 * /abs-path/ => /basedir/abs-path
+	 * relative-path/ => relative-path/
+	 * http://abs-path/ => http://abs-path/
 	 */
 	public static function makeURI(string $uri): string {
-		return App::getBasePath() . $uri;
+		if(substr($uri, 0, 1) == '/'){
+			return App::getBasePath() . $uri;
+		}
+
+		return $uri;
 	}
 }

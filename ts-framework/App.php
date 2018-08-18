@@ -20,7 +20,14 @@ class App{
 	protected static $basePath = '';
 
 	public static function setBasePath(string $path){
-		if(substr($path, -1) != '/') $path .= '/';
+		$path = str_replace(['\\', '|'], '/', $path);
+
+		// Слэш в начале
+		if(substr($path, 0, 1) != '/') $path = '/' . $path;
+
+		// Но без слэша в конце
+		if(substr($path, -1, 1) != '/') $path = substr($path, 0, -1);
+
 		self::$basePath = $path;
 	}
 
