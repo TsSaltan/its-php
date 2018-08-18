@@ -19,6 +19,12 @@ class App{
 	 */
 	protected static $basePath = '';
 
+	/**
+	 * Возможность установить базовую директорию для работы скрипта
+	 * Влияет на роутер (для роутера необходим путь вида %path%/ - слеш в конце, но не в начале!)
+	 * Влияет на генерацию ссылок (метод Http::makeURI), к абсолютным ссылкам в начало добавляет часть пути
+	 * @param string $path
+	 */
 	public static function setBasePath(string $path){
 		$path = str_replace(['\\', '|'], '/', $path);
 

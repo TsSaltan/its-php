@@ -5,6 +5,7 @@ use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\module\Crypto;
 use tsframe\Config;
+use tsframe\Http;
 use tsframe\Hook;
 use tsframe\Cache;
 
@@ -28,6 +29,11 @@ class Payment{
 
 	public function getForm(): string {
 		$host = $_SERVER['HTTP_HOST'];
+
+		$successUri = '//' . $host . Http::makeURI('/interkassa/success');
+		$failUri = '//' . $host . Http::makeURI('/interkassa/fail');
+		$pendingUri = '//' . $host . Http::makeURI('/interkassa/pending');
+
 		return <<<HTML
 		<form id="payment" name="payment" method="post" action="https://sci.interkassa.com/" enctype="utf-8">
 			<input type="hidden" name="ik_co_id" value="$this->cashId" />
@@ -36,11 +42,11 @@ class Payment{
 			<input type="hidden" name="ik_cur" value="$this->currency" />
 			<input type="hidden" name="ik_desc" value="$this->description" />
 
-			<input type="hidden" name="ik_suc_u" value="//$host/interkassa/success" />
+			<input type="hidden" name="ik_suc_u" value="$successUri" />
 			<input type="hidden" name="ik_suc_m" value="post" />
-			<input type="hidden" name="ik_fal_u" value="//$host/interkassa/fail" />
+			<input type="hidden" name="ik_fal_u" value="$failUri" />
 			<input type="hidden" name="ik_fal_m" value="post" />
-			<input type="hidden" name="ik_pnd_u" value="//$host/interkassa/pending" />
+			<input type="hidden" name="ik_pnd_u" value="$pendingUri" />
 			<input type="hidden" name="ik_pnd_m" value="post" />
 		    <input type="submit" value="Оплатить">
 		</form>
