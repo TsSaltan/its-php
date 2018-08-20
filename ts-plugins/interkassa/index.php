@@ -41,6 +41,7 @@ class CashInstaller {
 	public static function load(){
 		Plugins::required('database', 'user', 'dashboard');
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
 		self::$cash = Cash::currentUser();
 	}
 
@@ -57,20 +58,41 @@ class CashInstaller {
 		$selectUser = $tpl->selectUser;
 
 		if($tpl->self || UserAccess::checkCurrentUser('user.edit')){
+			if(isset($_GET['balance'])){
+				$activeTab = sizeof($configTabs);
+
+				switch($_GET['balance']){
+					case 'frompay':
+						$tpl->vars(['alert' => ['info' => 'Платёж совершён! Средства поступят на счёт после проверки платежа.']]);
+					break;
+				}
+			}
+
 			$configTabs['Баланс'] = function() use ($tpl, $selectUser){
 				$cash = new Cash($selectUser);
-				$pay = new Payment($selectUser);
 				$tpl->var('balance', $cash->getBalance());
 				$tpl->var('balanceCurrency', Config::get('interkassa.currency'));
 				$tpl->var('balanceHistory', $cash->getHistory());
-				$tpl->var('balancePayForm', $pay->getForm());
+
+				$payment = new Payment($selectUser);
+				$payment->calculateAmount('0');
+				$tpl->var('payFormAction', $payment->getProcessURI());
+				$tpl->var('payFormFields', $payment->getForm(true, true));
+
 				$tpl->inc('balance');
 			};
-
-			if(isset($_GET['balance'])){
-				$activeTab = sizeof($configTabs)-1;
-			}
 		}
+	}
+
+	public static function showUserBalance(Template $tpl, SingleUser $user){
+		if(!UserAccess::checkCurrentUser('cash.view')) return;
+
+		$balance = (new Cash($user))->getBalance();
+		$currency = Cash::getCurrency();
+
+		?>
+		<p>Текущий счёт: <b><?=$balance?></b> <?=$currency?></p>
+		<?
 	}
 }
 
@@ -79,3 +101,4 @@ Hook::registerOnce('app.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('menu.render.dashboard-sidebar', [CashInstaller::class, 'addMenuSidebar']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
+Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);

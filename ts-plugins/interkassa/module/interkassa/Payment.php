@@ -1,13 +1,9 @@
 <?php
 namespace tsframe\module\interkassa;
 
-use tsframe\module\database\Database;
-use tsframe\module\database\Query;
-use tsframe\module\Crypto;
+use tsframe\module\user\Cash;
 use tsframe\Config;
-use tsframe\Http;
-use tsframe\Hook;
-use tsframe\Cache;
+use tsframe\view\HtmlTemplate;
 
 
 class Payment{
@@ -17,41 +13,74 @@ class Payment{
 	protected $currency;
 	protected $user;
 	protected $description;
+	protected $tpl;
+
+	public function calculateAmount(string $requiredAmount = '0'){
+		$cash = new Cash($this->user);
+		$this->amount = 0;
+		if($cash->compare($requiredAmount) > 0){
+			$this->amount = $cash->diff($requiredAmount);
+		}
+	}
 
 	public function __construct($user = null, $amount = 10.0, string $description = null){
 		$this->user = is_null($user) ? User::current() : $user;
 		$this->cashId = Config::get('interkassa.cashId');
 		$this->payId = uniqid('ID_' . $user->get('id') . '_');
 		$this->amount = $amount;
-		$this->currency = Config::get('interkassa.currency');
+		$this->currency = Cash::getCurrency();
 		$this->description = is_null($description) ? ('Пополнение баланса пользователя ' . $user->get('login')) : $description;
+
+		$this->tpl = new HtmlTemplate('interkassa', 'payform');
 	}
 
+	public function getProcessURI(): string {
+		return "https://sci.interkassa.com/";
+	}
+
+	public function getForm(bool $amountEditable = true, bool $fieldsOnly = false){
+		$this->tpl->vars([
+			'cashId' => $this->cashId,
+			'payId' => $this->payId,
+			'amount' => $this->amount,
+			'currency' => $this->currency,
+			'description' => $this->description,
+			'amountEditable' => $amountEditable,
+			'fieldsOnly' => $fieldsOnly,
+			'formAction' => $this->getProcessURI(),
+		]);
+
+		return $this->tpl->render();
+	}
+
+	/*
+
 	public function getForm(): string {
-		$host = $_SERVER['HTTP_HOST'];
+		$action = $this->getFormAction();
 
-		$successUri = '//' . $host . Http::makeURI('/interkassa/success');
-		$failUri = '//' . $host . Http::makeURI('/interkassa/fail');
-		$pendingUri = '//' . $host . Http::makeURI('/interkassa/pending');
+		$form = <<<HTML
+		<form id="payment" name="payment" method="post" action="$action" enctype="utf-8">
+HTML;		
 
-		return <<<HTML
-		<form id="payment" name="payment" method="post" action="https://sci.interkassa.com/" enctype="utf-8">
-			<input type="hidden" name="ik_co_id" value="$this->cashId" />
-			<input type="hidden" name="ik_pm_no" value="$this->payId" />
-			<input type="number" name="ik_am" value="$this->amount" />
-			<input type="hidden" name="ik_cur" value="$this->currency" />
-			<input type="hidden" name="ik_desc" value="$this->description" />
+		$form .= $this->getFormFields();
 
-			<!--input type="hidden" name="ik_suc_u" value="$successUri" />
-			<input type="hidden" name="ik_suc_m" value="post" />
-			<input type="hidden" name="ik_fal_u" value="$failUri" />
-			<input type="hidden" name="ik_fal_m" value="post" />
-			<input type="hidden" name="ik_pnd_u" value="$pendingUri" />
-			<input type="hidden" name="ik_pnd_m" value="post" /-->
-		    <input type="submit" value="Оплатить">
+		$form .= <<<HTML
+			<input type="submit" value="Оплатить">
 		</form>
 HTML;
 	}
+
+	public function getFormFields(): string {
+		$host = $_SERVER['HTTP_HOST'];
+
+		return <<<HTML
+			<input type="hidden" name="ik_co_id" value="$this->cashId" />
+			<input type="hidden" name="ik_pm_no" value="$this->payId" />
+			<input type="hidden" name="ik_am" value="$this->amount" />
+			<input type="hidden" name="ik_cur" value="$this->currency" />
+			<input type="hidden" name="ik_desc" value="$this->description" />
+HTML;
+	}*/
 
 	public function getURI(): string {
 		return 'https://sci.interkassa.com/?' . http_build_query([

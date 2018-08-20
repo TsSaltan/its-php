@@ -33,6 +33,6 @@ class IKPayProcessor extends AbstractController{
 
 		file_put_contents(TEMP.'pay_log_' . $t . '.txt', 'check => ' . var_export($check, true ) . "\n\n" . 'REQUEST = ' . var_export($_REQUEST, true) . "\n\n" . 'SERVER = ' . var_export($_SERVER, true));
 	
-		return Http::redirect(Http::makeURI('/dashboard/user/me/edit?balance=view'));
+		return Http::redirect(Http::makeURI('/dashboard/user/me/edit?balance=frompay'));
 	}
 }

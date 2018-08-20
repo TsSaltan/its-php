@@ -1,12 +1,9 @@
 <div class="row">
     <div class="col-lg-12">
+        <?showAlerts()?>
         <h3>Текущий счёт</h3>
         <p>Ваш баланс: <b><?=$this->balance?></b> <?=$this->balanceCurrency?></p>
-    </div>
-
-    <div class="col-lg-12">
-        <h3>Пополнение</h3>
-        <?=$this->balancePayForm?>
+        <p><?$this->incPutbalance()?></p>
     </div>
 
     <div class="col-lg-12">

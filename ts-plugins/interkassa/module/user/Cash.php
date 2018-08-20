@@ -33,6 +33,11 @@ class Cash{
 			->fetch();
 	}
 
+	public static function getCurrency(){
+		$cur = Config::get('interkassa.currency');
+		return is_null($cur) ? 'USD' : $cur;
+	}
+
 	public static function currentUser(){
 		return new self(User::current());
 	}
@@ -114,6 +119,14 @@ class Cash{
 				->bind(':description', $description)
 				->exec();
 		$this->setBalance();
+	}
+
+	/**
+	 * Получить разницу
+	 * @param string $sum
+	 */
+	public function diff(string $sum): string {
+		return bcsub($sum, $this->balance, self::ACCURACY);
 	}
 
 	/**
