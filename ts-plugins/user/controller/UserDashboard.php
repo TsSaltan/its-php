@@ -100,7 +100,7 @@ class UserDashboard extends Dashboard {
 			$this->self = $this->params['user_id'] == 'me' || $this->params['user_id'] == $this->currentUser->get('id');
 
 			if(!$this->self){
-				$select = User::get(['id' => $this->params['user_id']]);
+				$select = array_values(User::get(['id' => $this->params['user_id']]));
 				if(!isset($select[0])){
 					throw new RouteException('Invalid user id: ' . $this->params['user_id']);
 				}
