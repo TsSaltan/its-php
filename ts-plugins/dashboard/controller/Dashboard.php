@@ -1,18 +1,21 @@
 <?php
 namespace tsframe\controller;
 
+use tsframe\Config;
 use tsframe\Http;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\view\HtmlTemplate;
 use tsframe\module\testing\TestEngine;
+use tsframe\utils\io\Validator;
 
 /**
  * @route GET /dashboard -> /dashboard/
  * 
  * @route GET /dashboard/
- * @route GET /dashboard/[login|logout:action]
+ * @route GET /dashboard/[login|logout|config:action]
+ * @route POST /dashboard/[config:action]
  */
 class Dashboard extends AbstractController{
 	use ActionToMethodTrait;
@@ -59,6 +62,28 @@ class Dashboard extends AbstractController{
 	public function getLogout(){
 		$this->currentUser->closeSession(true);
 		return Http::redirect(Http::makeURI('/dashboard/'));
+	}
+
+	public function getConfig(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		$this->vars['title'] = 'Редактирование системных настроек';
+		$this->vars['systemConfigs'] = Config::get('*');
+
+		if(isset($_GET['save']) && $_GET['save'] == 'success'){
+			$this->vars['alert']['success'][] = 'Настройки успешно сохранены';
+		}
+	}
+
+	public function postConfig(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		$data = Validator::post()
+						->name('config')
+						->json()
+						->assert();
+
+		Config::set('*', json_decode($data['config'], true));
+
+		return Http::redirect(Http::makeURI('/dashboard/config?save=success'));
 	}
 
 	public function response(){

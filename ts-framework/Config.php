@@ -51,13 +51,16 @@ class Config{
 		return $data;
 	}
 
-	public static function get(string $path){
+	public static function get(string $path = '*'){
+		if($path == '*') return self::$cache;
+
 		$data = self::getPath($path);
 		return $data;
 	}	
 
-	public static function set(string $path, $value){
-		$data =& self::getPath($path);
+	public static function set(string $path = '*', $value){
+		if($path == '*') $data =& self::$cache;
+		else $data =& self::getPath($path);
 		$data = $value;
 		self::save();
 	}

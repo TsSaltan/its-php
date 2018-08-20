@@ -41,7 +41,7 @@ Hook::register('menu.render.dashboard-top', function(MenuItem $menu){
  * Меню сбоку
  */
 Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Список пользователей', ['url' => Http::makeURI('/dashboard/user/list'), 'fa' => 'users', 'access' => UserAccess::getAccess('user.list')]));
+	$menu->add(new MenuItem('Список пользователей', ['url' => Http::makeURI('/dashboard/user/list'), 'fa' => 'users', 'access' => UserAccess::getAccess('user.list')]), -2);
 });
 
 /**
@@ -83,6 +83,7 @@ Hook::registerOnce('app.install', function(){
 		Config::set('access.user.edit', 2); 		// Редактирование пользователей
 		Config::set('access.user.delete', 4); 		// Редактирование пользователей
 		Config::set('access.user.editAccess', 4);	// Редактирование уровня доступа
+		Config::set('access.user.editConfig', 4);	// Редактирование системных настроек
 	}
 });
 
