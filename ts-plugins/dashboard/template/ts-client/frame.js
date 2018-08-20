@@ -5,6 +5,11 @@
 var tsFrame = {
 	basePath: '',
 
+	makeURI: function(uri){
+		let url = tsFrame.basePath + uri;
+		return url.replace(/\/\//, '/');
+	},
+
 	ajax: {
 		xhr: function(){
 			if (typeof XMLHttpRequest !== 'undefined') {
@@ -38,9 +43,7 @@ var tsFrame = {
 			}
 			
 			var x = tsFrame.ajax.xhr();
-
-			url = tsFrame.basePath + url;
-			url = url.replace(/\/\//, '/');
+			url = tsFrame.makeURI(url);
 			
 			if(method == 'GET'){
 				url = url + (data.length ? '?' + data : '');

@@ -50,8 +50,8 @@ var tsResponse = {
                 case 5:
                     this.setNotifyText(form, 'Пользователь удалён', 'success');
                     setTimeout(function(){
-                        location.replace('/dashboard/user/list');
-                    }, 2000);
+                        location.replace(tsFrame.makeURI('/dashboard/user/list'));
+                    }, 1000);
                     break;                        
 
                 case 6:
