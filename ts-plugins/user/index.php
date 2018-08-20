@@ -90,6 +90,6 @@ Hook::registerOnce('app.install', function(){
 
 Hook::register('template.dashboard.user.profile', function(Template $tpl, SingleUser $user){
 	?>
-	User ID: <b><?=$user->get('id')?></b>
+	<p>User ID: <b><?=$user->get('id')?></b></p>
 	<?
 });

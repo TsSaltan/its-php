@@ -27,7 +27,9 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                <?$this->hook('user.profile', [$selectUser])?>
+                                <form role='form'>
+                                    <?$this->hook('user.profile', [$selectUser])?>
+                                </form>
                             </div>
                             <div class="panel-footer">
                                 <?if(UserAccess::checkCurrentUser('user.edit') || $self):?><a href="<?=$this->makeURI('/dashboard/user/' . $selectUser->get('id') . '/edit')?>" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i> Редактировать</a><?endif?>
