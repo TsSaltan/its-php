@@ -33,7 +33,7 @@
                                 <div class="panel-footer">
                                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
                                     <button class="btn btn-default btn-danger btn-sm">Удалить</button>
-                                    <a href="/dashboard/user/list" class="btn btn-default btn-outline btn-sm">Отмена</a>
+                                    <a href="<?=$this->makeURI('/dashboard/user/list')?>" class="btn btn-default btn-outline btn-sm">Отмена</a>
                                 </div>
                             </form>
                         </div>

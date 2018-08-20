@@ -41,9 +41,9 @@
                                                 <td><?=$userItem->get('email')?></td>
                                                 <td><?=array_flip($accessList)[$userItem->get('access')]?></td>
                                                 <td>
-                                                    <?if(UserAccess::checkCurrentUser('user.view')):?><a href="/dashboard/user/<?=$userItem->get('id')?>" class="btn btn-default btn-sm btn-outline" title='Профиль'><i class='fa fa-user'></i></a><?endif?>
-                                                    <?if(UserAccess::checkCurrentUser('user.edit')):?><a href="/dashboard/user/<?=$userItem->get('id')?>/edit" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i></a><?endif?>
-                                                    <?if(UserAccess::checkCurrentUser('user.delete')):?><a href="/dashboard/user/<?=$userItem->get('id')?>/delete" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i></a><?endif?>
+                                                    <?if(UserAccess::checkCurrentUser('user.view')):?><a href="<?$this->makeURI('/dashboard/user/' . $userItem->get('id'))?>" class="btn btn-default btn-sm btn-outline" title='Профиль'><i class='fa fa-user'></i></a><?endif?>
+                                                    <?if(UserAccess::checkCurrentUser('user.edit')):?><a href="<?$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/edit')?>" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i></a><?endif?>
+                                                    <?if(UserAccess::checkCurrentUser('user.delete')):?><a href="<?$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i></a><?endif?>
                                                 </td>
                                             </tr>
                                             <?endforeach?>
