@@ -16,6 +16,10 @@ use tsframe\module\user\SocialLogin;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
+/**
+ * @todo Просмотр всех операций админом
+ * @todo Просмотр баланса админом
+ */
 class CashInstaller {
 	protected static $cash;
 	
