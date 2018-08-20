@@ -11,6 +11,8 @@
                 </div>
             </div>
 
+            <?=$this->hook('cash.global')?>
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel tabbed-panel panel-default">

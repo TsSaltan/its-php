@@ -1,6 +1,8 @@
 <?
 /**
  * Система приёма платежей
+ *
+ * @hook template.dashboard.cash.global
  */
 namespace tsframe;
 
