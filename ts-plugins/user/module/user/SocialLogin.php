@@ -5,6 +5,7 @@ use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\exception\AccessException;
 use tsframe\module\Meta;
+use tsframe\Http;
 
 /**
  * @link https://ulogin.ru
@@ -21,7 +22,7 @@ class SocialLogin{
 	protected static $providers = ['vkontakte','facebook','odnoklassniki'];
 
 	public static function getWidgetCode() : string {
-		$url = urlencode('//'.$_SERVER['SERVER_NAME'] . self::$callbackURI);
+		$url = urlencode('//'.$_SERVER['SERVER_NAME'] . Http::makeURI(self::$callbackURI));
 		$fields = implode(',', self::$fields);
 		$providers = implode(',', self::$providers);
 
