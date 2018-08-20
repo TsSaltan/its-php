@@ -76,7 +76,7 @@ class User{
 		$result = $query->exec()->fetch();
 		$users = [];
 		foreach ($result as $user) {
-			$users[] = new SingleUser($user['id'], $user['login'], $user['email'], $user['access'], $user['password']);
+			$users[$user['id']] = new SingleUser($user['id'], $user['login'], $user['email'], $user['access'], $user['password']);
 		}
 
 		return $users;

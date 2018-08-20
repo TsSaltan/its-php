@@ -118,7 +118,8 @@ class UserDashboard extends Dashboard {
 		return parent::response();
 	}
 
+	protected $actionPrefix = 'user_';
 	protected function getAction(string $default = 'profile') : string {
-		return 'user_' . parent::getAction($default);
+		return $this->actionPrefix . parent::getAction($default);
 	}
 }

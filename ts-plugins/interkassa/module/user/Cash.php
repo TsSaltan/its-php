@@ -27,6 +27,12 @@ class Cash{
 	 */
 	protected $balance = '0';
 
+	public static function getGlobalHistory(){
+		return Database::prepare('SELECT * FROM `cash_log` ORDER BY `timestamp` DESC')
+			->exec()
+			->fetch();
+	}
+
 	public static function currentUser(){
 		return new self(User::current());
 	}
