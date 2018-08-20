@@ -52,6 +52,8 @@
     <!-- JSON editor -->
     <?$this->css("css/jsoneditor.css")?>
     <?$this->js("js/jquery.jsoneditor.min.js")?>
+
+    <?$this->hook("header")?>
 </head>
 <body>
 

@@ -3,6 +3,8 @@
  * Dashboard: админ-панель
  *
  * @hook template.dashboard.index
+ * @hook template.dashboard.header
+ * @hook template.dashboard.footer
  */
 namespace tsframe;
 
