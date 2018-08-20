@@ -3,6 +3,7 @@
  * Dashboard: админ-панель
  *
  * @hook template.dashboard.index
+ * @hook template.dashboard.config
  * @hook template.dashboard.header
  * @hook template.dashboard.footer
  */

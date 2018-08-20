@@ -9,7 +9,7 @@
                     <h1 class="page-header"><?=$this->title?></h1>
                 </div>
             </div>
-
+            <?$this->hook('config')?>
             <div class="row">
                     <div class="col-lg-12">
                     	<?uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'warning')?>
