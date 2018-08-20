@@ -55,8 +55,12 @@ class UserAccess{
     }
 
     public static function assert(SingleUser $user, $rule){
-    	if(!self::checkUser($user, $rule)){
-    		throw new AccessException('Access denied for action "' . $rule . '"');
-    	}
+        if(!self::checkUser($user, $rule)){
+            throw new AccessException('Access denied for action "' . $rule . '"');
+        }
+    }
+
+    public static function assertCurrentUser($rule){
+    	return self::assert(User::current(), $rule);
     }
 }
