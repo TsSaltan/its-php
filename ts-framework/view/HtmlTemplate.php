@@ -38,4 +38,19 @@ class HtmlTemplate extends Template {
 
 		return ob_get_clean();
 	}
+
+	/**
+	 * Var filter
+	 */
+	public function filter($var, array $filters){
+		$filter = Filter::of($var);
+		$filters = array_unique($filters);
+		foreach($filters as $f){
+			if(method_exists($filter, $f)){
+				$filter = call_user_func([$filter, $f]);
+			}
+		}
+
+		return $filter->getData();
+	}
 }
