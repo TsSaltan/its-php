@@ -40,7 +40,8 @@
                                 <button type="submit" class="btn btn-success">Сохранить</button>
                                 <button type="reset" class="btn btn-default">Отмена</button>
                                 <div class='pull-right'>
-                                <?if(UserAccess::checkCurrentUser('user.delete') || $self):?><a href="<?=$this->makeURL('/dashboard/user/'.$selectUser->get('id').'/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i> Удалить профиль</a><?endif?>
+                                <?if(UserAccess::checkCurrentUser('user.delete') || $self):?>
+                                    <a href="<?=$this->makeURI('/dashboard/user/' . $selectUser->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i> Удалить профиль</a><?endif?>
                                 </div>
                             </form>
                             <?
