@@ -91,25 +91,29 @@ class Referrer{
 		return intval($fromBase);
 	}
 
-	public function getRefURI(): string {
-		$origUrl = 'http://' . $_SERVER['HTTP_HOST'] . Http::makeURI('/dashboard/login?ref=' . $this->encodeID());
-
-		$url = $this->userMeta->get('referrer_url');
-		if(is_null($url)){
-			$bit = new Bitly;
-			$url = $bit->shortUrl($origUrl);
-			if(!$url){
-				$url = $origUrl;
-			} else {
-				$this->userMeta->set('referrer_url', $url);
-			}	
+	public function getReferalURI(): string {
+		$refUrl = $this->userMeta->get('referrer_url');
+		if(is_null($refUrl)){
+			$eid = $this->encodeID();
+			$refUrl = 'http://' . $_SERVER['HTTP_HOST'] . Http::makeURI('/dashboard/login?ref=' . $eid);
+			Hook::call('referrer.makeURI', [&$refUrl, $this]);
+			$this->userMeta->set('referrer_url', $refUrl);
 		}
 
-		return $url;
+		$shortUrl = $this->userMeta->get('referrer_short_url');
+		if(is_null($shortUrl)){
+			$bit = new Bitly;
+			$shortUrl = $bit->shortUrl($refUrl);
+			if(!is_null($shortUrl)){
+				$this->userMeta->set('referrer_short_url', $shortUrl);
+			}
+		}
+
+		return !is_null($shortUrl) ? $shortUrl : $refUrl;
 	}
 
-	public function getRefStatURI(){
-		$url = $this->userMeta->get('referrer_url');
+	public function getReferalStatisticURI(){
+		$url = $this->userMeta->get('referrer_short_url');
 		if(!is_null($url) && strpos($url, 'bit.ly') !== false){
 			return $url . '+';
 		}

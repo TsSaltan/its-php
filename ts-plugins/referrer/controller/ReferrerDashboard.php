@@ -19,8 +19,8 @@ class ReferrerDashboard extends UserDashboard {
 		$this->vars['title'] = 'Партнёрская программа';
 		$this->vars['userReferrer'] = $refer->getReferrer();
 		$this->vars['userReferrals'] = $refer->getReferrals();
-		$this->vars['userRefLink'] = $refer->getRefURI();
-		$this->vars['userRefStatLink'] = $refer->getRefStatURI();
+		$this->vars['userRefLink'] = $refer->getReferalURI();
+		$this->vars['userRefStatLink'] = $refer->getReferalStatisticURI();
 	}
 
 }
