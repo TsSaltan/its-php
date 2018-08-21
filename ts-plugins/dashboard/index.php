@@ -6,6 +6,7 @@
  * @hook template.dashboard.config
  * @hook template.dashboard.header
  * @hook template.dashboard.footer
+ * @hook template.dashboard.auth
  */
 namespace tsframe;
 
