@@ -68,9 +68,8 @@ HTML;
 		foreach ($meta as $m) {
 			$parent = $m->getParent();
 			$users = User::get(['id' => str_replace('user_', '', $parent)]);
-			if(isset($users[0])){
-				//$this->saveUserMeta($users[0]);
-				return $users[0];
+			foreach ($users as $user){
+				return $user;
 			}
 		}
 
@@ -107,7 +106,6 @@ HTML;
 			next($nicknames);
 
 			$exists = User::exists(['login' => $nickname]);
-			var_dump(['nick' => $nickname, 'result' => $exists]);
 		}
 
 		$email = $this->data['email'] ?? $this->data['identity'] . '@' . $this->data['network'];

@@ -24,7 +24,7 @@ class UserAJAX extends AbstractAJAXController{
 		try{
 
 			if(isset($_REQUEST['id'])){
-				$select = User::get(['id' => $_REQUEST['id']]);
+				$select = array_values(User::get(['id' => $_REQUEST['id']]));
 				if(isset($select[0])){
 					$selectUser = $select[0];
 				} else {
