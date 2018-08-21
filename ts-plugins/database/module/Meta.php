@@ -52,8 +52,8 @@ class Meta{
 	public static function find(string $key = '*', string $value = '*'): array {
 		$return = [];
 		
-		$keyQuery = ($key == '*') ? '`key` = *' : '`key` = :key';
-		$valQuery = ($value == '*') ? '`value` = *' : '`value` = :value';
+		$keyQuery = ($key == '*') ? '1 = 1' : '`key` = :key';
+		$valQuery = ($value == '*') ? '1 = 1' : '`value` = :value';
 
 		$query = Database::prepare('SELECT * FROM `meta` WHERE ' . $keyQuery . ' AND ' . $valQuery);
 
