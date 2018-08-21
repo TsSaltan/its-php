@@ -104,7 +104,7 @@ class Referrer{
 		return $url;
 	}
 
-	public function getRefStatURI(): string {
+	public function getRefStatURI(){
 		$url = $this->userMeta->get('referrer_url');
 		if(!is_null($url) && strpos($url, 'bit.ly') !== false){
 			return $url . '+';
