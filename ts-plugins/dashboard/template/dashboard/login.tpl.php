@@ -62,6 +62,8 @@
                             </form>
 
                         </div>
+
+                        <?$this->hook('auth')?>
                     </div>                    
                 </div>
             </div>
