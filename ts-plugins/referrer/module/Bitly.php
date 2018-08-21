@@ -45,7 +45,7 @@ class Bitly{
 		}
 
 		$shorten = $this->api('shorten', ['long_url' => $url, 'group_guid' => $guid, 'domain' => "bit.ly"]);
-		return $shorten['link'] ?? $url;
+		return $shorten['link'] ?? false;
 	}
 
 }

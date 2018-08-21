@@ -98,7 +98,11 @@ class Referrer{
 		if(is_null($url)){
 			$bit = new Bitly;
 			$url = $bit->shortUrl($origUrl);
-			$this->userMeta->set('referrer_url', $url);
+			if(!$url){
+				$url = $origUrl;
+			} else {
+				$this->userMeta->set('referrer_url', $url);
+			}	
 		}
 
 		return $url;
