@@ -6,7 +6,7 @@
  * 
  * @hook template.dashboard.referrer
  * @hook referrer.invite (int $referrerId, SingleUser $referral)
- * @hook referrer.makeURI (string &$referrerURI, Referer $referer)
+ * @hook referrer.makeURI (string &$referrerURI, Referrer $referer)
  */
 namespace tsframe;
 
