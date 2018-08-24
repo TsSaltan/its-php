@@ -43,6 +43,10 @@ class Paginator{
 
 	}	
 
+	public function isData(): bool {
+		return sizeof($this->getData()) > 0;
+	}
+
 	public function getData(): array {
 		return array_slice($this->data, $this->offset, $this->num);
 	}
