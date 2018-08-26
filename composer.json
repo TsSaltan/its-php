@@ -12,21 +12,6 @@
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",
-        "andr-04/jquery.inputmask-multi": "1.2.0",
-        "RobinHerbots/jquery.inputmask": "3.2.7"
-    },
-    "repositories": {
-        "inputmask": {
-            "type": "package",
-            "package": {
-                "name": "RobinHerbots/jquery.inputmask",
-                "version": "1.0.0",
-                "source": {
-                    "url": "https://github.com/RobinHerbots/jquery.inputmask",
-                    "type": "git",
-                    "reference": "c95fe993f91e1da2069a26d84eaa372835842286"
-                }
-            }
-        }
+        "andr-04/jquery.inputmask-multi": "1.2.0"
     }
 }
