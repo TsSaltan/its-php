@@ -73,9 +73,32 @@ class Http{
 	 */
 	public static function makeURI(string $uri): string {
 		if(substr($uri, 0, 1) == '/'){
-			return App::getBasePath() . substr($uri, 1);
+			return self::getProtocol() . '://' .  self::getHostName() . App::getBasePath() . substr($uri, 1);
 		}
 
 		return $uri;
 	}
+
+	/**
+	 * Получить текущий протокол
+	 * @return string http|https
+	 */
+	public static function getProtocol(): string {
+		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)){
+			return 'https';
+		} else if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
+			return 'https';
+		} else if (isset($_SERVER['REQUEST_SCHEME'])){
+			return $_SERVER['REQUEST_SCHEME'];
+		} else if(isset($_SERVER["SERVER_PROTOCOL"])){
+			return strtolower(explode('/', $_SERVER["SERVER_PROTOCOL"])[0]);
+		}
+
+		return 'http';
+	}
+	
+	public static function getHostName(): string {
+		return $_SERVER['SERVER_NAME'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+	}
+
 }
