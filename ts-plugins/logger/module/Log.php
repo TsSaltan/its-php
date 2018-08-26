@@ -11,11 +11,15 @@ class Log{
 		$meta['message'] = $message;
 		self::$logs[$type][] = $meta;
 
-		return Database::prepare('INSERT INTO `log` (`id`, `type`, `data`) VALUES (UUID(), :type, :data)')
+		try {
+			return Database::prepare('INSERT INTO `log` (`id`, `type`, `data`) VALUES (UUID(), :type, :data)')
 				->bind('type', $type)
 				->bind('data', json_encode($meta))
 				->exec()
 				->lastInsertId() > 0;
+		} catch (\Exception $e){
+			return false;
+		}
 	}
 
 	public static function getCurrentLogs(): array {
