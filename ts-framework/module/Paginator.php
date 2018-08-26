@@ -43,6 +43,10 @@ class Paginator{
 
 	}	
 
+	/**
+	 * Есть ли данные для отображения
+	 * @return bool
+	 */
 	public function isData(): bool {
 		return sizeof($this->getData()) > 0;
 	}
@@ -52,6 +56,8 @@ class Paginator{
 	}
 
 	public function getPages(int $pagesNum = 5, bool $helpers = true): array {
+		if(sizeof($this->data) == 0) return [];
+		
 		$pages = [];
 
 		if($helpers){
