@@ -13,6 +13,7 @@ use tsframe\module\user\UserAccess;
 use tsframe\module\user\User;
 use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
+use tsframe\view\HtmlTemplate;
 
 Hook::register('app.install', function(){
 	if(is_null(Config::get('smsc'))){
@@ -26,6 +27,8 @@ Hook::register('app.install', function(){
 Hook::registerOnce('plugin.load', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');
+	TemplateRoot::addDefault(CD . 'vendor' . DS . 'robinherbots' . DS . 'jquery.inputmask');
 });
 
 /*Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
@@ -50,4 +53,14 @@ Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$c
 
 Hook::register('template.render', function(Template $tpl){
 	$tpl->var('userPhone', User::current()->getMeta()->get('phone'));
+});
+
+Hook::register('template.dashboard.header', function(HtmlTemplate $tpl){
+	$tpl->js('dist/min/jquery.inputmask.bundle.min.js');
+	$tpl->js('js/jquery.inputmask-multi.js');
+
+	/*
+	$tpl->css('css/flag.css');
+	$tpl->js('js/jquery-ui-1.10.4.custom.min.js');
+	$tpl->js('js/phonecode.js');*/
 });
