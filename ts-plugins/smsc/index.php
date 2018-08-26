@@ -27,8 +27,8 @@ Hook::register('app.install', function(){
 Hook::registerOnce('plugin.load', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+	TemplateRoot::addDefault(__DIR__ . DS . 'template');
 	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');
-	TemplateRoot::addDefault(CD . 'vendor' . DS . 'robinherbots' . DS . 'jquery.inputmask');
 });
 
 /*Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
@@ -56,7 +56,7 @@ Hook::register('template.render', function(Template $tpl){
 });
 
 Hook::register('template.dashboard.header', function(HtmlTemplate $tpl){
-	$tpl->js('dist/min/jquery.inputmask.bundle.min.js');
+	$tpl->js('js/jquery.inputmask.bundle.min.js');
 	$tpl->js('js/jquery.inputmask-multi.js');
 
 	/*
