@@ -51,4 +51,13 @@ class Log{
 
 		return $return;		
 	}
+
+	/**
+	 * Add log with type=funcName
+	 * @param  string $message
+	 * @param  array  $meta
+	 */
+	public static function __callStatic(string $name , array $args){
+		return self::add($args[0], $name, $args[1] ?? []);
+	}
 }
