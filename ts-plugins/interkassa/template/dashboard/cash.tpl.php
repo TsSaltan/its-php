@@ -39,7 +39,7 @@
                                         <tr>
                                             <td><?=$item['timestamp']?></td>
                                             <td><a href="<?=$this->makeURI('/dashboard/user/' . $user->get('id'))?>"><?=$user->get('login')?></a></td>
-                                            <td><b style="color:<?=($item['balance'] > 0) ? "green" : ($item['balance'] == 0 ? "black" : "red")?>"><?=$item['balance']?></b></td>
+                                            <td><b style="color:<?=($item['balance'] > 0) ? "green" : ($item['balance'] == 0 ? "black" : "red")?>"><?=$item['balance']>0?'+':''?><?=$item['balance']?></b></td>
                                             <td><?=$item['description']?></td>
                      
                                         </tr>
