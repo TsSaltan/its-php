@@ -48,7 +48,7 @@ class CashInstaller {
 	}
 
 	public static function addMenuSidebar(MenuItem $menu){
-		$menu->add(new MenuItem('Денежные операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -2);
+		$menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -2);
 	}
 	
 	public static function addMenuTop(MenuItem $menu){
@@ -65,7 +65,7 @@ class CashInstaller {
 
 				switch($_GET['balance']){
 					case 'frompay':
-						$tpl->vars(['alert' => ['info' => 'Платёж совершён! Средства поступят на счёт после проверки платежа.']]);
+						$tpl->vars(['cashAlert' => ['info' => 'Платёж совершён! Средства поступят на счёт после проверки платежа.']]);
 					break;
 				}
 			}

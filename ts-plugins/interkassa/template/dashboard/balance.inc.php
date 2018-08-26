@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12">
-        <?showAlerts()?>
+        <?showAlerts($this->vars['cashAlert'] ?? [])?>
         <h3>Текущий счёт</h3>
         <p>Ваш баланс: <b><?=$this->balance?></b> <?=$this->balanceCurrency?></p>
         <p><?$this->incPutbalance()?></p>
