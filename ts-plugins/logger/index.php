@@ -1,6 +1,7 @@
 <?
 /**
  * Логирование
+ * @todo  clear logs
  */
 namespace tsframe;
 

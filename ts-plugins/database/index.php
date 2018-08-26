@@ -6,7 +6,7 @@
 namespace tsframe;
 
 use tsframe\Config;
-use tsframe\Log;
+use tsframe\module\Log;
 use tsframe\module\database\Database;
 
 Hook::register('plugin.load', function(){
@@ -45,7 +45,7 @@ Hook::register('app.install', function(){
 function importSql(string $parentDir){
 	$sql = $parentDir . DS . 'install.sql';
 	if(file_exists($sql)){
-		Log::add('[Database] Install from: ' . $sql);
+		Log::add('[Database] Install from: ' . $sql, 'install');
 		Database::exec(file_get_contents($sql));
 	}
 }

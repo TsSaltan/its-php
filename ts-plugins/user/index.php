@@ -16,6 +16,7 @@ use tsframe\module\user\User;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
+use tsframe\module\Log;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
@@ -68,7 +69,7 @@ Hook::registerOnce('app.install', function(){
 		$mail = 'change@admin.mail';
 		$password = uniqid('pwd');
 		User::register($login, $mail, $password, UserAccess::Admin);
-		Log::add('New admin profile:', [
+		Log::add('New admin profile', 'install', [
 			'login' => $login,
 			'mail' => $mail,
 			'password' => $password,
