@@ -78,7 +78,7 @@
 		<p id='err-code'><b><?=$errorCode?></b></p>
 		<? if(isset($dump)):?>
 		<div id='code'>
-			<h2 style='color:blue'>Debug:</h2>
+			<h2 style='color:#29adfd'>Debug:</h2>
 			<blockquote><?=$dump?></blockquote>
 		</div>
 		<? endif; ?>
