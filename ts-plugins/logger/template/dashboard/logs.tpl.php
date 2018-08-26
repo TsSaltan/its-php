@@ -14,7 +14,6 @@
             <?=$this->hook('referrer')?>
 
             <div class="row">
-                <?if(1 || $logs->isData):?>
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
@@ -25,6 +24,7 @@
                                 <?endforeach?>
                             </div>
                         </div>
+                    <?if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
@@ -37,7 +37,7 @@
                                     </thead>
                                     <tbody>
                                         <?foreach($logs->getData() as $log):?>
-                                        <?$logMessage = $log['data']['message']?>
+                                        <?$logMessage = $log['data']['message'] ?? null?>
                                         <?unset($log['data']['message'])?>
                                         <tr>
                                             <td><?=$log['date']?></td>
@@ -68,10 +68,10 @@
                             <a class="btn btn-primary <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a>
                             <?endforeach?>
                         </div>
+                    <?endif?>
                     </div>
                     <!-- /.panel -->
                 </div>
-                <?endif?>
             </div>
         </div>
     </div>

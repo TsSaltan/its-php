@@ -22,7 +22,7 @@ class BaseException extends \Exception{
 		switch(Http::getContentType()){
 			case 'text/html':
 				$eol = '<br/>';
-				$pre = '<h2 style="color:darkred">';
+				$pre = '<h2 style="color:#EC429B">';
 				$post = '</h2>';
 				
 				$pre_h = '<b>';
@@ -56,7 +56,6 @@ class BaseException extends \Exception{
 			<?=$pre_h?>Message:<?=$post_h?> <?=$this->getMessage().$eol?>
 			<?=$pre_h?>Code:<?=$post_h?> <?=$this->getCode().$eol?>
 			<?=$pre_h?>Debug:<?=$post_h?> <?=$pre_c.var_export($this->getDebug(), true).$post_c?>
-			<?=$pre_h?>Log:<?=$post_h?> <?=$pre_c.Log::get().$post_c?>
 		<?
 
 		if($return){

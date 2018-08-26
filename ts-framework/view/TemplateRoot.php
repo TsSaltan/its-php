@@ -47,7 +47,6 @@ class TemplateRoot{
 
 		foreach($roots as $root){
 			$filePath = $root . $path . $ext;
-			Log::add(['path' => $filePath, 'exists' => file_exists($filePath)]);
 			if(file_exists($filePath)){
 				$files[] = $filePath;
 			}
