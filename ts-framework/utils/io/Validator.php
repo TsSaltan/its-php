@@ -135,6 +135,14 @@ class Validator{
 				$continue = is_numeric($var);
 				break;
 
+			case 'double':
+				$continue = is_double($var);
+				break;
+
+			case 'float':
+				$continue = is_float($var);
+				break;
+
 			case 'int':
 				$continue = preg_match('#^[0-9]+$#Ui', $var) || is_int($var);
 				break;
