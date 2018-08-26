@@ -176,6 +176,7 @@ class Validator{
 			case 'phone':
 				$var = str_replace(['+', ' ', '-', '(', ')', '.', "\t"], '', $var);
 				$continue = is_numeric($var);
+				$var = '+' . $var;
 				break;
 
 			// for upload files
