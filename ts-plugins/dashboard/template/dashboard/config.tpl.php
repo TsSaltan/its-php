@@ -22,7 +22,7 @@
                             </div>
                            	<form role="form" method="POST">
 	                            <div class="panel-body">
-	                            		<?uiJsonEditor($systemConfigs, 'config')?>
+	                            	<?uiJsonEditor($systemConfigs, 'config')?>
 	                            </div>
 	                            <div class="panel-footer">
 	                           		<button class='btn btn-success'>Сохранить</button>
