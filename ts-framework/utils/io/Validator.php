@@ -173,7 +173,13 @@ class Validator{
 				$continue = in_array($var, $values);
 				break;
 
+			case 'phone':
+				$var = str_replace(['+', ' ', '-', '(', ')', '.', "\t"], '', $var);
+				$continue = is_numeric($var);
+				break;
+
 			// for upload files
+			case 'file':
 			case 'fileRequired':
 				$continue = isset($this->vars[$this->key]) && 
 							isset($this->vars[$this->key]['name']) && 
@@ -213,6 +219,8 @@ class Validator{
 
 		if(!$continue){
 			$this->invalidKeys[$this->key] = $error;
+		} else {
+			$this->vars[$this->key] = $var;
 		}
 
 		return $this;
