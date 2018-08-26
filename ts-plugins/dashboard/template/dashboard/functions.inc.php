@@ -2,10 +2,13 @@
 global $that;
 $that = $this;
 
-function showAlerts(){
-    global $that;
-    if(!is_array($that->alert)) return;
-    foreach($that->alert as $type => $messages){
+function showAlerts(array $alerts = null){
+    if(!is_array($alerts)){
+        global $that;
+        if(!is_array($that->alert)) return;
+        $alerts = $that->alert;
+    }
+    foreach($alerts as $type => $messages){
         $messages = is_array($messages) ? $messages : [$messages];
         foreach ($messages as $message) {
             uiAlert($message, $type);
