@@ -1,7 +1,7 @@
 AddDefaultCharset UTF-8
 Options -Indexes
 
-<FilesMatch ".(json|sql|ini|log)$">
+<FilesMatch "(config.json|.sql|.ini|.log)$">
     Require all denied
 </FilesMatch>
 
