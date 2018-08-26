@@ -73,7 +73,7 @@ class Template{
 	 * Преобразует абсолютный путь в URI
 	 * @return string
 	 */
-	protected function toURI(string $path){
+	public function toURI(string $path){
 		$path = str_replace(
 			[realpath($_SERVER['DOCUMENT_ROOT']), '\\'], 
 			['//' . $_SERVER['SERVER_NAME'], '/'], 
@@ -87,10 +87,10 @@ class Template{
 
 
 	/**
-	 * Получить ссылку (на ресурсы, стили, скрипты)
+	 * Получить ссылку (на ресурсы, стили, скрипты) в текущей директории 
 	 * @return string
 	 */
-	protected function getURI(string $path){
+	public function getURI(string $path){
 		if(substr($path, 0, 4) == 'http' || substr($path, 0, 2) == '//'){
 			// Абсолютные ссылки оставляем без изменения
 		} else {
