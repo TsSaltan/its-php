@@ -4,6 +4,7 @@ namespace tsframe\controller;
 use tsframe\module\interkassa\API;
 use tsframe\module\user\Cash;
 use tsframe\Http;
+use tsframe\Hook;
 
 /**
  * @route GET|POST /interkassa/[:action]
@@ -25,7 +26,7 @@ class IKPayProcessor extends AbstractController{
 			$cash = Cash::ofUserId($userId);
 			$cash->add($am, $description . '; Transaction ID: ' . $payId);
 
-			
+			Hook::call('cash.pay', [$userId, $am, $description, $payId]);
 			Http::send('OK', 200);
 
 			die;

@@ -3,6 +3,7 @@
  * Система приёма платежей
  *
  * @hook template.dashboard.cash.global
+ * @hook cash.pay (int $userId, $amount, $description, $payId)
  */
 namespace tsframe;
 
@@ -19,8 +20,7 @@ use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
 /**
- * @todo Просмотр всех операций админом
- * @todo Просмотр баланса админом
+ * @todo  Проверка уникальности платежей
  */
 class CashInstaller {
 	protected static $cash;
