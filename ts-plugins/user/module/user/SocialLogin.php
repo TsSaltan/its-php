@@ -22,7 +22,7 @@ class SocialLogin{
 	protected static $providers = ['vkontakte','facebook','odnoklassniki'];
 
 	public static function getWidgetCode() : string {
-		$url = urlencode('//'.$_SERVER['SERVER_NAME'] . Http::makeURI(self::$callbackURI));
+		$url = urlencode(Http::makeURI(self::$callbackURI));
 		$fields = implode(',', self::$fields);
 		$providers = implode(',', self::$providers);
 
