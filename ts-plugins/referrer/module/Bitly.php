@@ -37,14 +37,16 @@ class Bitly{
 	public function shortUrl(string $url){
 		$guid = null;
 		$groups = $this->api('groups');
-		foreach($groups as $group){
-			if(isset($group['guid'])){
-				$guid = $group['guid'];
-				break;
+		if(is_array($groups)){
+			foreach($groups as $group){
+				if(isset($group['guid'])){
+					$guid = $group['guid'];
+					break;
+				}
 			}
-		}
 
-		$shorten = $this->api('shorten', ['long_url' => $url, 'group_guid' => $guid, 'domain' => "bit.ly"]);
+			$shorten = $this->api('shorten', ['long_url' => $url, 'group_guid' => $guid, 'domain' => "bit.ly"]);
+		}
 		return $shorten['link'] ?? null;
 	}
 
