@@ -12,6 +12,7 @@
             </div>
 
             <div class="row">
+                    <?showAlerts()?>
                     <?$configTabs = [
                         'Основные настройки' => function() use ($user, $selectUser, $self){
                             uiAlert();
@@ -108,7 +109,7 @@
                         },
 
                         'Социальные сети' => function() use ($self, $social, $selectUser) {
-                            showAlerts();
+                            showAlerts($this->vars['socialAlert'] ?? []);
                             ?>
 
                             <div class="panel-body col-lg-6">
