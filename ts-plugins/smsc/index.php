@@ -19,8 +19,7 @@ Hook::register('app.install', function(){
 	if(is_null(Config::get('smsc'))){
 		Config::set('smsc.login', "INPUT_YOUR_LOGIN");
 		Config::set('smsc.password', "INPUT_YOUR_PASSWORD");
-		Config::set('smsc.translit', "1");
-		Config::set('access.smsc.log', UserAccess::Moderator);
+		// Config::set('access.smsc', UserAccess::Admin);
 	}
 });
 
@@ -58,9 +57,8 @@ Hook::register('template.render', function(Template $tpl){
 Hook::register('template.dashboard.header', function(HtmlTemplate $tpl){
 	$tpl->js('js/jquery.inputmask.bundle.min.js');
 	$tpl->js('js/jquery.inputmask-multi.js');
+});
 
-	/*
-	$tpl->css('css/flag.css');
-	$tpl->js('js/jquery-ui-1.10.4.custom.min.js');
-	$tpl->js('js/phonecode.js');*/
+Hook::register('template.dashboard.config', function(HtmlTemplate $tpl){
+	$tpl->inc('sms_config');
 });
