@@ -6,6 +6,7 @@
         <p><?$this->incPutbalance()?></p>
     </div>
 
+    <?if(isset($this->vars['balanceHistory']) && sizeof($this->vars['balanceHistory']) > 0):?>
     <div class="col-lg-12">
         <h3>История операций</h3>
         <div class="table-responsive">
@@ -19,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?foreach ($this->vars['balanceHistory'] as $i => $item):?>
+                    <?foreach($this->vars['balanceHistory'] as $i => $item):?>
                     <tr>
                         <td><?=($i+1)?></td>
                         <td style='color:<?=($item['balance'] < 0) ? 'red' : 'green'?>'><?=$item['balance']?></td>
@@ -32,4 +33,5 @@
         </div>
         <!-- /.table-responsive -->
     </div>
+    <?endif?>
 </div>
