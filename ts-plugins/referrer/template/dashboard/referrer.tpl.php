@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <?=$this->hook('referrer')?>
+            <?=$this->hook('referrer.before')?>
 
             <div class="row">
                 <div class="col-lg-12">
@@ -35,6 +35,8 @@
                         </div>
                     </div>
                 </div>
+                
+                <?=$this->hook('referrer.middle')?>
 
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -74,6 +76,7 @@
                     <!-- /.panel -->
                 </div>
             </div>
+            <?=$this->hook('referrer.after')?>
         </div>
     </div>
 
