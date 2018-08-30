@@ -1,6 +1,8 @@
 <?
 /**
- * Система отправки смс через https://smsc.ru/
+ * Система отправки смс
+ * Основа для провайдеров
+ * Номер телефона в аккаунте пользователя
  */
 namespace tsframe;
 
@@ -15,24 +17,12 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
-Hook::register('app.install', function(){
-	if(is_null(Config::get('smsc'))){
-		Config::set('smsc.login', "INPUT_YOUR_LOGIN");
-		Config::set('smsc.password', "INPUT_YOUR_PASSWORD");
-		// Config::set('access.smsc', UserAccess::Admin);
-	}
-});
-
 Hook::registerOnce('plugin.load', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');
 	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');
 });
-
-/*Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('SMS-сообщения', ['url' => Http::makeURI('/dashboard/sms'), 'fa' => 'envelope-o', 'access' => UserAccess::getAccess('smsc.log')]));
-});*/
 
 Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$configTabs, int &$activeTab){
 	if(is_null($tpl->selectUser)) return;

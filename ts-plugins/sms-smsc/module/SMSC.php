@@ -2,14 +2,14 @@
 namespace tsframe\module;
 
 use tsframe\Config;
-use tsframe\exception\SMSException;
+use tsframe\exception\SMSCException;
 use tsframe\module\Log;
 
 /**
  * Отправка SMS через API
  * https://smsc.ru/api/http/
  */
-class SMS{
+class SMSC{
 	/**
 	 * Отправить SMS
 	 * @param  string|array $phones
@@ -62,7 +62,7 @@ class SMS{
 		$decode = json_decode($result, true);
 
 		if(strpos($result, 'error') !== false || !$result || is_null($decode) || isset($decode['error'])){
-			throw new SMSException('SMS API error', 0, [
+			throw new SMSCException('SMS API error', 0, [
 				'url' => $url,
 				'answer' => $result,
 				'curl_errno' => curl_errno($ch),
