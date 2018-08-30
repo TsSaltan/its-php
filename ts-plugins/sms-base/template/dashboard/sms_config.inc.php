@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-lg-12">
         <?if(isset($_GET['sms']) && $_GET['sms'] == 'ok'):
-            uiAlert(['success' => 'SMS отправлено!']);
+            uiAlert('SMS отправлено!', 'success');
         elseif(isset($_GET['sms']) && $_GET['sms'] == 'fail'):
-            uiAlert(['error' => 'Ошибка при отправке SMS!']);
+            uiAlert('Ошибка при отправке SMS!', 'error');
         endif?>
         <div class="panel tabbed-panel panel-default">
             <div class="panel-heading clearfix">
