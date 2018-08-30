@@ -47,7 +47,7 @@
                                                     <table class="table">
                                                         <?foreach ($log['data'] as $key => $value):?>
                                                             <tr>
-                                                                <td><?=$key?></td>
+                                                                <td width="100px"><?=$key?></td>
                                                                 <td><?=(is_string($value)?$value:'<pre>' . var_export($value, true) . '</pre>')?></td>
                                                             </tr>
                                                         <?endforeach?>
