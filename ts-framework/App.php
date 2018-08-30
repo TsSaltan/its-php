@@ -11,7 +11,9 @@ class App{
 	 */
 	public static function load(){
 		$disabledPlugins = Config::get('plugins.disabled');
-		call_user_func_array([Plugins::class, 'disable'], $disabledPlugins);
+		if(is_array($disabledPlugins) && sizeof($disabledPlugins) > 0){
+			call_user_func_array([Plugins::class, 'disable'], $disabledPlugins);
+		}
 		Plugins::load();
 	}
 
