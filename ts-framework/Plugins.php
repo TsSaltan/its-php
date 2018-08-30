@@ -49,4 +49,19 @@ class Plugins{
 			}
 		}
 	}
+
+	/**
+	 * @throws PluginException
+	 * @param строки с названиями конфликтующих плагинов
+	 */
+	public static function conflict(){
+		foreach(func_get_args() as $pluginName){
+			if(isset(self::$loaded[$pluginName])){
+				throw new PluginException('Plugin conflict with "'. $pluginName .'"', 500, [
+					'pluginName' => $pluginName,
+					'loaded' => self::$loaded
+				]);
+			}
+		}
+	}
 }
