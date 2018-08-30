@@ -10,6 +10,8 @@ class App{
 	 * Загрузка приложения
 	 */
 	public static function load(){
+		$disabledPlugins = Config::get('plugins.disabled');
+		call_user_func_array([Plugins::class, 'disable'], $disabledPlugins);
 		Plugins::load();
 	}
 
@@ -65,13 +67,18 @@ class App{
 	 * Включен ли режим разработчика
 	 */
 	public static function isDev() : bool {
-		return Config::get('dev_mode') === true; // мб null
+		return Config::get('dev_mode') === true;
 	}
 
 	/**
 	 * Установка компонентов
 	 */
 	public static function install(){
+		$disabled = Config::get('plugins.disabled');
+		if(!is_array($disabled)){
+			Config::set('plugins.disabled', ['input_here_disabled_plugins']);
+		}
+
 		Plugins::install();
 		Hook::call('app.install');
 	}

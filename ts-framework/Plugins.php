@@ -10,13 +10,22 @@ class Plugins{
 	 */
 	protected static $loaded = [];
 
+	/**
+	 * Disabled plugins
+	 * @var array
+	 */
+	protected static $disabled = [];
+
 	public static function load(){
 		$list = self::getList();
 		foreach ($list as $plugin) {
 			$parent = dirname($plugin);
+			$pluginName = basename($parent);
+			if(in_array($pluginName, self::$disabled)) continue;
+
 			Autoload::addRoot($parent);
 			require $plugin;
-			self::$loaded[basename($parent)] = $parent;
+			self::$loaded[$pluginName] = $parent;
 		}
 
 		foreach (self::$loaded as $name => $path) {
@@ -36,6 +45,7 @@ class Plugins{
 	}
 
 	/**
+	 * Позволяет указать на требуемые плагины
 	 * @throws PluginException
 	 * @param строки с названиями необходимых плагинов
 	 */
@@ -44,13 +54,15 @@ class Plugins{
 			if(!isset(self::$loaded[$pluginName])){
 				throw new PluginException('Plugin "'. $pluginName .'" does not loaded', 500, [
 					'pluginName' => $pluginName,
-					'loaded' => self::$loaded
+					'loaded' => self::$loaded,
+					'disabled' => self::$disabled,
 				]);
 			}
 		}
 	}
 
 	/**
+	 * Позволяет указать на конфликтующие плагины
 	 * @throws PluginException
 	 * @param строки с названиями конфликтующих плагинов
 	 */
@@ -63,5 +75,12 @@ class Plugins{
 				]);
 			}
 		}
+	}
+
+	/**
+	 * Позволяет отключить плагины
+	 */
+	public static function disable(){
+		self::$disabled = array_unique(array_merge(self::$disabled, func_get_args()));
 	}
 }
