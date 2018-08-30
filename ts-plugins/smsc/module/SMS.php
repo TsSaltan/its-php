@@ -46,6 +46,7 @@ class SMS{
 		$fields['login'] = Config::get('smsc.login');
 		$fields['psw'] = Config::get('smsc.password');
 		$fields['fmt'] = 3;
+		$fields['charset'] = 'utf-8';
 
 		$url .= '?' . http_build_query($fields);
 
