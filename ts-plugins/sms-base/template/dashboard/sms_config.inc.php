@@ -1,5 +1,10 @@
 <div class="row">
     <div class="col-lg-12">
+        <?if(isset($_GET['sms']) && $_GET['sms'] == 'ok'):
+            uiAlert(['success' => 'SMS отправлено!']);
+        elseif(isset($_GET['sms']) && $_GET['sms'] == 'fail'):
+            uiAlert(['error' => 'Ошибка при отправке SMS!']);
+        endif?>
         <div class="panel tabbed-panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="panel-title pull-left">
@@ -16,6 +21,7 @@
                 </div>
                 <div class="panel-footer">
                     <button class='btn btn-primary'>Отправить</button>
+                    <a href="<?=$this->makeURI('/dashboard/logs/sms')?>" class='btn btn-default'>Открыть логи</a>
                 </div>
             </form>
         </div>
