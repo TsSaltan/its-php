@@ -32,7 +32,6 @@ class Template{
 	public function __construct(string $part, string $name){
 		$this->part = $part;
 		$this->name = $name;
-		// $this->file = TemplateRoot::getTemplateFile($part, $name);
 	}
 
 	/**

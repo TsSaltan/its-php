@@ -44,7 +44,8 @@ class TemplateRoot{
 	public static function findFiles(string $part, string $path, string $ext = null): array {
 		$files = [];
 		$roots = array_merge((self::$roots[$part] ?? []), self::$roots[self::DEFAULT]);
-
+		$roots = array_unique($roots);
+		
 		foreach($roots as $root){
 			$filePath = $root . $path . $ext;
 			if(file_exists($filePath)){

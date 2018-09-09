@@ -53,7 +53,6 @@ class App{
 		try{
 			$controller = Router::findController();
 			$controller->send();
-
 		} catch(BaseException $e) {
 			$dump = $e->dump(true);
 			$code = $e->getCode();

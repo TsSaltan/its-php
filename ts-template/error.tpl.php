@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<meta charset='<?=$this->charset?>'/>
+		<meta charset='utf-8'/>
 		<title>Системная ошибка</title>
 		<style>
 			body{
@@ -17,7 +17,6 @@
 			#error{
 				padding:10px;
 				border:5px solid #EC429B;
-				/*background-color:rgba(93,151,214,0.6);*/
 				background-color:rgba(41,173,253,0.9);
 				border-radius:10px;
 				position:absolute;
@@ -41,8 +40,7 @@
 				text-decoration:none;
 				padding:6px;
 				border:3px solid rgba(41,173,253,0.99);
-				/*border-top:none;*/
-				border-radius3px;
+				border-radius: 3px;
 				background:rgba(255,255,255,0.5);
 			}
 			#code{
@@ -75,12 +73,15 @@
 		<div id="error">Ошибка! Невозможно отобразить страницу!</div>
 		<a href='#' onclick='window.history.back();' class="main" style='left:10px'>Вернуться назад</a>
 		<a href='/' class="main" style='left:150px'>На главную</a>
+		<?if(isset($errorCode)):?>
 		<p id='err-code'><b><?=$errorCode?></b></p>
-		<? if(isset($dump)):?>
+		<?endif?>
+
+		<?if(isset($dump)):?>
 		<div id='code'>
 			<h2 style='color:#29adfd'>Debug:</h2>
 			<blockquote><?=$dump?></blockquote>
 		</div>
-		<? endif; ?>
+		<?endif?>
 	</body>
 </html>
