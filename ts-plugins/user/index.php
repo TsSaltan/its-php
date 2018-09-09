@@ -24,7 +24,7 @@ use tsframe\view\TemplateRoot;
  * Загрузка плагина
  */
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('database', 'crypto');
+	Plugins::required('cache', 'crypto', 'database');
 
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');

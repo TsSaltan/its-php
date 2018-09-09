@@ -6,7 +6,7 @@ use tsframe\module\database\Query;
 use tsframe\module\Crypto;
 use tsframe\Config;
 use tsframe\Hook;
-use tsframe\Cache;
+use tsframe\module\Cache;
 
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
@@ -87,7 +87,7 @@ class User{
 	 * @return SingleUser
 	 */
 	public static function current() : SingleUser {
-		return Cache::variable('currentUser', function(){
+		return Cache::toVar('currentUser', function(){
 			return SingleUser::current();
 		});
 	}

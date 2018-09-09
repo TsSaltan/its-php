@@ -6,7 +6,6 @@ use tsframe\module\database\Query;
 use tsframe\module\Crypto;
 use tsframe\Config;
 use tsframe\Hook;
-use tsframe\Cache;
 
 /**
  * Используется тип string, т.к. нужны функции повышенной точности bc
