@@ -24,19 +24,19 @@ class Cache{
 	 * @param  string       $type     Cache::TYPE_FILE | Cache::TYPE_DATABASE | Cache::TYPE_VAR
 	 * @param  string       $key      Field name
 	 * @param  callable     $getValue Callback function, returns value
-	 * @param  int          $liveTime Time to live | null - MAX_TIME
+	 * @param  int     		$liveTime Time to live | null - MAX_TIME
 	 * @return [type]                 [description]
 	 */
 	public static function load(string $type, string $key, callable $getValue, int $liveTime = null){
-		$liveTime = is_null($liveTime) ? self::MAX_TIME : $liveTime;
 		$now = time();
+		$liveTime = $now + (is_null($liveTime) ? self::MAX_TIME : $liveTime);
 		$updateRequired = $now > $liveTime;
 
 		// Если обновление не нужно, прочитаем данные из кеша
 		if(!$updateRequired){
 			$cached = self::getCached($type, $key);
 			if(is_array($cached)){
-				if($cached['update'] === false || is_int($cached['update']) && $now < $cached['update']){
+				if($now < $cached['update']){
 					return $cached['data'];
 				}
 			}
@@ -44,7 +44,7 @@ class Cache{
 
 		// Если выполнение функции не прервалось return, нужно обновлять данные
 		$data = call_user_func($getValue);
-		self::setCached($type, $key, $data, $now + $liveTime);
+		self::setCached($type, $key, $data, $liveTime);
 
 		return $data;
 	}
