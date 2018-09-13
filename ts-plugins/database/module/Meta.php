@@ -48,6 +48,17 @@ class Meta{
 	public function getData(): array {
 		return $this->data;
 	}
+
+	public function isExists(): bool {
+		return sizeof($this->data) > 0;
+	}
+
+	public function delete(): bool {
+		return Database::prepare('DELETE FROM `meta` WHERE `parent` = :parent')
+						->bind('parent', $this->parent)
+						->exec()
+						->affectedRows() > 0;
+	}
 	
 	public static function find(string $key = '*', string $value = '*'): array {
 		$return = [];
