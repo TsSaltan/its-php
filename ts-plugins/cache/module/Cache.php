@@ -57,36 +57,36 @@ class Cache{
 	/**
 	 * Cache to variable
 	 * @param  string   $key     
-	 * @param  callable $getValue 
+	 * @param  mixed 	$getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
 	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toVar(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+	public static function toVar(string $key, $getValue, int $liveTime = null, bool $update = false){
 		return self::load(self::TYPE_VAR, $key, $getValue, $liveTime, $update);
 	}
 
 	/**
 	 * Cache to database
 	 * @param  string   $key     
-	 * @param  callable $getValue 
+	 * @param  mixed 	$getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
 	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toDatabase(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+	public static function toDatabase(string $key, $getValue, int $liveTime = null, bool $update = false){
 		return self::load(self::TYPE_DATABASE, $key, $getValue, $liveTime, $update);
 	}
 
 	/**
 	 * Cache to file
 	 * @param  string   $key     
-	 * @param  callable $getValue 
+	 * @param  mixed 	$getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
 	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toFile(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+	public static function toFile(string $key, $getValue, int $liveTime = null, bool $update = false){
 		return self::load(self::TYPE_FILE, $key, $getValue, $liveTime, $update);
 	}
 
