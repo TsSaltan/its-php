@@ -21,16 +21,17 @@ class Cache{
 
 	/**
 	 * Load cached data
-	 * @param  string       $type     Cache::TYPE_FILE | Cache::TYPE_DATABASE | Cache::TYPE_VAR
-	 * @param  string       $key      Field name
-	 * @param  callable     $getValue Callback function, returns value
-	 * @param  int     		$liveTime Time to live | null - MAX_TIME
+	 * @param  string       	$type     Cache::TYPE_FILE | Cache::TYPE_DATABASE | Cache::TYPE_VAR
+	 * @param  string       	$key      Field name
+	 * @param  callable|mixed  	$getValue Callback function, returns value
+	 * @param  int     			$liveTime Time to live | null - MAX_TIME
+	 * @param  bool    			$update   is update required
 	 * @return [type]                 [description]
 	 */
-	public static function load(string $type, string $key, callable $getValue, int $liveTime = null){
+	public static function load(string $type, string $key, $getValue, int $liveTime = null, bool $update = false){
 		$now = time();
 		$liveTime = $now + (is_null($liveTime) ? self::MAX_TIME : $liveTime);
-		$updateRequired = $now > $liveTime;
+		$updateRequired = $now > $liveTime || $update;
 
 		// Если обновление не нужно, прочитаем данные из кеша
 		if(!$updateRequired){
@@ -43,7 +44,11 @@ class Cache{
 		}
 
 		// Если выполнение функции не прервалось return, нужно обновлять данные
-		$data = call_user_func($getValue);
+		if(is_callable($getValue)){
+			$data = call_user_func($getValue);
+		} else {
+			$data = $getValue;
+		}
 		self::setCached($type, $key, $data, $liveTime);
 
 		return $data;
@@ -54,10 +59,11 @@ class Cache{
 	 * @param  string   $key     
 	 * @param  callable $getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
+	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toVar(string $key, callable $getValue, int $liveTime = null){
-		return self::load(self::TYPE_VAR, $key, $getValue, $liveTime);
+	public static function toVar(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+		return self::load(self::TYPE_VAR, $key, $getValue, $liveTime, $update);
 	}
 
 	/**
@@ -65,10 +71,11 @@ class Cache{
 	 * @param  string   $key     
 	 * @param  callable $getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
+	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toDatabase(string $key, callable $getValue, int $liveTime = null){
-		return self::load(self::TYPE_DATABASE, $key, $getValue, $liveTime);
+	public static function toDatabase(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+		return self::load(self::TYPE_DATABASE, $key, $getValue, $liveTime, $update);
 	}
 
 	/**
@@ -76,10 +83,11 @@ class Cache{
 	 * @param  string   $key     
 	 * @param  callable $getValue 
 	 * @param  int|null $liveTime Time to live | null - MAX_TIME
+	 * @param  bool  	$update
 	 * @return mixes
 	 */
-	public static function toFile(string $key, callable $getValue, int $liveTime = null){
-		return self::load(self::TYPE_FILE, $key, $getValue, $liveTime);
+	public static function toFile(string $key, callable $getValue, int $liveTime = null, bool $update = false){
+		return self::load(self::TYPE_FILE, $key, $getValue, $liveTime, $update);
 	}
 
 	/**
