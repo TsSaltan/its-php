@@ -3,10 +3,10 @@ namespace tsframe;
 
 /**
  * Класс для хранения конфигов в формате json
- * Config::get('param', 'a', 'b', 'c', 'etc...');
+ * Config::get('param');
+ * Config::get('param.path');
  * Config::set('param', 'value');
- * Config::set('param', 'value');
- * Config::database->
+ * Config::set('param,path', 'value');
  */
 class Config{
 
