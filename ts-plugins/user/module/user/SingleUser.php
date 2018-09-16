@@ -4,7 +4,7 @@ namespace tsframe\module\user;
 use tsframe\module\Meta;
 use tsframe\module\database\Database;
 use tsframe\exception\AccessException;
-use tsframe\utils\IP;
+use tsframe\module\IP;
 
 
 class SingleUser{
@@ -136,7 +136,7 @@ class SingleUser{
 				->bind('key', $sessionId)
 				->bind('id', $this->id)
 				->bind('expires', self::SESSION_EXPIRES, TYPE_INT)
-				->bind('ip', IP::get())
+				->bind('ip', IP::current())
 				->exec()
 				->affectedRows() > 0;
 	}

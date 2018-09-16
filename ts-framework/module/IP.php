@@ -1,5 +1,5 @@
 <?
-namespace tsframe\utils;
+namespace tsframe\module;
 
 class IP{
 	/**
@@ -41,7 +41,7 @@ class IP{
 	    return NULL;
 	}
 
-	public static function get(){
+	public static function current(){
 		return $_SERVER['REMOTE_ADDR'];
 	}
 }

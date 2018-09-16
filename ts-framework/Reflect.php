@@ -1,8 +1,9 @@
 <?
-namespace tsframe\utils;
+namespace tsframe;
 
-use tsframe\Autoload;
-
+/**
+ * Reflection functions
+ */
 class Reflect{
 	/**
 	 * Получить список классов и их расположение по namespace

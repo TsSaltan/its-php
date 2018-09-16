@@ -3,7 +3,7 @@ namespace tsframe\module\user;
 
 use tsframe\Config;
 use tsframe\exception\AccessException;
-use tsframe\utils\Reflect;
+use tsframe\Reflect;
 
 
 class UserAccess{

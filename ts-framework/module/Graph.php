@@ -1,7 +1,4 @@
 <?
-//define(IMAGE_RETURN_COLOR_LIGHT, 'IMAGE_RETURN_COLOR_LIGHT');
-
-	
 /**
  * Либа для работы с графическими файлами. Обёртка над GD.
  *
@@ -40,7 +37,7 @@
  * @return array [r=>, b=> ,g=>]
  */
 
-namespace tsframe\utils;
+namespace tsframe;
 
 use tsframe\exception\GraphException;
 

@@ -1,5 +1,5 @@
 <?
-namespace tsframe\utils;
+namespace tsframe;
 
 class Math{
 	public static function calculate(string $statement) {

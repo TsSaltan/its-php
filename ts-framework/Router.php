@@ -5,7 +5,7 @@ use AltoRouter;
 use tsframe\exception\RouteException;
 use tsframe\controller\AbstractController;
 use tsframe\Http;
-use tsframe\utils\Reflect;
+use tsframe\Reflect;
 
 /**
  * Роутер парсит список контроллеров, извлекает из phpDoc параметра @route URL-маску
