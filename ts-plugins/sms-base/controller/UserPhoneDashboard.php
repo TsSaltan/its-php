@@ -16,7 +16,7 @@ class UserPhoneDashboard extends UserDashboard {
 	protected $actionPrefix = '';
 
 	public function postPhone(){
-		UserAccess::assert($this->currentUser, ($this->self ? 'user.self' : 'user.edit'));
+		UserAccess::assertCurrentUser(($this->self ? 'user.self' : 'user.edit'));
 		$data = Input::post()
 					->referer()
 					->name('phone')
@@ -24,7 +24,7 @@ class UserPhoneDashboard extends UserDashboard {
 					 	->phone()
 					->assert();
 
-		$meta = $this->currentUser->getMeta()->set('phone', $data['phone']);
-		return Http::redirect(Http::makeURI('/dashboard/user/'.$this->currentUser->get('id').'/edit?phone'));
+		$meta = $this->selectUser->getMeta()->set('phone', $data['phone']);
+		return Http::redirect(Http::makeURI('/dashboard/user/'.$this->selectUser->get('id').'/edit?phone'));
 	}
 }
