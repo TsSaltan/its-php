@@ -75,4 +75,8 @@ class BaseException extends \Exception{
 			<?=$pre_h?>Debug:<?=$post_h?> <?=$pre_c.var_export($this->getDebug(), true).$post_c?>
 		<?
 	}
+
+	public function throw(){
+		throw $this;
+	}
 }
