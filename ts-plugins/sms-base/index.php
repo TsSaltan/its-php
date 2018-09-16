@@ -13,6 +13,7 @@ use tsframe\Plugins;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\User;
+use tsframe\module\io\Input;
 use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
@@ -22,6 +23,21 @@ Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');
 	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');
+
+	Input::addFilter('phone', function(Input $input){
+		$phone = $input->getCurrentData();
+		$phone = str_replace(['+', ' ', '-', '(', ')', '.', "\t", '_'], '', $phone);
+		
+		if(is_numeric($phone)){
+			$input->varProcess(function() use ($phone){
+				return '+' . $phone;
+			});
+
+			return true;
+		}
+
+		return false;
+	});
 });
 
 Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$configTabs, int &$activeTab){

@@ -10,6 +10,7 @@
 namespace tsframe;
 
 use tsframe\Config;
+use tsframe\module\io\Input;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\User;
@@ -28,6 +29,18 @@ Hook::registerOnce('plugin.load', function(){
 
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+
+	Input::addFilter('login', function($input){
+		$input->required();
+		$input->regexp('#[A-Za-z0-9-_\.]+#Ui');
+		return true;
+	});
+
+	Input::addFilter('password', function($input){
+		$input->required();
+		$input->minLength(1);
+		return true;
+	});
 });
 
 /**

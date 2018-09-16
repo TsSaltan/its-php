@@ -8,7 +8,7 @@ use tsframe\module\user\User;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
-use tsframe\utils\io\Validator;
+use tsframe\module\io\Input;
 
 /**
  * @route GET|POST /dashboard/social-login
@@ -16,11 +16,11 @@ use tsframe\utils\io\Validator;
 class SocialLoginController extends AbstractController{
 	public function response(){
 		$currentUser = User::current();
-		$data = Validator::post(false)
+		$data = Input::post(false)
 						->name('token')
-						 ->required()
-					  	 ->minLength(1)
-						 ->assert();
+						  ->required()
+					  	  ->minLength(1)
+						->assert();
 
 		$login = new SocialLogin($data['token']);
 		

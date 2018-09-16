@@ -7,7 +7,7 @@ use tsframe\module\SMSC as SMS;
 use tsframe\exception\SMSCException;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
-use tsframe\utils\io\Validator;
+use tsframe\module\io\Input;
 
 /**
  * @route POST /dashboard/config/[sendsms:action]
@@ -22,7 +22,7 @@ class UserPhoneDashboard extends UserDashboard {
 
 	public function postSendsms(){
 		UserAccess::assertCurrentUser('user.editConfig');
-		$data = Validator::post()
+		$data = Input::post()
 					->name('phone')
 						->required()
 					 	->phone()

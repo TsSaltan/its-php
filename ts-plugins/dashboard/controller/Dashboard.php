@@ -3,12 +3,11 @@ namespace tsframe\controller;
 
 use tsframe\Config;
 use tsframe\Http;
+use tsframe\module\io\Input;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\view\HtmlTemplate;
-use tsframe\module\testing\TestEngine;
-use tsframe\utils\io\Validator;
 
 /**
  * @route GET /dashboard -> /dashboard/
@@ -76,10 +75,10 @@ class Dashboard extends AbstractController{
 
 	public function postConfig(){
 		UserAccess::assertCurrentUser('user.editConfig');
-		$data = Validator::post()
-						->name('config')
+		$data = Input::post()
+					->name('config')
 						->json()
-						->assert();
+					->assert();
 
 		Config::set('*', json_decode($data['config'], true));
 

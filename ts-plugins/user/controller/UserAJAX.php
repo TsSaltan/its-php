@@ -3,12 +3,12 @@ namespace tsframe\controller;
 
 use tsframe\exception\RouteException;
 use tsframe\exception\BaseException;
-use tsframe\exception\ValidateException;
+use tsframe\exception\InputException;
 use tsframe\Http;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
-use tsframe\utils\io\Validator;
+use tsframe\module\io\Input;
 
 /**
  * @route POST /ajax/[user:part]/[:action]
@@ -18,11 +18,11 @@ class UserAJAX extends AbstractAJAXController{
 
 	public function response(){
 		$action = $this->params['part'] . '/' . $this->params['action'];
-		$input = Validator::post();
+		$input = Input::post();
 		$user = User::current();
 
 		try{
-
+			$input->referer();
 			if(isset($_REQUEST['id'])){
 				$select = array_values(User::get(['id' => $_REQUEST['id']]));
 				if(isset($select[0])){
@@ -49,8 +49,8 @@ class UserAJAX extends AbstractAJAXController{
 
 			switch ($action) {
 				case 'user/login':
-					$data = $input->validateLogin()
-								  ->validatePassword()
+					$data = $input->name('login')->required()
+								  ->name('password')->password()
 						  	  	  ->assert();
 
 					$user = User::login($data['login'], $data['password']);
@@ -65,9 +65,9 @@ class UserAJAX extends AbstractAJAXController{
 
 
 				case 'user/register':
-					$data = $input->validateLogin()
-								  ->validatePassword()
-								  ->validateEmail()
+					$data = $input->name('login')->login()
+								  ->name('password')->password()
+								  ->name('email')->email()
 						  		  ->assert();
 
 					if(User::exists(['email' => $data['email'], 'login' => $data['login']])){
@@ -86,10 +86,15 @@ class UserAJAX extends AbstractAJAXController{
 					
 
 				case 'user/edit':
-					$data = $input->validateID()
-								  ->validateLogin()
-								  ->validateEmail()
+					$data = $input->name('id')
+									->required()
+									->int()
+								  ->name('login')
+								  	->login()
+								  ->name('email')
+								  	->email()
 								  ->name('access')
+								  	->required()
 								  	->int()
 						  		  ->assert();
 
@@ -117,8 +122,10 @@ class UserAJAX extends AbstractAJAXController{
 
 				case 'user/changePassword':
 					$this->access(UserAccess::getAccess('user.self'));
-					$data = $input->validatePassword('new_password')
-									->name('current_password')
+					$data = $input->name('new_password')
+									->required()
+									->minLength(1)
+					   			  ->name('current_password')
 									->required()
 						  		  ->assert();
 
@@ -134,7 +141,8 @@ class UserAJAX extends AbstractAJAXController{
 					break;
 
 				case 'user/resetPassword':
-					$data = $input->validateID()
+					$data = $input->name('id')
+									->int()
 						  		  ->assert();
 
 					if($data['id'] == $user->get('id')) $this->access(UserAccess::getAccess('user.self'));
@@ -153,7 +161,9 @@ class UserAJAX extends AbstractAJAXController{
 					break;
 
 				case 'user/closeSessions':
-					$data = $input->validateID()
+					$data = $input->name('id')
+									->required()
+									->int()
 						  		  ->assert();
 
 					if($data['id'] == $user->get('id')) $this->access(UserAccess::getAccess('user.self'));
@@ -169,8 +179,10 @@ class UserAJAX extends AbstractAJAXController{
 					break;
 
 				case 'user/deleteSocial':
-					$data = $input->validateID()
-									->name('network')
+					$data = $input->name('id')
+									->required()
+									->int()
+								  ->name('network')
 									->required()
 						  		  ->assert();
 
@@ -185,7 +197,9 @@ class UserAJAX extends AbstractAJAXController{
 					break;
 				
 				case 'user/delete':
-					$data = $input->validateID()
+					$data = $input->name('id')
+									->required()
+									->int()
 						  		  ->assert();
 
 					if($data['id'] == $user->get('id')) $this->access(UserAccess::getAccess('user.self'));
@@ -202,8 +216,8 @@ class UserAJAX extends AbstractAJAXController{
 				default:
 					$this->sendError('Invalid action "'.$action.'"');
 			}
-		} catch (BaseException $e){
-			if($e instanceof ValidateException){
+		} catch (InputException $e){
+			if($e instanceof InputException){
 				$this->sendError('Validation error', 13, ['fields' => $e->getInvalidKeys()]);
 			} else {
 				$this->sendError(get_class($e) . ': ' . $e->getMessage());
