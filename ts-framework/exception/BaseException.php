@@ -6,19 +6,40 @@ use tsframe\Http;
 use tsframe\Log;
 
 class BaseException extends \Exception{
-	
-	private $debugData;
-	public function getDebug(){
-		return $this->debugData;
-	}
+
+	/**
+	 * Данные для дебага
+	 * @var array
+	 */
+	protected $debugData;
 		
-	public function __construct(string $message = null, int $httpCode = 0, array $debugData = []){
-		$this->debugData = $debugData;
-		$this->debugData['trace'] = explode("\n", $this->getTraceAsString());
-		return parent::__construct($message, $httpCode, null);
+	public static function create(string $message = null, int $code = 0){
+		return new self($message, $code);
 	}
 
-	public function dump(bool $return = false){
+	public function __construct(string $message = null, int $code = 0, array $debugData = []){
+		$this->setDebug($debugData);
+
+		return parent::__construct($message, $code, null);
+	}
+
+	public function setDebug(array $debugData){
+		$this->debugData = $debugData;
+		$this->debugData['trace'] = explode("\n", $this->getTraceAsString());
+		return $this;
+	}
+
+	public function getDebug(): array {
+		return $this->debugData;
+	}
+
+	public function getDump(): string {
+		ob_start();
+		$this->dump();
+		return ob_get_clean();
+	}
+
+	public function dump(){
 		switch(Http::getContentType()){
 			case 'text/html':
 				$eol = '<br/>';
@@ -45,10 +66,6 @@ class BaseException extends \Exception{
 				$pre_c = PHP_EOL . '-----Start----' . PHP_EOL;
 				$post_c = PHP_EOL . '-----End----' . PHP_EOL;
 		}
-		 
-		if($return){
-			ob_start();
-		} 
 
 		?>
 			<?=$pre?>Exception dump:<?=$post?>
@@ -57,9 +74,5 @@ class BaseException extends \Exception{
 			<?=$pre_h?>Code:<?=$post_h?> <?=$this->getCode().$eol?>
 			<?=$pre_h?>Debug:<?=$post_h?> <?=$pre_c.var_export($this->getDebug(), true).$post_c?>
 		<?
-
-		if($return){
-			return ob_get_clean();
-		} 
 	}
 }

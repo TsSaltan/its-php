@@ -54,7 +54,7 @@ class App{
 			$controller = Router::findController();
 			$controller->send();
 		} catch(BaseException $e) {
-			$dump = $e->dump(true);
+			$dump = $e->getDump();
 			$code = $e->getCode();
 			$tpl = Template::error();
 			$tpl->vars(['dump' => $dump, 'errorCode' => $code]);
