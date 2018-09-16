@@ -1,8 +1,6 @@
 <?php
 namespace tsframe\module;
 
-use tsframe\utils\io\Filter;
-
 class Paginator{
 	/**
 	 * Данные для отображения

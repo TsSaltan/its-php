@@ -1,9 +1,6 @@
 <?php
 namespace tsframe\module\menu;
 
-use tsframe\module\database\Database;
-use tsframe\utils\io\Filter;
-
 class MenuItem{
 	protected $title;
 	protected $data = [];
