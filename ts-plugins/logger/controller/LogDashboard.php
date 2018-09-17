@@ -4,6 +4,7 @@ namespace tsframe\controller;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\module\Log;
+use tsframe\module\io\Output;
 use tsframe\module\Paginator;
 
 /**
@@ -22,7 +23,13 @@ class LogDashboard extends UserDashboard {
 		$this->vars['title'] = 'Системные логи';
 		$this->vars['logTypes'] = Log::getTypes();
 		$this->vars['logType'] = $type;
-		$this->vars['logs'] = new Paginator(Log::getLogs($type));
+
+		$pages = new Paginator(Log::getLogs($type));
+		$pages->setDataCallback(function($data){
+			return Output::of($data)->specialChars()->getData();
+		});
+
+		$this->vars['logs'] = $pages;
 	}
 
 }
