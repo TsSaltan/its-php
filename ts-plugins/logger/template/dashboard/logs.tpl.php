@@ -1,5 +1,10 @@
 <?$this->incHeader()?>
 <?$this->incNavbar()?>
+<style>
+    table.meta pre{
+        max-height: 100px; overflow-y: auto;
+    }
+</style>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -44,11 +49,11 @@
                                             <td><?=$logMessage?></td>
                                             <td>
                                                 <?if(sizeof($log['data'])>0):?>
-                                                    <table class="table">
+                                                    <table class="table meta">
                                                         <?foreach ($log['data'] as $key => $value):?>
                                                             <tr>
                                                                 <td width="100px"><?=$key?></td>
-                                                                <td><?=(is_string($value)?$value:'<pre>' . var_export($value, true) . '</pre>')?></td>
+                                                                <td><pre><?=(is_string($value)?$value:var_export($value, true))?></pre></td>
                                                             </tr>
                                                         <?endforeach?>
                                                     </table>
@@ -75,5 +80,13 @@
             </div>
         </div>
     </div>
-
+<script type="text/javascript">
+    // При клике выделяем содержимое pre
+    $('.meta pre').click(function(e){ 
+        var range = document.createRange(); 
+        range.selectNode($(this)[0]); 
+        window.getSelection().removeAllRanges(); 
+        window.getSelection().addRange(range); 
+    });
+</script>
 <?$this->incFooter()?>
