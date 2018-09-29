@@ -27,8 +27,10 @@ Hook::registerOnce('plugin.load', function(){
 
 Hook::registerOnce('app.start', function(){
 	Menu::create('dashboard-sidebar')
-		->add(new MenuItem('Профиль', ['url' => Http::makeURI('/dashboard/'), 'fa' => 'user', 'access' => UserAccess::Guest]))
-		->add(new MenuItem('Системные настройки', ['url' => Http::makeURI('/dashboard/config'), 'fa' => 'wrench', 'access' => UserAccess::getAccess('user.editConfig')]), -1);
+		->add(new MenuItem('Главная', ['url' => Http::makeURI('/dashboard/index'), 'fa' => 'user', 'access' => UserAccess::Guest]));
+	
+	Menu::create('dashboard-admin-sidebar')
+		->add(new MenuItem('Системные настройки', ['url' => Http::makeURI('/dashboard/config'), 'fa' => 'wrench', 'access' => UserAccess::getAccess('user.editConfig')]), 0);
 
 	Menu::create('dashboard-top')
 		->add(new MenuItem('Выход', ['url' => Http::makeURI('/dashboard/logout'), 'fa' => 'sign-out', 'access' => UserAccess::Guest]));

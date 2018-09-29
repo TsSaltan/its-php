@@ -20,6 +20,6 @@ Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 
-Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
+Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
 	$menu->add(new MenuItem('Логи', ['url' => Http::makeURI('/dashboard/logs'), 'fa' => 'list-alt', 'access' => UserAccess::getAccess('log')]));
 });

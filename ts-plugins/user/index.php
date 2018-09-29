@@ -54,8 +54,8 @@ Hook::register('menu.render.dashboard-top', function(MenuItem $menu){
 /**
  * Меню сбоку
  */
-Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Список пользователей', ['url' => Http::makeURI('/dashboard/user/list'), 'fa' => 'users', 'access' => UserAccess::getAccess('user.list')]), -2);
+Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
+	$menu->add(new MenuItem('Список пользователей', ['url' => Http::makeURI('/dashboard/user/list'), 'fa' => 'users', 'access' => UserAccess::getAccess('user.list')]), 1);
 });
 
 /**

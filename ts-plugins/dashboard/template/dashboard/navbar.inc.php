@@ -42,12 +42,25 @@
                     }, 
 
                     function($item, $sub){
-
                         if(!tsframe\module\user\UserAccess::checkCurrentUser($item->getData('access'))) return;
                         return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
                     }
                 )?>
-             
+
+                <?=$this->menu('dashboard-admin-sidebar', 
+                    function(string $items, int $level){
+                        if($level == 0){
+                            return "<ul class=\"nav nav-admin\" id=\"side-menu\">$items</ul>";    
+                        }
+                        
+                        return "<ul class=\"nav nav-second-level\">$items</ul>";    
+                    }, 
+
+                    function($item, $sub){
+                        if(!tsframe\module\user\UserAccess::checkCurrentUser($item->getData('access'))) return;
+                        return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
+                    }
+                )?>
             </div>
         </div>
     </nav>

@@ -15,6 +15,7 @@
 
     <!-- Bootstrap Core CSS -->
     <?$this->css(
+        "css/style.css", 
         "css/bootstrap.min.css", 
         "css/metisMenu.min.css", 
         "css/timeline.css", 

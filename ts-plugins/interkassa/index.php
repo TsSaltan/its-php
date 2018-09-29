@@ -48,7 +48,7 @@ class CashInstaller {
 	}
 
 	public static function addMenuSidebar(MenuItem $menu){
-		$menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -2);
+		$menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -1);
 	}
 	
 	public static function addMenuTop(MenuItem $menu){
@@ -101,6 +101,6 @@ class CashInstaller {
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
 Hook::registerOnce('app.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
-Hook::register('menu.render.dashboard-sidebar', [CashInstaller::class, 'addMenuSidebar']);
+Hook::register('menu.render.dashboard-admin-sidebar', [CashInstaller::class, 'addMenuSidebar']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
 Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);

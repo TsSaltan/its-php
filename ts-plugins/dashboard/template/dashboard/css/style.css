@@ -1,0 +1,10 @@
+/**
+ * Боковое меню для админа
+ */
+.nav-admin{
+    margin-top:40px; 
+    border-top: 1px solid #e7e7e7 !important;
+}
+.nav-admin a{
+    color: #b73333;
+}

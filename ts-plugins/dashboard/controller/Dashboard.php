@@ -10,10 +10,10 @@ use tsframe\module\user\UserAccess;
 use tsframe\view\HtmlTemplate;
 
 /**
- * @route GET /dashboard -> /dashboard/
+ * @route GET /dashboard -> /dashboard/index
+ * @route GET /dashboard/ -> /dashboard/index
  * 
- * @route GET /dashboard/
- * @route GET /dashboard/[login|logout|config:action]
+ * @route GET /dashboard/[login|index|logout|config:action]
  * @route POST /dashboard/[config:action]
  */
 class Dashboard extends AbstractController{
