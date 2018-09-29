@@ -123,7 +123,10 @@ class SingleUser{
 			$this->email = $data[0]['email'];
 			$this->access = $data[0]['access'];
 			$this->password = $data[0]['password'];
-		}		
+		} else {
+			// Если данных нет в бд, значит пользователь не авторизован
+			$this->id = -1;
+		}
 	}
 
 	public function createSession() : bool {
