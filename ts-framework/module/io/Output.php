@@ -41,6 +41,11 @@ class Output extends Filter {
 	protected function filterData($data, string $filter, array $args = []){
 		if(is_array($data)){
 			foreach ($data as $key => $value) {
+				if(!is_numeric($key)){
+					unset($data[$key]);
+					$key = $this->filterData($key, $filter, $args);
+				}
+
 				$data[$key] = $this->filterData($value, $filter, $args);
 			}
 		} else {
