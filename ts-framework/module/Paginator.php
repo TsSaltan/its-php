@@ -86,6 +86,10 @@ class Paginator{
 		return $data;
 	}
 
+	public function hasPages(): bool {
+		return sizeof($this->getPages(10, false)) > 1;
+	}
+
 	public function getPages(int $pagesNum = 5, bool $helpers = true): array {
 		if(sizeof($this->data) == 0) return [];
 		
