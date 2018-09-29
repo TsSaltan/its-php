@@ -127,4 +127,15 @@ class Meta{
 		}
 		return $return;
 	}
+
+	public static function getParentList(?string $filter = null): array {
+		if(is_null($filter)){
+			$query = Database::prepare('SELECT DISTINCT `parent` p FROM `meta` ORDER BY p ASC');
+		} else {
+			$query = Database::prepare('SELECT DISTINCT `parent` p FROM `meta` WHERE `parent` LIKE :filter ORDER BY p ASC');
+			$query->bind('filter', $filter . '%');
+		}
+		$parents = $query->exec()->fetch();
+		return array_column($parents, 'p');
+	}
 }
