@@ -8,7 +8,7 @@
 function uiTabPanel(array $params = [], array $tabs = [], int $active = 0){
 	global $that;
 
-    $title = $params['title'] ?? null;
+    $title = $params['title'] ?? false;
     $type = $params['type'] ?? 'default';
 
     $tabTitle = '';
@@ -34,8 +34,12 @@ function uiTabPanel(array $params = [], array $tabs = [], int $active = 0){
     <div class="col-lg-12">
     	<div class="panel tabbed-panel panel-<?=$type?>">
         	<div class="panel-heading clearfix">
+                <?if($title !== false):?>
             	<div class="panel-title pull-left"><?=$title?></div>
                 <div class="pull-right">
+                <?else:?>
+                <div class="pull-left">
+                <?endif?>
                     <ul class="nav nav-tabs">
                         <?=$tabTitle?>
                     </ul>

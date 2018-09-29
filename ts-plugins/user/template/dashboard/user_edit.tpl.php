@@ -157,7 +157,7 @@
 
                     $activeTab = 0;
                     $this->hook('user.edit', [&$configTabs, &$activeTab]);
-                    uiTabPanel(['title' => 'Настройки профиля', 'type' => 'default'], $configTabs, $activeTab);
+                    uiTabPanel(['type' => 'default'], $configTabs, $activeTab);
                     ?>
 
                 </div>
