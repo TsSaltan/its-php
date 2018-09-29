@@ -43,10 +43,10 @@
                                         </th>
                                     </tr>
                                         <?foreach ($m['data'] as $key => $value):?>
-                                        <tr> 
-                                            <th><?=$key?></th>    
+                                        <tr>  
+                                            <th style="padding-left:15px" width="120px"><?=$key?></th>    
                                             <td>
-                                                <input class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" value="<?=$value?>"/>
+                                                <input class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" value="<?=$value?>" placeholder="delete"/>
                                             </td>    
                                         </tr>    
                                         <?endforeach?>
@@ -69,14 +69,15 @@
         </div>
     </div>
 <script type="text/javascript">
-    function saveMeta(e){
-        let $field = $(e.target);
-        let data = {key: $field.attr('data-key'), parent: $field.attr('data-parent'), value: $field.val()};
+    function saveMeta(parent, key, value){
+        let data = {key: key, parent: parent, value: value};
         console.log(data);
         tsFrame.query('POST', 'meta', data);
     }
     
-    //$('.meta-field').change(function(e){ return saveMeta(e);  });
-    $('.meta-field').blur(function(e){ return saveMeta(e);  });
+    $('.meta-field').blur(function(e){ 
+        let $field = $(e.target);
+        return saveMeta($field.attr('data-parent'), $field.attr('data-key'), $field.val());
+    });
 </script>
 <?$this->incFooter()?>

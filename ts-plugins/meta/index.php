@@ -22,5 +22,5 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Meta', ['url' => Http::makeURI('/dashboard/meta'), 'fa' => 'table', 'access' => UserAccess::getAccess('meta')]));
+	$menu->add(new MenuItem('Meta реестр данных', ['url' => Http::makeURI('/dashboard/meta'), 'fa' => 'table', 'access' => UserAccess::getAccess('meta')]), -2);
 });

@@ -22,9 +22,9 @@ class MetaDashboard extends UserDashboard {
 		UserAccess::assertCurrentUser('meta');
 
 
-		$this->vars['title'] = 'МЕТА - реестр данных';
+		$this->vars['title'] = 'Мeta реестр данных';
 		$filter = $_GET['filter'] ?? null;
-		$pages = new Paginator(Meta::getParentList($filter));
+		$pages = new Paginator(Meta::getParentList($filter), 10);
 		$pages->setDataCallback(function($data){
 			$m = new Meta($data);
 			$metaData = $m->getData();
