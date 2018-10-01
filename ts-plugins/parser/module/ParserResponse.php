@@ -29,7 +29,7 @@ class ParserResponse{
 	}
 
 	public function hasError(): bool {
-		return ($this->result !== false) && ($this->getResponseCode() >= 500);
+		return $this->result === false || $this->getResponseCode() >= 500 || $this->getResponseCode() == 0 || strlen($this->getError()) > 0;
 	}
 
 	public function getInfo(): array {

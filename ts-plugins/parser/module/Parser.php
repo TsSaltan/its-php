@@ -193,7 +193,7 @@ class Parser{
 		while($attempt++ < $attempts && $response->hasError());
 
 		if($response->hasError()){
-			throw new ParserException('Invalid query', $response->getError(), [
+			throw new ParserException('Invalid query: ' . $response->getError(), 0, [
 				'attempts' => $attempts,
 				'params' => $this->getParams(),
 				'response' => $response
@@ -218,7 +218,7 @@ class Parser{
 
 		if($this->logPolicy == self::LOG_MAX){
 			$responseData['body'] = $response->getResponseBody();
-			$requestData = ['url' => ($this->params[CURLOPT_URL] ?? null), 'headers' => $response->getRequestHeader()];
+			$requestData = ['url' => ($this->params[CURLOPT_URL] ?? null), 'headers' => $response->getRequestHeader(), 'params' => $this->getParams()];
 		} else {
 			$requestData = $response->getRequestMethod() . ' ' . ($this->params[CURLOPT_URL] ?? null);
 		}
@@ -245,6 +245,14 @@ class Parser{
 	 */
 	public function getLogs(): array {
 		return $this->queries;
+	}	
+
+	public function clearLogs(){
+		$this->queries = [];
+	}	
+
+	public function getLastLog(): array {
+		return end($this->queries);
 	}
 
 	public function setLogPolicy(int $policy){
@@ -267,6 +275,7 @@ class Parser{
 	 */
 	public function post($data, int $attempts = 1){
 		$this->setRequestMethod('POST');
+		$data = is_array($data) ? http_build_query($data) : $data;
 		$this->setParams([CURLOPT_POSTFIELDS => $data]);
 		return $this->exec($attempts);
 	}
@@ -290,6 +299,7 @@ class Parser{
 			
 			case 'POST':
 				$this->setParams([CURLOPT_POST => true]);
+				break;
 
 			case 'PUT':
 				$this->setParams([CURLOPT_PUT => true]);
