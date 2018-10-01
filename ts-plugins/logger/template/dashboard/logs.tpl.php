@@ -43,7 +43,7 @@
                                     <tbody>
                                         <?foreach($logs->getData() as $log):?>
                                         <?$logMessage = $log['data']['message'] ?? null?>
-                                        <?unset($log['data']['message'])?>
+                                        <?@unset($log['data']['message'])?>
                                         <tr>
                                             <td><?=$log['date']?></td>
                                             <td><?=$logMessage?></td>
