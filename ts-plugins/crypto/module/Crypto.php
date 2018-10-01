@@ -30,7 +30,7 @@ class Crypto{
 				$string .= sha1(uniqid(microtime()));
 			}
 		}
-		return substr($str, 0, $length);
+		return substr($string, 0, $length);
 	}
 
 	/**
