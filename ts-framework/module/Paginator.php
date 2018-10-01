@@ -96,8 +96,8 @@ class Paginator{
 		$pages = [];
 
 		if($helpers){
-			$pages[] = ['title' => '<<', 'url' => '?page=1', 'current' => $this->page == 1];
-			$pages[] = ['title' => '<', 'url' => '?page=' . ($this->page-1), 'current' => $this->page == 1];
+			$pages[] = ['title' => '<<', 'url' => $this->makeURI(1), 'current' => $this->page == 1];
+			$pages[] = ['title' => '<', 'url' => $this->makeURI($this->page-1), 'current' => $this->page == 1];
 		}
 
 		$start = $this->page-floor($pagesNum/2);
@@ -107,14 +107,20 @@ class Paginator{
 
 		for($index = $startIndex - ($end-$endIndex); $index <= $endIndex + ($startIndex - $start); ++$index){
 			if($index < 1 || $index > $this->last) continue;
-			$pages[] = ['title' => $index, 'url' => '?page=' . $index, 'current' => $this->page == $index];
+			$pages[] = ['title' => $index, 'url' => $this->makeURI($index), 'current' => $this->page == $index];
 		}
 
 		if($helpers){
-			$pages[] = ['title' => '>', 'url' => '?page=' . ($this->page+1), 'current' => $this->page >= $this->last];
-			$pages[] = ['title' => '>>', 'url' => '?page=' . $this->last, 'current' => $this->page >= $this->last];
+			$pages[] = ['title' => '>', 'url' => $this->makeURI($this->page+1), 'current' => $this->page >= $this->last];
+			$pages[] = ['title' => '>>', 'url' => $this->makeURI($this->last), 'current' => $this->page >= $this->last];
 		}
 
 		return $pages;
+	}
+
+	protected function makeURI(int $page): string {
+		parse_str($_SERVER['QUERY_STRING'], $query);
+		$query['page'] = $page;
+		return '?' . http_build_query($query);
 	}
 }
