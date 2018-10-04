@@ -8,8 +8,8 @@ class Meta{
 	protected $parent;
 	protected $data = [];
 
-	public function __construct(){
-		$this->parent = implode('_', func_get_args());
+	public function __construct(...$args){
+		$this->parent = implode('_', $args);
 	}	
 
 	/**
@@ -137,5 +137,23 @@ class Meta{
 		}
 		$parents = $query->exec()->fetch();
 		return array_column($parents, 'p');
+	}
+
+	/**
+	 * Создаёт Meta элемент с уникальным значением родителя
+	 * @return Meta
+	 */
+	public static function create(): Meta {
+		$args = func_get_args();
+		$meta = new self(...$args);
+		$append = 0;
+		while($meta->isExists()){
+			$append++;
+			$argList = $args;
+			$argList[] = $append;
+			$meta = new self(...$argList);
+		}
+
+		return $meta;
 	}
 }
