@@ -51,12 +51,33 @@ class Paginator{
 	 */
 	protected $getTotalDataCallback = false;
 
-	public function __construct(array $data = [], int $num = 20){
+	public function __construct(array $data = [], int $num = 10){
 		$this->data = $data;
-		$this->num = $num;
-		$this->setDataSize();		
+		$this->setItemsNum($num);
 	}	
 
+	/**
+	 * Устанавливает количество записей на странице
+	 * Зависит в первую очередь от GET параметра count
+	 * @param int $num
+	 */
+	public function setItemsNum(int $num){
+		$this->num = (isset($_GET['count']) && is_numeric($_GET['count']) && $_GET['count'] > 0) ? $_GET['count'] : $num;
+		$this->setDataSize();		
+	}
+
+	/**
+	 * Получить текущее значение количества элементов на странице
+	 * @return int
+	 */
+	public function getItemsNum(): int {
+		return $this->num;
+	}
+
+	/**
+	 * Установить общее количество элементов, для расчёта количества страниц
+	 * @param int|integer $size Если не указать параметр, будет рассчитан на основе размера массива данных
+	 */
 	public function setDataSize(int $size = 0){
 		$this->size = ($size < 1) ? sizeof($this->data) : $size;
 		$this->last = $this->num > 0 ? ceil($this->size / $this->num) : 1;
@@ -64,6 +85,10 @@ class Paginator{
 		$this->offset = ($this->page-1) * $this->num;
 	}
 
+	/**
+	 * Получить общее количество записей
+	 * @return int
+	 */
 	public function getDataSize(): int {
 		return $this->size;
 	}
