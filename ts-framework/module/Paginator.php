@@ -2,6 +2,13 @@
 namespace tsframe\module;
 
 class Paginator{
+
+	/**
+	 * Размер данных в $data (sizeof data)
+	 * @var int
+	 */
+	protected $size = 0;
+
 	/**
 	 * Данные для отображения
 	 * @var array
@@ -38,21 +45,35 @@ class Paginator{
 	 */
 	protected $getDataCallback = false;
 
-	public function __construct(array $data, int $num = 20){
-		$this->last = ceil(sizeof($data) / $num);
-		$this->page = min(max($_GET['page'] ?? 1, 1), $this->last);
-		$this->num = $num;
-		$this->data = $data;
-		$this->offset = ($this->page-1) * $this->num;
+	/**
+	 * Если нужно получить данные за одну операцию
+	 * @var boolean
+	 */
+	protected $getTotalDataCallback = false;
 
+	public function __construct(array $data = [], int $num = 20){
+		$this->data = $data;
+		$this->num = $num;
+		$this->setDataSize();		
 	}	
+
+	public function setDataSize(int $size = 0){
+		$this->size = ($size < 1) ? sizeof($this->data) : $size;
+		$this->last = $this->num > 0 ? ceil($this->size / $this->num) : 1;
+		$this->page = min(max($_GET['page'] ?? 1, 1), $this->last);
+		$this->offset = ($this->page-1) * $this->num;
+	}
+
+	public function getDataSize(): int {
+		return $this->size;
+	}
 
 	/**
 	 * Есть ли данные для отображения
 	 * @return bool
 	 */
 	public function isData(): bool {
-		return sizeof($this->getCurrentSlice()) > 0;
+		return $this->getDataSize() > 0 || sizeof($this->getCurrentSlice()) > 0;
 	}
 
 	/**
@@ -61,6 +82,14 @@ class Paginator{
 	 */
 	public function setDataCallback(callable $callback){
 		$this->getDataCallback = $callback;
+	}
+
+	/**
+	 * Установить callback функцию для получения всех данных сразу
+	 * @param callable $callback function($offset, $count)
+	 */
+	public function setTotalDataCallback(callable $callback){
+		$this->getTotalDataCallback = $callback;
 	}
 
 	/**
@@ -77,8 +106,12 @@ class Paginator{
 	 */
 	public function getData(): array {
 		$data = $this->getCurrentSlice();
+		if(is_callable($this->getTotalDataCallback)){
+			$data = call_user_func($this->getTotalDataCallback, $this->offset, $this->num);
+		}
+
 		if(is_callable($this->getDataCallback)){
-			foreach ($data as $key => $value) {
+			foreach ($data as $key => $value){
 				$data[$key] = call_user_func($this->getDataCallback, $value, $key);
 			}
 		}
@@ -91,7 +124,7 @@ class Paginator{
 	}
 
 	public function getPages(int $pagesNum = 5, bool $helpers = true): array {
-		if(sizeof($this->data) == 0) return [];
+		if($this->getDataSize() == 0) return [];
 		
 		$pages = [];
 
