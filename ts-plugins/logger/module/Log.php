@@ -26,9 +26,19 @@ class Log{
 		return self::$logs;
 	}
 
-	public static function getLogs(string $type): array {
+	public static function getLogsCount(string $type): int {
+		$logs = Database::prepare('SELECT COUNT(*) c FROM `log` WHERE `type` = :type')
+					->bind('type', $type)
+					->exec()
+					->fetch();
+
+		return $logs[0]['c'] ?? -1;
+	}
+
+	public static function getLogs(string $type, int $offset = 0, int $count = 0): array {
 		$return = [];
-		$logs = Database::prepare('SELECT * FROM `log` WHERE `type` = :type ORDER BY `date` DESC')
+		$limits = (($count > 0) ? 'LIMIT ' . $count : '') . ' ' . (($offset > 0) ? 'OFFSET ' . $offset : '');
+		$logs = Database::prepare('SELECT * FROM `log` WHERE `type` = :type ORDER BY `date` DESC ' . $limits)
 					->bind('type', $type)
 					->exec()
 					->fetch();
