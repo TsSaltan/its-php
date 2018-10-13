@@ -6,22 +6,46 @@
 namespace tsframe;
 
 use tsframe\Config;
-use tsframe\module\Log;
 use tsframe\module\database\Database;
+use tsframe\exception\DatabaseException;
 
-Hook::register('plugin.load', function(){
-	if(Config::get('database') == null){
-		Config::set('database.host', 'localhost');
-		Config::set('database.user', 'root');
-		Config::set('database.pass', '');
-		Config::set('database.name', 'tsframe');
+Hook::registerOnce('plugin.install.required', function(){
+	$fields = [
+		'database.host' => ['type' => 'text', 'placeholder' => 'Хост базы данных', 'value' => Config::get('database.host')],
+		'database.user' => ['type' => 'text', 'placeholder' => 'Имя пользователя', 'value' => Config::get('database.user')],
+		'database.pass' => ['type' => 'text', 'placeholder' => 'Пароль', 'value' => Config::get('database.pass')],
+		'database.name' => ['type' => 'text', 'placeholder' => 'Имя базы данных', 'value' => Config::get('database.name')],
+	];
+
+	if(Config::get('database') !== null){
+		try{
+			Database::connect(
+				Config::get('database.host'), 
+				Config::get('database.user'), 
+				Config::get('database.pass'), 
+				Config::get('database.name')
+			);
+		} catch(DatabaseException $e){
+			Config::set('database.host', null);
+			Config::set('database.user', null); 
+			Config::set('database.pass', null); 
+			Config::set('database.name', null);
+			$fields['database.error'] = ['type' => 'error', 'text' => 'Database connection error!'];
+		}
+
 	}
-	
-	$host = Config::get('database.host');
-	$user = Config::get('database.user');
-	$pass = Config::get('database.pass');
-	$dbname = Config::get('database.name');
-	Database::connect($host, $user, $pass, $dbname);
+
+	return $fields;
+});
+
+
+Hook::registerOnce('plugin.load', function(){
+	Database::connect(
+		Config::get('database.host'), 
+		Config::get('database.user'), 
+		Config::get('database.pass'), 
+		Config::get('database.name')
+	);
 });
 
 /**
@@ -45,7 +69,6 @@ Hook::register('app.install', function(){
 function importSql(string $parentDir){
 	$sql = $parentDir . DS . 'install.sql';
 	if(file_exists($sql)){
-		Log::add('[Database] Install from: ' . $sql, 'install');
 		Database::exec(file_get_contents($sql));
 	}
 }

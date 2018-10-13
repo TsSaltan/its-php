@@ -21,16 +21,12 @@ use tsframe\module\user\User;
 use tsframe\module\menu\MenuItem;
 use tsframe\view\TemplateRoot;
 
-Hook::register('app.install', function(){
-	if(is_null(Config::get('access.referrer'))){
-		Config::set('access.referrer.self', UserAccess::Guest);
-		Config::set('access.referrer.view', UserAccess::Moderator);
-	}
-
-	if(is_null(Config::get('bitly'))){
-		Config::set('bitly.accessToken', 'your_access_token_from_app.bitly.com');
-		
-	}
+Hook::registerOnce('plugin.install.required', function(){
+	return [
+		'access.referrer.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
+		'access.referrer.view' => ['type' => 'numeric', 'value' => UserAccess::Moderator],
+		'bitly.accessToken' => ['type' => 'text', 'placeholder' => "Your token for app.bitly.com"],
+	];
 });
 
 Hook::registerOnce('plugin.load', function(){

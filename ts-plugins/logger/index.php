@@ -11,8 +11,10 @@ use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
-Hook::register('app.install', function(){
-	Config::set('access.log', UserAccess::Admin);
+Hook::register('plugin.install.required', function(){
+	return [
+		'access.log' => ['type' => 'numeric', 'value' => UserAccess::Admin, 'title' => 'Просмотр системных логов']
+	];
 });
 
 Hook::registerOnce('plugin.load', function(){

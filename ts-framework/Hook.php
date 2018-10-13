@@ -4,13 +4,14 @@ namespace tsframe;
 class Hook{
 	/**
 	 * Hooks:
-	 * plugin.load (string $pluginName, string pluginPath) : void // загрузка плагина
-	 * plugin.install (string $pluginName, string pluginPath) : void // загрузка плагина
-	 * template.render (Template $tpl) // отрисовка шаблона
-	 * template.include (string $name, Template $tpl) // импорт файла в шаблон
+	 * plugin.load (string $pluginName, string $pluginPath) : void - загрузка плагина
+	 * plugin.install.required: array(path.to.param => ['type' => string|int|bool, 'description' => '...') - перед установкой плагина, необходимые полня
+	 * plugin.install (string $pluginName, string $pluginPath) : void - установка плагина
+	 * template.render (Template $tpl): void - отрисовка шаблона
+	 * template.include (string $name, Template $tpl): void - импорт файла в шаблон
 	 * app.start
 	 * app.finish
-	 * app.install
+	 * app.install // @deprecated
 	 * menu.render (string $menuName, MenuItem $menu): void
 	 * menu.render.$menuName (MenuItem $menu): void
 	 * http.send (string &$body, array &$headers): void
@@ -38,9 +39,6 @@ class Hook{
 			if($hook['once'] ?? true){
 				unset(self::$hooks[$name][$key]);
 			}
-
-			// А нужны ли логи ???
-			// Log::add('Hook['.$name.']', ['params' => $params], ['return' => $result]);
 		}
 	}
 }

@@ -16,4 +16,3 @@ Autoload::init();
 Autoload::addRoot('ts-framework');
 
 Config::load('ts-config.json');
-App::load();

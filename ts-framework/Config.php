@@ -27,8 +27,6 @@ class Config{
 
 		if(file_exists(self::$file)){
 			self::$cache =  json_decode(file_get_contents(self::$file), true);
-		} else {
-			self::save();
 		}
 	}
 
@@ -63,5 +61,17 @@ class Config{
 		else $data =& self::getPath($path);
 		$data = $value;
 		self::save();
+	}
+
+	public static function isset(string $path) {
+		$path = explode('.', $path);
+		$data = &self::$cache;
+
+		foreach ($path as $p) {
+			if(!isset($data[$p])) return false;
+			$data = &$data[$p];
+		}
+
+		return true;
 	}
 }

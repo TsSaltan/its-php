@@ -2,6 +2,7 @@
 namespace tsframe\module\database;
 
 use tsframe\exception\DatabaseException;
+use PDOException;
 
 /*
 DataBase::Connect('localhost', 'root', '', 'api');
@@ -26,7 +27,7 @@ class Database{
 			$dsn = 'mysql:dbname='.$dbname.';host='.$host.';charset='.$charset;
 			self::$pdo = new \PDO($dsn, $user, $pass);
 			self::$pdo->exec("set names ".$charset);
-		} catch( \PDOException $e ) {
+		} catch( PDOException $e ) {
 			throw new DatabaseException( 
 				'Connect error: '.$e->getMessage(), 
 				$e->getCode(),

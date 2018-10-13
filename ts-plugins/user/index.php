@@ -17,7 +17,6 @@ use tsframe\module\user\User;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
-use tsframe\module\Log;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
@@ -73,31 +72,27 @@ Hook::register('template.render', function($tpl){
 	]);
 });
 
+Hook::registerOnce('plugin.install.required', function(){
+	return [
+		'access.user.onRegister' => ['type' => 'numeric', 'value' => 1, 'title' => 'Права доступа при регистрации'],
+		'access.user.self' => ['type' => 'numeric', 'value' => 1, 'title' => 'Изменение собственного профиля'],
+		'access.user.view' => ['type' => 'numeric', 'value' => 1, 'title' => 'Просмотр профиля пользователей'],
+		'access.user.list' => ['type' => 'numeric', 'value' => 2, 'title' => 'Просмотр списка пользователей'],
+		'access.user.edit' => ['type' => 'numeric', 'value' => 2, 'title' => 'Редактирование пользователей'],
+		'access.user.delete' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование пользователей'],
+		'access.user.editAccess' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование уровня доступа'],
+		'access.user.editConfig' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование системных настроек'],
+	];
+});
+
 /**
  * После установки приложения создадим учётку администратора
  */
 Hook::registerOnce('app.install', function(){
 	if(!User::exists(['access' => UserAccess::Admin])){
-		$login = 'admin';
+		$password = $login = 'admin';
 		$mail = 'change@admin.mail';
-		$password = uniqid('pwd');
 		User::register($login, $mail, $password, UserAccess::Admin);
-		Log::add('New admin profile', 'install', [
-			'login' => $login,
-			'mail' => $mail,
-			'password' => $password,
-		]);
-	}
-
-	if(Config::get('access') == null){
-		Config::set('access.user.onRegister', 1); 	// Права доступа при регистрации
-		Config::set('access.user.self', 1); 		// Изменение собственного профиля
-		Config::set('access.user.view', 1); 		// Просмотр профиля пользователей
-		Config::set('access.user.list', 2); 		// Просмотр списка пользователей
-		Config::set('access.user.edit', 2); 		// Редактирование пользователей
-		Config::set('access.user.delete', 4); 		// Редактирование пользователей
-		Config::set('access.user.editAccess', 4);	// Редактирование уровня доступа
-		Config::set('access.user.editConfig', 4);	// Редактирование системных настроек
 	}
 });
 

@@ -16,11 +16,11 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
-Hook::register('app.install', function(){
-	if(is_null(Config::get('smsc'))){
-		Config::set('smsc.login', "INPUT_YOUR_LOGIN");
-		Config::set('smsc.password', "INPUT_YOUR_PASSWORD");
-	}
+Hook::register('plugin.install.required', function(){
+	return [
+		'smsc.login' => ['type' => 'text', 'placeholder' => 'Your login for smsc'],
+		'smsc.password' => ['type' => 'text', 'placeholder' => 'Your password for smsc']
+	];
 });
 
 Hook::registerOnce('plugin.load', function(){

@@ -2,19 +2,18 @@
 namespace tsframe;
 
 use tsframe\exception\BaseException;
+use tsframe\exception\PluginException;
 use tsframe\view\Template;
+use tsframe\controller\InstallController;
 
 class App{
 
 	/**
 	 * Загрузка приложения
+	 * @deprecated
 	 */
 	public static function load(){
-		$disabledPlugins = Config::get('plugins.disabled');
-		if(is_array($disabledPlugins) && sizeof($disabledPlugins) > 0){
-			call_user_func_array([Plugins::class, 'disable'], $disabledPlugins);
-		}
-		Plugins::load();
+		throw new BaseException("App::load deprecated!");
 	}
 
 	/**
@@ -49,6 +48,7 @@ class App{
 	 * Запуск приложения
 	 */
 	public static function start(){
+		Plugins::load();
 		Hook::call('app.start');
 		try{
 			$controller = Router::findController();
@@ -74,13 +74,18 @@ class App{
 	/**
 	 * Установка компонентов
 	 */
-	public static function install(){
-		$disabled = Config::get('plugins.disabled');
-		if(!is_array($disabled)){
-			Config::set('plugins.disabled', ['input_here_disabled_plugins']);
+	public static function install(): bool {
+		$controller = new InstallController;
+		$controller->checkPost();
+
+		$fields = Plugins::install();
+		if(is_array($fields)){
+			$controller->setRequiredFields($fields);
+			$controller->send();
+			return false;
 		}
 
-		Plugins::install();
 		Hook::call('app.install');
+		return true;
 	}
 }
