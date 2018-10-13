@@ -12,8 +12,8 @@ use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
-Hook::register('plugin.load', function(){
-	Config::set('access.meta', UserAccess::Admin);
+Hook::registerOnce('plugin.install.required', function(){
+	return ['access.meta' => ['type' => 'numeric', 'value' => UserAccess::Admin]];
 });
 
 Hook::registerOnce('plugin.load', function(){
