@@ -23,28 +23,23 @@ use tsframe\view\TemplateRoot;
  * @todo  Проверка уникальности платежей
  */
 class CashInstaller {
-	protected static $cash;
 	
-	public static function install(){
-		if(Config::get('interkassa') == null){
-			Config::set('interkassa.accountId', 'input_your_account_id');
-			Config::set('interkassa.cashId', 'input_your_cash_id');
-			Config::set('interkassa.key', 'input_your_key');
-			Config::set('interkassa.currency', 'USD');
-		}	
-
-		if(Config::get('access.cash') == null){
-			Config::set('access.cash.view', UserAccess::Admin);
-			Config::set('access.cash.global', UserAccess::Admin);
-			Config::set('access.cash.self', UserAccess::Guest);
-		}
+	public static function installRequired(){
+		return [
+			'interkassa.accountId' => ['type' => 'text', 'placeholder' => 'IK account ID'],
+			'interkassa.cashId' => ['type' => 'text', 'placeholder' => 'IK cash ID'],
+			'interkassa.key' => ['type' => 'text', 'placeholder' => 'IK private key'],
+			'interkassa.currency' => ['type' => 'text', 'value' => 'RUB'],
+			'access.cash.view' => ['type' => 'numeric', 'value' => UserAccess::Admin],
+			'access.cash.global' => ['type' => 'numeric', 'value' => UserAccess::Admin],
+			'access.cash.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
+		];
 	}
 
 	public static function load(){
 		Plugins::required('database', 'user', 'dashboard');
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
-		self::$cash = Cash::currentUser();
 	}
 
 	public static function addMenuSidebar(MenuItem $menu){
@@ -52,7 +47,7 @@ class CashInstaller {
 	}
 	
 	public static function addMenuTop(MenuItem $menu){
-		$menu->add(new MenuItem('Баланс: ' . self::$cash->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
+		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
 	}
 
 	public static function addEditTab(Template $tpl, array &$configTabs, int &$activeTab){
@@ -99,7 +94,7 @@ class CashInstaller {
 }
 
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
-Hook::registerOnce('app.install', [CashInstaller::class, 'install']);
+Hook::registerOnce('plugin.install.required', [CashInstaller::class, 'installRequired']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('menu.render.dashboard-admin-sidebar', [CashInstaller::class, 'addMenuSidebar']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
