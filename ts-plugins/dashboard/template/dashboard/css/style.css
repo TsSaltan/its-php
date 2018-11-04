@@ -8,3 +8,11 @@
 .nav-admin a{
     color: #b73333;
 }
+
+.nav-admin a:hover, .nav-admin a:focus {
+    color: #b74444;
+}
+
+.sidebar ul li a.active {
+    border-left:3px solid;
+}

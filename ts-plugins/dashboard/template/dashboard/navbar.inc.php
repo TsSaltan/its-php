@@ -50,7 +50,7 @@
                 <?=$this->menu('dashboard-admin-sidebar', 
                     function(string $items, int $level){
                         if($level == 0){
-                            return "<ul class=\"nav nav-admin\" id=\"side-menu\">$items</ul>";    
+                            return "<ul class=\"nav nav-admin\">$items</ul>";    
                         }
                         
                         return "<ul class=\"nav nav-second-level\">$items</ul>";    
