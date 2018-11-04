@@ -13,7 +13,7 @@
 			<td>
 				<ul>
 				<?foreach ($plugins as $pluginName => $value):?>
-					<li><label for="plugin_<?=$pluginName?>"><?=$pluginName?></label><input id="plugin_<?=$pluginName?>" type="checkbox" name="param[plugins][disabled][<?=$pluginName?>]"/></li>
+					<li><label for="plugin_<?=$pluginName?>"><?=$pluginName?></label><input id="plugin_<?=$pluginName?>" type="checkbox" name="param[plugins][disabled][<?=$pluginName?>]" <?=(in_array($pluginName, $disabled)?'checked':'')?>/></li>
 				<?endforeach?>
 				</ul>
 			</td>

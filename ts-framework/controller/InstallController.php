@@ -32,6 +32,8 @@ class InstallController extends AbstractController{
 		$tpl = new HtmlTemplate('default', 'install');
 		$tpl->var('fields', $this->fields);
 		$tpl->var('plugins', Plugins::getList());
+		$disabled = Config::get('plugins.disabled');
+		$tpl->var('disabled', is_array($disabled) ? $disabled : []);
 		return $tpl->render();
 	}
 }

@@ -9,14 +9,6 @@ use tsframe\controller\InstallController;
 class App{
 
 	/**
-	 * Загрузка приложения
-	 * @deprecated
-	 */
-	public static function load(){
-		throw new BaseException("App::load deprecated!");
-	}
-
-	/**
 	 * Путь к директории на сервере, откуда будет брать начало роутер, ссылки и т.д.
 	 * @var string
 	 */
@@ -40,15 +32,24 @@ class App{
 		self::$basePath = $path;
 	}
 
+
 	public static function getBasePath(): string {
 		return self::$basePath;
 	}
 
 	/**
+	 * Загрузка приложения
+	 */
+	public static function load(){
+		Plugins::load();
+	}
+	
+	/**
 	 * Запуск приложения
+	 * Поиск подходящего контроллера
 	 */
 	public static function start(){
-		Plugins::load();
+		self::load();
 		Hook::call('app.start');
 		try{
 			$controller = Router::findController();
