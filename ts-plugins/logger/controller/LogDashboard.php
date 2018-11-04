@@ -9,7 +9,7 @@ use tsframe\module\Paginator;
 
 /**
  * @route GET /dashboard/[logs:action]
- * @route GET /dashboard/[logs:action]/[:type]
+ * @route GET /dashboard/[logs:action]/[*:type]
  */ 
 class LogDashboard extends UserDashboard {
 
