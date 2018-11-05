@@ -75,31 +75,7 @@
                             <!-- /.table-responsive -->
                         </div>
 
-                        <div class="panel-footer">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <?foreach($logs->getPages() as $page):?>
-                                    <a class="btn btn-primary <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a>
-                                    <?endforeach?>
-                                </div>
-
-                                <div class="col-lg-6 pull-right">
-                                    <form action="" method="GET">
-                                        <div class="form-group input-group">
-                                            <span class="input-group-addon">Элементов на странице</span>
-                                            <select class="form-control" name='count' onchange="this.parentElement.parentElement.submit()">
-                                                <option value="<?=$logs->getItemsNum()?>" selected style="display: none"><?=$logs->getItemsNum()?></option>
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="panel-footer"><?uiPaginatorFooter($logs)?></div>
                     <?endif?>
                     </div>
                     <!-- /.panel -->

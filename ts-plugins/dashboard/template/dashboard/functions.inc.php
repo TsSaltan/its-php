@@ -2,12 +2,18 @@
 global $that;
 $that = $this;
 
+/**
+ * Показать уведомления, установленные контроллером ($this->alert)
+ * или массив уведомлений
+ * @param  array|null $alerts [type=>[message1, message2], type2=>message3...]
+ */
 function showAlerts(array $alerts = null){
     if(!is_array($alerts)){
         global $that;
         if(!is_array($that->alert)) return;
         $alerts = $that->alert;
     }
+
     foreach($alerts as $type => $messages){
         $messages = is_array($messages) ? $messages : [$messages];
         foreach ($messages as $message) {
@@ -16,6 +22,11 @@ function showAlerts(array $alerts = null){
     }
 }
 
+/**
+ * Показать бар с уведомлением
+ * @param string $message Текст сообщения
+ * @param string $type=info|danger|warning|error|success
+ */
 function uiAlert(string $message = null, string $type='info'){
     $view = is_null($message) ? 'hidden' : '';
 ?>
@@ -26,12 +37,21 @@ function uiAlert(string $message = null, string $type='info'){
 <?
 }
 
+/**
+ * Подключить js-скрипты фреймворка
+ */
 function jsFrame(){
     global $that;
     $that->js('ts-client/frame.js', 'ts-client/user.js');
     ?><script type="text/javascript">tsFrame.basePath = <?=json_encode(\tsframe\App::getBasePath())?>;</script><?
 }
 
+/**
+ * Отобразить json редактор
+ * @param  array       $data      Массив с данными
+ * @param  string      $fieldName Имя поля в редакторе
+ * @param  int|integer $rows      Максимальное количество строк
+ */
 function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
     $fieldID = 'json-' . $fieldName;
     ?>
@@ -94,3 +114,51 @@ function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
     <?
 }
 
+/**
+ * Отобразить страницы пагинатора
+ * @param  Paginator  $paginator    
+ * @param  string $btnClass
+ */
+function uiPaginatorNav($paginator, string $btnClass = "btn-primary"){
+    foreach($paginator->getPages() as $page){
+        ?><a class="btn <?=$btnClass?> <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a> <?
+    }
+}
+
+/**
+ * Отобразить колчество элементов на странице
+ * @param  Paginator $paginator 
+ */
+function uiPaginatorCount($paginator){
+    ?>
+    <form action="" method="GET">
+        <div class="input-group">
+            <span class="input-group-addon">Элементов на странице</span>
+            <select class="form-control" name='count' onchange="this.parentElement.parentElement.submit()">
+                <option value="<?=$paginator->getItemsNum()?>" selected style="display: none"><?=$paginator->getItemsNum()?></option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+    </form>
+    <?
+}
+
+/**
+ * Отобразить футер для пагинатора (ссылки на страницы + выбор колчества элементов)
+ * @param  Paginator $paginator 
+ */
+function uiPaginatorFooter($paginator){
+?><div class="row">
+    <div class="col-lg-6">
+        <?uiPaginatorNav($paginator)?>
+    </div>
+
+    <div class="col-lg-6 pull-right">
+        <?uiPaginatorCount($paginator)?>
+    </div>
+</div><?
+}

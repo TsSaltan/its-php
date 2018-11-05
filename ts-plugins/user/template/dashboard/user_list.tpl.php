@@ -52,11 +52,7 @@
                                 </div>
                                 <!-- /.table-responsive -->
                             </div>
-                            <div class="panel-footer">
-                                <?foreach($userList->getPages() as $page):?>
-                                <a class="btn btn-primary <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a>
-                                <?endforeach?>
-                            </div>
+                            <div class="panel-footer"><?uiPaginatorFooter($userList)?></div>
                         </div>
                         <!-- /.panel -->
 

@@ -1,4 +1,4 @@
-                       <?$this->incHeader()?>
+<?$this->incHeader()?>
 <?$this->incNavbar()?>
 
     <!-- Page Content -->
@@ -49,11 +49,7 @@
                             </div>
                             <!-- /.table-responsive -->
                         </div>
-                        <div class="panel-footer">
-                            <?foreach($cashHistory->getPages() as $page):?>
-                            <a class="btn btn-primary <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a>
-                            <?endforeach?>
-                        </div>
+                        <div class="panel-footer"><?uiPaginatorFooter($cashHistory)?></div>
                     </div>
                     <!-- /.panel -->
                 </div>
