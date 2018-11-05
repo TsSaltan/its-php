@@ -18,7 +18,7 @@ class SMSTwilioDashboard extends UserDashboard {
 
 	public function getSendsms(string $message = null){
 		$append = is_null($message) ? '' : '?sms=' . $message;
-		return Http::redirect(Http::makeURI('/dashboard/config' . $append));
+		return Http::redirect(Http::makeURI('/dashboard/config' . $append . '#sms'));
 	}
 
 	public function postSendsms(){
