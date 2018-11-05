@@ -50,6 +50,11 @@ class SingleUser{
 	 */
 	protected $email;
 
+	/**
+	 * @var Meta
+	 */
+	protected $meta;
+
 	public static function unauthorized(){
 		return new self(-1);
 	}	
@@ -177,6 +182,6 @@ class SingleUser{
 	}
 
 	public function getMeta(): Meta {
-		return new Meta('user', $this->id);
+		return !is_object($this->meta) ? $this->meta = new Meta('user', $this->id) : $this->meta ;
 	}
 }

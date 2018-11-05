@@ -16,14 +16,8 @@ class Referrer{
 	 */
 	protected $user;
 
-	/**
-	 * @var Meta
-	 */
-	protected $userMeta;
-
 	public function __construct(SingleUser $user){
 		$this->user = $user;
-		$this->userMeta = $user->getMeta();
 	}
 
 	/**
@@ -31,7 +25,7 @@ class Referrer{
 	 * @return SingleUser|null
 	 */
 	public function getReferrer(){
-		$refId = $this->userMeta->get('referrer');
+		$refId = $this->user->getMeta()->get('referrer');
 		if(!is_null($refId)){
 			$users = User::get(['id' => $refId]);
 			foreach ($users as $user) {
@@ -67,7 +61,7 @@ class Referrer{
 	 */
 	public function setReferrer($referrer){
 		$refId = ($referrer instanceof SingleUser) ? $referrer->get('id') : $referrer;
-		$this->userMeta->set('referrer', $refId);
+		$this->user->getMeta()->set('referrer', $refId);
 	}
 
 	/**
@@ -92,20 +86,20 @@ class Referrer{
 	}
 
 	public function getReferalURI(): string {
-		$refUrl = $this->userMeta->get('referrer_url');
+		$refUrl = $this->user->getMeta()->get('referrer_url');
 		if(is_null($refUrl)){
 			$eid = $this->encodeID();
 			$refUrl = 'http://' . $_SERVER['HTTP_HOST'] . Http::makeURI('/dashboard/login?ref=' . $eid);
 			Hook::call('referrer.makeURI', [&$refUrl, $this]);
-			$this->userMeta->set('referrer_url', $refUrl);
+			$this->user->getMeta()->set('referrer_url', $refUrl);
 		}
 
-		$shortUrl = $this->userMeta->get('referrer_short_url');
+		$shortUrl = $this->user->getMeta()->get('referrer_short_url');
 		if(is_null($shortUrl)){
 			$bit = new Bitly;
 			$shortUrl = $bit->shortUrl($refUrl);
 			if(!is_null($shortUrl)){
-				$this->userMeta->set('referrer_short_url', $shortUrl);
+				$this->user->getMeta()->set('referrer_short_url', $shortUrl);
 			}
 		}
 
@@ -113,7 +107,7 @@ class Referrer{
 	}
 
 	public function getReferalStatisticURI(){
-		$url = $this->userMeta->get('referrer_short_url');
+		$url = $this->user->getMeta()->get('referrer_short_url');
 		if(!is_null($url) && strpos($url, 'bit.ly') !== false){
 			return $url . '+';
 		}
