@@ -152,13 +152,34 @@ function uiPaginatorCount($paginator){
  * @param  Paginator $paginator 
  */
 function uiPaginatorFooter($paginator){
-?><div class="row">
-    <div class="col-lg-6">
-        <?uiPaginatorNav($paginator)?>
-    </div>
+    ?><div class="row">
+        <div class="col-lg-6">
+            <?uiPaginatorNav($paginator)?>
+        </div>
 
-    <div class="col-lg-6 pull-right">
-        <?uiPaginatorCount($paginator)?>
-    </div>
-</div><?
+        <div class="col-lg-6 pull-right">
+            <?uiPaginatorCount($paginator)?>
+        </div>
+    </div><?
+}
+
+
+function uiCollapsePanel($headerContent, $bodyContent, $footerContent = null, string $panelClass = "panel-default", string $icon = null, string $paneId = null){
+    $paneId = is_null($paneId) ? uniqid('panel') : $paneId ;
+    ?>
+    <div class="row">
+        <div class="panel panel-collapsable <?=$panelClass?>">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#<?=$paneId?>"><?if(!is_null($icon)):?><i class='fa fa-<?=$icon?>'></i>&nbsp;&nbsp;<?endif?><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></a>
+                </h4>
+            </div>
+            <div id="<?=$paneId?>" class="panel-collapse collapse">
+                <div class="panel-body"><?=(is_callable($bodyContent) ? call_user_func($bodyContent) : $bodyContent)?></div>
+                <?if(!is_null($footerContent)):?>
+                <div class="panel-footer"><?=(is_callable($footerContent) ? call_user_func($footerContent) : $footerContent)?></div>
+                <?endif?>
+            </div>
+        </div>
+    </div><?
 }

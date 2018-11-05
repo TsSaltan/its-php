@@ -1,7 +1,5 @@
 $(function() {
-
-    $('#side-menu').metisMenu();
-
+    $('.sidebar ul.nav').metisMenu();
 });
 
 //Loads the correct sidebar on window load,
@@ -32,5 +30,9 @@ $(function() {
     }).addClass('active').parent().parent().addClass('in').parent();
     if (element.is('li')) {
         element.addClass('active');
+    }
+
+    if(window.location.hash && $(window.location.hash+".collapse").length) {
+        $(window.location.hash+".collapse").removeClass('collapse');
     }
 });

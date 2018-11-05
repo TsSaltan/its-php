@@ -16,3 +16,9 @@
 .sidebar ul li a.active {
     border-left:3px solid;
 }
+
+.panel-collapsable .panel-heading .panel-title a,
+.panel-collapsable .panel-heading .panel-title a:hover,
+.panel-collapsable .panel-heading .panel-title a:focus{
+	text-decoration: none;
+}
