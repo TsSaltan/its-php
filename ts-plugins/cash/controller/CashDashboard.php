@@ -16,7 +16,7 @@ class CashDashboard extends UserDashboard {
 	public function getCash(){
 		UserAccess::assertCurrentUser('cash.global');
 		$cashHistory = Cash::getGlobalHistory();
-		$this->vars['title'] = 'Денежные операции';
+		$this->vars['title'] = 'Финансовые операции';
 		$this->vars['cashHistory'] = new Paginator($cashHistory);
 		$this->vars['userList'] = User::get();
 	}
