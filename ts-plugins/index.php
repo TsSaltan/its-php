@@ -89,10 +89,10 @@ Hook::register('database.query', function(Query $query){
 /**
  * Изменение конкретного шаблона
  * @hook template.{templateName}.{templatePath}
- * f.e. template.dashboard.auth, template.dashboard.user.edit, template.dashboard.header
+ * f.e. template.dashboard.auth, template.dashboard.config, template.dashboard.user.edit, template.dashboard.header
  * @param Template $tpl
  */
-Hook::register('template.dashboard.auth', function(Template $tpl){
+Hook::register('template.{templateName}.{templatePath}', function(Template $tpl){
 	// Можно добавить свои скрипты или стили
 	$tpl->js('script.js');
 	$tpl->css('style.css');
