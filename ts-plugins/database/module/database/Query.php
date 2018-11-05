@@ -18,11 +18,10 @@ class Query{
 	}
 
 	public function exec($vars = false){
-		Hook::call('database.query', [$this]);
-
 		if(is_array($vars))$this->sth->execute($vars);
 		else $this->sth->execute();
 		
+		Hook::call('database.query', [$this]);
 		return $this;
 	}
 

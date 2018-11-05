@@ -19,8 +19,9 @@ if(App::isDev()){
 		}
 	});
 
-	Hook::register('database.query', function() use ($debug){
-		$debug->addCounter('Database-Query');
+	Hook::register('database.query', function($sth) use ($debug){
+		$debug->dbQuery(str_replace("\n", '; ', $sth->getDebug()));
+		//$debug->addCounter('Database-Query');
 	});
 
 }

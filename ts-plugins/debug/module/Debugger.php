@@ -10,6 +10,11 @@ class Debugger{
 		$this->startTime = microtime(true);
 	}
 
+	public function dbQuery(string $data){
+		$num = $this->addCounter('Database-Query-Total');
+		$this->counters['Database-Query-' . $num] = $data;
+	}
+
 	public function addCounter(string $name, int $value = 1): int {
 		return $this->counters[$name] = ($this->counters[$name] ?? 0) + $value;
 	}
