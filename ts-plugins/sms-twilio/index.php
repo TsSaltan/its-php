@@ -8,15 +8,13 @@ use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Plugins;
 
-Hook::registerOnce('app.install', function(){
-	if(is_null(Config::get('twilio'))){
-		Config::set('twilio.account', "INPUT_YOUR_ACCOUNT_ID");
-		Config::set('twilio.token', "INPUT_YOUR_SECRET_TOKEN");
-		Config::set('twilio.phone', "INPUT_YOUR_DEFAULT_PHONE_NUMBER_+123456...");
-	}
-});
-
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('plugin.install', function(){
 	Plugins::required('sms-base');
 	Plugins::conflict('sms-smsc');
+
+	return [
+		'twilio.account' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_ACCOUNT_ID'],
+		'twilio.token' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_SECRET_TOKEN'],
+		'twilio.phone' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_DEFAULT_PHONE_NUMBER_+123456...'],
+	];
 });

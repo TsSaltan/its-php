@@ -24,7 +24,9 @@ use tsframe\view\TemplateRoot;
  */
 class CashInstaller {
 	
-	public static function installRequired(){
+	public static function install(){
+		Plugins::required('database', 'user', 'dashboard');
+		
 		return [
 			'interkassa.accountId' => ['type' => 'text', 'placeholder' => 'IK account ID'],
 			'interkassa.cashId' => ['type' => 'text', 'placeholder' => 'IK cash ID'],
@@ -37,7 +39,6 @@ class CashInstaller {
 	}
 
 	public static function load(){
-		Plugins::required('database', 'user', 'dashboard');
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
 	}
@@ -94,7 +95,7 @@ class CashInstaller {
 }
 
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
-Hook::registerOnce('plugin.install.required', [CashInstaller::class, 'installRequired']);
+Hook::registerOnce('plugin.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('menu.render.dashboard-admin-sidebar', [CashInstaller::class, 'addMenuSidebar']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);

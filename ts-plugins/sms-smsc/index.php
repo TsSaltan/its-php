@@ -16,13 +16,11 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
-Hook::registerOnce('plugin.install.required', function(){
+Hook::registerOnce('plugin.install', function(){
+	Plugins::required('sms-base');
+
 	return [
 		'smsc.login' => ['type' => 'text', 'placeholder' => 'Your login for smsc'],
 		'smsc.password' => ['type' => 'text', 'placeholder' => 'Your password for smsc']
 	];
-});
-
-Hook::registerOnce('plugin.load', function(){
-	Plugins::required('sms-base');
 });

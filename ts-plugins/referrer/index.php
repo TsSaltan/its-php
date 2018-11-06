@@ -21,7 +21,8 @@ use tsframe\module\user\User;
 use tsframe\module\menu\MenuItem;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('plugin.install.required', function(){
+Hook::registerOnce('plugin.install', function(){
+	Plugins::required('database', 'user', 'dashboard');
 	return [
 		'access.referrer.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
 		'access.referrer.view' => ['type' => 'numeric', 'value' => UserAccess::Moderator],
@@ -30,7 +31,6 @@ Hook::registerOnce('plugin.install.required', function(){
 });
 
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('database', 'user', 'dashboard');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 

@@ -5,6 +5,6 @@
 
 namespace tsframe;
 
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database');
 });

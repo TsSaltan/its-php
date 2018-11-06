@@ -1,6 +1,7 @@
 <?php
 namespace tsframe;
 
+use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 
 class Plugins{
@@ -30,17 +31,33 @@ class Plugins{
 
 	/**
 	 * Установка плагинов
-	 * @return array|null возвращает либо массив необходимых полей в настройках, либо null 
+	 * Проходится по всем плагинам и вызывает хук plugin.install
+	 * Если произошла ошибка, плагин будет отключён
+	 * @return array Массив необходимых параметров, которые должен заполнить пользователь в процессе установки [key => params[]]
 	 */
-	public static function install(){
+	public static function install(): array {
+		// Функция, которая будет отключать плагины, если в процессе утсановки произошли какие-либо ошибки
+		$disabledPlugin = function($e){
+			foreach ($e->getTrace() as $item) {
+				if(isset($item['file']) && basename($item['file']) == 'index.php' && strstr($item['file'], 'ts-plugins') !== false){
+					$pluginName = basename(dirname($item['file']));
+					self::disable($pluginName);
+				}
+			}
+		};
+
 		// 1. Загружаем плагины
 		foreach (self::getList() as $pluginName => $pluginPath) {
-			self::loadPlugin($pluginName, $pluginPath);
+			try{
+				self::loadPlugin($pluginName, $pluginPath);
+			} catch(\Exception $e){
+				self::disable($pluginName);
+			}
 		}
 
-		// 2. Получаем необходимые параметры
+		// 2. Получаем необходимые плагинам параметры
 		$requiredParams = [];
-		Hook::call('plugin.install.required', [], function($params) use (&$requiredParams){
+		Hook::call('plugin.install', [], function($params) use (&$requiredParams){
 			if(is_array($params)){
 				foreach ($params as $paramPath => $data) {
 					if(!Config::isset($paramPath)){
@@ -48,20 +65,9 @@ class Plugins{
 					}
 				}
 			}
-		});
+		}, $disabledPlugin);
 
-		if(sizeof($requiredParams) > 0){
-			return $requiredParams;
-		}
-
-		// 3. Загружаем плагины
-		foreach (self::$loaded as $name => $path) {
-			try{
-				Hook::call('plugin.install', [$name, $path]);
-			} catch(PluginException $e){
-				self::disable($e->getPluginName());
-			}
-		}
+		return $requiredParams;
 	}
 
 	/**
@@ -90,7 +96,6 @@ class Plugins{
 				throw new PluginException('Plugin "'. $pluginName .'" does not loaded', 500, [
 					'pluginName' => $pluginName,
 					'loaded' => self::$loaded,
-					'disabled' => self::$disabled,
 				]);
 			}
 		}
@@ -119,9 +124,14 @@ class Plugins{
 	 * @param string ...
 	 */
 	public static function disable(){
-		$disabled = Config::get('plugins.disabled');
-		$disabled = !is_array($disabled) ? [] : $disabled;
+		$disabled = self::getDisabled();
 		Config::set('plugins.disabled', array_unique(array_merge($disabled, func_get_args())));
+
+		foreach(func_get_args() as $pluginName){
+			if(in_array($pluginName, self::$loaded)){
+				unset(self::$loaded[array_search($pluginName, self::$loaded)]);
+			}
+		}
 	}
 
 	/**
@@ -131,8 +141,7 @@ class Plugins{
 	 * @param string ...
 	 */
 	public static function enable(){
-		$disabled = Config::get('plugins.disabled');
-		$disabled = !is_array($disabled) ? [] : $disabled;
+		$disabled = self::getDisabled();
 		Config::set('plugins.disabled', array_unique(array_diff($disabled, func_get_args())));
 	}
 
@@ -142,7 +151,16 @@ class Plugins{
 	 * @return bool
 	 */
 	public static function isDisabled(string $pluginName): bool {
+		$disabled = self::getDisabled();
+		return in_array($pluginName, $disabled);
+	}
+
+	/**
+	 * Получить список отключенных плагинов
+	 * @return array
+	 */
+	public static function getDisabled(): array {
 		$disabled = Config::get('plugins.disabled');
-		return (is_array($disabled) && in_array($pluginName, $disabled));
+		return !is_array($disabled) ? [] : $disabled;
 	}
 }

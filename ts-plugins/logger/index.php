@@ -11,14 +11,12 @@ use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('plugin.install.required', function(){
-	return [
-		'access.log' => ['type' => 'numeric', 'value' => UserAccess::Admin, 'title' => 'Просмотр системных логов']
-	];
+Hook::registerOnce('plugin.install', function(){
+	Plugins::required('dashboard');
+	return ['access.log' => ['type' => 'numeric', 'value' => UserAccess::Admin, 'title' => 'Просмотр системных логов']];
 });
 
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('dashboard');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 

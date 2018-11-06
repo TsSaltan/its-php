@@ -31,14 +31,24 @@ class Hook{
 	 * Вывоз хука
 	 * @param  string        $name   
 	 * @param  array         $params Параметры, которые будут переданы в коллбэк
-	 * @param  callable|null $return коллбэк функция
+	 * @param  callable|null $return Функция для возвращения результата
+	 * @param  callable|null $error  Функция для возвращения исключения
 	 * @param  bool|boolean  $once   Если true, то любой хук считается как "одноразовый"
 	 */
-	public static function call(string $name, array $params = [], ?callable $return = null, bool $once = false){
+	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
 		if(!isset(self::$hooks[$name])) return;
 		foreach (self::$hooks[$name] as $key => $hook) {
 			$func = $hook['function'];
-			$result = call_user_func_array($func, $params);
+			try{
+				$result = call_user_func_array($func, $params);
+			} catch(\Exception|\Error $e){
+				if(is_callable($error)){
+					call_user_func($error, $e);
+				} else {
+					throw $e;
+				}
+			}
+
 			if(is_callable($return)){
 				call_user_func($return, $result);
 			}

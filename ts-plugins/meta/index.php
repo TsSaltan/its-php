@@ -12,12 +12,12 @@ use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('plugin.install.required', function(){
+Hook::registerOnce('plugin.install', function(){
+	Plugins::required('dashboard', 'database');
 	return ['access.meta' => ['type' => 'numeric', 'value' => UserAccess::Admin]];
 });
 
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('dashboard', 'database');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 

@@ -9,7 +9,7 @@ use tsframe\Config;
 use tsframe\module\database\Database;
 use tsframe\exception\DatabaseException;
 
-Hook::registerOnce('plugin.install.required', function(){
+Hook::registerOnce('plugin.install', function(){
 	$fields = [
 		'database.host' => ['type' => 'text', 'placeholder' => 'Хост базы данных', 'value' => Config::get('database.host')],
 		'database.user' => ['type' => 'text', 'placeholder' => 'Имя пользователя', 'value' => Config::get('database.user')],
@@ -30,7 +30,7 @@ Hook::registerOnce('plugin.install.required', function(){
 			Config::set('database.user', null); 
 			Config::set('database.pass', null); 
 			Config::set('database.name', null);
-			$fields['database.error'] = ['type' => 'error', 'text' => 'Database connection error!'];
+			$fields['database.error'] = ['type' => 'error', 'text' => 'Ошибка при подключении к базе данных. Проверьте указанные настройки!'];
 		}
 
 	}
@@ -49,16 +49,15 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 /**
- * install.sql из папок с плагинами
- */
-Hook::register('plugin.install', function(string $name, string $path){
-	importSql($path);
-});
-
-/**
- * install.sql из корня
+ * Выполнение SQL запроса из install.sql
  */
 Hook::register('app.install', function(){
+	// Из каждой папки плагина
+	foreach (Plugins::getList() as $name => $path) {
+		importSql($path);
+	}
+
+	// Из корневой папки
 	importSql(CD);
 });
 

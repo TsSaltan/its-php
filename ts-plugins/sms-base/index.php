@@ -18,8 +18,11 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('plugin.install', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
+});
+
+Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');
 	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');

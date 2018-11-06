@@ -12,19 +12,9 @@ die('Access denied');
 
 /**
  * Требование необходимых данных перед установкой системы
- * @hook plugin.install.required
- * @return array возвращает массив с данными, которые должен заполнить пользователь, данные будут сохранены в файл конфига
- *               ключ-в-конфиге => ['type' => 'text|email|numeric', 'placeholder' => ..., 'value' => ...]
- */
-Hook::registerOnce('plugin.install.required', function(){
-	return [
-		'anticaptcha.apiKey' => ['type' => 'text', 'placeholder' => 'Anticapthca API key'],
-	];
-});
-
-/**
- * После установки системы
  * @hook plugin.install
+ * @return array|null возвращает массив с данными, которые должен заполнить пользователь, данные будут сохранены в файл конфига
+ *               ключ-в-конфиге => ['type' => 'text|email|numeric|error', 'placeholder' => ..., 'value' => ...]
  */
 Hook::registerOnce('plugin.install', function(){
 	// Можно указать необходимые для работы плагины
@@ -32,9 +22,13 @@ Hook::registerOnce('plugin.install', function(){
 
 	// Или несовместимые плагины
 	Plugins::conflict('smsc');
-
-	// Если положить рядом файл install.sql и подключить модуль database, то при установке системы быдет выполнен SQL запрос из этого файла
+	
+	 
+	return [
+		'anticaptcha.apiKey' => ['type' => 'text', 'placeholder' => 'Key placeholder'],
+	];
 });
+// Если положить рядом файл install.sql и подключить модуль database, то при установке системы быдет выполнен SQL запрос из этого файла
 
 /**
  * Установка приложения, после установки всех плагинов

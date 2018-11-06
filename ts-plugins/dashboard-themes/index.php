@@ -18,8 +18,11 @@ class DashboardTheme {
 	 */
 	protected static $themeConfig;
 
-	public static function load(){
+	public static function install(){
 		Plugins::required('dashboard', 'meta');
+	}
+
+	public static function load(){
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');	
 
 		self::$themeConfig = new Meta('dashboard', 'theme');
@@ -46,5 +49,6 @@ class DashboardTheme {
 }
 
 Hook::registerOnce('plugin.load', [DashboardTheme::class, 'load']);
+Hook::registerOnce('plugin.install', [DashboardTheme::class, 'install']);
 Hook::register('template.dashboard.config', [DashboardTheme::class, 'config']);
 Hook::register('template.dashboard.header', [DashboardTheme::class, 'header']);

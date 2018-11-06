@@ -18,9 +18,11 @@ use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database', 'user');
+});
 
+Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');	
 });
@@ -34,5 +36,4 @@ Hook::registerOnce('app.start', function(){
 
 	Menu::create('dashboard-top')
 		->add(new MenuItem('Выход', ['url' => Http::makeURI('/dashboard/logout'), 'fa' => 'sign-out', 'access' => UserAccess::Guest]));
-
 });

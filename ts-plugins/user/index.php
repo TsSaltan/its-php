@@ -24,7 +24,6 @@ use tsframe\view\TemplateRoot;
  * Загрузка плагина
  */
 Hook::registerOnce('plugin.load', function(){
-	Plugins::required('cache', 'crypto', 'database');
 
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
@@ -72,7 +71,8 @@ Hook::register('template.render', function($tpl){
 	]);
 });
 
-Hook::registerOnce('plugin.install.required', function(){
+Hook::registerOnce('plugin.install', function(){
+	Plugins::required('cache', 'crypto', 'database');
 	return [
 		'access.user.onRegister' => ['type' => 'numeric', 'value' => 1, 'title' => 'Права доступа при регистрации'],
 		'access.user.self' => ['type' => 'numeric', 'value' => 1, 'title' => 'Изменение собственного профиля'],
