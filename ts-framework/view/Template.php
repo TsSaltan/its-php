@@ -24,6 +24,12 @@ class Template{
 	protected $name;
 
 	/**
+	 * Разрешено ли использовать хуки
+	 * @var boolean
+	 */
+	protected $useHooks = true;
+
+	/**
 	 * Переменные для шаблона
 	 * @var array
 	 */
@@ -57,7 +63,7 @@ class Template{
 	 * @return string
 	 */
 	public function render() : string {
-		Hook::call('template.render', [$this]);
+		if($this->useHooks) Hook::call('template.render', [$this]);
 
 		ob_start();
 			extract($this->vars);
@@ -126,7 +132,7 @@ class Template{
 			foreach($tplFiles as $tplFile){
 				require $tplFile;
 			}
-			Hook::call('template.include', [$name, $this]);
+			if($this->useHooks) Hook::call('template.include', [$name, $this]);
 		} catch (TemplateException $e){
 
 		}
@@ -145,10 +151,15 @@ class Template{
 	}
 
 	public function hook(string $name, array $params = []){
+		if(!$this->useHooks) return;
 		return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
 	}
 
 	public function makeURI($uri){
 		return Http::makeURI($uri);
+	}
+
+	public function setHooksUsing(bool $enable){
+		$this->useHooks = $enable;
 	}
 }
