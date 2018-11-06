@@ -48,6 +48,9 @@ Hook::register('app.install', function(){
  * @hook plugin.load
  */
 Hook::registerOnce('plugin.load', function(){
+	// Если текущее приложение расположено не в корневой директории, указываем директорию
+	App::setBasePath('cp');
+
 	// Если плагин использует свои шаблоны - укажем в системе путь к ним
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template');
 
