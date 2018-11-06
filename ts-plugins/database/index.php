@@ -54,7 +54,9 @@ Hook::registerOnce('plugin.load', function(){
 Hook::register('app.install', function(){
 	// Из каждой папки плагина
 	foreach (Plugins::getList() as $name => $path) {
-		importSql($path);
+		if(!Plugins::isDisabled($name)){
+			importSql($path);
+		}
 	}
 
 	// Из корневой папки
