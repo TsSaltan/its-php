@@ -8,7 +8,7 @@ use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Plugins;
 
-Hook::register('app.install', function(){
+Hook::registerOnce('app.install', function(){
 	if(is_null(Config::get('twilio'))){
 		Config::set('twilio.account', "INPUT_YOUR_ACCOUNT_ID");
 		Config::set('twilio.token', "INPUT_YOUR_SECRET_TOKEN");

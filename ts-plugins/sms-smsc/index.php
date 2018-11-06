@@ -16,7 +16,7 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
-Hook::register('plugin.install.required', function(){
+Hook::registerOnce('plugin.install.required', function(){
 	return [
 		'smsc.login' => ['type' => 'text', 'placeholder' => 'Your login for smsc'],
 		'smsc.password' => ['type' => 'text', 'placeholder' => 'Your password for smsc']

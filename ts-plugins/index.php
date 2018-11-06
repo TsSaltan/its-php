@@ -16,7 +16,7 @@ die('Access denied');
  * @return array возвращает массив с данными, которые должен заполнить пользователь, данные будут сохранены в файл конфига
  *               ключ-в-конфиге => ['type' => 'text|email|numeric', 'placeholder' => ..., 'value' => ...]
  */
-Hook::register('plugin.install.required', function(){
+Hook::registerOnce('plugin.install.required', function(){
 	return [
 		'anticaptcha.apiKey' => ['type' => 'text', 'placeholder' => 'Anticapthca API key'],
 	];
@@ -26,7 +26,7 @@ Hook::register('plugin.install.required', function(){
  * После установки системы
  * @hook plugin.install
  */
-Hook::register('plugin.install', function(){
+Hook::registerOnce('plugin.install', function(){
 	// Можно указать необходимые для работы плагины
 	Plugins::required('database', 'user', 'dashboard');
 
@@ -40,7 +40,7 @@ Hook::register('plugin.install', function(){
  * Установка приложения, после установки всех плагинов
  * @hook app.install
  */
-Hook::register('app.install', function(){
+Hook::registerOnce('app.install', function(){
 });
 
 /**
