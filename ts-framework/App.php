@@ -73,16 +73,17 @@ class App{
 	}
 
 	/**
-	 * Установка компонентов
+	 * Установка компонентов приложения
 	 */
 	public static function install(): bool {
 		$controller = new InstallController;
 		$controller->checkPost();
 
 		$fields = Plugins::install();
-		if(is_array($fields)){
-			$controller->setRequiredFields($fields);
-			$controller->send();
+		$controller->setRequiredFields($fields);
+		$controller->send();
+
+		if(is_array($fields) && sizeof($fields) > 0){
 			return false;
 		}
 
