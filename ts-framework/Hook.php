@@ -27,7 +27,14 @@ class Hook{
 		self::$hooks[$name][] = ['function' => $function, 'once' => $once];
 	}
 
-	public static function call(string $name, array $params = [], ?callable $return = null){
+	/**
+	 * Вывоз хука
+	 * @param  string        $name   
+	 * @param  array         $params Параметры, которые будут переданы в коллбэк
+	 * @param  callable|null $return коллбэк функция
+	 * @param  bool|boolean  $once   Если true, то любой хук считается как "одноразовый"
+	 */
+	public static function call(string $name, array $params = [], ?callable $return = null, bool $once = false){
 		if(!isset(self::$hooks[$name])) return;
 		foreach (self::$hooks[$name] as $key => $hook) {
 			$func = $hook['function'];
@@ -36,7 +43,7 @@ class Hook{
 				call_user_func($return, $result);
 			}
 
-			if($hook['once'] ?? true){
+			if(($hook['once'] ?? true) || $once){
 				unset(self::$hooks[$name][$key]);
 			}
 		}
