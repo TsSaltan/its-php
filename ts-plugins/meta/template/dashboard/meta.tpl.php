@@ -2,11 +2,13 @@
 <?$this->incNavbar()?>
     <style>
         .meta-editor .item-header:nth-child(n+2) th{
-            /*border-top:20px solid transparent;*/
             padding-top:35px;
         }
 
-     
+        .meta-editor .key-label{
+            width: 170px;
+            vertical-align: middle;
+        }
     </style>   
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -31,8 +33,6 @@
                             <div class="panel-title pull-right"><form action=""><input class="form-control" name='filter' placeholder="Фильтр" value="<?=$filter?>"></form></div>
                         </div>
                         <div class="panel-body">
-
-                            
                             <div class="tab-content">
                                 <div class="tab-pane fade in active" id="meta-editor">
                                     <div class="table-responsive">
@@ -52,7 +52,7 @@
                                             </tr>
                                                 <?foreach ($m['data'] as $key => $value):?>
                                                 <tr>  
-                                                    <th style="padding-left:15px" width="120px"><?=$key?></th>    
+                                                    <th class="key-label"><?=$key?></th>    
                                                     <td>
                                                         <input class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" value="<?=$value?>" placeholder="delete"/>
                                                     </td>    
