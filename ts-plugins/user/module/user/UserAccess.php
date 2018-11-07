@@ -30,8 +30,8 @@ class UserAccess{
      * @return int
      */
     public static function getAccess(string $rule): int {
-    	$access = Config::get('access.' . $rule);
-    	return is_int($access) ? $access : self::Admin;
+    	$access = intval(Config::get('access.' . $rule));
+    	return ($access >= self::Guest && $access <= self::Admin) ? $access : self::Admin;
     }
 
     /**
