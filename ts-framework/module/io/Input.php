@@ -207,7 +207,7 @@ Input::addFilter('regexp', function(Input $input, string $reg){
 	return preg_match($reg, $input->getCurrentData()) > 0;
 });
 
-Input::addFilter('numeric', function(Input $input){
+Input::addFilter(['numeric', 'number'], function(Input $input){
 	return is_numeric($input->getCurrentData());
 });
 
