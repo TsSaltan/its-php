@@ -58,6 +58,7 @@ class App{
 			$dump = $e->getDump();
 			$code = $e->getCode();
 			$tpl = Template::error();
+			$tpl->setHooksUsing(false);
 			$tpl->vars(['dump' => $dump, 'errorCode' => $code]);
 			$body = $tpl->render();
 			Http::sendBody($body, $code, Http::TYPE_HTML, 'utf-8');
