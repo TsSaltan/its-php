@@ -69,8 +69,10 @@ body,
     border-left: none;
 }
 
+.panel-default .nav>li>a:focus, .nav>li>a:hover,
 #sidebar .nav>li>a:focus, #sidebar .nav>li>a:hover{
-    background-color: #3d566e; hover
+    background-color: #3d566e;
+    color: #fff;
 }
 
 /**
