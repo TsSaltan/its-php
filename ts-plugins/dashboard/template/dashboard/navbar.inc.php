@@ -1,6 +1,6 @@
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="navbar-header" id="nav-header">
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-top" role="navigation">
+        <div id="navbar-top-left" class="navbar-header">
             <a class="navbar-brand" href="/"><i class="fa fa-home fa-fw"></i> На главную</a>
         </div>
 
@@ -12,7 +12,7 @@
         </button>
 
         <!-- Top Navigation: Right Menu -->
-        <ul id="nav-header-right" class="nav navbar-right navbar-top-links">
+        <ul id="navbar-top-right" class="nav navbar-right navbar-top-links">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <?=$this->login?> <b class="caret"></b>
@@ -30,7 +30,7 @@
         </ul>
 
         <!-- Sidebar -->
-        <div id="nav-sidebar" class="navbar-default sidebar" role="navigation">
+        <div id="sidebar" class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <?=$this->menu('dashboard-sidebar', 
                     function(string $items, int $level){
@@ -50,7 +50,7 @@
                 <?=$this->menu('dashboard-admin-sidebar', 
                     function(string $items, int $level){
                         if($level == 0){
-                            return "<ul class=\"nav nav-admin\">$items</ul>";    
+                            return "<ul id=\"side-admin-menu\" class=\"nav nav-admin\">$items</ul>";    
                         }
                         
                         return "<ul class=\"nav nav-second-level\">$items</ul>";    
