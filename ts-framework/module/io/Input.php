@@ -239,3 +239,15 @@ Input::addFilter('json', function(Input $input){
 Input::addFilter('email', function(Input $input){
 	return substr_count($input->getCurrentData(), '@') == 1;
 });
+
+Input::addFilter('ip', function(Input $input){
+	return filter_var($input->getCurrentData(), FILTER_VALIDATE_IP) !== false;
+});
+
+Input::addFilter('ipv4', function(Input $input){
+	return filter_var($input->getCurrentData(), FILTER_FLAG_IPV4) !== false;
+});
+
+Input::addFilter('ipv6', function(Input $input){
+	return filter_var($input->getCurrentData(), FILTER_FLAG_IPV6) !== false;
+});
