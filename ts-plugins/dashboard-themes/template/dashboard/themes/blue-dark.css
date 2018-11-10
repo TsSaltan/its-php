@@ -1,0 +1,119 @@
+/*
+#navbar-top
+    #navbar-top-left
+    #navbar-top-right
+
+    #sidebar
+        ul#side-menu
+        ul#side-admin-menu
+*/
+
+/**
+ * Верхний бар
+ */
+#navbar-top{
+    border-bottom: 1px solid #3F93D1;
+    background-color: #3F93D1;
+}
+
+#navbar-top-right a:focus,
+#navbar-top-right a:hover{
+    background: transparent;
+}
+
+#navbar-top-right a.dropdown-toggle,
+#navbar-top-right a.dropdown-toggle:active,
+#navbar-top-right a.dropdown-toggle:hover,
+#navbar-top-right a.dropdown-toggle:focus,
+#navbar-top-left a,
+#navbar-top-left a:active,
+#navbar-top-left a:focus,
+#navbar-top-left a:hover
+{
+    color: white;
+}
+
+
+/**
+ * Боковое меню
+ */
+body,
+#sidebar{
+    background-color: #33363B;
+}
+
+#side-menu,
+#side-admin-menu{
+    border-bottom: 1px solid #54677a;
+}
+
+#side-admin-menu{
+    margin-top: 15px;
+}
+
+#sidebar ul li{
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #54677a;
+    border-bottom: 1px solid #142638;
+}
+
+#sidebar ul li a{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: white;
+}
+
+#sidebar ul li a.active{
+    background-color: #376a9a;
+    border-left: none;
+}
+
+#sidebar .nav>li>a:focus, #sidebar .nav>li>a:hover{
+    background-color: #3d566e; hover
+}
+
+/**
+ * Контент
+ */
+#page-wrapper {
+    background-color: #ecf0f1;
+}
+
+/**
+ * Панели
+ */
+.panel-default>.panel-heading{
+    background-color: #33363B;
+    border-color: #33363B;
+    color: white;
+}
+
+.panel-default{
+    border-color: #33363B;
+}
+
+.panel:hover{
+    box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.5);
+}
+
+/**
+ * Кнопки
+ */
+.btn.btn-primary{
+    border-color: #2779b0;
+    color: #fff;
+    background-color: #2980b9;
+}
+
+.btn.btn-success{
+    border-color: #15987e;
+    color: #fff;
+    background-color: #16a085;
+}
+
+.btn.btn-danger{
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
