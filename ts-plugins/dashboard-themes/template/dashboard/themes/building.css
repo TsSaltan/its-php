@@ -1,0 +1,56 @@
+/*
+#navbar-top
+    #navbar-top-left
+    #navbar-top-right
+
+    #sidebar
+        ul#side-menu
+        ul#side-admin-menu
+*/
+
+/**
+ * Верхний бар
+ */
+#navbar-top{
+    border-bottom: 1px solid #d5dddf;
+
+    background-image: 
+        repeating-linear-gradient(
+        45deg,
+        rgba(255,234,0,1),
+        rgba(255,234,0,1) 50px,
+        black 50px,
+        black 100px
+    );
+}
+
+#navbar-top-right a:focus,
+#navbar-top-right a:hover{
+    background: transparent;
+}
+
+#navbar-top-right a.dropdown-toggle,
+#navbar-top-right a.dropdown-toggle:active,
+#navbar-top-right a.dropdown-toggle:hover,
+#navbar-top-right a.dropdown-toggle:focus,
+#navbar-top-left a,
+#navbar-top-left a:active,
+#navbar-top-left a:focus,
+#navbar-top-left a:hover
+{
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px black,
+                 0px 0px 2px black,
+                 1px 0px 2px black,
+                 0px 1px 2px black,
+                 -1px -1px 2px black;
+
+
+
+}
+
+
+a{
+    color: #548eaa;
+}
