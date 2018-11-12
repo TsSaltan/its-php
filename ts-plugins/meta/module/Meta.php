@@ -145,14 +145,13 @@ class Meta{
 	 */
 	public static function create(): Meta {
 		$args = func_get_args();
-		$meta = new self(...$args);
 		$append = 0;
-		while($meta->isExists()){
-			$append++;
+		do{
 			$argList = $args;
 			$argList[] = $append;
 			$meta = new self(...$argList);
-		}
+			$append++;
+		} while($meta->isExists());
 
 		return $meta;
 	}
