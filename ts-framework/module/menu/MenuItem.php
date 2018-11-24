@@ -7,7 +7,7 @@ class MenuItem{
 	protected $children = [];
 
 	public function __construct(?string $title = null, array $data = []){
-		$this->title = $title;
+		$this->setTitle($title);
 		$this->data = $data;
 	}
 
@@ -28,12 +28,20 @@ class MenuItem{
 		return $this;
 	}
 
-    public function getTitle(){
+    public function getTitle(): ?string {
         return $this->title;
+    }
+
+    public function setTitle(?string $title){
+        $this->title = $title;
     }
 
     public function getData(string $item){
         return $this->data[$item] ?? null;
+    }
+
+    public function setData(string $key, $value){
+        $this->data[$key] = $value;
     }
 
     public function getChildren(): array {
