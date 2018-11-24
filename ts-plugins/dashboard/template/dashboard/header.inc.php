@@ -1,5 +1,4 @@
 <?$this->incFunctions()?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
