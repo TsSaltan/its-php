@@ -11,13 +11,15 @@ use tsframe\module\Cache;
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		$access = is_null($access) ? UserAccess::getAccess('user.onRegister') : $access;
-		$uid = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
+		$query = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
 				->bind('login', $login)
 				->bind('email', $email)
 				->bind('access', $access)
-				->exec()
-				->lastInsertId();
+				->exec();
 
+		if($query->affectedRows() == 0) return SingleUser::unauthorized();
+
+		$uid = $query->lastInsertId();
 		$user = new SingleUser($uid, $login, $email, $access);
 		$user->set('password', $password); // Пароль устанавливается отдельно, чтоб сгенерировался его хеш
 		Hook::call('user.register', [$user]);

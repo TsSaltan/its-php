@@ -70,8 +70,9 @@ class UserAJAX extends AbstractAJAXController{
 								  ->name('email')->email()
 						  		  ->assert();
 
-					if(User::exists(['email' => $data['email'], 'login' => $data['login']])){
+					if(User::exists(['email' => $data['email']]) || User::exists(['login' => $data['login']])){
 						$this->sendError('Login or email already used', 10);
+						break;
 					}
 
 					$user = User::register($data['login'], $data['email'], $data['password']);
@@ -83,7 +84,6 @@ class UserAJAX extends AbstractAJAXController{
 					}
 
 					break;
-					
 
 				case 'user/edit':
 					$data = $input->name('id')
