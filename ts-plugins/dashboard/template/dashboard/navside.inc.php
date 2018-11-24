@@ -31,5 +31,6 @@
                 }
             )?>
         <?endif?>
+        <?$this->hook('navbar.side')?>
     </div>
 </div>

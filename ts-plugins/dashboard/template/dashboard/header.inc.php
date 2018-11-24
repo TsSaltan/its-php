@@ -60,5 +60,3 @@
 
 <div id="preloader"></div>
 <div id="wrapper">
-
-    

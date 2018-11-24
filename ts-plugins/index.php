@@ -86,7 +86,12 @@ Hook::register('database.query', function(Query $query){
 /**
  * Изменение конкретного шаблона
  * @hook template.{templateName}.{templatePath}
- * f.e. template.dashboard.auth, template.dashboard.config, template.dashboard.user.edit, template.dashboard.header
+ * f.e. template.dashboard.auth, 
+ * 		template.dashboard.config, 
+ * 		template.dashboard.user.edit, 
+ * 		template.dashboard.header
+ * 		template.dashboard.navbar.top
+ * 		template.dashboard.navbar.side
  * @param Template $tpl
  */
 Hook::register('template.{templateName}.{templatePath}', function(Template $tpl){

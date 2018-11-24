@@ -27,4 +27,5 @@
         )?>
     </li>
     <?endif?>
+    <?$this->hook('navbar.top')?>
 </ul>
