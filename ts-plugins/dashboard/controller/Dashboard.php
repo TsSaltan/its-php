@@ -3,6 +3,7 @@ namespace tsframe\controller;
 
 use tsframe\Config;
 use tsframe\Http;
+use tsframe\module\io\Output;
 use tsframe\module\io\Input;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
@@ -89,6 +90,19 @@ class Dashboard extends AbstractController{
 		$this->callActionMethod();
 
 		$action = $this->getAction();
+		
+		$meta = new Meta('dashboard');
+		$siteName = $meta->get('sitename');
+		$this->vars['siteName'] = is_null($siteName) ? $_SERVER['SERVER_NAME'] : $siteName;
+		Output::of($this->vars['siteName'])->xss()->quotes();
+		
+		$siteHome = $meta->get('sitehome');
+		$this->vars['siteHome'] = is_null($siteHome) ? '/' : Http::makeURI($siteHome);
+		Output::of($this->vars['siteHome'])->xss()->quotes();
+		
+		$siteIcon = $meta->get('siteicon');
+		$this->vars['siteIcon'] = is_null($siteIcon) ? 'fa-home' : $siteIcon;
+		Output::of($this->vars['siteIcon'])->xss()->quotes();
 
 		$tpl = new HtmlTemplate('dashboard', $action);
 		$tpl->vars($this->vars);

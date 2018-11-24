@@ -1,5 +1,14 @@
 <div id="navbar-top-left" class="navbar-header">
-    <a class="navbar-brand" href="/"><i class="fa fa-home fa-fw"></i> На главную</a>
+    <a class="navbar-brand" href="<?=$siteHome?>">
+        <?if(strpos($siteIcon, '://') !== false):?>
+            <img src="<?=$siteIcon?>" class="site-icon" alt="Site icon">
+        <?elseif(strpos($siteIcon, 'fa-') !== false):?>
+            <i class="fa <?=$siteIcon?> fa-fw"></i>
+        <?else:?>
+            <?=$siteIcon?>
+        <?endif?>
+        <?=$siteName?>
+    </a>
 </div>
 
 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

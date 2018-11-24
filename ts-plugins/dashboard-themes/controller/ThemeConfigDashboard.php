@@ -15,13 +15,17 @@ class ThemeConfigDashboard extends UserDashboard {
 	public function postTheme(){
 		UserAccess::assertCurrentUser('user.editConfig');
 		$data = Input::post()
-					->name('theme')
-						->required()
-					 	->minLength(0)
+					->name('theme')->required()->minLength(0)
+					->name('sitename')->required()->minLength(0)
+					->name('siteicon')->required()->minLength(0)
+					->name('sitehome')->required()->minLength(0)
 					->assert();
 
-		$meta = new Meta('dashboard', 'theme');
-		$meta->set('current_theme', $data['theme']);
+		$meta = new Meta('dashboard');
+		$meta->set('theme', $data['theme']);
+		$meta->set('sitename', $data['sitename']);
+		$meta->set('siteicon', $data['siteicon']);
+		$meta->set('sitehome', $data['sitehome']);
 		Http::redirect(Http::makeURI('/dashboard/config#theme'));
 	}
 }
