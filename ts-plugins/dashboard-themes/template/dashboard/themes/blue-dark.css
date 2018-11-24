@@ -42,8 +42,8 @@ body,
     background-color: #33363B;
 }
 
-#side-menu,
-#side-admin-menu{
+#side-menu li:nth-last-child(1),
+#side-admin-menu li:nth-last-child(1){
     border-bottom: 1px solid #54677a;
 }
 
