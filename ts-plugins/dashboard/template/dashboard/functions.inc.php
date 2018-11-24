@@ -2,6 +2,17 @@
 global $that;
 $that = $this;
 
+function uiNavbar(bool $top = true, bool $side = true){
+    global $that;
+    ?>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-top" role="navigation">
+        <?if($top)  $that->incNavtop()?>
+        <?if($side) $that->incNavside()?>
+    </nav>
+    <?
+}
+
 /**
  * Показать уведомления, установленные контроллером ($this->alert)
  * или массив уведомлений
