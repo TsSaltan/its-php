@@ -42,10 +42,6 @@ class CashInstaller {
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
 	}
-
-	public static function addMenuSidebar(MenuItem $menu){
-		// $menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -1);
-	}
 	
 	public static function addMenuTop(MenuItem $menu){
 		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
@@ -97,6 +93,5 @@ class CashInstaller {
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
 Hook::registerOnce('plugin.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
-Hook::register('menu.render.dashboard-admin-sidebar', [CashInstaller::class, 'addMenuSidebar']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
 Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);

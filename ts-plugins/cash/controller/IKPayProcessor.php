@@ -37,9 +37,9 @@ class IKPayProcessor extends AbstractController{
 				Log::Cash('Ошибка: платёж уже обработан!', ['pay_id' => $payId]);
 			}
 
-			Http::send('OK', 200);
-
+			Http::sendBody('OK', 200);
 			die;
+
 		} elseif(isset($_REQUEST['ik_inv_st'])){
 			Log::Cash('Запрос от платёжного сервера', ['check' => $check, 'request' => $_REQUEST]);
 		}
