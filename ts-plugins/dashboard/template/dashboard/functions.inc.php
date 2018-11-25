@@ -2,6 +2,11 @@
 global $that;
 $that = $this;
 
+/**
+ * Отображение навигационного меню
+ * @param  bool|boolean $top  Показать верхний бар
+ * @param  bool|boolean $side Показать боковой бар
+ */
 function uiNavbar(bool $top = true, bool $side = true){
     global $that;
     ?>
