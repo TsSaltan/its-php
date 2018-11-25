@@ -84,7 +84,7 @@ class Cash{
 
 		foreach($logs as $log){
 			$data = json_decode($log['data'], true);
-			if(isset($data['pay_id']) && $data['pay_id'] == $trId){
+			if(isset($data['pay_id']) && $data['pay_id'] == $trId && isset($data['user']) && $data['user'] == $this->user->get('id')){
 				return true;
 			}
 		}
