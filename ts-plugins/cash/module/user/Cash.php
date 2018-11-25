@@ -83,7 +83,7 @@ class Cash{
 					->fetch();
 
 		foreach($logs as $log){
-			$data = json_decode($log['data']);
+			$data = json_decode($log['data'], true);
 			if(isset($data['pay_id']) && $data['pay_id'] == $trId){
 				return true;
 			}
