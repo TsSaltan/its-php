@@ -24,8 +24,8 @@
                     <tr>
                         <td><?=($i+1)?></td>
                         <td style='color:<?=($item['balance'] < 0) ? 'red' : 'green'?>'><?=$item['balance']?></td>
-                        <td><?=$item['description']?></td>
-                        <td><?=$item['timestamp']?></td>
+                        <td><?=($item['message'] ?? null )?></td>
+                        <td><?=$item['date']?></td>
                     </tr>
                     <?endforeach?>
                 </tbody>

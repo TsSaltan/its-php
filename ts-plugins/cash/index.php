@@ -44,7 +44,7 @@ class CashInstaller {
 	}
 
 	public static function addMenuSidebar(MenuItem $menu){
-		$menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -1);
+		// $menu->add(new MenuItem('Финансовые операции', ['url' => Http::makeURI('/dashboard/cash'), 'fa' => 'money', 'access' => UserAccess::getAccess('cash.global')]), -1);
 	}
 	
 	public static function addMenuTop(MenuItem $menu){

@@ -4,6 +4,7 @@ namespace tsframe\module\user;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\module\Crypto;
+use tsframe\module\Log;
 use tsframe\Config;
 use tsframe\Hook;
 
@@ -26,10 +27,8 @@ class Cash{
 	 */
 	protected $balance = '0';
 
-	public static function getGlobalHistory(){
-		return Database::prepare('SELECT * FROM `cash_log` ORDER BY `timestamp` DESC')
-			->exec()
-			->fetch();
+	public static function getGlobalHistory(int $offset = 0, int $count = 0){
+		return Log::getLogs('Cash', $offset, $count);
 	}
 
 	public static function getCurrency(){
@@ -76,11 +75,45 @@ class Cash{
 		return $this->balance;
 	}
 
-	public function getHistory(){
-		return Database::prepare('SELECT * FROM `cash_log` WHERE `owner` = :userId')
-					->bind(':userId', $this->user->get('id'))
+	public function isTransactionExists(string $trId): bool {
+		$logs = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND `data` LIKE :trId')
+					->bind(':type', 'Cash')
+					->bind(':trId', '%' . $trId . '%')
 					->exec()
 					->fetch();
+
+		foreach($logs as $log){
+			$data = json_decode($log['data']);
+			if(isset($data['pay_id']) && $data['pay_id'] == $trId){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function getHistory(){
+		//return Database::prepare('SELECT * FROM `cash_log` WHERE `owner` = :userId')
+		// SELECT * FROM `log` WHERE `data` LIKE "%\"isExpired\":true%" LIMIT 10
+		$data = [];
+		$history = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND (`data` LIKE :userId OR `data` LIKE :userId2)')
+					->bind(':type', 'Cash')
+					->bind(':userId', '%"user":' . $this->user->get('id') . '%')
+					->bind(':userId2', '%"user":"' . $this->user->get('id') . '"%')
+					->exec()
+					->fetch();
+
+		foreach($history as $item){
+			$iData = json_decode($item['data'], true);
+			$data[] = [
+				'user' => $iData['user'],
+				'balance' => $iData['balance'],
+				'date' => $item['date'],
+				'message' => $iData['message'],
+			];
+		}
+
+		return $data;
 	}
 
 	private function setBalance(): bool {
@@ -98,11 +131,10 @@ class Cash{
 	 */
 	public function add(string $sum, string $description = null){
 		$this->balance = bcadd($this->balance, $sum, self::ACCURACY);
-		Database::prepare('INSERT INTO `cash_log` (`owner`, `balance`, `description`, `timestamp`) VALUES (:userId, :sum, :description, CURRENT_TIMESTAMP)')
-				->bind(':userId', $this->user->get('id'))
-				->bind(':sum', $sum)
-				->bind(':description', $description)
-				->exec();
+		Log::Cash($description, [
+			'user' => $this->user->get('id'),
+			'balance' => '+' . $sum
+		]);
 		$this->setBalance();
 	}
 
@@ -112,11 +144,10 @@ class Cash{
 	 */
 	public function sub(string $sum, string $description = null){
 		$this->balance = bcsub($this->balance, $sum, self::ACCURACY);
-		Database::prepare('INSERT INTO `cash_log` (`owner`, `balance`, `description`, `timestamp`) VALUES (:userId, :sum, :description, CURRENT_TIMESTAMP)')
-				->bind(':userId', $this->user->get('id'))
-				->bind(':sum', '-' . $sum)
-				->bind(':description', $description)
-				->exec();
+		Log::Cash($description, [
+			'user' => $this->user->get('id'),
+			'balance' => '-' . $sum
+		]);
 		$this->setBalance();
 	}
 
