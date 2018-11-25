@@ -13,17 +13,17 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Изменение счёта</th>
                         <th>Описание</th>
                         <th>Дата</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?foreach($this->vars['balanceHistory'] as $i => $item):?>
+                    <?foreach($balanceHistory as $item):?>
                     <tr>
-                        <td><?=($i+1)?></td>
-                        <td style='color:<?=($item['balance'] < 0) ? 'red' : 'green'?>'><?=$item['balance']?></td>
+                        <td style='font-size: 10px'><?=($item['pay_id'] ?? null)?></td>
+                        <td style='color:<?=($item['balance'] < 0) ? 'red' : ($item['balance'] > 0 ? 'green' : 'black')?>'><?=$item['balance']?></td>
                         <td><?=($item['message'] ?? null )?></td>
                         <td><?=$item['date']?></td>
                     </tr>

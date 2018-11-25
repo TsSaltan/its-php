@@ -1,9 +1,10 @@
 <?php
 namespace tsframe\module\user;
 
+use tsframe\module\Crypto;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
-use tsframe\module\Crypto;
+use tsframe\module\interkassa\Payment;
 use tsframe\module\Log;
 use tsframe\Config;
 use tsframe\Hook;
@@ -27,11 +28,21 @@ class Cash{
 	 */
 	protected $balance = '0';
 
-	public static function getGlobalHistory(int $offset = 0, int $count = 0){
+	/**
+	 * Получить историю всех платежей
+	 * @param  int|integer $offset 
+	 * @param  int|integer $count  
+	 * @return array
+	 */
+	public static function getGlobalHistory(int $offset = 0, int $count = 0): array {
 		return Log::getLogs('Cash', $offset, $count);
 	}
 
-	public static function getCurrency(){
+	/**
+	 * Получить текущую валюту
+	 * @return string
+	 */
+	public static function getCurrency(): string {
 		$cur = Config::get('interkassa.currency');
 		return is_null($cur) ? 'USD' : $cur;
 	}
@@ -51,6 +62,7 @@ class Cash{
 	}
 
 	/**
+	 * Получить баланс текущего пользователя
 	 * @return string
 	 */
 	public function getBalance(bool $update = false): string {
@@ -72,9 +84,17 @@ class Cash{
 			}
 		}
 
-		return $this->balance;
+		// Убираем нули, если их много после точки
+		// Но минимум 1 нуль должен быть
+		$balance = rtrim($this->balance, '0');
+		return $balance . (substr($balance, -1, 1) == '0' ? '' : '0');
 	}
 
+	/**
+	 * Проверить, поступал ли платёж с таким ID
+	 * @param  string  $trId ID транзакции
+	 * @return boolean      
+	 */
 	public function isTransactionExists(string $trId): bool {
 		$logs = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND `data` LIKE :trId')
 					->bind(':type', 'Cash')
@@ -92,11 +112,15 @@ class Cash{
 		return false;
 	}
 
-	public function getHistory(){
-		//return Database::prepare('SELECT * FROM `cash_log` WHERE `owner` = :userId')
-		// SELECT * FROM `log` WHERE `data` LIKE "%\"isExpired\":true%" LIMIT 10
+	/**
+	 * Получить историю платежей текущего пользователя
+	 * @return array ([user=>, balance=>, date=>, message=>, pay_id=>], ... )
+	 */
+	public function getHistory(): array {
 		$data = [];
-		$history = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND (`data` LIKE :userId OR `data` LIKE :userId2)')
+
+		// Только недавно mysql научился работать с json, поэтому для кроссплатформенности использую LIKE
+		$history = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND (`data` LIKE :userId OR `data` LIKE :userId2) ORDER BY `date` DESC')
 					->bind(':type', 'Cash')
 					->bind(':userId', '%"user":' . $this->user->get('id') . '%')
 					->bind(':userId2', '%"user":"' . $this->user->get('id') . '"%')
@@ -110,12 +134,16 @@ class Cash{
 				'balance' => $iData['balance'],
 				'date' => $item['date'],
 				'message' => $iData['message'],
+				'pay_id' => $iData['pay_id'] ?? null ,
 			];
 		}
 
 		return $data;
 	}
 
+	/**
+	 * Обновить баланс из базы данных
+	 */
 	private function setBalance(): bool {
 		if(!$this->user->isAuthorized()) return false;
 		return Database::prepare('UPDATE `cash` SET `balance` = :balance WHERE `owner` = :userId')
@@ -127,26 +155,32 @@ class Cash{
 
 	/**
 	 * Добавить сумму
-	 * @param string $sum
+	 * @param string $sum 			Cумма операции
+	 * @param string $description 	Описание платежа
+	 * @param string $payId 		Уникальный идентификатор транзакции
 	 */
-	public function add(string $sum, string $description = null){
+	public function add(string $sum, string $description = null, string $payId = null){
 		$this->balance = bcadd($this->balance, $sum, self::ACCURACY);
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
-			'balance' => '+' . $sum
+			'balance' => '+' . $sum,
+			'pay_id' => !is_null($payId) ? $payId : Payment::createPayId($this->user->get('id'))
 		]);
 		$this->setBalance();
 	}
 
 	/**
-	 * Вычесть сумму
-	 * @param string $sum
+	 * Вычесть сумму	 
+	 * @param string $sum 			Cумма операции
+	 * @param string $description 	Описание платежа
+	 * @param string $payId 		Уникальный идентификатор транзакции
 	 */
-	public function sub(string $sum, string $description = null){
+	public function sub(string $sum, string $description = null, string $payId = null){
 		$this->balance = bcsub($this->balance, $sum, self::ACCURACY);
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
-			'balance' => '-' . $sum
+			'balance' => '-' . $sum,
+			'pay_id' => !is_null($payId) ? $payId : Payment::createPayId($this->user->get('id'))
 		]);
 		$this->setBalance();
 	}
@@ -160,7 +194,7 @@ class Cash{
 	}
 
 	/**
-	 * Вычесть сумму
+	 * Сравнить сумму с текущим балансом
 	 * @param string $sum
 	 * @return int 0, если числа равны; 1, если $sum больше; -1, если меньше.
 	 */

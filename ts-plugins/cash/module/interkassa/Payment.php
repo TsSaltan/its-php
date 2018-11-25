@@ -1,12 +1,30 @@
 <?php
 namespace tsframe\module\interkassa;
 
+use tsframe\module\Crypto;
 use tsframe\module\user\Cash;
 use tsframe\Config;
 use tsframe\view\HtmlTemplate;
 
 
 class Payment{
+	public static function decodePayId(string $payId): int {
+		$keys = explode('-', $payId);
+		$keyLength = $keys[0];
+		$idLength = $keys[1];
+		$key = $keys[2];
+		$userId = substr($key, $keyLength, $idLength);
+
+		return intval($userId);
+	}
+
+	public static function createPayId(int $userId): string {
+		$keyLength = rand(5,12);
+		$idLength = strlen($userId);
+		return $keyLength . '-' . $idLength . '-' . Crypto::generateString($keyLength) . $userId . Crypto::generateString(rand(1,6));
+	}
+
+
 	protected $cashId;
 	protected $payId;
 	protected $amount;
@@ -26,7 +44,7 @@ class Payment{
 	public function __construct($user = null, $amount = 10.0, string $description = null){
 		$this->user = is_null($user) ? User::current() : $user;
 		$this->cashId = Config::get('interkassa.cashId');
-		$this->payId = uniqid('ID_' . $user->get('id') . '_');
+		$this->payId = self::createPayId($user->get('id'));
 		$this->amount = $amount;
 		$this->currency = Cash::getCurrency();
 		$this->description = is_null($description) ? ('Пополнение баланса пользователя ' . $user->get('login')) : $description;
