@@ -36,27 +36,20 @@ class Dashboard extends AbstractController{
 
 		$action = $this->getAction();
 		$this->currentUser = User::current();
+
+		// Неавторизованных на авторизацию
 		if(!$this->currentUser->isAuthorized() && $action != 'login'){
-			Http::redirect(Http::makeURI('/dashboard/login'));
+			$currentUrl = $_SERVER['REQUEST_URI'];
+			Http::redirect(Http::makeURI('/dashboard/login', ['redirect' => $currentUrl]));
 		} elseif($this->currentUser->isAuthorized() && $action == 'login'){
-			Http::redirect(Http::makeURI('/dashboard/'));
-		}
- 		
- 		// @todo redirects
-			/*if(isset($_GET['redirect'])){
-				setcookie('RE', $_GET['redirect'], time() + 60*60, '/');
-				$this->vars['alert']['info'] = 'Необходимо авторизоваться!';
-			}
-			$this->param['action'] = 'login';
-			return false;
-		} else {
-			if(isset($_COOKIE['RE'])){
-				setcookie('RE', null, -1, '/');
-				Http::redirect($_COOKIE['RE']);
+			if(isset($_GET['redirect']) && strpos($_GET['redirect'], '://') === false){
+				$url = $_GET['redirect'];
+			} else {
+				$url = '/dashboard/';
 			}
 
-			return true;
-		}*/
+			Http::redirect(Http::makeURI($url));
+		}
 	}
 
 	public function getLogout(){
