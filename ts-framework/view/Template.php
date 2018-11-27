@@ -155,8 +155,8 @@ class Template{
 		return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
 	}
 
-	public function makeURI($uri){
-		return Http::makeURI($uri);
+	public function makeURI(string $uri, array $queryParams = [], string $hashString = null){
+		return Http::makeURI($uri, $queryParams, $hashString);
 	}
 
 	public function setHooksUsing(bool $enable){

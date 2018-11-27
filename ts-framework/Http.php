@@ -71,12 +71,15 @@ class Http{
 	 * relative-path/ => relative-path/
 	 * http://abs-path/ => http://abs-path/
 	 */
-	public static function makeURI(string $uri): string {
+	public static function makeURI(string $uri, array $queryParams = [], string $hashString = null): string {
+		$postfix = (sizeof($queryParams) > 0) ? (strpos($uri, '?') === false ? '?' : '&') . http_build_query($queryParams) : null;
+		$postfix .= strlen($hashString) > 0 ? '#' . $hashString : null;
+
 		if(substr($uri, 0, 1) == '/'){
-			return self::getProtocol() . '://' .  self::getHostName() . App::getBasePath() . substr($uri, 1);
+			return self::getProtocol() . '://' .  self::getHostName() . App::getBasePath() . substr($uri, 1) . $postfix;
 		}
 
-		return $uri;
+		return $uri . $postfix;
 	}
 
 	/**
