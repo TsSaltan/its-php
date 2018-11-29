@@ -95,6 +95,7 @@ body,
     border-color: #33363B;
 }
 
+.login-panel,
 .panel:hover{
     box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.5);
 }
@@ -118,4 +119,22 @@ body,
     color: #fff;
     background-color: #d9534f;
     border-color: #d43f3a;
+}
+
+/**
+ * Панель авторизации
+ */
+.panel.login-panel .panel-heading ul li a{
+    color: #eee;
+}
+
+.panel.login-panel .panel-heading{
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.panel.login-panel .panel-heading ul li a:hover,
+.panel.login-panel .panel-heading ul li a:focus {
+    background-color: #424448;
+    color: #fff;
 }
