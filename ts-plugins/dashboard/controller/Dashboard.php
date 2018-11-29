@@ -13,8 +13,10 @@ use tsframe\view\HtmlTemplate;
 /**
  * @route GET /dashboard -> /dashboard/index
  * @route GET /dashboard/ -> /dashboard/index
+ * @route GET /dashboard/login -> /dashboard/auth#login
+ * @route GET /dashboard/register -> /dashboard/auth#register
  * 
- * @route GET /dashboard/[login|index|logout|config:action]
+ * @route GET /dashboard/[auth|index|logout|config:action]
  * @route POST /dashboard/[config:action]
  */
 class Dashboard extends AbstractController{
@@ -38,10 +40,13 @@ class Dashboard extends AbstractController{
 		$this->currentUser = User::current();
 
 		// Неавторизованных на авторизацию
-		if(!$this->currentUser->isAuthorized() && $action != 'login'){
+		if(!$this->currentUser->isAuthorized() && $action != 'auth'){
 			$currentUrl = $_SERVER['REQUEST_URI'];
-			Http::redirect(Http::makeURI('/dashboard/login', ['redirect' => $currentUrl]));
-		} elseif($this->currentUser->isAuthorized() && $action == 'login'){
+			Http::redirect(Http::makeURI('/dashboard/auth', ['redirect' => $currentUrl]));
+		} 
+		// Если авторизованный открывает страницу логина - перекидываем на redirect или на главную
+		elseif($this->currentUser->isAuthorized() && $action == 'auth'){
+			// Редирект только внутри домена
 			if(isset($_GET['redirect']) && strpos($_GET['redirect'], '://') === false){
 				$url = $_GET['redirect'];
 			} else {

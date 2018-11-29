@@ -43,19 +43,19 @@ Hook::registerOnce('plugin.load', function(){
 	});
 });
 
-Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$configTabs, int &$activeTab){
+Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$configTabs, &$activeTab){
 	if(is_null($tpl->selectUser)) return;
 	$selectUser = $tpl->selectUser;
 
 	if($tpl->self || UserAccess::checkCurrentUser('user.edit')){
 		if(isset($_GET['phone'])){
-			$activeTab = sizeof($configTabs);
+			$activeTab = 'phone';
 		}
 
-		$configTabs['Телефон'] = function() use ($tpl, $selectUser){
+		$configTabs['phone']['title'] = 'Телефон';
+		$configTabs['phone']['content'] = function() use ($tpl, $selectUser){
 			$tpl->inc('user_phone');
 		};
-
 	}
 });
 

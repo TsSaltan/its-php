@@ -15,16 +15,10 @@ $(function() {
         } else {
             $('div.navbar-collapse').removeClass('collapse');
         }
-
-        /*height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
-        height = height - topOffset;
-        if (height < 1) height = 1;
-        if (height > topOffset) {
-            $("#page-wrapper").css("min-height", (height) + "px");
-        }*/
     });
 
     var url = window.location;
+
     var element = $('ul.nav a').filter(function() {
         return this.href == url || url.href.indexOf(this.href) == 0;
     }).addClass('active').parent().parent().addClass('in').parent();
@@ -32,7 +26,33 @@ $(function() {
         element.addClass('active');
     }
 
-    if(window.location.hash && $(window.location.hash+".collapse").length) {
-        $(window.location.hash+".collapse").removeClass('collapse');
+    if(window.location.hash){
+        let hash = window.location.hash;
+
+        // Раскрываем свёрнутые панели
+        if($(hash+".collapse").length) {
+            $(hash+".collapse").removeClass('collapse');
+        } 
+
+        // Раскрываем табы
+        else if($('a[href="'+hash+'"]')){
+            $('a[href="'+hash+'"]').click();
+        }
     }
+
+    // Сохраняем в url нажатые ссылки на табы, панели и т.д.
+    $('a[href^="#"]').click(function(e){
+        setHash(e.target.hash);
+    });
 });
+
+function setHash(hash){
+    if(hash.charAt(0) != '#') hash = '#' + hash;
+
+    if(history.pushState) {
+        history.pushState(null, null, hash);
+    }
+    else {
+        location.hash = hash;
+    }
+}

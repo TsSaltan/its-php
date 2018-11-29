@@ -47,13 +47,13 @@ class CashInstaller {
 		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
 	}
 
-	public static function addEditTab(Template $tpl, array &$configTabs, int &$activeTab){
+	public static function addEditTab(Template $tpl, array &$configTabs, &$activeTab){
 		if(is_null($tpl->selectUser)) return;
 		$selectUser = $tpl->selectUser;
 
 		if($tpl->self || UserAccess::checkCurrentUser('user.edit')){
 			if(isset($_GET['balance'])){
-				$activeTab = sizeof($configTabs);
+				$activeTab = 'balance';
 
 				switch($_GET['balance']){
 					case 'frompay':
@@ -62,7 +62,8 @@ class CashInstaller {
 				}
 			}
 
-			$configTabs['Баланс'] = function() use ($tpl, $selectUser){
+			$configTabs['balance']['title'] = 'Баланс';
+			$configTabs['balance']['content'] = function() use ($tpl, $selectUser){
 				$cash = new Cash($selectUser);
 				$tpl->var('balance', $cash->getBalance());
 				$tpl->var('balanceCurrency', Config::get('interkassa.currency'));

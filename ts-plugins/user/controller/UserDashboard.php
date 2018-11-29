@@ -35,12 +35,18 @@ class UserDashboard extends Dashboard {
 	 */
 	protected $selectUser;
 
+	/**
+	 * Отображение списа пользователей
+	 */
 	public function getUserList(){
 		UserAccess::assert($this->currentUser, 'user.list');
 		$this->vars['title'] = 'Список пользователей';
 		$this->vars['userList'] = new Paginator(User::get(), 10);
 	}
 
+	/**
+	 * Редактирование своего или чужого профиля
+	 */
 	public function getUserEdit(){
 		if($this->self){
 			UserAccess::assert($this->currentUser, 'user.self');
@@ -77,11 +83,17 @@ class UserDashboard extends Dashboard {
 		$this->vars['social'] = SocialLogin::getUserAccounts($this->selectUser);
 	}
 
+	/**
+	 * Удаление пользователя
+	 */
 	public function getUserDelete(){
 		$this->vars['title'] = 'Удаление пользователя';
 		UserAccess::assert($this->currentUser, ($this->self ? 'user.self' : 'user.delete'));
 	}
 
+	/**
+	 * Отображение профиля пользователя
+	 */
 	public function getUserProfile(){
 		if($this->self){
 			UserAccess::assert($this->currentUser, 'user.self');
@@ -112,8 +124,6 @@ class UserDashboard extends Dashboard {
 			$this->vars['selectUser'] = $this->selectUser;	
 			$this->vars['self'] = $this->self;	
 		}
-
-		//$this->callActionMethod();
 
 		return parent::response();
 	}

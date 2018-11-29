@@ -86,9 +86,9 @@ Hook::register('database.query', function(Query $query){
 /**
  * Изменение конкретного шаблона
  * @hook template.{templateName}.{templatePath}
- * f.e. template.dashboard.auth, 
+ * f.e. template.dashboard.auth ($tpl, array $authTabs [login =>..., register => ...]), 
  * 		template.dashboard.config, 
- * 		template.dashboard.user.edit, 
+ * 		template.dashboard.user.edit ($tpl, array &$configTabs, int|string &$activeTab), 
  * 		template.dashboard.header
  * 		template.dashboard.navbar.top
  * 		template.dashboard.navbar.side

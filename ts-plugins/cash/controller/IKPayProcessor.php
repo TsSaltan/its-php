@@ -46,6 +46,6 @@ class IKPayProcessor extends AbstractController{
 		}
 
 	
-		return Http::redirect(Http::makeURI('/dashboard/user/me/edit?balance=frompay'));
+		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'frompay'], 'balance'));
 	}
 }

@@ -25,6 +25,6 @@ class UserPhoneDashboard extends UserDashboard {
 					->assert();
 
 		$meta = $this->selectUser->getMeta()->set('phone', $data['phone']);
-		return Http::redirect(Http::makeURI('/dashboard/user/'.$this->selectUser->get('id').'/edit?phone'));
+		return Http::redirect(Http::makeURI('/dashboard/user/'.$this->selectUser->get('id').'/edit', [], 'phone'));
 	}
 }
