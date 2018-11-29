@@ -163,7 +163,7 @@
 
             $activeTab = 0;
             $this->hook('user.edit', [&$configTabs, &$activeTab]);
-            uiTabPanel(null, $configTabs, $activeTab, 'panel-primary');
+            uiTabPanel(null, $configTabs, $activeTab, 'panel-default');
             ?>
         </div>
     </div>

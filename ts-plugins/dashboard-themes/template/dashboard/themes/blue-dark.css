@@ -85,6 +85,23 @@ body,
 /**
  * Панели
  */
+.panel.tabbed-panel.panel-default .panel-heading ul li.active a,
+.panel.tabbed-panel.panel-default .panel-heading ul li.active a:hover,
+.panel.tabbed-panel.panel-default .panel-heading ul li.active a:focus {
+    background-color: #fff;
+    color: #555;
+}
+
+.panel.tabbed-panel.panel-default .panel-heading ul li a{
+    color: #eee;
+}
+
+.panel.tabbed-panel.panel-default .panel-heading ul li a:hover,
+.panel.tabbed-panel.panel-default .panel-heading ul li a:focus {
+    background-color: #424448;
+    color: #fff;
+}
+
 .panel-default>.panel-heading{
     background-color: #33363B;
     border-color: #33363B;
@@ -98,6 +115,14 @@ body,
 .login-panel,
 .panel:hover{
     box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.5);
+}
+
+/**
+ * Панель авторизации
+ */
+.panel.login-panel .panel-heading{
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
 }
 
 /**
@@ -119,22 +144,4 @@ body,
     color: #fff;
     background-color: #d9534f;
     border-color: #d43f3a;
-}
-
-/**
- * Панель авторизации
- */
-.panel.login-panel .panel-heading ul li a{
-    color: #eee;
-}
-
-.panel.login-panel .panel-heading{
-    border-top-right-radius: 0px;
-    border-top-left-radius: 0px;
-}
-
-.panel.login-panel .panel-heading ul li a:hover,
-.panel.login-panel .panel-heading ul li a:focus {
-    background-color: #424448;
-    color: #fff;
 }
