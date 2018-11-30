@@ -89,7 +89,7 @@ class Referrer{
 		$refUrl = $this->user->getMeta()->get('referrer_url');
 		if(is_null($refUrl)){
 			$eid = $this->encodeID();
-			$refUrl = 'http://' . $_SERVER['HTTP_HOST'] . Http::makeURI('/dashboard/login?ref=' . $eid);
+			$refUrl = Http::makeURI('/dashboard/auth?ref=' . $eid);
 			Hook::call('referrer.makeURI', [&$refUrl, $this]);
 			$this->user->getMeta()->set('referrer_url', $refUrl);
 		}
