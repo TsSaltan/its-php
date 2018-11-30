@@ -35,9 +35,6 @@ class Router{
 		self::$router = new AltoRouter([], $routerBase);
 		
 		$routers = Reflect::getClasses(__NAMESPACE__ . '\\controller');
-
-		//var_dump($routers);die;
-
 		foreach ($routers as $classPath){
 			$routes = self::getRouteDoc($classPath);
 

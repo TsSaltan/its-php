@@ -4,6 +4,7 @@ namespace tsframe;
 use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 use tsframe\view\Template;
+use tsframe\controller\ErrorController;
 use tsframe\controller\InstallController;
 
 class App{
@@ -55,13 +56,8 @@ class App{
 			$controller = Router::findController();
 			$controller->send();
 		} catch(BaseException $e) {
-			$dump = $e->getDump();
-			$code = $e->getCode();
-			$tpl = Template::error();
-			$tpl->setHooksUsing(false);
-			$tpl->vars(['dump' => $dump, 'errorCode' => $code]);
-			$body = $tpl->render();
-			Http::sendBody($body, $code, Http::TYPE_HTML, 'utf-8');
+			$controller = new ErrorController($e);
+			$controller->send();
 		} 
 		Hook::call('app.finish');
 	}

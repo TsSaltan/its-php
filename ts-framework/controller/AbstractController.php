@@ -14,9 +14,6 @@ use tsframe\Http;
  * 6. Для генерации ответа берутся данные из getResponseType, getResponseCode, getResponseBody
  */
 abstract class AbstractController{
-	public function __construct(){
-	}
-
 	public function response(){
 	}
 
