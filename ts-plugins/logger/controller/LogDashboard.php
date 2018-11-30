@@ -24,7 +24,7 @@ class LogDashboard extends UserDashboard {
 		$this->vars['logTypes'] = Log::getTypes();
 		$this->vars['logType'] = $type;
 
-		$pages = new Paginator([], 5);
+		$pages = new Paginator([], 10);
 		$pages->setDataSize(Log::getLogsCount($type));
 		$pages->setTotalDataCallback(function($offset, $limit) use ($type){
 			$logs = Log::getLogs($type, $offset, $limit);
