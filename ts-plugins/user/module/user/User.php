@@ -6,10 +6,13 @@ use tsframe\module\database\Query;
 use tsframe\module\Crypto;
 use tsframe\Config;
 use tsframe\Hook;
+use tsframe\exception\UserException;
 use tsframe\module\Cache;
 
 class User{
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
+		if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
+
 		$access = is_null($access) ? UserAccess::getAccess('user.onRegister') : $access;
 		$query = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
 				->bind('login', $login)
@@ -17,7 +20,7 @@ class User{
 				->bind('access', $access)
 				->exec();
 
-		if($query->affectedRows() == 0) return SingleUser::unauthorized();
+		if($query->affectedRows() == 0) throw new UserException('User registration error', 400, ['login' => $login, 'email' => $email, 'password' => $password, 'access' => $access]);
 
 		$uid = $query->lastInsertId();
 		$user = new SingleUser($uid, $login, $email, $access);
@@ -36,7 +39,7 @@ class User{
 			}
 		}
 
-		return SingleUser::unauthorized();
+		throw new UserException('User login error', 400, ['loginOrMail' => $loginOrMail, 'password' => $password]);
 	}
 
 	/**

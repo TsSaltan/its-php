@@ -14,9 +14,9 @@ use tsframe\module\io\Input;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\User;
+use tsframe\module\user\UserConfig;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
-use tsframe\module\user\SocialLogin;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
@@ -66,7 +66,6 @@ Hook::register('template.render', function($tpl){
 		'login' => $user->get('login'),
 		'email' => $user->get('email'),
 		'access' => $user->get('access'),
-		'socialLogin' => SocialLogin::getWidgetCode(),
 		'accessList' => UserAccess::getArray(),
 	]);
 });
@@ -101,4 +100,11 @@ Hook::register('template.dashboard.user.profile', function(Template $tpl, Single
 	?>
 	<p>User ID: <b><?=$user->get('id')?></b></p>
 	<?
+});
+
+Hook::register('template.dashboard.config', function(Template $tpl){
+	$tpl->var('canRegister', UserConfig::canRegister());
+	$tpl->var('canSocial', UserConfig::canSocial());
+	$tpl->var('accesses', Config::get('access'));
+	$tpl->inc('user_config');
 });

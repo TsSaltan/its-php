@@ -4,6 +4,7 @@ namespace tsframe\module\user;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\exception\AccessException;
+use tsframe\exception\UserException;
 use tsframe\module\Meta;
 use tsframe\Http;
 
@@ -73,14 +74,7 @@ HTML;
 			}
 		}
 
-		// 2. Поиск по e-mail
-		/*if(isset($this->data['email'])){
-			$users = User::get(['email' => $this->data['email']]);
-			if(isset($users[0])){
-				//$this->saveUserMeta($users[0]);
-				return $users[0];
-			}
-		}*/
+		if(!UserConfig::canRegister()) throw new UserException('Social register disabled');
 
 		// 3. Создание нового профиля
 		$nicknames = [];

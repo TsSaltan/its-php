@@ -4,6 +4,7 @@ namespace tsframe\controller;
 use tsframe\exception\RouteException;
 use tsframe\exception\BaseException;
 use tsframe\exception\InputException;
+use tsframe\exception\UserException;
 use tsframe\Http;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
@@ -53,13 +54,16 @@ class UserAJAX extends AbstractAJAXController{
 								  ->name('password')->password()
 						  	  	  ->assert();
 
-					$user = User::login($data['login'], $data['password']);
-					if($user->isAuthorized() && $user->createSession()){
-						$this->sendOK();
+					try{
+						$user = User::login($data['login'], $data['password']);
+						if($user->isAuthorized() && $user->createSession()){
+							$this->sendOK();
+							break;
+						}
+					} catch(UserException $e){
 					}
-					else {
-						$this->sendError('User login error', 12);
-					}
+
+					$this->sendError('User login error', 12);
 
 					break;			
 
@@ -75,14 +79,17 @@ class UserAJAX extends AbstractAJAXController{
 						break;
 					}
 
-					$user = User::register($data['login'], $data['email'], $data['password']);
-					if($user->isAuthorized() && $user->createSession()){
-						$this->sendOK();
-					}
-					else{
-						$this->sendError('User register error', 11);
+					try{
+						$user = User::register($data['login'], $data['email'], $data['password']);
+						if($user->isAuthorized() && $user->createSession()){
+							$this->sendOK();
+							break;
+						}
+					} catch(UserException $e){
+						
 					}
 
+					$this->sendError('User register error', 11);
 					break;
 
 				case 'user/edit':

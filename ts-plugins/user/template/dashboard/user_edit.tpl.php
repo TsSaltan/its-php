@@ -115,51 +115,53 @@
                 <?
             };
 
-            $configTabs['social']['title'] = 'Социальные сети';
-            $configTabs['social']['content'] = function() use ($self, $social, $selectUser) {
-                showAlerts($this->vars['socialAlert'] ?? []);
-                ?>
+            if($canSocial){
+                $configTabs['social']['title'] = 'Социальные сети';
+                $configTabs['social']['content'] = function() use ($self, $social, $selectUser, $socialLoginTemplate) {
+                    showAlerts($this->vars['socialAlert'] ?? []);
+                    ?>
 
-                <div class="panel-body col-lg-6">
-                    <div class="col-lg-12">
-                        <?if($self && isset($this->vars['socialLogin'])):?>
-                        <h3>Привязать аккаунт</h3>
-                        <div class="form-group">
-                            <label>Выберите социальную сеть</label>
-                            <?=$this->vars['socialLogin']?>
-                        </div>
-                        <?endif?>
-                
-                        <h3>Присоединённые аккаунты</h3>
-                    </div>
-
-                    <?foreach ($social as $networkName => $id):?>
-                    <div class="col-lg-12" style="margin-top:15px">
-                        <div class="alert hidden">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <p class='text'></p>
-                        </div>
-                        <div class="col-lg-10">
-                            <? $replace = ['google' => 'google-plus', 'vkontakte' => 'vk']; ?>
-                            <? $network = $replace[$networkName] ?? $networkName ; ?>
-                            <a href="<?=$id?>" target="_blank" class="btn btn-block btn-default btn-social btn-<?=$network?>"><i class="fa fa-<?=$network?>"></i> <?=basename($id)?></a>
-                            
-                        </div> 
-                        <div class="col-lg-2">
-                            <form role="form" onsubmit="tsUser.query('deleteSocial', this); $(sessions).hide(); return false;">
-                                <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                                <input class="form-control" name='network' type='hidden' value="<?=$networkName?>">
-                                <button type="submit" class="btn btn-outline btn-danger">Удалить</button>
-                            </form>
-                        </div> 
-                    </div>
-                    <?endforeach?>
-
+                    <div class="panel-body col-lg-6">
+                        <div class="col-lg-12">
+                            <?if($self):?>
+                            <h3 style="margin-top:0px">Привязать аккаунт</h3>
+                            <div class="form-group">
+                                <label>Выберите социальную сеть</label>
+                                <?=$socialLoginTemplate?>
+                            </div>
+                            <?endif?>
                     
+                            <?if(sizeof($social)>0):?><h3>Присоединённые аккаунты</h3><?endif?>
+                        </div>
 
-                </div>                                        
-                <?
-            };
+                        <?foreach ($social as $networkName => $id):?>
+                        <div class="col-lg-12" style="margin-top:15px">
+                            <div class="alert hidden">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <p class='text'></p>
+                            </div>
+                            <div class="col-lg-10">
+                                <? $replace = ['google' => 'google-plus', 'vkontakte' => 'vk']; ?>
+                                <? $network = $replace[$networkName] ?? $networkName ; ?>
+                                <a href="<?=$id?>" target="_blank" class="btn btn-block btn-default btn-social btn-<?=$network?>"><i class="fa fa-<?=$network?>"></i> <?=basename($id)?></a>
+                                
+                            </div> 
+                            <div class="col-lg-2">
+                                <form role="form" onsubmit="tsUser.query('deleteSocial', this); $(sessions).hide(); return false;">
+                                    <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
+                                    <input class="form-control" name='network' type='hidden' value="<?=$networkName?>">
+                                    <button type="submit" class="btn btn-outline btn-danger">Удалить</button>
+                                </form>
+                            </div> 
+                        </div>
+                        <?endforeach?>
+
+                        
+
+                    </div>                                        
+                    <?
+                };
+            }
 
             $activeTab = 0;
             $this->hook('user.edit', [&$configTabs, &$activeTab]);

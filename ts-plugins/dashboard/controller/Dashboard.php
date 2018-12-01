@@ -7,7 +7,9 @@ use tsframe\module\io\Output;
 use tsframe\module\io\Input;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
+use tsframe\module\user\UserConfig;
 use tsframe\module\user\UserAccess;
+use tsframe\module\user\SocialLogin;
 use tsframe\view\HtmlTemplate;
 
 /**
@@ -54,6 +56,17 @@ class Dashboard extends AbstractController{
 			}
 
 			Http::redirect(Http::makeURI($url));
+		}
+	}
+
+	public function getAuth(){
+		$this->vars['canRegister'] = UserConfig::canRegister();
+		$this->vars['canSocial'] = UserConfig::canSocial();
+		
+		if(UserConfig::canSocial()){
+			$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
+		} else {
+			$this->vars['socialLoginTemplate'] = null;
 		}
 	}
 

@@ -1,10 +1,13 @@
 <?php
 namespace tsframe\controller;
 
+use tsframe\Config;
 use tsframe\Http;
 use tsframe\module\Meta;
 use tsframe\Hook;
+use tsframe\module\io\Input;
 use tsframe\module\user\User;
+use tsframe\module\user\UserConfig;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
 use tsframe\module\Paginator;
@@ -21,6 +24,7 @@ use tsframe\exception\RouteException;
  * @route GET /dashboard/user/[me:user_id]/[profile|edit:action]
  * @route GET /dashboard/user/[i:user_id]
  * @route GET /dashboard/user/[i:user_id]/[profile|edit|delete:action]
+ * @route POST /dashboard/[config:action]/user
  */ 
 class UserDashboard extends Dashboard {
 	/**
@@ -60,6 +64,13 @@ class UserDashboard extends Dashboard {
 				$this->vars['tempPass'] = $tempPass;
 			}
 
+			$this->vars['canSocial'] = UserConfig::canSocial();
+			if(UserConfig::canSocial()){
+				$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
+			} else {
+				$this->vars['socialLoginTemplate'] = null;
+			}
+
 			// Если пользователь перенаправлен со страницы соц. логина
 			if(isset($_GET['social'])){
 				if($_GET['social'] == 'success'){
@@ -74,7 +85,6 @@ class UserDashboard extends Dashboard {
 				});
 			}
 
-			$this->vars['socialLogin'] = SocialLogin::getWidgetCode();
 		} else {
 			UserAccess::assert($this->currentUser, 'user.edit');
 			$this->vars['title'] = 'Редактирование пользователя №' . $this->selectUser->get('id');
@@ -104,6 +114,20 @@ class UserDashboard extends Dashboard {
 		}
 	}
 
+	public function postUserConfig(){
+		UserAccess::checkCurrentUser('user.editConfig');
+		Input::post()
+			  ->name('canRegister')->required()
+			  ->name('canSocial')->required()
+			  ->name('access')->required()->array()
+			 ->assert();
+
+		UserConfig::setRegister(boolval($_POST['canRegister']));
+		UserConfig::setSocial(boolval($_POST['canSocial']));
+		Config::set('access', $_POST['access']);
+
+		return Http::redirect(Http::makeURI('/dashboard/config', [], 'user'));
+	}
 
 	public function response(){
 		$action = $this->getAction();

@@ -2,9 +2,11 @@
 namespace tsframe\controller;
 
 use tsframe\exception\AccessException;
+use tsframe\exception\UserException;
 use tsframe\Http;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
+use tsframe\module\user\UserConfig;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
@@ -15,6 +17,8 @@ use tsframe\module\io\Input;
  */
 class SocialLoginController extends AbstractController{
 	public function response(){
+		if(!UserConfig::canSocial()) throw new AccessException('Social login is disabled');
+
 		$currentUser = User::current();
 		$data = Input::post(false)
 						->name('token')
@@ -25,8 +29,12 @@ class SocialLoginController extends AbstractController{
 		$login = new SocialLogin($data['token']);
 		
 		if(!$currentUser->isAuthorized()){
-			$user = $login->getUser();
-			$user->createSession();
+			try{	
+				$user = $login->getUser();
+				$user->createSession();
+			} catch (UserException $e){
+
+			}
 			Http::redirect(Http::makeURI('/dashboard/'));
 		} else {
 			try{
