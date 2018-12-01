@@ -8,7 +8,9 @@
                     if(isset($alert)) showAlerts($alert);
 
                     $authTabs = [];
-                    $authTabs['login']['title'] = 'Авторизация';
+                    $authTabs['login']['title'] = function(){
+                        ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?
+                    };
                     $authTabs['login']['content'] = function() use ($socialLoginTemplate, $canSocial){
                         ?>
                         <div class="alert hidden">
@@ -17,10 +19,10 @@
 
                         <form role="form" onsubmit="tsUser.login(this); return false;">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Логин или e-mail" name="login" type="text" autofocus>
+                                <input class="form-control" placeholder="Логин или e-mail" name="login" type="text" autofocus required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Пароль" name="password" type="password" value="">
+                                <input class="form-control" placeholder="Пароль" name="password" type="password" required>
                             </div>
                             <button class="btn btn-lg col-md-6 btn-success btn-block">Войти</button>
                         </form>
@@ -33,7 +35,9 @@
                         <?endif;
                     };
                     if($canRegister){       
-                        $authTabs['register']['title'] = 'Регистрация';
+                        $authTabs['register']['title'] =  function(){
+                            ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?
+                        };
                         $authTabs['register']['content'] = function(){
                             ?>
                             <div class="alert hidden">
