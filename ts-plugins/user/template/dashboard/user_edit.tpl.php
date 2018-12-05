@@ -115,7 +115,7 @@
                 <?
             };
 
-            if($canSocial){
+            if(isset($canSocial) && $canSocial){
                 $configTabs['social']['title'] = 'Социальные сети';
                 $configTabs['social']['content'] = function() use ($self, $social, $selectUser, $socialLoginTemplate) {
                     showAlerts($this->vars['socialAlert'] ?? []);
