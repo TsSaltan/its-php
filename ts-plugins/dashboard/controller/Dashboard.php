@@ -52,10 +52,10 @@ class Dashboard extends AbstractController{
 			if(isset($_GET['redirect']) && strpos($_GET['redirect'], '://') === false){
 				$url = $_GET['redirect'];
 			} else {
-				$url = '/dashboard/';
+				$url = Http::makeURI('/dashboard/');
 			}
 
-			Http::redirect(Http::makeURI($url));
+			Http::redirect($url);
 		}
 	}
 
