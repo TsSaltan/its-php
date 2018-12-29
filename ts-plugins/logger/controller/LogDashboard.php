@@ -1,15 +1,19 @@
 <?php
 namespace tsframe\controller;
 
+use tsframe\Http;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\module\Log;
 use tsframe\module\io\Output;
+use tsframe\module\io\Input;
 use tsframe\module\Paginator;
 
 /**
- * @route GET /dashboard/[logs:action]
- * @route GET /dashboard/[logs:action]/[*:type]
+ * @route GET  /dashboard/[logs:action]
+ * @route GET  /dashboard/[logs:action]/[*:type]
+ * @route POST /dashboard/[logs-clear:action]/
+ * @route POST /dashboard/[logs-clear:action]
  */ 
 class LogDashboard extends UserDashboard {
 
@@ -32,6 +36,18 @@ class LogDashboard extends UserDashboard {
 		});
 
 		$this->vars['logs'] = $pages;
+	}
+
+	public function postLogsClear(){
+		Input::post()
+			 ->name('group')->required()
+			 ->name('date')->required()
+		->assert();
+
+		$date = max(0, getdate(strtotime($_POST['date']))[0]);
+		Log::clear($_POST['group'], $date);
+		
+		return Http::redirect(Http::makeURI('/dashboard/logs?clear=ok'));
 	}
 
 }

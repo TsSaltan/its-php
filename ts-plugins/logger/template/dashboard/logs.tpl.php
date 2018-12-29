@@ -29,8 +29,54 @@
                                 <?foreach ($logTypes as $type):?>
                                 <a class="btn btn-primary btn-xs <?=($logType==$type?'':'btn-outline')?>" href="<?=$this->makeURI('/dashboard/logs/' . $type)?>"><?=ucfirst($type)?></a>
                                 <?endforeach?>
+                                <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#clearConfirm" href="#clearConfirm">Очистить</a>
                             </div>
                         </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="clearConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="<?=$this->makeURI('/dashboard/logs-clear/')?>" method="POST">
+                                        <input type="hidden" name="action" value="clear">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">Очистить логи</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label>Выберите группу</label>
+                                                <select class="form-control" name="group">
+                                                    <option value="*">Все</option>
+                                                    <?foreach ($logTypes as $type):?>
+                                                    <option value="<?=$type?>"<?=($logType == $type) ? ' selected':''?>><?=ucfirst($type)?></option>
+                                                    <?endforeach?>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Выберите время и дату, с которой будет проведено удаление</label>
+                                                <input class="form-control" id="clearDate" name="date" type="datetime-local" value="<?=date('Y-m-d')?>T<?=date('H:i')?>:00"/>
+                                                <a href="#" onclick="$('#clearDate').val('1970-01-01T00:00:00')">Удалить за всё время</a>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                            <button type="submit" class="btn btn-danger">Очистить</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+
+
+
                     <?if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">

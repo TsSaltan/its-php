@@ -70,4 +70,15 @@ class Log{
 	public static function __callStatic(string $name , array $args){
 		return self::add($args[0], $name, $args[1] ?? []);
 	}
+
+	public static function clear(string $type = '*', int $fromTs = 0): bool {
+		$query = ($type == '*') 
+					? Database::prepare('DELETE FROM `log` WHERE 1 = 1')
+					: Database::prepare('DELETE FROM `log` WHERE `type` = :type AND `date` >= from_unixtime(:ts)');
+		
+		$query->bind('ts', $fromTs);
+		if($type != '*') $query->bind('type', $type);
+
+		return $query->exec()->affectedRows() > 0;
+	}
 }
