@@ -47,7 +47,7 @@ class LogDashboard extends UserDashboard {
 		$date = max(0, getdate(strtotime($_POST['date']))[0]);
 		Log::clear($_POST['group'], $date);
 		
-		return Http::redirect(Http::makeURI('/dashboard/logs?clear=ok'));
+		return Http::redirect(Http::makeURI('/dashboard/logs' . ($_POST['group'] != '*' ? '/' . urlencode($_POST['group']) : '')));
 	}
 
 }
