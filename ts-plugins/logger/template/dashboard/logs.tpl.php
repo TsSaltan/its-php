@@ -55,10 +55,13 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Выберите время и дату, с которой будет проведено удаление</label>
+                                                <label>Выберите время и дату, до которой будет проведено удаление</label>
                                                 <input class="form-control" id="clearDate" name="date" type="datetime-local" value="<?=date('Y-m-d')?>T<?=date('H:i')?>:00"/>
-                                                <a href="#" onclick="$('#clearDate').val('1970-01-01T00:00:00')">Удалить за всё время</a>
-
+                                                <ul>
+                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d', time()+60*60*24)?>T00:00:00')">Удалить за всё время</a></li>
+                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d')?>T00:00:00')">Оставить записи за сегодня</a></li>
+                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m')?>-01T00:00:00')">Оставить записи этого месяца</a></li>
+                                                </ul>
                                             </div>
 
                                         </div>

@@ -71,12 +71,12 @@ class Log{
 		return self::add($args[0], $name, $args[1] ?? []);
 	}
 
-	public static function clear(string $type = '*', int $fromTs = 0): bool {
+	public static function clear(string $type = '*', int $timestamp = 0): bool {
 		$query = ($type == '*') 
 					? Database::prepare('DELETE FROM `log` WHERE 1 = 1')
-					: Database::prepare('DELETE FROM `log` WHERE `type` = :type AND `date` >= from_unixtime(:ts)');
+					: Database::prepare('DELETE FROM `log` WHERE `type` = :type AND `date` <= from_unixtime(:ts)');
 		
-		$query->bind('ts', $fromTs);
+		$query->bind('ts', $timestamp);
 		if($type != '*') $query->bind('type', $type);
 
 		return $query->exec()->affectedRows() > 0;
