@@ -119,15 +119,13 @@ class Database{
 		if(is_null($table)){
 			$query = self::exec('SELECT table_schema, SUM(data_length + index_length) AS "size"
 				FROM information_schema.TABLES
-				WHERE table_schema = :database
-				GROUP BY table_schema;', 
+				WHERE table_schema = :database', 
 			['database' => self::getCurrentDatabase()]);
 		} else {
 			$query = self::exec('SELECT table_name,
 				(data_length + index_length) AS "size"
 				FROM information_schema.TABLES
-				WHERE table_schema = :database AND table_name = :table
-				ORDER BY (data_length + index_length) DESC;', 
+				WHERE table_schema = :database AND table_name = :table', 
 			[
 				'database' => self::getCurrentDatabase(),
 				'table' => $table,
