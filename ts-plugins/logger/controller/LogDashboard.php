@@ -16,7 +16,6 @@ use tsframe\module\Paginator;
  * @route POST /dashboard/[logs-clear:action]
  */ 
 class LogDashboard extends UserDashboard {
-
 	protected $actionPrefix = '';
 
 	public function getLogs(){
@@ -27,6 +26,10 @@ class LogDashboard extends UserDashboard {
 		$this->vars['title'] = 'Системные логи';
 		$this->vars['logTypes'] = Log::getTypes();
 		$this->vars['logType'] = $type;
+
+		if($type == 'default'){
+			$this->vars['logSize'] = Log::getSize();
+		}
 
 		$pages = new Paginator([], 10);
 		$pages->setDataSize(Log::getLogsCount($type));

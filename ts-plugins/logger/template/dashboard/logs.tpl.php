@@ -16,8 +16,6 @@
                 </div>
             </div>
 
-            <?=$this->hook('referrer')?>
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -78,8 +76,6 @@
                         </div>
                         <!-- /.modal -->
 
-
-
                     <?if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -128,6 +124,10 @@
                     <?endif?>
                     </div>
                     <!-- /.panel -->
+
+                    <?if(isset($logSize) && $logSize > 0){
+                        uiAlert('Логи занимают <b>' . round($logSize / 1024 / 1024, 2) . ' MiB</b> в базе данных', 'info');
+                    }?>
                 </div>
             </div>
         </div>

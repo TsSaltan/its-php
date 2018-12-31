@@ -71,6 +71,12 @@ class Log{
 		return self::add($args[0], $name, $args[1] ?? []);
 	}
 
+	/**
+	 * Очистить логи
+	 * @param  string      $type      Тип логов ('*' = все)
+	 * @param  int|integer $timestamp Метка времени, ДО которой логи будут очищены
+	 * @return bool
+	 */
 	public static function clear(string $type = '*', int $timestamp = 0): bool {
 		$query = ($type == '*') 
 					? Database::prepare('DELETE FROM `log` WHERE 1 = 1')
@@ -80,5 +86,13 @@ class Log{
 		if($type != '*') $query->bind('type', $type);
 
 		return $query->exec()->affectedRows() > 0;
+	}
+
+	/**
+	 * Получить размер логов в базе данных
+	 * @return int
+	 */
+	public static function getSize(): int {
+		return Database::getSize('log');
 	}
 }
