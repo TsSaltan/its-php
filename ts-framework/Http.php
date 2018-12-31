@@ -23,7 +23,7 @@ class Http{
 		Hook::call('http.send', [&$body, &$headers]);
 		header('Content-type: ' . $type . '; charset=' . $charset, $code);
 		foreach ($headers as $key => $value) {
-			header($key . ': ' . $value);
+			header(str_replace(["\r\n", "\n", "\r"], " ", $key . ': ' . $value));
 		}
 		echo $body;
 	}
