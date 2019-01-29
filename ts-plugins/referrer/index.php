@@ -1,8 +1,7 @@
-<?
+<?php
 /**
  * Реферальная система пользователей 
  * Данные о пригласившем пользователе будут храниться в мета пользователя, ключ referrer
- * + поддержка сокращённых ссылок из https://app.bitly.com/
  * 
  * @hook template.dashboard.referrer
  * @hook referrer.invite (int $referrerId, SingleUser $referral)
@@ -26,7 +25,6 @@ Hook::registerOnce('plugin.install', function(){
 	return [
 		'access.referrer.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
 		'access.referrer.view' => ['type' => 'numeric', 'value' => UserAccess::Moderator],
-		'bitly.accessToken' => ['type' => 'text', 'placeholder' => "Your token for app.bitly.com"],
 	];
 });
 

@@ -1,12 +1,13 @@
 <?php
 namespace tsframe\module\user;
 
-use tsframe\module\Meta;
-use tsframe\module\Bitly;
-use tsframe\Config;
-use tsframe\Http;
-use tsframe\Hook;
 use tsframe\Cache;
+use tsframe\Config;
+use tsframe\Hook;
+use tsframe\Http;
+use tsframe\exception\BaseException;
+use tsframe\module\Bitly;
+use tsframe\module\Meta;
 
 
 class Referrer{
@@ -85,6 +86,11 @@ class Referrer{
 		return intval($fromBase);
 	}
 
+	/**
+	 * Получить реферральную ссылку
+	 * По возможности, ссылкак будет сокращена
+	 * @return string
+	 */
 	public function getReferalURI(): string {
 		$refUrl = $this->user->getMeta()->get('referrer_url');
 		if(is_null($refUrl)){
@@ -96,17 +102,25 @@ class Referrer{
 
 		$shortUrl = $this->user->getMeta()->get('referrer_short_url');
 		if(is_null($shortUrl)){
-			$bit = new Bitly;
-			$shortUrl = $bit->shortUrl($refUrl);
-			if(!is_null($shortUrl)){
-				$this->user->getMeta()->set('referrer_short_url', $shortUrl);
+			try{
+				$bit = new Bitly;
+				$shortUrl = $bit->shortUrl($refUrl);
+				if(!is_null($shortUrl)){
+					$this->user->getMeta()->set('referrer_short_url', $shortUrl);
+				}
+			} catch (\Error | BaseException | Exception $e){
+				// none
 			}
 		}
 
 		return !is_null($shortUrl) ? $shortUrl : $refUrl;
 	}
 
-	public function getReferalStatisticURI(){
+	/**
+	 * Если ссылка была сокращена через bit.ly, то можем получить статистику - "https://ссылка"."+"
+	 * @return string|null
+	 */
+	public function getReferalStatisticURI(): ?string {
 		$url = $this->user->getMeta()->get('referrer_short_url');
 		if(!is_null($url) && strpos($url, 'bit.ly') !== false){
 			return $url . '+';
