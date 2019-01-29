@@ -13,7 +13,7 @@ use tsframe\module\io\Input;
  * @route POST /dashboard/config/[sendsms:action]
  * @route GET /dashboard/config/[sendsms:action]
  */ 
-class UserPhoneDashboard extends UserDashboard {
+class SMSCDashboard extends UserDashboard {
 	protected $actionPrefix = '';
 
 	public function getSendsms(){

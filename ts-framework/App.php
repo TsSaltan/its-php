@@ -76,11 +76,12 @@ class App{
 		$controller = new InstallController;
 		$controller->checkPost();
 
-		$fields = Plugins::install();
-		$controller->setRequiredFields($fields);
+		$install = Plugins::install();
+		$controller->setErrors($install['errors']);
+		$controller->setRequiredFields($install['params']);
 		$controller->send();
 
-		if(is_array($fields) && sizeof($fields) > 0){
+		if(is_array($install['params']) && sizeof($install['params']) > 0){
 			return false;
 		}
 

@@ -7,7 +7,7 @@
 			margin: 10px auto;
 			position: relative;
 			display: block;
-			max-width: 900px;
+			max-width: 1000px;
 		}
 
 		
@@ -27,7 +27,7 @@
 			min-height: 300px;
 			overflow: hidden;
 			position: relative;
-			width: 800px;
+			width: 900px;
 		}
 
 		#nav{
@@ -51,7 +51,7 @@
 		}
 
 		#buttons{
-			width: 855px;
+			width: 955px;
 		}
 
 		.button{
@@ -138,7 +138,20 @@
 		/**
 		 * Table
 		 */
-		
+		td {
+			width: 295px;
+			vertical-align: bottom;
+			padding: 5px 0;
+		}
+
+		input, select {
+			width: 280px;
+			margin: 0;
+			padding: 3px 0 3px 5px;
+			border-radius: 3px;
+			border: 1px solid gray;
+		}
+
 		td.pluginName{
 			text-align: right;
 			padding-right:10px;
@@ -146,9 +159,25 @@
 			font-size: 16px;
 		}
 
-		tr.newLine{
-			height: 40px;
-    		vertical-align: bottom;
+		td.pluginError{
+			max-width: 300px;
+		}
+
+
+		tr.newLine td{
+			border-top: 3px dotted lightgray;
+			padding-top: 5px;
+		}
+
+		.keyText i{
+			font-size: 13px;
+			opacity: 0.7;
+		}
+
+		.error{
+			color: darkred;
+			border-left: 2px solid darkred;
+			padding: 5px 10px;
 		}
 	</style>
 </head>
@@ -166,6 +195,11 @@
 				case 1:?>
 					<h2>Выберите плагины, которые будут включены в работу системы</h2>
 					<table>
+					<?if(sizeof($errors) > 0):?>
+						<tr>
+							<td colspan="3"><p class="error">Решите ошибки, возникшие во врем установки. Возможно, необходимо отключить конфликтующие плагины!</p></td>	
+						</tr>
+					<?endif?>
 					<?foreach ($plugins as $pluginName => $value):?>
 						<tr>	
 							<td class="pluginName">
@@ -177,6 +211,11 @@
 						  			<span class="slider round"></span>
 								</label>
 							</td>
+							<?if(isset($errors[$pluginName])):?>	
+							<td class="pluginError">
+								<p class='error'>Ошибка: <?=$errors[$pluginName]?></p>
+							</td>
+							<?endif?>
 						</tr>
 					<?endforeach?>
 					</table>
@@ -188,31 +227,39 @@
 					?>
 					<h2>Укажите необходимые параметры</h2>
 					<table>
-					<?foreach($fields as $name => $params):
-						$id=md5($name);
-						$part = explode('.', $name)[0];
-						$label = ucfirst(str_replace('.', ' ', $name));
+					<?foreach($fields as $param):
+						$id = $param->getId();
+						$part = $param->getConfigPart();
+						$params = $param->getParams();
 					?>
 					<tr class="<?=($part!=$lastPart) ? "newLine": ""?>">
-						<td><label for="<?=$id?>"><?=$label?></label></td>
+						<td><?if($param->getType() != 'error'):?><label for="<?=$id?>"><?=$param->getDescription()?></label><?endif?></td>
 						<td>
-						<?switch ($params['type'] ?? 'text'):
+						<?switch ($param->getType()):
 							case 'error':?>
-							<b style="color:rgba(255,100,100)"><?=$params['text']?></b>
-							<?break;
+								<b style="color:rgba(255,100,100)"><?=$param->getDescription()?></b>
+								<?break;
+
+							case 'select':?>
+								<select id="<?=$id?>" name="param[<?=$param->getKey()?>]" <? array_walk($param->getParams(), function($value, $key){ ?><?=$key?>="<?=$value?>"<? }) ?> <?=$param->getRequired() ? 'required': ''?>>
+									<?foreach($param->getValues() as $value => $valueText):?>
+									<option value="<?=$value?>" <?=($value==$param->getValue()) ? "selected" : ''?>><?=$valueText?></option>
+									<?endforeach?>
+								</select>
+
+								<?break;
 
 							case 'text':
 							case 'numeric':
 							case 'email':
-							default:
-							?>
-								<input id="<?=$id?>" name="param[<?=$name?>]" <?array_walk($params, function($value, $key){ ?><?=$key?>="<?=$value?>"<? })?>/>
-
-							<?break;
+							default:?>
+								<input type="<?=$param->getType()?>" id="<?=$id?>" name="param[<?=$param->getKey()?>]" <? array_walk($params, function($value, $key){ ?><?=$key?>="<?=$value?>"<? }) ?> placeholder="<?=$param->getPlaceholder()?>" value="<?=$param->getValue()?>" <?=$param->getRequired() ? 'required': ''?>/>
+								<?break;
 							
 						endswitch;
 						?>
 						</td>
+						<td class="keyText"><?if($param->getType() != 'error'):?><i>(<?=$param->getKey()?>)</i><?endif?></td>
 					</tr>
 					<?
 					$lastPart = $part;
@@ -231,7 +278,11 @@
 		</div>
 
 		<div id="buttons">
+		
 		<?if($step < 3):?>
+			<?if($step > 1):?>
+				<a href="?step=<?=($step-1)?>" class="button" style="float:left;">Назад</a>
+			<?endif?>
 			<button class="button">Далее</button>
 		<?else:?>
 			<a href="./" class="button">На главную</a>

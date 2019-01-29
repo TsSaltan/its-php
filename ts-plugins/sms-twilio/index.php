@@ -11,10 +11,20 @@ use tsframe\Plugins;
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('sms-base');
 	Plugins::conflict('sms-smsc');
-
 	return [
-		'twilio.account' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_ACCOUNT_ID'],
-		'twilio.token' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_SECRET_TOKEN'],
-		'twilio.phone' => ['type' => 'text', 'placeholder' => 'INPUT_YOUR_DEFAULT_PHONE_NUMBER_+123456...'],
+		PluginInstaller::withKey('twilio.account')
+					->setType('text')
+					->setDescription("ID аккаунта <a href='https://twilio.com/' target='_blank'>twilio</a>")
+					->setRequired(true),
+
+		PluginInstaller::withKey('twilio.token')
+					->setType('text')
+					->setDescription("Ключ доступа от <a href='https://twilio.com/' target='_blank'>twilio</a>")
+					->setRequired(true),
+
+		PluginInstaller::withKey('twilio.phone')
+					->setType('text')
+					->setDescription("Телефон по умолчанию для <a href='https://twilio.com/' target='_blank'>twilio</a>")
+					->setRequired(true)
 	];
 });

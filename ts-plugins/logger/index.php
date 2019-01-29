@@ -13,7 +13,13 @@ use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('dashboard');
-	return ['access.log' => ['type' => 'numeric', 'value' => UserAccess::Admin, 'title' => 'Просмотр системных логов']];
+	return [
+		PluginInstaller::withKey('access.log')
+					->setType('select')
+					->setDescription("Права доступа: просмотр системных логов")
+					->setDefaultValue(UserAccess::Admin)
+					->setValues(array_flip(UserAccess::getArray())),
+	];
 });
 
 Hook::registerOnce('plugin.load', function(){

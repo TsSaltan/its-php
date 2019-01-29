@@ -11,13 +11,13 @@ use tsframe\exception\DatabaseException;
 
 Hook::registerOnce('plugin.install', function(){
 	$fields = [
-		'database.host' => ['type' => 'text', 'placeholder' => 'Хост базы данных', 'value' => Config::get('database.host')],
-		'database.user' => ['type' => 'text', 'placeholder' => 'Имя пользователя', 'value' => Config::get('database.user')],
-		'database.pass' => ['type' => 'text', 'placeholder' => 'Пароль', 'value' => Config::get('database.pass')],
-		'database.name' => ['type' => 'text', 'placeholder' => 'Имя базы данных', 'value' => Config::get('database.name')],
+		PluginInstaller::withKey('database.host')->setDescription('Хост базы данных')->setRequired(true),
+		PluginInstaller::withKey('database.user')->setDescription('Имя пользователя')->setRequired(true),
+		PluginInstaller::withKey('database.pass')->setDescription('Пароль базы данных')->setRequired(false),
+		PluginInstaller::withKey('database.name')->setDescription('Имя базы данных')->setRequired(true),
 	];
 
-	if(Config::get('database') !== null){
+	if(Config::get('database') !== null && Config::get('database.host') !== null && Config::get('database.user') !== null && Config::get('database.name') !== null){
 		try{
 			Database::connect(
 				Config::get('database.host'), 
@@ -26,11 +26,7 @@ Hook::registerOnce('plugin.install', function(){
 				Config::get('database.name')
 			);
 		} catch(DatabaseException $e){
-			Config::set('database.host', null);
-			Config::set('database.user', null); 
-			Config::set('database.pass', null); 
-			Config::set('database.name', null);
-			$fields['database.error'] = ['type' => 'error', 'text' => 'Ошибка при подключении к базе данных. Проверьте указанные настройки!'];
+			$fields[] = PluginInstaller::error('Ошибка при подключении к базе данных. Проверьте указанные настройки!');
 		}
 
 	}
@@ -40,12 +36,14 @@ Hook::registerOnce('plugin.install', function(){
 
 
 Hook::registerOnce('plugin.load', function(){
-	Database::connect(
-		Config::get('database.host'), 
-		Config::get('database.user'), 
-		Config::get('database.pass'), 
-		Config::get('database.name')
-	);
+	if(Config::get('database') !== null && Config::get('database.host') !== null && Config::get('database.user') !== null && Config::get('database.name') !== null){
+		Database::connect(
+			Config::get('database.host'), 
+			Config::get('database.user'), 
+			Config::get('database.pass'), 
+			Config::get('database.name')
+		);
+	}
 });
 
 /**

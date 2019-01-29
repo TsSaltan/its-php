@@ -73,14 +73,53 @@ Hook::register('template.render', function($tpl){
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('cache', 'crypto', 'database');
 	return [
-		'access.user.onRegister' => ['type' => 'numeric', 'value' => 1, 'title' => 'Права доступа при регистрации'],
-		'access.user.self' => ['type' => 'numeric', 'value' => 1, 'title' => 'Изменение собственного профиля'],
-		'access.user.view' => ['type' => 'numeric', 'value' => 1, 'title' => 'Просмотр профиля пользователей'],
-		'access.user.list' => ['type' => 'numeric', 'value' => 2, 'title' => 'Просмотр списка пользователей'],
-		'access.user.edit' => ['type' => 'numeric', 'value' => 2, 'title' => 'Редактирование пользователей'],
-		'access.user.delete' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование пользователей'],
-		'access.user.editAccess' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование уровня доступа'],
-		'access.user.editConfig' => ['type' => 'numeric', 'value' => 4, 'title' => 'Редактирование системных настроек'],
+		PluginInstaller::withKey('access.user.onRegister')
+					->setType('select')
+					->setDescription("Права доступа: права, назначаемые пользователю при регистрации")
+					->setDefaultValue(1)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.self')
+					->setType('select')
+					->setDescription("Права доступа: редактирование собственного профиля")
+					->setDefaultValue(1)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.view')
+					->setType('select')
+					->setDescription("Права доступа: просмотр профилей пользователей")
+					->setDefaultValue(1)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.list')
+					->setType('select')
+					->setDescription("Права доступа: просмотр списка всех пользователей")
+					->setDefaultValue(2)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.edit')
+					->setType('select')
+					->setDescription("Права доступа: редактирование пользователей")
+					->setDefaultValue(2)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.delete')
+					->setType('select')
+					->setDescription("Права доступа: удаление пользователей")
+					->setDefaultValue(4)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.editAccess')
+					->setType('select')
+					->setDescription("Права доступа: изменение уровня доступа пользователей")
+					->setDefaultValue(4)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.user.editConfig')
+					->setType('select')
+					->setDescription("Права доступа: редактирование системных настроек")
+					->setDefaultValue(4)
+					->setValues(array_flip(UserAccess::getArray())),
 	];
 });
 

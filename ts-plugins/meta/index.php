@@ -14,7 +14,13 @@ use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('dashboard', 'database');
-	return ['access.meta' => ['type' => 'numeric', 'value' => UserAccess::Admin]];
+	return [
+		PluginInstaller::withKey('access.meta')
+					->setType('select')
+					->setDescription("Права доступа: доступ к META-реестру")
+					->setDefaultValue(UserAccess::Admin)
+					->setValues(array_flip(UserAccess::getArray())),
+	];
 });
 
 Hook::registerOnce('plugin.load', function(){

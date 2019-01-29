@@ -1,6 +1,8 @@
 <?php
 namespace tsframe;
 
+use tsframe\PluginInstaller;
+use tsframe\controller\InstallController;
 use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 
@@ -33,20 +35,24 @@ class Plugins{
 	 * Установка плагинов
 	 * Проходится по всем плагинам и вызывает хук plugin.install
 	 * Если произошла ошибка, плагин будет отключён
-	 * @return array Массив необходимых параметров, которые должен заполнить пользователь в процессе установки [key => params[]]
+	 * @return PluginInstaller[] Массив необходимых параметров, которые должен заполнить пользователь в процессе установки [key => params[]]
 	 */
 	public static function install(): array {
-		// Функция, которая будет отключать плагины, если в процессе утсановки произошли какие-либо ошибки
-		$disabledPlugin = function($e){
+		$pluginErrors = [];
+
+		// Функция, которая будет отключать плагины, если в процессе установки произошли какие-либо ошибки
+		$disabledPlugin = function($e) use (&$pluginErrors){
 			foreach ($e->getTrace() as $item) {
 				if(isset($item['file']) && basename($item['file']) == 'index.php' && strstr($item['file'], 'ts-plugins') !== false){
 					$pluginName = basename(dirname($item['file']));
-					self::disable($pluginName);
+					$pluginErrors[$pluginName] = $e->getMessage();
+					//self::disable($pluginName);
 				}
 			}
 		};
 
-		// 1. Загружаем плагины
+		
+		// 1. Загружаем плагины 
 		foreach (self::getList() as $pluginName => $pluginPath) {
 			try{
 				self::loadPlugin($pluginName, $pluginPath);
@@ -54,20 +60,33 @@ class Plugins{
 				self::disable($pluginName);
 			}
 		}
+		
 
 		// 2. Получаем необходимые плагинам параметры
 		$requiredParams = [];
 		Hook::call('plugin.install', [], function($params) use (&$requiredParams){
 			if(is_array($params)){
 				foreach ($params as $paramPath => $data) {
-					if(!Config::isset($paramPath)){
-						$requiredParams[$paramPath] = $data;
+					if($data instanceof PluginInstaller){
+						$installer = $data;
+					} 
+					elseif(is_array($data)) {
+						$installer = PluginInstaller::fromArray($paramPath, $data);
+					} 
+					else {
+						continue;
 					}
+
+					if(Config::isset($installer->getKey())){
+						$installer->setCurrentValue(Config::get($installer->getKey()));
+					}
+					
+					$requiredParams[] = $installer;
 				}
 			}
 		}, $disabledPlugin);
 
-		return $requiredParams;
+		return ['errors' => $pluginErrors, 'params' => $requiredParams];
 	}
 
 	/**

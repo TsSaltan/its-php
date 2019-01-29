@@ -23,8 +23,17 @@ use tsframe\view\TemplateRoot;
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database', 'user', 'dashboard');
 	return [
-		'access.referrer.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
-		'access.referrer.view' => ['type' => 'numeric', 'value' => UserAccess::Moderator],
+		PluginInstaller::withKey('access.referrer.self')
+					->setType('select')
+					->setDescription("Права доступа: просмотр своего реферала")
+					->setDefaultValue(UserAccess::Guest)
+					->setValues(array_flip(UserAccess::getArray())),
+
+		PluginInstaller::withKey('access.referrer.view')
+					->setType('select')
+					->setDescription("Права доступа: просмотр реферала другого пользователя")
+					->setDefaultValue(UserAccess::Moderator)
+					->setValues(array_flip(UserAccess::getArray())),
 	];
 });
 

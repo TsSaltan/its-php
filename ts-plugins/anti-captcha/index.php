@@ -5,9 +5,10 @@
  */
 namespace tsframe;
 
-use tsframe\Hook;
-use tsframe\Plugins;
-
 Hook::register('plugin.install', function(){
-	return ['anticaptcha.apiKey' => ['type' => 'text', 'placeholder' => 'Anticapthca API key']];
+    return [
+        PluginInstaller::withKey('anticaptcha.apiKey')
+                       ->setDescription('Ключ для <a href="https://anti-captcha.com/" target="blank">AntiCaptcha API</a>')
+                       ->setRequired(true)
+    ];
 });

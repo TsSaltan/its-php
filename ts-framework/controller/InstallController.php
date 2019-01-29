@@ -16,6 +16,21 @@ class InstallController extends AbstractController{
 		$this->fields = $fields;
 	}
 
+	protected function hasErrorsInFields(): bool {
+		foreach ($this->fields as $field) {
+			if($field->getType() == 'error'){
+				return true;
+			}
+		}	
+
+		return false;
+	}
+
+	protected $errors = [];
+	public function setErrors(array $errors){
+		$this->errors = $errors;
+	}
+
 	/**
 	 * Записываем данные в хранилище настроек
 	 */
@@ -34,12 +49,18 @@ class InstallController extends AbstractController{
 	public function response(){
 		// 3 "шага", 1й - указываем используемые плагины, 2й - заполняем необходимые поля, 3й - приложение утсановлено
 		$step = max(1, min(3, $_GET['step'] ?? 1));
-		if(sizeof($this->fields) == 0) $step = 3;
-		elseif($step == 3)$step = 2;
+
+		// Ошибки плагинов решаем на 1 шаге
+		if(sizeof($this->errors) > 0) $step = 1;
+
+		// Ошибки конфигурации плагинов решаем на 2 шаге
+		if($step > 1 && $this->hasErrorsInFields()) $step = 2;
+
 
 		$tpl = new HtmlTemplate('default', 'install');
 		$tpl->setHooksUsing(false);
 		$tpl->var('fields', $this->fields);
+		$tpl->var('errors', $this->errors);
 		$tpl->var('step', $step);
 		$tpl->var('plugins', Plugins::getList());
 		$tpl->var('disabled', Plugins::getDisabled());

@@ -28,13 +28,44 @@ class CashInstaller {
 		Plugins::required('database', 'user', 'dashboard');
 		
 		return [
-			'interkassa.accountId' => ['type' => 'text', 'placeholder' => 'IK account ID'],
-			'interkassa.cashId' => ['type' => 'text', 'placeholder' => 'IK cash ID'],
-			'interkassa.key' => ['type' => 'text', 'placeholder' => 'IK private key'],
-			'interkassa.currency' => ['type' => 'text', 'value' => 'RUB'],
-			'access.cash.view' => ['type' => 'numeric', 'value' => UserAccess::Admin],
-			'access.cash.global' => ['type' => 'numeric', 'value' => UserAccess::Admin],
-			'access.cash.self' => ['type' => 'numeric', 'value' => UserAccess::Guest],
+			PluginInstaller::withKey('interkassa.accountId')
+							->setType('text')
+							->setDescription("ID аккаунта Interkassa")
+							->setRequired(true),
+
+			PluginInstaller::withKey('interkassa.cashId')
+							->setType('text')
+							->setDescription("ID кошелька Interkassa")
+							->setRequired(true),
+
+			PluginInstaller::withKey('interkassa.key')
+							->setType('text')
+							->setDescription("Приватный ключ Interkassa")
+							->setRequired(true),
+
+			PluginInstaller::withKey('interkassa.currency')
+							->setType('select')
+							->setDescription("Валюта, используемая в системе")
+							->setValues(['RUB'=>'RUB', 'UAH'=>'UAH', 'USD'=>'USD'])
+							->setDefaultValue('RUB'),
+
+			PluginInstaller::withKey('access.cash.view')
+							->setType('select')
+							->setDescription("Права доступа: просмотр баланса любого пользователя")
+							->setDefaultValue(UserAccess::Admin)
+							->setValues(array_flip(UserAccess::getArray())),
+
+			PluginInstaller::withKey('access.cash.global')
+							->setType('select')
+							->setDescription("Права доступа: доступ к истории финансовых операций")
+							->setDefaultValue(UserAccess::Admin)
+							->setValues(array_flip(UserAccess::getArray())),
+
+			PluginInstaller::withKey('access.cash.self')
+							->setType('select')
+							->setDescription("Права доступа: просмотр своего баланса")
+							->setDefaultValue(UserAccess::Guest)
+							->setValues(array_flip(UserAccess::getArray())),
 		];
 	}
 
