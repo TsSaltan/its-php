@@ -42,9 +42,13 @@ html, #wrapper{
  * Боковое меню
  */
 .navbar-default.sidebar{
-    margin-top: 55px;
     background-color: #2b2b2b;
+}
 
+@media (min-width: 768px){
+	.navbar-default.sidebar{
+    	margin-top: 55px;
+	}
 }
 
 /**
