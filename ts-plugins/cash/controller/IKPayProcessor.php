@@ -12,8 +12,6 @@ use tsframe\Hook;
  * @route GET|POST /interkassa/[:action]
  */
 class IKPayProcessor extends AbstractController{
-
-
 	public function response(){
 		$this->responseType = 'text/plain';
 

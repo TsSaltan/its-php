@@ -13,7 +13,9 @@ use tsframe\module\io\Input;
  * @route POST /dashboard/user/[:user_id]/edit/[phone:action]
  */ 
 class UserPhoneDashboard extends UserDashboard {
-	protected $actionPrefix = '';
+	public function __construct(){
+		$this->setActionPrefix(null);
+	}
 
 	public function postPhone(){
 		UserAccess::assertCurrentUser(($this->self ? 'user.self' : 'user.edit'));

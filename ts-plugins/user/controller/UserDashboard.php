@@ -152,7 +152,22 @@ class UserDashboard extends Dashboard {
 		return parent::response();
 	}
 
+	/**
+	 * Префикс для callback-функций
+	 * @var string
+	 */
 	protected $actionPrefix = 'user_';
+
+	/**
+	 * Изменить префикс для callback-функций, зависящих от действия (action)
+	 * Например, в роутере прописано "GET url/[todo:action]", а префикс = "pref", тогда
+	 * имя для callback-функции будет таким: getPrefTodo
+	 * @param string|null $prefix
+	 */
+	protected function setActionPrefix(?string $prefix){
+		$this->actionPrefix = $prefix;
+	}
+
 	protected function getAction(string $default = 'profile') : string {
 		return $this->actionPrefix . parent::getAction($default);
 	}

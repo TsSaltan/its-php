@@ -10,7 +10,9 @@ use tsframe\module\io\Input;
  * @route POST /dashboard/config/[theme:action]
  */ 
 class ThemeConfigDashboard extends UserDashboard {
-	protected $actionPrefix = '';
+	public function __construct(){
+		$this->setActionPrefix(null);
+	}
 
 	public function postTheme(){
 		UserAccess::assertCurrentUser('user.editConfig');

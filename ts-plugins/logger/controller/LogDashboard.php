@@ -16,7 +16,9 @@ use tsframe\module\Paginator;
  * @route POST /dashboard/[logs-clear:action]
  */ 
 class LogDashboard extends UserDashboard {
-	protected $actionPrefix = '';
+	public function __construct(){
+		$this->setActionPrefix(null);
+	}
 
 	public function getLogs(){
 		UserAccess::assertCurrentUser('log');

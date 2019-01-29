@@ -15,13 +15,12 @@ use tsframe\module\Meta;
  * @route POST /ajax/[meta:action]
  */ 
 class MetaDashboard extends UserDashboard {
-
-	protected $actionPrefix = '';
+	public function __construct(){
+		$this->setActionPrefix(null);
+	}
 
 	public function getMeta(){
 		UserAccess::assertCurrentUser('meta');
-
-
 		$this->vars['title'] = 'Мeta реестр данных';
 		$filter = $_GET['filter'] ?? null;
 		$pages = new Paginator(Meta::getParentList($filter), 10);

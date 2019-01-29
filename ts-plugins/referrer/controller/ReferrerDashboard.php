@@ -9,8 +9,9 @@ use tsframe\module\user\Referrer;
  * @route GET /dashboard/[referrer:action]
  */ 
 class ReferrerDashboard extends UserDashboard {
-
-	protected $actionPrefix = '';
+	public function __construct(){
+		$this->setActionPrefix(null);
+	}
 
 	public function getReferrer(){
 		UserAccess::assertCurrentUser('referrer.self');
