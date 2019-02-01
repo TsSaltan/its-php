@@ -76,7 +76,7 @@ class InstallController extends AbstractController{
 		$tpl->setHooksUsing(false);
 		$tpl->var('fields', $this->fields);
 		$tpl->var('errors', $this->errors);
-		$tpl->var('step', $step);
+		$tpl->var('step', $this->step);
 		$tpl->var('plugins', Plugins::getList());
 		$tpl->var('disabled', Plugins::getDisabled());
 		return $tpl->render();
