@@ -1,4 +1,8 @@
-DROP TABLE `city`;
+SET foreign_key_checks = 0; 
+DROP TABLE IF EXISTS `city`;
+DROP TABLE IF EXISTS `region`;
+DROP TABLE IF EXISTS `country`;
+SET foreign_key_checks = 1; 
 
 CREATE TABLE `city` (
   `id` bigint(20) NOT NULL,
@@ -17313,8 +17317,6 @@ INSERT INTO `city` (`id`, `region_id`, `name`) VALUES
 -- Структура таблицы `country`
 --
 
-DROP TABLE `country`;
-
 CREATE TABLE `country` (
   `id` bigint(20) NOT NULL,
   `name` varchar(52) NOT NULL,
@@ -17550,8 +17552,6 @@ INSERT INTO `country` (`id`, `name`, `alias`) VALUES
 --
 -- Структура таблицы `region`
 --
-
-DROP TABLE `region`;
 
 CREATE TABLE `region` (
   `id` bigint(20) NOT NULL,
