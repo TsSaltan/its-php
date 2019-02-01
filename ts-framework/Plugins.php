@@ -46,7 +46,6 @@ class Plugins{
 				if(isset($item['file']) && basename($item['file']) == 'index.php' && strstr($item['file'], 'ts-plugins') !== false){
 					$pluginName = basename(dirname($item['file']));
 					$pluginErrors[$pluginName] = $e->getMessage();
-					//self::disable($pluginName);
 				}
 			}
 		};

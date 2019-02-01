@@ -81,7 +81,7 @@ class App{
 		$controller->setRequiredFields($install['params']);
 		$controller->send();
 
-		if(is_array($install['params']) && sizeof($install['params']) > 0){
+		if(!$controller->isInstalled()){
 			return false;
 		}
 
