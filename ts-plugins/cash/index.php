@@ -102,6 +102,12 @@ class CashInstaller {
 		<p>Текущий счёт: <b><?=$balance?></b> <?=$currency?></p>
 		<?
 	}
+
+	public static function userBalance(Template $tpl, SingleUser $selectUser){
+		if(UserAccess::checkCurrentUser('cash.payment')){
+			$tpl->inc('edit-balance');
+		}
+	}
 }
 
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
@@ -109,3 +115,4 @@ Hook::registerOnce('plugin.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
 Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);
+Hook::register('template.dashboard.user.edit.balance', [CashInstaller::class, 'userBalance']);

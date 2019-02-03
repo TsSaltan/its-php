@@ -20,7 +20,6 @@ use tsframe\view\TemplateRoot;
  * @todo  Проверка уникальности платежей
  */
 class CashInterkassaInstaller {
-	
 	public static function install(){
 		Plugins::required('cash');
 		
@@ -47,15 +46,13 @@ class CashInterkassaInstaller {
 		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
 	}
 	
-
 	public static function userBalance(Template $tpl, SingleUser $selectUser){
 		$payment = new Payment($selectUser);
 		$payment->calculateAmount('0');
 		$tpl->var('payFormAction', $payment->getProcessURI());
 		$tpl->var('payFormFields', $payment->getForm(true, true));
-		$tpl->inc('putbalance');
+		$tpl->inc('put-balance');
 	}
-
 }
 
 Hook::registerOnce('plugin.load', [CashInterkassaInstaller::class, 'load']);

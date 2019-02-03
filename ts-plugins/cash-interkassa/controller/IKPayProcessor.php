@@ -19,7 +19,7 @@ class IKPayProcessor extends AbstractController{
 			$am = $_REQUEST['ik_am'];
 			$description = $_REQUEST['ik_desc'];
 			$payId = $_REQUEST['ik_pm_no'];
-			$userId = Payment::decodePayId($payId);
+			$userId = Cash::decodePayId($payId);
 
 			Log::Cash('Успешный запрос от платёжного сервера', [
 				'pay_id' => $payId, 

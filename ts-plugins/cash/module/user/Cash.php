@@ -164,7 +164,7 @@ class Cash{
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '+' . $sum,
-			'pay_id' => !is_null($payId) ? $payId : Payment::createPayId($this->user->get('id'))
+			'pay_id' => !is_null($payId) ? $payId : self::createPayId($this->user->get('id'))
 		]);
 		$this->setBalance();
 	}
@@ -180,7 +180,7 @@ class Cash{
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '-' . $sum,
-			'pay_id' => !is_null($payId) ? $payId : Payment::createPayId($this->user->get('id'))
+			'pay_id' => !is_null($payId) ? $payId : self::createPayId($this->user->get('id'))
 		]);
 		$this->setBalance();
 	}
@@ -200,5 +200,31 @@ class Cash{
 	 */
 	public function compare(string $sum): int {
 		return bccomp($sum, $this->balance, self::ACCURACY);
+	}
+
+	/**
+	 * Создать уникальный ID платежа на основе ID пользователя
+	 * @param  int    $userId
+	 * @return string
+	 */
+	public static function createPayId(int $userId): string {
+		$keyLength = rand(5,12);
+		$idLength = strlen($userId);
+		return $keyLength . '-' . $idLength . '-' . Crypto::generateString($keyLength) . $userId . Crypto::generateString(rand(1,6));
+	}
+
+	/**
+	 * Получить ID пользователя из ID платежа
+	 * @param  string $payId
+	 * @return int
+	 */
+	public static function decodePayId(string $payId): int {
+		$keys = explode('-', $payId);
+		$keyLength = $keys[0];
+		$idLength = $keys[1];
+		$key = $keys[2];
+		$userId = substr($key, $keyLength, $idLength);
+
+		return intval($userId);
 	}
 }

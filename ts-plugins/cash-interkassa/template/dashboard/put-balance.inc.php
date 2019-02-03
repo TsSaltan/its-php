@@ -1,5 +1,5 @@
-<div class="col-lg-12">
-	<button class="btn btn-primary" data-toggle="modal" data-target="#putBalance">Пополнить счёт</button>
+<div class="col-md-3">
+	<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#putBalance">Пополнить баланс</button>
 </div>
 
 <!-- Modal -->
