@@ -1,9 +1,8 @@
 <?
 /**
  * Система приёма платежей
- *
- * @hook template.dashboard.cash.global
- * @hook cash.pay (int $userId, $amount, $description, $payId)
+ * @hook template.dashboard.user.edit.balance (Template $tpl, SingleUser $selectUser)
+ * @hook cash.pay (int $userId, $amount, $description, $payId) - Поступление средств на счёт
  */
 namespace tsframe;
 
@@ -12,7 +11,6 @@ use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\User;
 use tsframe\module\user\Cash;
-use tsframe\module\interkassa\Payment;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
@@ -23,31 +21,21 @@ use tsframe\view\TemplateRoot;
  * @todo  Проверка уникальности платежей
  */
 class CashInstaller {
-	
 	public static function install(){
 		Plugins::required('database', 'user', 'dashboard');
 		
 		return [
-			PluginInstaller::withKey('interkassa.accountId')
-							->setType('text')
-							->setDescription("ID аккаунта Interkassa")
-							->setRequired(true),
-
-			PluginInstaller::withKey('interkassa.cashId')
-							->setType('text')
-							->setDescription("ID кошелька Interkassa")
-							->setRequired(true),
-
-			PluginInstaller::withKey('interkassa.key')
-							->setType('text')
-							->setDescription("Приватный ключ Interkassa")
-							->setRequired(true),
-
-			PluginInstaller::withKey('interkassa.currency')
+			PluginInstaller::withKey('cash.currency')
 							->setType('select')
 							->setDescription("Валюта, используемая в системе")
 							->setValues(['RUB'=>'RUB', 'UAH'=>'UAH', 'USD'=>'USD'])
 							->setDefaultValue('RUB'),
+
+			PluginInstaller::withKey('access.cash.payment')
+							->setType('select')
+							->setDescription("Права доступа: возможность изменять баланс пользователей")
+							->setDefaultValue(UserAccess::Admin)
+							->setValues(array_flip(UserAccess::getArray())),
 
 			PluginInstaller::withKey('access.cash.view')
 							->setType('select')
@@ -71,18 +59,17 @@ class CashInstaller {
 
 	public static function load(){
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
-		TemplateRoot::add('interkassa', __DIR__ . DS . 'template' . DS . 'interkassa');
 	}
 	
 	public static function addMenuTop(MenuItem $menu){
-		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Config::get('interkassa.currency'), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
+		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Cash::getCurrency(), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
 	}
 
 	public static function addEditTab(Template $tpl, array &$configTabs, &$activeTab){
 		if(is_null($tpl->selectUser)) return;
 		$selectUser = $tpl->selectUser;
 
-		if($tpl->self || UserAccess::checkCurrentUser('user.edit')){
+		if(($tpl->self && UserAccess::checkCurrentUser('cash.self')) || (!$tpl->self && UserAccess::checkCurrentUser('cash.view'))){
 			if(isset($_GET['balance'])){
 				$activeTab = 'balance';
 
@@ -97,13 +84,8 @@ class CashInstaller {
 			$configTabs['balance']['content'] = function() use ($tpl, $selectUser){
 				$cash = new Cash($selectUser);
 				$tpl->var('balance', $cash->getBalance());
-				$tpl->var('balanceCurrency', Config::get('interkassa.currency'));
+				$tpl->var('balanceCurrency',  Cash::getCurrency());
 				$tpl->var('balanceHistory', $cash->getHistory());
-
-				$payment = new Payment($selectUser);
-				$payment->calculateAmount('0');
-				$tpl->var('payFormAction', $payment->getProcessURI());
-				$tpl->var('payFormFields', $payment->getForm(true, true));
 
 				$tpl->inc('balance');
 			};

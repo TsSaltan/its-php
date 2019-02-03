@@ -43,7 +43,7 @@ class Cash{
 	 * @return string
 	 */
 	public static function getCurrency(): string {
-		$cur = Config::get('interkassa.currency');
+		$cur = Config::get('cash.currency');
 		return is_null($cur) ? 'USD' : $cur;
 	}
 

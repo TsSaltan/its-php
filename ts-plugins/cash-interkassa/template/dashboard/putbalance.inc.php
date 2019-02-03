@@ -1,4 +1,7 @@
-<button class="btn btn-primary" data-toggle="modal" data-target="#putBalance">Пополнить счёт</button>
+<div class="col-lg-12">
+	<button class="btn btn-primary" data-toggle="modal" data-target="#putBalance">Пополнить счёт</button>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="putBalance" tabindex="-1" role="dialog" aria-labelledby="putBalanceLabel" aria-hidden="true">
     <div class="modal-dialog">
