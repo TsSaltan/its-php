@@ -23,6 +23,10 @@ class CashInterkassaInstaller {
 	public static function install(){
 		Plugins::required('cash');
 		
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    	$domainName = $_SERVER['HTTP_HOST'].'/';	
+    	$host = $protocol . $domainName;
+
 		return [
 			PluginInstaller::withKey('interkassa.accountId')
 							->setType('text')
@@ -36,7 +40,13 @@ class CashInterkassaInstaller {
 
 			PluginInstaller::withKey('interkassa.key')
 							->setType('text')
-							->setDescription("Приватный ключ Interkassa")
+							->setDescription("Секретный (или тестовый) ключ от кошелька Interkassa<br/>".
+											"<p>В настройках кассы укажите:</p>".
+											"<p><b>URL успешной оплаты:</b> <u>".$host."interkassa/success</u></p>".
+											"<p><b>URL неуспешной оплаты:</b> <u>".$host."interkassa/fail</u></p>".
+											"<p><b>URL ожидания проведения платежа:</b> <u>".$host."interkassa/pending</u></p>".
+											"<p><b>URL взаимодействия:</b> <u>".$host."interkassa/pay</u></p>"
+							)
 							->setRequired(true),
 		];
 	}
