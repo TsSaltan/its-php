@@ -20,6 +20,7 @@
 
 <!-- Top Navigation: Right Menu -->
 <ul id="navbar-top-right" class="nav navbar-right navbar-top-links">
+    <?$this->hook('navbar.top')?>
     <?if($user->isAuthorized()):?>
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -36,5 +37,4 @@
         )?>
     </li>
     <?endif?>
-    <?$this->hook('navbar.top')?>
 </ul>
