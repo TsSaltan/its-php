@@ -140,7 +140,7 @@
 		 */
 		td {
 			width: 295px;
-			vertical-align: bottom;
+			vertical-align: top;
 			padding: 5px 0;
 		}
 
@@ -157,12 +157,17 @@
 			padding-right:10px;
 			font-weight: 400;
 			font-size: 16px;
+			padding: 12px 15px;
 		}
 
 		td.pluginError{
+			padding: 0;
 			max-width: 300px;
 		}
 
+		td.pluginSlider{
+			width: 100px;
+		}
 
 		tr.newLine td{
 			border-top: 3px dotted lightgray;
@@ -178,6 +183,7 @@
 			color: darkred;
 			border-left: 2px solid darkred;
 			padding: 5px 10px;
+			margin: 0;
 		}
 	</style>
 </head>
@@ -205,7 +211,7 @@
 							<td class="pluginName">
 							<?=ucfirst(str_replace('-', ' ', $pluginName))?>
 							</td>
-							<td>
+							<td class="pluginSlider">
 								<label class="switch">
 						  			<input id="plugin_<?=$pluginName?>" type="checkbox" name="param[plugins][disabled][<?=$pluginName?>]" <?=(in_array($pluginName, $disabled)?'checked':'')?>>
 						  			<span class="slider round"></span>

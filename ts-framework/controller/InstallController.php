@@ -31,12 +31,6 @@ class InstallController extends AbstractController{
 
 	public function __construct(){
 		$this->step = max(1, min(3, $_GET['step'] ?? 1));
-
-		// Ошибки плагинов решаем на 1 шаге
-		if(sizeof($this->errors) > 0) $this->step = 1;
-
-		// Ошибки конфигурации плагинов решаем на 2 шаге
-		elseif($this->step > 1 && $this->hasErrorsInFields()) $this->step = 2;
 	}
 
 	public function setRequiredFields(array $fields){
@@ -72,6 +66,12 @@ class InstallController extends AbstractController{
 	}
 
 	public function response(){
+		// Ошибки плагинов решаем на 1 шаге
+		if(sizeof($this->errors) > 0) $this->step = 1;
+
+		// Ошибки конфигурации плагинов решаем на 2 шаге
+		elseif($this->step > 1 && $this->hasErrorsInFields()) $this->step = 2;
+		
 		$tpl = new HtmlTemplate('default', 'install');
 		$tpl->setHooksUsing(false);
 		$tpl->var('fields', $this->fields);
