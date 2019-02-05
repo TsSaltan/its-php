@@ -1,6 +1,10 @@
 <?$this->incHeader()?>
 <?$this->incNavbar()?>
-
+<style type="text/css">
+    .chat li:nth-last-child(1){
+        border-bottom: none;
+    }
+</style>
     <!-- Page Content -->
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -53,8 +57,8 @@
                         </div-->
                     </div>
                     <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <ul class="chat">
+                    <div class="panel-body" id="chat-container">
+                        <ul class="chat" id="chat-content">
                             <?foreach($chatMessages as $message):?>
                                 <? $this->vars['messageAuthor'] = $message->getOwner()->get('login') ?>
                                 <? $this->vars['messageTime'] = date('Y-m-d h:i:s', $message->getDate()) ?>
@@ -84,22 +88,46 @@
 
 <script type="text/javascript">
     var chat_id = <?=$this->chatId?>;
-    $('#send-chat').click(function(){
+    var $chat_parent = $("#chat-container");
+    var $chat = $("#chat-content");
+
+    function sendMessage(){
         let $message = $('#message');
         let text = $message.val();
         $message.val('');
 
-        tsFrame.query('POST', 'support/message', {chat: chat_id, message: text});
-    });
+        tsFrame.query('POST', 'support/message', {chat: chat_id, message: text}, function(){
+            updateMessages();
+        });
+    }
 
     function updateMessages(){
         tsFrame.query('POST', 'support/updates', {chat: chat_id}, function(data){
-
+            if(data.updates && data.html.length > 0){
+                $chat.append(data.html);
+                scrollChat();
+            }
         });
+    }
+
+    function scrollChat(){
+        $chat_parent.animate({ scrollTop: $chat.height()}, 300);
     }
 
     setInterval(function(){
         updateMessages();
     }, 5000);
+
+    $('#send-chat').click(function(){
+        sendMessage();
+    });
+
+    $('#message').keypress(function (e){
+        if(e.which == 13){
+            sendMessage(); 
+        }
+    });   
+
+    scrollChat();
 </script>
 <?$this->incFooter()?>

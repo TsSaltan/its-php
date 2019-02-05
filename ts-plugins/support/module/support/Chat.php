@@ -20,6 +20,12 @@ class Chat{
 	 */
 	protected $data = [];
 
+
+	public static function getChatCount(): int {
+		$query = Database::exec("SELECT COUNT(*) c FROM `support-chats`")->fetch();
+		return $query[0]['c'];
+	}
+
 	/**
 	 * Получить все чаты
 	 * @return Chat[]
@@ -137,12 +143,14 @@ class Chat{
 	}
 
 	public function getLastMessage(): Message {
-		$mes = $this->getMessages(0, 1);
-		return current($mes);
+		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat ORDER BY `date` DESC LIMIT 1', [
+			'chat' => $this->id
+		])->fetch();
+		return new Message($query[0]['id'], $query[0]);
 	}
 
 	public function getNewMessages(): array {
-		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND date_ts > :date ORDER BY `date` ASC', [
+		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND UNIX_TIMESTAMP(`date`) > :date ORDER BY `date` ASC', [
 			'chat' => $this->id,
 			'date' => $this->getDate(),
 		])->fetch();

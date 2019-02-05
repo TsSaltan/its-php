@@ -14,7 +14,7 @@ use tsframe\view\HtmlTemplate;
 
 /**
  * @route POST /ajax/support/[message:action]
- * @route POST /ajax/support/[update:action]
+ * @route POST /ajax/support/[updates:action]
  */ 
 class SupportAjaxDashboard extends AbstractAJAXController {
 	public function response(){
@@ -38,13 +38,15 @@ class SupportAjaxDashboard extends AbstractAJAXController {
 				$this->sendOK();
 				break;
 				
-			case 'update':
+			case 'updates':
 				if($chat->hasNewMessages()){
 					$messages = $chat->getNewMessages();
 					$tpl = new HtmlTemplate('dashboard', 'update-messages');
 					$tpl->var('chatMessages', $messages);
 					$html = $tpl->render();
-					$this->sendData(); // @todo // stopishere
+					$this->sendData(['updates' => true, 'html' => $html]);
+				} else {
+					$this->sendData(['updates' => false, 'html' => null]);
 				}
 				break;
 		}

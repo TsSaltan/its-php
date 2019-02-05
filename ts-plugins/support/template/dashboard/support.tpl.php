@@ -3,7 +3,7 @@
 <style>
 .chat-item {
     cursor: pointer;
-    border-left: 7px solid transparent;
+    /*border-left: 7px solid transparent;*/
 }
 
 .chat-update {
