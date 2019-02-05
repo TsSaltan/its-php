@@ -53,7 +53,12 @@ class Message{
 	}
 
 	public function getMessage(): ?string {
-		return Output::of($this->data['message'])->specialChars()->getData();
+		$message = Output::of($this->data['message'])->specialChars()->quotes()->getData();
+		$message = preg_replace_callback('#(https?\:\/\/[^\s\n\r]+?)#Ui', function(array $matches){
+			$text = (strlen($matches[1]) > 60) ? substr($matches[1], 0, 57) . '...' : $matches[1];
+			return "<a href='".$matches[1]."' target='_blank'>".$text."</a>";
+		}, $message);
+		return $message;
 	}
 	
 	public function getId(): int {
