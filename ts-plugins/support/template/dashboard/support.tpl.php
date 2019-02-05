@@ -1,20 +1,5 @@
 <?$this->incHeader()?>
 <?$this->incNavbar()?>
-<style>
-.chat-item {
-    cursor: pointer;
-    /*border-left: 7px solid transparent;*/
-}
-
-.chat-update {
-    border-left: 7px solid #2e6da4;
-}
-
-.chat-update td {
-    /*font-weight: 600;*/
-    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
-}
-</style>
     <!-- Page Content -->
     <div id="page-wrapper">
         <div class="container-fluid">
@@ -91,7 +76,7 @@
                                                 <?foreach ($userChats->getData() as $chat):?>
                                                 <tr class="chat-item <?=($chat->hasNewMessages() ? 'chat-update' : '')?>" onclick="document.location.replace('<?=$this->makeURI('/dashboard/support/chat/' . $chat->getId())?>')">
                                                     <td><?=$chat->getTitle()?></td>
-                                                    <td><?=($chat->getStatus() == 1) ? 'Открыт' : 'Закрыт'?></td>
+                                                    <td class="chat-<?=($chat->getStatus() == 1) ? 'open' : 'close'?>"><?=($chat->getStatus() == 1) ? 'Открыт' : 'Закрыт'?></td>
                                                 </tr>
                                                 <?endforeach?>
                                             </tbody>

@@ -1,11 +1,17 @@
 <?
 /**
+ * Система поддержки
+ * @hook template.dashboard.support.menu (HtmlTemplate $tpl, int $chatId, string $chatRole="operator|client")
+ * @hook template.dashboard.support.header (HtmlTemplate $tpl, int $chatId, string $chatRole="operator|client")
+ * @hook template.dashboard.support.footer (HtmlTemplate $tpl, int $chatId, string $chatRole="operator|client")
  */
 namespace tsframe;
 
 use tsframe\Hook;
 use tsframe\Plugins;
 use tsframe\module\menu\MenuItem;
+use tsframe\module\support\Message;
+use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
@@ -31,9 +37,21 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Поддержка', ['url' => Http::makeURI('/dashboard/support'), 'fa' => 'comments', 'access' => -1]));
+	$unread = Message::getUnreadCountForUser(User::current());
+	$menu->add(new MenuItem('Поддержка', [
+		'url' => Http::makeURI('/dashboard/support'), 
+		'fa' => 'comments', 
+		'access' => UserAccess::getAccess('support.client'), 
+		'counter' => $unread
+	]));
 });
 
 Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Заявки в поддержку', ['url' => Http::makeURI('/dashboard/support-operator'), 'fa' => 'support', 'access' => UserAccess::getAccess('support.operator')]));
+	$unread = Message::getUnreadCountForOperator();
+	$menu->add(new MenuItem('Оператор поддержки', [
+		'url' => Http::makeURI('/dashboard/operator'), 
+		'fa' => 'support', 
+		'access' => UserAccess::getAccess('support.operator'), 
+		'counter' => $unread
+	]));
 });

@@ -6,6 +6,7 @@ use tsframe\exception\BaseException;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 use tsframe\module\user\SingleUser;
+use tsframe\module\user\UserAccess;
 
 class Chat{
 	/**
@@ -31,7 +32,7 @@ class Chat{
 	 * @return Chat[]
 	 */
 	public static function getChats(int $offset = 0, int $count = 0): array {
-		$query = Database::exec("SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-chats` ORDER BY `status` DESC ORDER BY `date` DESC" . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''))->fetch();
+		$query = Database::exec("SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-chats` ORDER BY `status` DESC, `date` DESC" . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''))->fetch();
 		$chats = [];
 		foreach ($query as $chat) {
 			$chats[] = new self($chat['id'], $chat);
@@ -121,11 +122,15 @@ class Chat{
 		$this->data['date_ts'] = time();
 	}
 
-	public function hasNewMessages(): bool {
-		$last = $this->getLastMessage()->getDate();
-		$date = $this->getDate();
-
-		return $last > $date;
+	public function hasNewMessages(int $fromId = -1): bool {
+		if($fromId > 0){
+			$last = $this->getLastMessage()->getId();
+			return $last > $fromId;
+		} else {
+			$last = $this->getLastMessage()->getDate();
+			$date = $this->getDate();
+			return $last > $date;
+		}
 	}
 
 	/**
@@ -149,21 +154,27 @@ class Chat{
 		return new Message($query[0]['id'], $query[0]);
 	}
 
-	public function getNewMessages(): array {
-		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND UNIX_TIMESTAMP(`date`) > :date ORDER BY `date` ASC', [
-			'chat' => $this->id,
-			'date' => $this->getDate(),
-		])->fetch();
+	public function getNewMessages(int $fromMessageId = -1): array {
+		if($fromMessageId > 0){
+			$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND `id` > :id ORDER BY `date` ASC', [
+				'chat' => $this->id,
+				'id' => $fromMessageId,
+			])->fetch();
+		} else {
+			$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND UNIX_TIMESTAMP(`date`) > :date ORDER BY `date` ASC', [
+				'chat' => $this->id,
+				'date' => $this->getDate(),
+			])->fetch();
+		}
 		$messages = [];
 		foreach ($query as $m) {
 			$messages[] = new Message($m['id'], $m);
 		}
 
-		$this->setCurrentDate();
 		return $messages;
 	}
 
-	public function getMessages(int $offset = 0, int $count = 10): array {
+	public function getMessages(int $offset = 0, int $count = 0): array {
 		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat ORDER BY `date` ASC'  . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''), [
 			'chat' => $this->id
 		])->fetch();
@@ -181,5 +192,19 @@ class Chat{
 			$this->id,
 			$text
 		);
+	}
+
+	public function isAnswered(): bool {
+		$lastMes = $this->getLastMessage()->getOwner();
+		return UserAccess::checkUser($lastMes, 'support.operator');
+	}
+
+	public function close(){
+		$this->setStatus(0);
+	}
+
+	public function delete(){
+		Database::exec('DELETE FROM `support-chats` WHERE `id` = :id', ['id' => $this->id]);
+		Database::exec('DELETE FROM `support-messages` WHERE `chat` = :id', ['id' => $this->id]);
 	}
 }

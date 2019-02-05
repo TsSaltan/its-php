@@ -13,7 +13,8 @@
 
                 function($item, $sub) use ($user){
                     if(!$user->isAccess($item->getData('access'))) return;
-                    return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
+                    $counter = intval($item->getData('counter'));
+                    return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($counter > 0 ? ' <span class="counter btn-primary btn-xs">'.$counter.'</span>' : '') . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') .'</a>' . $sub . '</li>';
                 }
             )?>
             <?=$this->menu('dashboard-admin-sidebar', 
@@ -27,7 +28,8 @@
 
                 function($item, $sub) use ($user){
                     if(!$user->isAccess($item->getData('access'))) return;
-                    return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
+                    $counter = intval($item->getData('counter'));
+                    return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($counter > 0 ? ' <span class="counter btn-danger btn-xs">'.$counter.'</span>' : '') . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
                 }
             )?>
         <?endif?>

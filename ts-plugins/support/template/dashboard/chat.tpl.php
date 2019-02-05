@@ -11,50 +11,66 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Поддержка</h1>
+                <h1 class="page-header">
+                    <?if(isset($chatRole) && $chatRole == 'operator'):?>
+                    Оператор поддержки
+                    <?else:?>
+                    Поддержка
+                    <?endif?>
+                </h1>
             </div>
         </div>
-
+        <?$this->hook('support.header', [$chatId, $chatRole])?>
         <div class="row">
             <div class="col-lg-12">
+                <?
+                if($isClosed){
+                    if($chatRole == 'operator'){
+                        uiAlert('Данный диалог закрыт. Пользователь не может отвечать.', 'warning');
+                    } else {
+                        uiAlert('Данный диалог закрыт оператором. Чтоб задать вопрос, откройте новое обращение.', 'warning');
+                    }
+                } 
+                ?>
+
                 <div class="chat-panel panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-comments fa-fw"></i>
                         <?=$chatTitle?>
-                        <!--div class="btn-group pull-right">
+                        <div class="btn-group pull-right">
                             <button type="button" class="btn btn-default btn-xs dropdown-toggle"
                                     data-toggle="dropdown">
                                 <i class="fa fa-chevron-down"></i>
                             </button>
                             <ul class="dropdown-menu slidedown">
                                 <li>
-                                    <a href="#">
-                                        <i class="fa fa-refresh fa-fw"></i> Refresh
+                                    <a href="#" onclick="updateMessages()">
+                                        <i class="fa fa-refresh fa-fw"></i> Обновить
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        <i class="fa fa-check-circle fa-fw"></i> Available
+                                    <a href="<?=$this->makeURI('/dashboard/' . ($chatRole == 'client' ? 'support' : 'operator'))?>">
+                                        <i class="fa fa-sign-out fa-fw"></i> Назад к списку диалогов
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-times fa-fw"></i> Busy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-clock-o fa-fw"></i> Away
-                                    </a>
-                                </li>
+                                <?if($chatRole == 'operator'):?>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#">
-                                        <i class="fa fa-sign-out fa-fw"></i> Sign Out
-                                    </a>
+                                    <form action="<?=$this->makeURI('/dashboard/operator/close')?>" method="POST" id="closeChat">
+                                        <input type="hidden" name="chat_id" value="<?=$chatId?>"/>
+                                    </form>
+                                    <a href="#" onclick="$('#closeChat').submit();"><i class="fa fa-close fa-fw"></i> Закрыть диалог</a>
                                 </li>
+                                <li>
+                                    <form action="<?=$this->makeURI('/dashboard/operator/delete')?>" method="POST" id="deleteChat">
+                                        <input type="hidden" name="chat_id" value="<?=$chatId?>"/>
+                                    </form>
+                                    <a href="#" onclick="$('#deleteChat').submit();"><i class="fa fa-trash fa-fw"></i> Удалить диалог</a>
+                                </li>
+                                <?endif?>
+                                <?$this->hook('support.menu', [$chatId, $chatRole])?>
                             </ul>
-                        </div-->
+                        </div>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body" id="chat-container">
@@ -69,6 +85,7 @@
                     </div>
                     <!-- /.panel-body -->
                     <div class="panel-footer">
+                        <? if((!$isClosed && $chatRole == 'client') || $chatRole == 'operator'):?>
                         <div class="input-group">
                             <input id="message" type="text" class="form-control input-sm" placeholder="Введите текст сообщения"/>
                             <span class="input-group-btn">
@@ -77,17 +94,20 @@
                                 </button>
                             </span>
                         </div>
+                        <?endif?>
                     </div>
                     <!-- /.panel-footer -->
                 </div>
                 <!-- /.panel .chat-panel -->
             </div>
         </div>
+        <?$this->hook('support.footer', [$chatId, $chatRole])?>
     </div>
 </div>
 
 <script type="text/javascript">
     var chat_id = <?=$this->chatId?>;
+    var from_id = <?=$this->fromId?>;
     var $chat_parent = $("#chat-container");
     var $chat = $("#chat-content");
 
@@ -96,16 +116,29 @@
         let text = $message.val();
         $message.val('');
 
-        tsFrame.query('POST', 'support/message', {chat: chat_id, message: text}, function(){
+        <?if($chatRole == 'operator'):?>
+        tsFrame.query('POST', 'support/message-operator', {chat: chat_id, message: text}, function(){
             updateMessages();
         });
+        <?else:?>
+        tsFrame.query('POST', 'support/message', {chat: chat_id, message: text}, function(data){
+            updateMessages();
+            if(data.error){
+                document.location.reload();
+            }
+        });
+        <?endif?>
     }
 
     function updateMessages(){
-        tsFrame.query('POST', 'support/updates', {chat: chat_id}, function(data){
+        tsFrame.query('POST', 'support/updates', {chat: chat_id, from_id: from_id}, function(data){
             if(data.updates && data.html.length > 0){
                 $chat.append(data.html);
                 scrollChat();
+
+                if(data.from_id){
+                    from_id = data.from_id;
+                }
             }
         });
     }

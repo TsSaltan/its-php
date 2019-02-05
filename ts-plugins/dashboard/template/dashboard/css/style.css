@@ -32,3 +32,8 @@ body,
 .panel-collapsable .panel-heading .panel-title a:focus{
 	text-decoration: none;
 }
+
+span.counter{
+	float:right;
+	padding: 0px 8px;
+}

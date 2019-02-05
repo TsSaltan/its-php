@@ -26,10 +26,15 @@ class SupportDashboard extends UserDashboard {
 		if($chat->getOwnerId() !== $this->currentUser->get('id')){
 			throw new AccessException('Invalid access');
 		}
+		$messages = $chat->getMessages();
+		$last = end($messages);
 
+		$this->vars['chatRole'] = 'client';
 		$this->vars['chatTitle'] = $chat->getTitle();
 		$this->vars['chatId'] = $chat->getId();
-		$this->vars['chatMessages'] = $chat->getMessages();
+		$this->vars['isClosed'] = $chat->getStatus() < 1;
+		$this->vars['fromId'] = $last->getId();
+		$this->vars['chatMessages'] = $messages;
 		$chat->setCurrentDate();
 	}
 

@@ -11,14 +11,17 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 
 /**
- * @route GET /dashboard/[support-operator:action]
+ * @route GET /dashboard/[operator:action]
+ * @route GET /dashboard/operator/[chat:action]/[:chat_id]
+ * @route POST /dashboard/operator/[close:action]
+ * @route POST /dashboard/operator/[delete:action]
  */ 
 class SupportOperatorDashboard extends UserDashboard {
 	public function __construct(){
 		$this->setActionPrefix(null);
 	}
 
-	public function getSupportOperator(){
+	public function getOperator(){
 		UserAccess::assertCurrentUser('support.operator');
 
 		$pages = new Paginator([], 10);
@@ -31,30 +34,37 @@ class SupportOperatorDashboard extends UserDashboard {
 	}
 
 	public function getChat(){
-		UserAccess::assertCurrentUser('support.client');
+		UserAccess::assertCurrentUser('support.operator');
 		$chat = new Chat($this->params['chat_id']);
-		if($chat->getOwnerId() !== $this->currentUser->get('id')){
-			throw new AccessException('Invalid access');
-		}
+
+		$messages = $chat->getMessages();
+		$last = end($messages);
 
 		$this->vars['chatTitle'] = $chat->getTitle();
 		$this->vars['chatId'] = $chat->getId();
-		$this->vars['chatMessages'] = $chat->getMessages();
-		$chat->setCurrentDate();
+		$this->vars['fromId'] = $last->getId();
+		$this->vars['chatMessages'] = $messages;
+		$this->vars['isClosed'] = $chat->getStatus() < 1;
+		$this->vars['chatRole'] = 'operator';
 	}
-	
-	public function postNew(){
-		UserAccess::assertCurrentUser('support.client');
-		Input::post()
-			->referer()
-			->name('title')->required()->minlength(1)
-			->name('message')->required()->minlength(1)
-		->assert();
 
-		$chat = Chat::create($this->currentUser, $_POST['title']);
-		$chat->addMessage($_POST['message']);
+	public function postClose(){
+		UserAccess::assertCurrentUser('support.operator');
+		Input::post()->referer()->name('chat_id')->required()->numeric()->minLength(1);
+		$chat = new Chat($_POST['chat_id']);
+		$chat->close();
 
-		Http::redirect(Http::makeURI('/dashboard/support/chat/' . $chat->getId()));
+		Http::redirect(Http::makeURI('/dashboard/operator?closed'));
+		die;
+	}
+
+	public function postDelete(){
+		UserAccess::assertCurrentUser('support.operator');
+		Input::post()->referer()->name('chat_id')->required()->numeric()->minLength(1);
+		$chat = new Chat($_POST['chat_id']);
+		$chat->delete();
+
+		Http::redirect(Http::makeURI('/dashboard/operator?deleted'));
 		die;
 	}
 }

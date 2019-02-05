@@ -6,8 +6,33 @@ use tsframe\exception\BaseException;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 use tsframe\module\user\SingleUser;
+use tsframe\module\user\UserAccess;
 
 class Message{
+	public static function getUnreadCountForUser(SingleUser $owner): int {
+		$q = Database::exec('SELECT COUNT(*) c FROM `support-chats` chat
+			RIGHT JOIN `support-messages` message ON (
+    			message.chat = chat.id
+			)
+			WHERE chat.`owner` = :owner AND message.date > chat.date', ['owner' => $owner->get('id')])->fetch();
+
+		return $q[0]['c'] ?? 0;
+	}
+
+	public static function getUnreadCountForOperator(): int {
+		$q = Database::exec('SELECT COUNT(chat.id) c FROM `support-chats` as chat  
+			LEFT JOIN `support-messages` as message ON (
+			    message.id = (SELECT MAX(`id`) FROM `support-messages` WHERE `support-messages`.`chat` = chat.id)
+			)
+			LEFT JOIN `users` as users ON (
+			    users.id = message.owner
+			)
+			WHERE chat.status > 0 AND users.access < :access', ['access' => UserAccess::getAccess('support.operator')]
+		)->fetch();
+
+		return $q[0]['c'] ?? 0;
+	}
+
 	public static function create(SingleUser $owner, int $chat, string $message): Message {
 		$query = Database::exec("INSERT INTO `support-messages` (`owner`, `chat`, `message`) VALUES (:owner, :chat, :message)", [
 			'owner' => $owner->get('id'),
