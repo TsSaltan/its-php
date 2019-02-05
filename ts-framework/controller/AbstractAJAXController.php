@@ -32,6 +32,11 @@ abstract class AbstractAJAXController extends AbstractController{
 		$this->responseCode = Http::CODE_OK;
 	}
 
+	public function sendData(array $data){
+		$this->responseBody = $data;
+		$this->responseCode = Http::CODE_OK;
+	}
+
 	public function send(){
 		Http::acceptCORS();
 		parent::send();
