@@ -1,0 +1,177 @@
+<?php
+namespace tsframe\module\support;
+
+use tsframe\Config;
+use tsframe\exception\BaseException;
+use tsframe\module\database\Database;
+use tsframe\module\io\Output;
+use tsframe\module\user\SingleUser;
+
+class Chat{
+	/**
+	 * Chat id
+	 * @var int
+	 */
+	protected $id;
+
+	/**
+	 * Chat data
+	 * @var array
+	 */
+	protected $data = [];
+
+	/**
+	 * Получить все чаты
+	 * @return Chat[]
+	 */
+	public static function getChats(int $offset = 0, int $count = 0): array {
+		$query = Database::exec("SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-chats` ORDER BY `status` DESC ORDER BY `date` DESC" . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''))->fetch();
+		$chats = [];
+		foreach ($query as $chat) {
+			$chats[] = new self($chat['id'], $chat);
+		}		
+		
+		return $chats;
+	}
+
+	public static function getUserChatCount(SingleUser $user): int {
+		$query = Database::exec("SELECT COUNT(*) c FROM `support-chats` WHERE `owner` = :owner", [
+			'owner' => $user->get('id')
+		])->fetch();
+		return $query[0]['c'];
+	}
+
+	public static function getUserChats(SingleUser $user, int $offset = 0, int $count = 0): array {
+		$query = Database::exec("SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-chats` WHERE `owner` = :owner ORDER BY `date` DESC" . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''), [
+			'owner' => $user->get('id')
+		])->fetch();
+
+		$chats = [];
+		foreach ($query as $chat) {
+			$chats[] = new self($chat['id'], $chat);
+		}		
+		
+		return $chats;
+	}
+
+	public static function create(SingleUser $owner, string $title): Chat {
+		$query = Database::exec("INSERT INTO `support-chats` (`owner`, `title`, `status`) VALUES (:owner, :title, :status)", [
+			'owner' => $owner->get('id'),
+			'title' => $title,
+			'status' => 1
+		]);
+		$id = $query->lastInsertId();
+		return new self($id);
+	}
+
+	public function __construct(int $id, ?array $data = []){
+		$this->id = $id;
+		$this->data = (is_array($data) && sizeof($data) > 0) ? $data : (Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-chats` WHERE `id` = :id', ['id' => $this->id])->fetch()[0] ?? []);
+
+		if(sizeof($this->data) == 0){
+			throw new BaseException('Invalid chat_id: ' . $this->id);
+		}
+	}
+
+	public function getTitle(): string {
+		$title = $this->data['title'] ?? 'Диалог #' . $this->id;
+		return Output::of($title)->specialChars()->getData();
+	}
+	
+	public function getId(): int {
+		return $this->id;
+	}
+
+	/**
+	 * 0 - чат закрыт
+	 * 1 - чат активен
+	 * @return int
+	 */
+	public function getStatus(): int {
+	    return $this->data['status'] ?? 0;
+	}
+
+	public function setStatus(int $status){
+		Database::exec('UPDATE `support-chats` SET `status` = :status WHERE `id` = :id', [
+			'status' => $status,
+			'id' => $this->id
+		]);
+		$this->data['status'] = $status;
+	}
+
+	/**
+	 * Здесь дата - время последнего прочтения
+	 * На этой метке будем основываться на том, есть ли новые сообщения
+	 * @return int
+	 */
+	public function getDate(): int {
+	    return $this->data['date_ts'] ?? 0;
+	}
+
+	public function setCurrentDate(){
+		Database::exec('UPDATE `support-chats` SET `date` = CURRENT_TIMESTAMP() WHERE `id` = :id', [
+			'id' => $this->id
+		]);
+		$this->data['date_ts'] = time();
+	}
+
+	public function hasNewMessages(): bool {
+		$last = $this->getLastMessage()->getDate();
+		$date = $this->getDate();
+
+		return $last > $date;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getOwnerId(): int {
+	    return $this->data['owner'] ?? 0;
+	}
+
+	/**
+	 * @return SingleUser
+	 */
+	public function getOwner(): SingleUser {
+	    return new SingleUser($this->getOwnerId());
+	}
+
+	public function getLastMessage(): Message {
+		$mes = $this->getMessages(0, 1);
+		return current($mes);
+	}
+
+	public function getNewMessages(): array {
+		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat AND date_ts > :date ORDER BY `date` ASC', [
+			'chat' => $this->id,
+			'date' => $this->getDate(),
+		])->fetch();
+		$messages = [];
+		foreach ($query as $m) {
+			$messages[] = new Message($m['id'], $m);
+		}
+
+		$this->setCurrentDate();
+		return $messages;
+	}
+
+	public function getMessages(int $offset = 0, int $count = 10): array {
+		$query = Database::exec('SELECT *, UNIX_TIMESTAMP(`date`) date_ts FROM `support-messages` WHERE `chat` = :chat ORDER BY `date` ASC'  . ($count > 0 ? ' LIMIT ' . $count : '') . ($offset > 0 ? ' OFFSET ' . $offset : ''), [
+			'chat' => $this->id
+		])->fetch();
+		$messages = [];
+		foreach ($query as $m) {
+			$messages[] = new Message($m['id'], $m);
+		}
+
+		return $messages;
+	}
+
+	public function addMessage(string $text, ?SingleUser $owner = null): Message {
+		return Message::create(
+			(is_null($owner) ? $this->getOwner() : $owner),
+			$this->id,
+			$text
+		);
+	}
+}
