@@ -104,4 +104,18 @@ class Http{
 		return $_SERVER['SERVER_NAME'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
 	}
 
+	/**
+	 * Поступил ли текущий запрос от браузера
+	 * @return boolean
+	 */
+	public static function isBrowser(): bool {
+		return isset($_SERVER['HTTP_USER_AGENT']) && (
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'mozilla') || 
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'windows') ||
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'firefox') ||
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'opera') ||
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'chrome') ||
+			   stripos($_SERVER['HTTP_USER_AGENT'], 'webkit'));
+	}
+
 }
