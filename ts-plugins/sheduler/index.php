@@ -19,7 +19,8 @@ Hook::registerOnce('plugin.install', function(){
  */
 function(){
 	// Добавление новой задачи (например при установке плагина)
-	Hook::registerOnce('plugin.install', function(){
+	// app.install выполняется после установки всех плагинов !!!
+	Hook::registerOnce('app.install', function(){
 		Scheduler::addTask('my-super-task', '@daily');
 	});
 

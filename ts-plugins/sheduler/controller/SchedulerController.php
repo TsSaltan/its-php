@@ -28,11 +28,13 @@ class SchedulerController extends AbstractController{
 		}
 
 		$tasks = Scheduler::getTasks();
+		Hook::call('scheduler.start', [$tasks], null, function(){});
+
 		foreach ($tasks as $task){
 			if($task->runRequired()){
 				$logData = [
 					'now' => time(), 
-					'tast-exec' => date('Y-m-d h:i:s', $task->getLastExec()),
+					'last-exec' => date('Y-m-d h:i:s', $task->getLastExec()),
 					'period' => $task->getPeriod(), 
 				];
 

@@ -120,3 +120,21 @@ Hook::register('template.render', function(Template $tpl){
  */
 Hook::register('user.register', function(SingleUser $user){
 });
+
+
+/**
+ * Запуск планировщика
+ * @param Task[] $tasks
+ */
+Hook::register('scheduler.start', function(array $tasks){
+	
+});
+
+/**
+ * Выполнение задачи планировщика
+ * @param Task $task
+ * @return false, если задача не выполнеина
+ */
+Hook::register('scheduler.task.%taskName%', function(Task $task){
+
+});
