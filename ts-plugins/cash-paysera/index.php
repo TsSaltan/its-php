@@ -1,10 +1,13 @@
 <?
 /**
  * Интеграция с платежной системой paysera
+ * @link https://developers.paysera.com/ru/payments/current
  */
 namespace tsframe;
 
 use tsframe\PluginInstaller;
+use tsframe\module\user\Cash;
+use tsframe\module\user\SingleUser;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
@@ -14,26 +17,27 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 Hook::registerOnce('plugin.install', function(){
-	/*	return [
-			PluginInstaller::withKey('interkassa.accountId')
-							->setType('text')
-							->setDescription("ID аккаунта Interkassa")
-							->setRequired(true),
+	return [
+		PluginInstaller::withKey('paysera.projectid')
+						->setType('text')
+						->setDescription("Уникальный ID проекта Paysera")
+						->setRequired(true),
 
-			PluginInstaller::withKey('interkassa.cashId')
-							->setType('text')
-							->setDescription("ID кошелька Interkassa")
-							->setRequired(true),
+		PluginInstaller::withKey('paysera.sign_password')
+						->setType('text')
+						->setDescription("Пароль от проекта Paysera")
+						->setRequired(true),
 
-			PluginInstaller::withKey('interkassa.key')
-							->setType('text')
-							->setDescription("Секретный (или тестовый) ключ от кошелька Interkassa<br/>".
-											"<p>В настройках кассы укажите:</p>".
-											"<p><b>URL успешной оплаты:</b> <u>".$host."interkassa/success</u></p>".
-											"<p><b>URL неуспешной оплаты:</b> <u>".$host."interkassa/fail</u></p>".
-											"<p><b>URL ожидания проведения платежа:</b> <u>".$host."interkassa/pending</u></p>".
-											"<p><b>URL взаимодействия:</b> <u>".$host."interkassa/pay</u></p>"
-							)
-							->setRequired(true),
-		];*/
+		PluginInstaller::withKey('paysera.test')
+						->setType('select')
+						->setDescription("Режим работы")
+						->setValues([1 => "Test mode", 0 => "Production mode"])
+						->setRequired(true),
+	];
+});
+
+
+Hook::register('template.dashboard.user.edit.balance', function(Template $tpl, SingleUser $selectUser){
+	$tpl->var('currency', Cash::getCurrency());
+	$tpl->inc('pay-form');
 });
