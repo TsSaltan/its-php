@@ -41,16 +41,16 @@ class Hook{
 			$func = $hook['function'];
 			try{
 				$result = call_user_func_array($func, $params);
+
+				if(is_callable($return)){
+					call_user_func($return, $result);
+				}
 			} catch(\Exception|\Error $e){
 				if(is_callable($error)){
 					call_user_func($error, $e);
 				} else {
 					throw $e;
 				}
-			}
-
-			if(is_callable($return)){
-				call_user_func($return, $result);
 			}
 
 			if(($hook['once'] ?? true) || $once){
