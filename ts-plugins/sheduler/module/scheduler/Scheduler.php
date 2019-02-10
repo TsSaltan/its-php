@@ -24,7 +24,7 @@ class Scheduler {
 	 *	@return Task
 	 */
     public static function addTask(string $taskName, string $period): Task {
-        Database::exec("INSERT INTO `tasks` (`name`, `period`) VALUES (:name, :period) ON DUPLICATE KEY UPDATE `period` = :period", ['name' => $this->name, 'period' => $this->period]);
+        Database::exec("INSERT INTO `tasks` (`name`, `period`) VALUES (:name, :period) ON DUPLICATE KEY UPDATE `period` = :period", ['name' => $taskName, 'period' => $period]);
         return new Task($taskName, $period);
     }
 

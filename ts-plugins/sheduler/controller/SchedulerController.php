@@ -21,7 +21,7 @@ class SchedulerController extends AbstractController{
 
 	public function response(){
 		// Для браузера - никакого доступа
-		if(false && Http::isBrowser()){
+		if(Http::isBrowser()){
 			$this->responseCode = Http::CODE_ACCESS_DENIED;
 			$this->responseBody = "Access denied";
 			return;
