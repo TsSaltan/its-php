@@ -12,6 +12,7 @@
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",
-        "andr-04/jquery.inputmask-multi": "1.2.0"
+        "andr-04/jquery.inputmask-multi": "1.2.0",
+        "dragonmantank/cron-expression": "2.2"
     }
 }
