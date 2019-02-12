@@ -83,7 +83,7 @@ class UserAJAX extends AbstractAJAXController{
 					try{
 						Hook::call('user.register.controller', [$data, $input], function($return) use ($data){
 							if($return === false) throw new UserException('User register error: cancelled by hook', 0, ['data' => $data]);
-						}, function($error){
+						}, function($error) use ($data){
 							throw new UserException('User register error: error by hook', 0, ['error' => $error, 'data' => $data]);
 						});
 
