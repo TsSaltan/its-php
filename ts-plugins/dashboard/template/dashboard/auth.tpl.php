@@ -48,13 +48,13 @@
                             <form role="form" onsubmit="tsUser.register(this); return false;">
                                 <fieldset>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Логин" name="login" type="text">
+                                        <input class="form-control" placeholder="Логин" name="login" type="text" required>
                                     </div>          
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="E-mail" name="email" type="email">
+                                        <input class="form-control" placeholder="E-mail" name="email" type="email" required>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Пароль" name="password" type="password" value="">
+                                        <input class="form-control" placeholder="Пароль" name="password" type="password" value="" required>
                                     </div>
                                     <?$this->hook('auth.register')?>
                                     <button class="btn btn-lg col-md-6 btn-success btn-block">Регистрация</button>
