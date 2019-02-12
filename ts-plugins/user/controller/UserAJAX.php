@@ -1,15 +1,16 @@
 <?php
 namespace tsframe\controller;
 
-use tsframe\exception\RouteException;
+use tsframe\Hook;
+use tsframe\Http;
 use tsframe\exception\BaseException;
 use tsframe\exception\InputException;
+use tsframe\exception\RouteException;
 use tsframe\exception\UserException;
-use tsframe\Http;
 use tsframe\module\Meta;
+use tsframe\module\io\Input;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
-use tsframe\module\io\Input;
 
 /**
  * @route POST /ajax/[user:part]/[:action]
@@ -80,6 +81,12 @@ class UserAJAX extends AbstractAJAXController{
 					}
 
 					try{
+						Hook::call('user.register.controller', [$data, $input], function($return) use ($data){
+							if($return === false) throw new UserException('User register error: cancelled by hook', 0, ['data' => $data]);
+						}, function($error){
+							throw new UserException('User register error: error by hook', 0, ['error' => $error, 'data' => $data]);
+						});
+
 						$user = User::register($data['login'], $data['email'], $data['password']);
 						if($user->isAuthorized() && $user->createSession()){
 							$this->sendOK();

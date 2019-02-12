@@ -24,6 +24,7 @@
                             <div class="form-group">
                                 <input class="form-control" placeholder="Пароль" name="password" type="password" required>
                             </div>
+                            <?$this->hook('auth.login')?>
                             <button class="btn btn-lg col-md-6 btn-success btn-block">Войти</button>
                         </form>
                         <?if($canSocial):?>
@@ -55,6 +56,7 @@
                                     <div class="form-group">
                                         <input class="form-control" placeholder="Пароль" name="password" type="password" value="">
                                     </div>
+                                    <?$this->hook('auth.register')?>
                                     <button class="btn btn-lg col-md-6 btn-success btn-block">Регистрация</button>
                                 </fieldset>
                             </form>

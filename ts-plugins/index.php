@@ -4,9 +4,10 @@
  */
 namespace tsframe;
 
+use tsframe\Http;
+use tsframe\module\io\Input;
 use tsframe\module\menu\MenuItem;
 use tsframe\view\TemplateRoot;
-use tsframe\Http;
 
 die('Access denied');
 
@@ -87,6 +88,8 @@ Hook::register('database.query', function(Query $query){
  * Изменение конкретного шаблона
  * @hook template.{templateName}.{templatePath}
  * f.e. template.dashboard.auth ($tpl, array $authTabs [login =>..., register => ...]), 
+ * 		template.dashboard.auth.login, 
+ * 		template.dashboard.auth.register, 
  * 		template.dashboard.config, 
  * 		template.dashboard.user.edit ($tpl, array &$configTabs, int|string &$activeTab), 
  * 		template.dashboard.header
@@ -111,6 +114,16 @@ Hook::register('template.{templateName}.{templatePath}', function(Template $tpl)
 Hook::register('template.render', function(Template $tpl){
 	// Свои переменные
 	$tpl->var('key1', 'value2');
+});
+
+/**
+ * Перед регистрацией пользователя (dвызывается из контроллера UserAJAX)
+ * @hook user.register.controller
+ * @param array $data Данные, отправленные пользователем во время регистрации
+ * @param Input $input Обработчик входящих данных
+ * @return bool Если хук возвращает false (или во время выполнения произошла ошибка), регистрация пользователя будет отменена
+ */
+Hook::register('user.register.controller', function(array $data, Input $input){
 });
 
 /**

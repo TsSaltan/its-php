@@ -10,6 +10,15 @@ use tsframe\exception\UserException;
 use tsframe\module\Cache;
 
 class User{
+	/**
+	 * Регистрация пользователя
+	 * @param  string   	 $login    
+	 * @param  string   	 $email    
+	 * @param  string|null   $password (optional) Если null, будет установлен случайный пароль
+	 * @param  int|null 	 $access (optional) Если null, будут установлены права доступа по умолчанию (Config: access.user.onRegister)
+	 * @return SingleUser
+	 * @throws UserException
+	 */
 	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
 
