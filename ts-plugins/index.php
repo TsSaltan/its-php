@@ -39,6 +39,20 @@ Hook::registerOnce('app.install', function(){
 });
 
 /**
+ * Начало работы приложения (после инициализации плагинов)
+ * @hook app.start
+ */
+Hook::registerOnce('app.start', function(){
+});
+
+/**
+ * Завершение работы приложения
+ * @hook app.finish
+ */
+Hook::registerOnce('app.finish', function(){
+});
+
+/**
  * Загрузка плагина (каждый запуск системы)
  * @hook plugin.load
  */
@@ -139,6 +153,16 @@ Hook::register('template.{templateName}.{templatePath}', function(Template $tpl)
 Hook::register('template.render', function(Template $tpl){
 	// Свои переменные
 	$tpl->var('key1', 'value2');
+});
+
+
+/**
+ * Импорт файла в шаблон
+ * @hook template.include
+ * @param Template $tpl
+ * @param string $name Имя файла
+ */
+Hook::register('template.include', function(string $name, Template $tpl){
 });
 
 /**

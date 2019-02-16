@@ -2,29 +2,24 @@
 namespace tsframe;
 
 class Hook{
-	/**
-	 * Hooks:
-	 * plugin.load (string $pluginName, string $pluginPath) : void - загрузка плагина
-	 * plugin.install.required: array(path.to.param => ['type' => string|int|bool, 'description' => '...') - перед установкой плагина, необходимые полня
-	 * plugin.install (string $pluginName, string $pluginPath) : void - установка плагина
-	 * template.render (Template $tpl): void - отрисовка шаблона
-	 * template.include (string $name, Template $tpl): void - импорт файла в шаблон
-	 * app.start
-	 * app.finish
-	 * app.install // @deprecated
-	 * menu.render (string $menuName, MenuItem $menu): void
-	 * menu.render.$menuName (MenuItem $menu): void
-	 * http.send (string &$body, array &$headers): void
-	 * database.query (Query $dbQuery)
-	 */
 	protected static $hooks = [];
 
-	public static function registerOnce(string $name, callable $function){
-		return self::register($name, $function, true);
+	/**
+	 * Добавить фукнцию на каждый вызов хука
+	 * @param  string   $name     Имя хука
+	 * @param  callable $function Функция
+	 * @param  int 		$priority Приоритет: чем меньше значение, тем раньше будет вызван коллбэк
+	 */
+	public static function register(string $name, callable $function, int $priority = 10){
+		self::$hooks[$name][] = ['function' => $function, 'once' => false, 'priority' => $priority];
 	}
 
-	public static function register(string $name, callable $function, bool $once = false){
-		self::$hooks[$name][] = ['function' => $function, 'once' => $once];
+	/**
+	 * Добавить функцию на однократный вызов хука
+	 * см. Hook::register
+	 */
+	public static function registerOnce(string $name, callable $function, int $priority = 10){
+		self::$hooks[$name][] = ['function' => $function, 'once' => true, 'priority' => $priority];
 	}
 
 	/**
@@ -37,6 +32,14 @@ class Hook{
 	 */
 	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
 		if(!isset(self::$hooks[$name])) return;
+		$hooks = self::$hooks[$name];
+		usort($hooks, function($a, $b){
+			if ($a['priority'] == $b['priority']) {
+		        return 0;
+		    }
+		    return ($a['priority'] < $b['priority']) ? -1 : 1;
+		});
+
 		foreach (self::$hooks[$name] as $key => $hook) {
 			$func = $hook['function'];
 			try{
