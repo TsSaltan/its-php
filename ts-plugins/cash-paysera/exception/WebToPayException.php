@@ -1,12 +1,10 @@
 <?php 
 namespace tsframe\exception;
 
-use tsframe\exception\BaseException;
-
 /**
  * Base exception class for all exceptions in this library
  */
-class WebToPayException extends BaseException {
+class WebToPayException extends \Exception {
 
     /**
      * Missing field.
