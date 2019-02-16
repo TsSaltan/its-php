@@ -6,6 +6,7 @@ use tsframe\Http;
 use tsframe\exception\WebToPayException;
 use tsframe\module\WebToPay;
 use tsframe\module\user\Cash;
+use tsframe\module\user\SingleUser;
 use tsframe\module\user\User;
 
 class Paysera {
@@ -43,9 +44,10 @@ class Paysera {
     	$currency = $response['currency'];
 
     	$userId = Cash::decodePayId($orderId);
-    	$cash = Cash::ofUserId($userId);
+    	$user = new SingleUser($userId);
+    	$cash = new Cash($user);
     	if(!$cash->isTransactionExists($orderId)){
-    		$cash->add($amount, 'Пополнение счёта (через paysera)', $orderId);
+    		$cash->add($amount, 'Пополнение счёта пользователя ' . $user->get('login') . ' через Paysera', $orderId);
     	} else {
     		throw new WebToPayException('Payment #' . $orderId . ' already processed');
     	}

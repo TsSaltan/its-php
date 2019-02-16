@@ -29,7 +29,7 @@ class Payment{
 		$this->payId = Cash::createPayId($user->get('id'));
 		$this->amount = $amount;
 		$this->currency = Cash::getCurrency();
-		$this->description = is_null($description) ? ('Пополнение баланса пользователя ' . $user->get('login')) : $description;
+		$this->description = is_null($description) ? ('Пополнение баланса пользователя ' . $user->get('login') . ' через Interkassa') : $description;
 
 		$this->tpl = new HtmlTemplate('interkassa', 'payform');
 	}
