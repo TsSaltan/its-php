@@ -195,17 +195,19 @@ function uiCollapsePanel($headerContent, $bodyContent, $footerContent = null, st
     $paneId = is_null($paneId) ? uniqid('panel') : $paneId ;
     ?>
     <div class="row">
-        <div class="panel panel-collapsable <?=$panelClass?>">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#<?=$paneId?>"><?if(!is_null($icon)):?><i class='fa fa-<?=$icon?>'></i>&nbsp;&nbsp;<?endif?><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></a>
-                </h4>
-            </div>
-            <div id="<?=$paneId?>" class="panel-collapse collapse">
-                <div class="panel-body"><?=(is_callable($bodyContent) ? call_user_func($bodyContent) : $bodyContent)?></div>
-                <?if(!is_null($footerContent)):?>
-                <div class="panel-footer"><?=(is_callable($footerContent) ? call_user_func($footerContent) : $footerContent)?></div>
-                <?endif?>
+        <div class="col-lg-12">
+            <div class="panel panel-collapsable <?=$panelClass?>">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#<?=$paneId?>"><?if(!is_null($icon)):?><i class='fa fa-<?=$icon?>'></i>&nbsp;&nbsp;<?endif?><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></a>
+                    </h4>
+                </div>
+                <div id="<?=$paneId?>" class="panel-collapse collapse">
+                    <div class="panel-body"><?=(is_callable($bodyContent) ? call_user_func($bodyContent) : $bodyContent)?></div>
+                    <?if(!is_null($footerContent)):?>
+                    <div class="panel-footer"><?=(is_callable($footerContent) ? call_user_func($footerContent) : $footerContent)?></div>
+                    <?endif?>
+                </div>
             </div>
         </div>
     </div><?
