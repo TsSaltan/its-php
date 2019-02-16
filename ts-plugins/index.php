@@ -87,14 +87,33 @@ Hook::register('database.query', function(Query $query){
 /**
  * Изменение конкретного шаблона
  * @hook template.{templateName}.{templatePath}
- * f.e. template.dashboard.auth ($tpl, array $authTabs [login =>..., register => ...]), 
- * 		template.dashboard.auth.login, 
- * 		template.dashboard.auth.register, 
- * 		template.dashboard.config, 
- * 		template.dashboard.user.edit ($tpl, array &$configTabs, int|string &$activeTab), 
- * 		template.dashboard.header
- * 		template.dashboard.navbar.top
- * 		template.dashboard.navbar.side
+ *
+ * Шаблон Dashboard
+ *   template.dashboard.config, 
+ *   template.dashboard.header
+ *   template.dashboard.navbar.top
+ *   template.dashboard.navbar.side
+ *   
+ *   Страница авторизации
+ *   - Вкладки авторизация/регистрация
+ *     template.dashboard.auth ($tpl, array $authTabs [login =>..., register => ...]), 
+ *     
+ *   - Внутри вкладки авторизация (поля)
+ *     template.dashboard.auth.login, 
+ *     
+ *   - Внутри вкладки регистрация (поля)
+ *     template.dashboard.auth.register, 
+ *
+ *   Страницы User
+ *   - Редактирование пользователя
+ *     template.dashboard.user.edit ($tpl, array &$configTabs, int|string &$activeTab), 
+ *
+ *   - Список пользователей в админке
+ *   - - Столбцы в таблице (внутри <tr>):
+ *       template.dashboard.user.list.column ($tpl) 					  
+ *   - - Строка с пользователем (внутри <tr>)
+ *       template.dashboard.user.list.item ($tpl, SingleUser $user) 	
+ * 		
  * @param Template $tpl
  */
 Hook::register('template.{templateName}.{templatePath}', function(Template $tpl){

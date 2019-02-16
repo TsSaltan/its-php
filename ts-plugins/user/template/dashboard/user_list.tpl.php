@@ -30,6 +30,7 @@
                                                 <th>Имя</th>
                                                 <th>Email</th>
                                                 <th>Группа</th>
+                                                <?$this->hook('user.list.column')?>
                                                 <th width="130px" align="center">Действия</th>
                                             </tr>
                                         </thead>
@@ -40,6 +41,7 @@
                                                 <td><?=$userItem->get('login')?></td>
                                                 <td><?=$userItem->get('email')?></td>
                                                 <td><?=array_flip($accessList)[$userItem->get('access')]?></td>
+                                                <?$this->hook('user.list.item', [$userItem])?>
                                                 <td>
                                                     <?if(UserAccess::checkCurrentUser('user.view')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id'))?>" class="btn btn-default btn-sm btn-outline" title='Профиль'><i class='fa fa-user'></i></a><?endif?>
                                                     <?if(UserAccess::checkCurrentUser('user.edit')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/edit')?>" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i></a><?endif?>
