@@ -89,30 +89,36 @@ Hook::register('database.query', function(Query $query){
  * @hook template.{templateName}.{templatePath}
  *
  * Шаблон Dashboard
- *   template.dashboard.config, 
- *   template.dashboard.header
- *   template.dashboard.navbar.top
- *   template.dashboard.navbar.side
+ *   template.dashboard.config (Template $tpl) 
+ *   template.dashboard.header (Template $tpl)
+ *   template.dashboard.navbar.top (Template $tpl)
+ *   template.dashboard.navbar.side (Template $tpl)
  *   
  *   Страница авторизации
  *   - Вкладки авторизация/регистрация
- *     template.dashboard.auth ($tpl, array $authTabs [login =>..., register => ...]), 
+ *     template.dashboard.auth (Template $tpl, array $authTabs [login =>..., register => ...]), 
  *     
  *   - Внутри вкладки авторизация (поля)
- *     template.dashboard.auth.login, 
+ *     template.dashboard.auth.login (Template $tpl) 
  *     
  *   - Внутри вкладки регистрация (поля)
- *     template.dashboard.auth.register, 
+ *     template.dashboard.auth.register (Template $tpl) 
  *
  *   Страницы User
  *   - Редактирование пользователя
- *     template.dashboard.user.edit ($tpl, array &$configTabs, int|string &$activeTab), 
+ *     template.dashboard.user.edit (Template $tpl, array &$configTabs, int|string &$activeTab)
+ *     
+ *   - Редактирование пользователя: вкладка с балансом
+ *     template.dashboard.user.edit.balance (Template $tpl, SingleUser $selectUser)
+ *     
+ *   - Профиль пользователя
+ *     template.dashboard.user.profile (Template $tpl, SingleUser $user)
  *
  *   - Список пользователей в админке
  *   - - Столбцы в таблице (внутри <tr>):
- *       template.dashboard.user.list.column ($tpl) 					  
+ *       template.dashboard.user.list.column (Template $tpl) 					  
  *   - - Строка с пользователем (внутри <tr>)
- *       template.dashboard.user.list.item ($tpl, SingleUser $user) 	
+ *       template.dashboard.user.list.item (Template $tpl, SingleUser $user) 	
  * 		
  * @param Template $tpl
  */
