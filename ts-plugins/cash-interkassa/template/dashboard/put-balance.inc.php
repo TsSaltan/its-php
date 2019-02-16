@@ -1,5 +1,6 @@
 <div class="col-md-3">
 	<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#putBalance">Пополнить баланс</button>
+	<label class="description"><i style="opacity: 0.5">Через Interkassa</i></label>
 </div>
 
 <!-- Modal -->

@@ -1,6 +1,6 @@
 <div class="col-md-3">
 	<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#pay-form">Пополнить баланс</button>
-	<label class="description"><i style="opacity: 0.5">via paysera</i></label>
+	<label class="description"><i style="opacity: 0.5">Через Paysera</i></label>
 </div>
 
 <!-- Modal -->
