@@ -32,13 +32,10 @@ class PayseraProcessor extends AbstractController{
 				return;
 			
 			case 'accept':
-				// @todo наверное здесь нужно перенаправлять юзера на страницу с уведомлением, что всё оплачено
-				$this->htmlTemplate('Thank you for buying');
-				return;
+				return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'success'], 'balance'));
 
 			case 'cancel':
-				$this->htmlTemplate('Payment canceled');
-				return;
+				return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'cancel'], 'balance'));
 
 			case 'callback':
 				try{
@@ -49,25 +46,8 @@ class PayseraProcessor extends AbstractController{
 					Log::cash("Ошибка при обработке запроса от платёжного сервера", ['data' => $_REQUEST, 'error' => $e->getMessage(), 'error_type' => get_class($e)]);
 					return "Payment error: " . $e->getMessage();
 				}
-				return;
 		}
 
-		// return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'frompay'], 'balance'));
-	}
-
-	protected function htmlTemplate(string $message){
-		$this->responseType = Http::TYPE_HTML;
-		$this->responseBody = <<<HTML
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <title></title>
-</head>
-<body>
-    $message
-</body>
-</html>
-HTML;
+		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'fail'], 'balance'));
 	}
 }

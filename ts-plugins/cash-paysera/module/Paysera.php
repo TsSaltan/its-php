@@ -15,7 +15,8 @@ class Paysera {
 	        'projectid'     => Config::get('paysera.projectid'),
 	        'sign_password' => Config::get('paysera.sign_password'),
 	        'orderid'       => Cash::createPayId($user->get('id')),
-	        'amount'        => $amount,
+	        'p_email'       => $user->get('email'),
+	        'amount'        => $amount / 1000,
 	        'currency'      => Cash::getCurrency(),
 	        'accepturl'     => Http::makeURI('/paysera/accept'),
 	        'cancelurl'     => Http::makeURI('/paysera/cancel'),
@@ -38,7 +39,7 @@ class Paysera {
 	    }
 
 	    $orderId = $response['orderid'];
-    	$amount = $response['amount'];
+    	$amount = $response['amount'] * 1000;
     	$currency = $response['currency'];
 
     	$userId = Cash::decodePayId($orderId);
