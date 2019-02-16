@@ -75,8 +75,17 @@ class CashInstaller {
 
 				switch($_GET['balance']){
 					case 'frompay':
+					case 'success':
 						$tpl->vars(['cashAlert' => ['info' => 'Платёж совершён! Средства поступят на счёт после проверки платежа, обычно для этого требуется не более 5-10 минут.']]);
-					break;
+						break;
+
+					case 'fail':
+						$tpl->vars(['cashAlert' => ['danger' => 'Произошла ошибка во время платежа!']]);
+						break;
+
+					case 'cancel':
+						$tpl->vars(['cashAlert' => ['warning' => 'Платёж был отменён.']]);
+						break;
 				}
 			}
 
