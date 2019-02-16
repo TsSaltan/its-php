@@ -224,46 +224,48 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
     $hasHeader = is_callable($headerContent) || strlen($headerContent) > 0;
     ?>
     <div class="row">
-        <div class="panel tabbed-panel <?=$panelClass?>">
-            <div class="panel-heading clearfix">
-                <?if($hasHeader):?>
-                <div class="panel-title pull-left"><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></div>
-                <div class="pull-right">
-                <?else:?>
-                <div class="pull-left">
-                <?endif?>
+        <div class="col-lg-12">
+            <div class="panel tabbed-panel <?=$panelClass?>">
+                <div class="panel-heading clearfix">
+                    <?if($hasHeader):?>
+                    <div class="panel-title pull-left"><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></div>
+                    <div class="pull-right">
+                    <?else:?>
+                    <div class="pull-left">
+                    <?endif?>
 
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
-                        <?
-                        $tabN = 0;
-                        foreach ($tabs as $k => $tab):
-                            $tabId = is_numeric($k) ? uniqid('tab' . $k . '_') : $k;
-                            $isActive = $activeTab === $tabId || is_numeric($activeTab) && $activeTab == $tabN;
-                            $tabs[$k]['id'] = $tabId;
-                            $tabN++;
-                        ?>
-                        <li <?=$isActive ? 'class="active"' : ''?>>
-                            <a href="#<?=$tabId?>" data-toggle="tab"><?=is_callable($tab['title']) ? call_user_func($tab['title']) : $tab['title'] ?></a>
-                        </li>
-                        <?endforeach?>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="panel-body">
-
-                <div class="tab-content">
-                <?
-                $tabN = 0;
-                foreach ($tabs as $k => $tab):
-                    $isActive = $activeTab === $tab['id'] || is_numeric($activeTab) && $activeTab == $tabN;
-                    $tabN++;
-                ?>
-                    <div class="tab-pane fade <?=$isActive ? 'in active' : ''?>" id="<?=$tab['id']?>">
-                         <?=is_callable($tab['content']) ? call_user_func($tab['content']) : $tab['content']?>           
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <?
+                            $tabN = 0;
+                            foreach ($tabs as $k => $tab):
+                                $tabId = is_numeric($k) ? uniqid('tab' . $k . '_') : $k;
+                                $isActive = $activeTab === $tabId || is_numeric($activeTab) && $activeTab == $tabN;
+                                $tabs[$k]['id'] = $tabId;
+                                $tabN++;
+                            ?>
+                            <li <?=$isActive ? 'class="active"' : ''?>>
+                                <a href="#<?=$tabId?>" data-toggle="tab"><?=is_callable($tab['title']) ? call_user_func($tab['title']) : $tab['title'] ?></a>
+                            </li>
+                            <?endforeach?>
+                        </ul>
                     </div>
-                <?endforeach?>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="tab-content">
+                    <?
+                    $tabN = 0;
+                    foreach ($tabs as $k => $tab):
+                        $isActive = $activeTab === $tab['id'] || is_numeric($activeTab) && $activeTab == $tabN;
+                        $tabN++;
+                    ?>
+                        <div class="tab-pane fade <?=$isActive ? 'in active' : ''?>" id="<?=$tab['id']?>">
+                             <?=is_callable($tab['content']) ? call_user_func($tab['content']) : $tab['content']?>           
+                        </div>
+                    <?endforeach?>
+                    </div>
                 </div>
             </div>
         </div>
