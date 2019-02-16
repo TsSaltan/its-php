@@ -40,7 +40,7 @@ class Hook{
 		    return ($a['priority'] < $b['priority']) ? -1 : 1;
 		});
 
-		foreach (self::$hooks[$name] as $key => $hook) {
+		foreach ($hooks as $key => $hook) {
 			$func = $hook['function'];
 			try{
 				$result = call_user_func_array($func, $params);
