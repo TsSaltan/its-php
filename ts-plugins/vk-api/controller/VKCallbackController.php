@@ -8,37 +8,61 @@ use tsframe\module\Log;
 use tsframe\module\vk\CallbackAPI;
 
 /**
+ * @route GET|POST /vk-callback
  * @route GET|POST /vk-callback/
+ * @route GET|POST /vk-callback/[:group_id]
  */ 
 class VKCallbackController extends AbstractController {
 	public static $log = true;
 
 	public function response(){
 		$this->responseType = Http::TYPE_PLAIN;
+		$this->responseBody = 'ok';
 
-		$confirmToken = Config::get('vk.confirmToken');
-		$gAccessToken = Config::get('vk.groupAccessToken');
-		$cbApi = new CallbackAPI($gAccessToken, $confirmToken);
+		$groupId = $this->params['group_id'] ?? -1;
+		$groupData = Config::get('vk.groups.'.$groupId);
+		$data = [];
+		$cbApi = new CallbackAPI;
 
-		if($cbApi->hasData()){
+		if(is_null($groupData)){
+			$this->responseBody = 'Error: Invalid callback URI.';
+		}
+		elseif($cbApi->hasData()){
 			$data = $cbApi->getInputData();
-			if(self::$log) Log::VKCallback('Incoming query', $data);
+			$secretKey = $groupData['secret'] ?? null;
+			$confirmCode = $groupData['confirm'] ?? null;
 
-			switch($data['type']){
-				case 'confirmation':
-					return $cbApi->getConfirmToken();
+			if(!isset($data['secret']) || $data['secret'] != $secretKey){
+				$this->responseBody = 'Error: Invalid secret key.';
+			} 
+			elseif($data['group_id'] != $groupId){
+				$this->responseBody = 'Error: Invalid group id.';
+			} 
+			else {
+				switch($data['type']){
+					case 'confirmation':
+						$this->responseBody = $confirmCode;
+						break;
 
-				default:
-					/**
-					 * @hook vk.%event% (vkAPI $api, array $data);
-					 */
-					Hook::call('vk.' . $data['type'], [$cbApi->getApi(), $data]);
+					default:
+						/**
+						 * @hook vk.%event% (array $data);
+						 */
+						Hook::call('vk.' . $data['type'], [$data], function($response){
+							if(is_string($response) && strlen($response) > 0){
+								$this->responseBody = $response;
+							}
+						}, function($error){
+							$this->responseBody = 'Error: ' . $error->getMessage();
+						});
+				}
 			}
-			return "ok";
+
+
 		} else {
-			if(self::$log) Log::VKCallback('Incoming null query', []);
+			$this->responseBody = 'null query';
 		}
 
-		return "null";
+		if(self::$log) Log::VKCallback('Incoming query from group_id=' . $groupId . '. Response: ' . $this->responseBody , $data);
 	}
 }

@@ -6,42 +6,9 @@ use tsframe\module\vk\vkAPI;
 
 class CallbackAPI {
 	/**
-	 * Токен для подтверждения callback_url
-	 * @var string
-	 */
-	protected $confirmToken;
-
-	/**
-	 * Токен для совершения запросов к API
-	 * @var string
-	 */
-	protected $accessToken;
-
-	/**
 	 * @var array
 	 */
 	protected $inputData = [];
-
-	public function __construct(?string $accessToken = null, ?string $confirmToken = null){
-		if(!is_null($accessToken)) $this->setAccessToken($accessToken);
-		if(!is_null($confirmToken)) $this->setConfirmToken($confirmToken);
-	}
-
-	/**
-	 * @param string $confirmToken
-	 */
-	public function setConfirmToken(string $confirmToken){
-	    $this->confirmToken = $confirmToken;
-	    return $this;
-	}
-
-	/**
-	 * @param string $accessToken
-	 */
-	public function setAccessToken(string $accessToken){
-	    $this->accessToken = $accessToken;
-	    return $this;
-	}
 
 	public function getInputData(): array {
 		if(sizeof($this->inputData) > 0) return $this->inputData;
@@ -66,16 +33,5 @@ class CallbackAPI {
 		} catch (VKException $e){
 			return false;
 		}
-	}
-
-	/**
-	 * @return type
-	 */
-	public function getConfirmToken(): string {
-	    return $this->confirmToken;
-	}
-
-	public function getApi(): vkAPI {
-		return new vkAPI($this->accessToken);
 	}
 }
