@@ -3,7 +3,7 @@
     if(is_array($vkGroups) && sizeof($vkGroups) > 0):
     ?>
     <h3 style="margin: 0 10px 10px 0;">Список групп</h3>
-    <div class="table-responsive" id="sessions">
+    <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>

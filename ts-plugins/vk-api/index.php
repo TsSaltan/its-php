@@ -26,4 +26,4 @@ Hook::register('template.dashboard.config', function(Template $tpl){
 	$tpl->var('vkGroups', Config::get('vk.groups'));
 	$tpl->var('vkRandom', Crypto::generateString(16));
 	$tpl->inc('vk-groups-config');
-});
+}, 20);
