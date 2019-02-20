@@ -22,7 +22,7 @@ class VKCallbackController extends AbstractController {
 
 		if($cbApi->hasData()){
 			$data = $cbApi->getInputData();
-			if($log) Log::VKCallback('Incoming query', $data);
+			if(self::$log) Log::VKCallback('Incoming query', $data);
 
 			switch($data['type']){
 				case 'confirmation':
@@ -36,7 +36,7 @@ class VKCallbackController extends AbstractController {
 			}
 			return "ok";
 		} else {
-			if($log) Log::VKCallback('Incoming null query', []);
+			if(self::$log) Log::VKCallback('Incoming null query', []);
 		}
 
 		return "null";
