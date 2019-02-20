@@ -12,7 +12,7 @@ use tsframe\module\vk\CallbackAPI;
 class VKCallbackController extends AbstractController {
 	public function response(){
 		$this->responseType = Http::TYPE_PLAIN;
-		
+
 		$confirmToken = Config::get('vk.confirmToken');
 		$gAccessToken = Config::get('vk.groupAccessToken');
 		$cbApi = new CallbackAPI($gAccessToken, $confirmToken);
@@ -21,7 +21,7 @@ class VKCallbackController extends AbstractController {
 			$data = $cbApi->getInputData();
 			switch($data['type']){
 				case 'confirmation':
-					return $this->getConfirmToken();
+					return $cbApi->getConfirmToken();
 
 				default:
 					/**
