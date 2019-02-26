@@ -18,6 +18,7 @@ class Http{
 	const TYPE_HTML = 'text/html';
 	const TYPE_PLAIN = 'text/plain';
 	const TYPE_JSON = 'application/json';
+	const TYPE_JAVASCRIPT = 'text/javascript';
 
 	public static function sendBody(?string $body, int $code = 200, string $type = 'text/html', string $charset = 'utf-8', array $headers = []){
 		Hook::call('http.send', [&$body, &$headers]);

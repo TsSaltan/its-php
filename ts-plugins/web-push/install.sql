@@ -1,0 +1,7 @@
+CREATE TABLE `web-push-clients` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`endpoint` VARCHAR(300) NOT NULL , 
+	`p256dh` VARCHAR(150) NOT NULL , 
+	`auth` VARCHAR(50) NOT NULL , 
+	PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
