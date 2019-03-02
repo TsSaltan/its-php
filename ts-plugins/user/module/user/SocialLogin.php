@@ -63,6 +63,18 @@ HTML;
 		return $this->data;
 	}
 
+	/**
+	 * Получить аккаунт юзера по данным. полученным от социальной сети
+	 * Логика такая:
+	 * - Ищем в Meta инфо о привязанном аккаунте (ключ - sociaL_%provider%)
+	 * - Если не найдено - создаем новый аккаунт
+	 * 	 - Проверяем, разрешена ли регистрация
+	 * 	 - Проверяем, не занят ли привязанный email, есчли занят - ошибка
+	 * 	 - Генерируем логины, проверяем, не заняты ли они
+	 * 	 
+	 * @return SingleUser
+	 * @throws UserException
+	 */
 	public function getUser(): SingleUser {
 		// 1. Поиск по сохранённому ранее meta
 		$meta = Meta::find('social_' . $this->data['network'], $this->data['identity']);
@@ -75,6 +87,11 @@ HTML;
 		}
 
 		if(!UserConfig::canRegister()) throw new UserException('Social register disabled');
+
+		$email = $this->data['email'] ?? $this->data['identity'] . '@' . $this->data['network'];
+		if(User::exists(['email' => $email])){
+			throw new UserException('Email already used');
+		}
 
 		// 3. Создание нового профиля
 		$nicknames = [];
@@ -102,7 +119,6 @@ HTML;
 			$exists = User::exists(['login' => $nickname]);
 		}
 
-		$email = $this->data['email'] ?? $this->data['identity'] . '@' . $this->data['network'];
 		$password = uniqid('pass_');
 		$user = User::register($nickname, $email, $password);
 		$meta = $this->saveUserMeta($user);
