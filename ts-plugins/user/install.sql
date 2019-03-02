@@ -1,5 +1,3 @@
--- DROP TABLE IF EXISTS `sessions`;
-
 CREATE TABLE IF NOT EXISTS `sessions` (
   `key` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -15,5 +13,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `access` int(11) NOT NULL DEFAULT '0',
   `password` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`login`)
+  UNIQUE KEY `login` (`login`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
