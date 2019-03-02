@@ -209,7 +209,7 @@ class UserAJAX extends AbstractAJAXController{
 					else $this->access(UserAccess::getAccess('user.edit'));
 
 					
-					if($selectUser->closeSession()){
+					if($selectUser->closeAllSessions()){
 						$this->sendMessage('Sessions are closed', 4);
 					} else {
 						$this->sendError('Can not close sessions', 16);

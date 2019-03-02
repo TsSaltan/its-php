@@ -64,13 +64,6 @@ class UserDashboard extends Dashboard {
 				$this->vars['tempPass'] = $tempPass;
 			}
 
-			$this->vars['canSocial'] = UserConfig::canSocial();
-			if(UserConfig::canSocial()){
-				$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
-			} else {
-				$this->vars['socialLoginTemplate'] = null;
-			}
-
 			// Если пользователь перенаправлен со страницы соц. логина
 			if(isset($_GET['social'])){
 				if($_GET['social'] == 'success'){
@@ -149,7 +142,7 @@ class UserDashboard extends Dashboard {
 			$this->vars['selectUser'] = $this->selectUser;	
 			$this->vars['self'] = $this->self;	
 		}
-		
+
 		return parent::response();
 	}
 

@@ -30,7 +30,7 @@
                         <input class="form-control" name='login' type='text' value="<?=$selectUser->get('login')?>">
                     </div>                                            
                     <?endif?>
-                    
+
                     <div class="form-group">
                         <label>E-mail</label>
                         <input class="form-control" name='email' type='email' value="<?=$selectUser->get('email')?>">
@@ -92,8 +92,9 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th width="50px">#</th>
                                 <th>IP</th>
+                                <th>Дата авторизации</th>
                                 <th>Истекает</th>
                             </tr>
                         </thead>
@@ -102,6 +103,7 @@
                             <tr>
                                 <td><?=$k+1?></td>
                                 <td><?=$session['ip']?></td>
+                                <td><?=$session['start']?></td>
                                 <td><?=$session['expires']?></td>
                             </tr>
                             <?endforeach?>

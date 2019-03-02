@@ -63,16 +63,10 @@ class Dashboard extends AbstractController{
 		if(isset($_GET['error']) && $_GET['error'] == 'social'){
 			$this->vars['alert']['danger'][] = 'Невозможно войти через данный аккаунт, привязанный к нему e-mail уже зарегистрирован.';
 		}
-
-		if(UserConfig::canSocial()){
-			$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
-		} else {
-			$this->vars['socialLoginTemplate'] = null;
-		}
 	}
 
 	public function getLogout(){
-		$this->currentUser->closeSession(true);
+		$this->currentUser->closeSession();
 		return Http::redirect(Http::makeURI('/dashboard/'));
 	}
 
@@ -103,6 +97,7 @@ class Dashboard extends AbstractController{
 		$this->vars['canRegister'] = UserConfig::canRegister();
 		$this->vars['canSocial'] = UserConfig::canSocial();
 		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
+		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
 
 		$this->callActionMethod();
 
