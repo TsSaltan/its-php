@@ -84,7 +84,6 @@ class UserDashboard extends Dashboard {
 					$activeTab = 3;
 				});
 			}
-
 		} else {
 			UserAccess::assert($this->currentUser, 'user.edit');
 			$this->vars['title'] = 'Редактирование пользователя №' . $this->selectUser->get('id');
@@ -119,11 +118,13 @@ class UserDashboard extends Dashboard {
 		Input::post()
 			  ->name('canRegister')->required()
 			  ->name('canSocial')->required()
+			  ->name('loginUsed')->required()
 			  ->name('access')->required()->array()
 			 ->assert();
 
 		UserConfig::setRegister(boolval($_POST['canRegister']));
 		UserConfig::setSocial(boolval($_POST['canSocial']));
+		UserConfig::setLoginUsed(boolval($_POST['loginUsed']));
 		Config::set('access', $_POST['access']);
 
 		return Http::redirect(Http::makeURI('/dashboard/config', [], 'user'));
@@ -148,7 +149,7 @@ class UserDashboard extends Dashboard {
 			$this->vars['selectUser'] = $this->selectUser;	
 			$this->vars['self'] = $this->self;	
 		}
-
+		
 		return parent::response();
 	}
 

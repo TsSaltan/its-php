@@ -19,16 +19,18 @@
             <?
             $configTabs = [];
             $configTabs['main']['title'] = 'Основные настройки';
-            $configTabs['main']['content'] = function() use ($user, $selectUser, $self){
+            $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginUsed){
                 uiAlert();
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
+                    <?if($loginUsed):?>
                     <div class="form-group">
                         <label>Имя пользователя</label>
                         <input class="form-control" name='login' type='text' value="<?=$selectUser->get('login')?>">
                     </div>                                            
-
+                    <?endif?>
+                    
                     <div class="form-group">
                         <label>E-mail</label>
                         <input class="form-control" name='email' type='email' value="<?=$selectUser->get('email')?>">

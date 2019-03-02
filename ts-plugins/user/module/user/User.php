@@ -19,8 +19,11 @@ class User{
 	 * @return SingleUser
 	 * @throws UserException
 	 */
-	public static function register(string $login, string $email, ?string $password, int $access = null) : SingleUser {
+	public static function register(?string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
+
+		// Если логин не используется, сгенерируем его на основе email
+		if(!UserConfig::isLoginUsed() && is_null($login))$login = explode('@', $email)[0] . '_' . strrev(uniqid()); // Токены, сгенерированные через uniqid уж очень похожи один на другого, переверну их через strrev
 
 		$access = is_null($access) ? UserAccess::getAccess('user.onRegister') : $access;
 		$query = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')

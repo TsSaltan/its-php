@@ -12,13 +12,13 @@
             </div>
 
             <div class="row">
-                    <div class="panel tabbed-panel panel-default">
-                            <div class="alert hidden">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <p class='text'></p>
-                            </div>
-
-                            <form role="form" onsubmit="tsUser.query('delete', this); return false;">
+                <div class="col-lg-12">
+                    <div class="alert hidden">
+                        <p class='text'></p>
+                    </div>
+                    
+                    <form role="form" onsubmit="tsUser.query('delete', this); this.style.display = 'none'; return false;">
+                        <div class="panel panel-default">
                                 <div class="panel-heading clearfix">
                                     <div class="panel-title pull-left">Удаление профиля</div>
                                 </div>
@@ -35,18 +35,13 @@
                                     <button class="btn btn-default btn-danger btn-sm">Удалить</button>
                                     <a href="<?=$this->makeURI('/dashboard/user/list')?>" class="btn btn-default btn-outline btn-sm">Отмена</a>
                                 </div>
-                            </form>
+                            
                         </div>
                         <!-- /.panel -->
-
-                    </div>
-                    <!-- /.col-lg-12 -->
-
+                    </form>
                 </div>
-                <!-- /.row -->
-
-            <!-- ... Your content goes here ... -->
-
+            </div>
+            <!-- /.row -->
         </div>
     </div>
 

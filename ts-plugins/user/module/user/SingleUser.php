@@ -1,10 +1,11 @@
 <?php
 namespace tsframe\module\user;
 
-use tsframe\module\Meta;
-use tsframe\module\database\Database;
 use tsframe\exception\AccessException;
 use tsframe\module\IP;
+use tsframe\module\Meta;
+use tsframe\module\database\Database;
+use tsframe\module\user\UserConfig;
 
 
 class SingleUser{
@@ -93,6 +94,9 @@ class SingleUser{
 	}
 
 	public function get(string $data){
+		// Если отключен логин, заменим его на email
+		// if($data == 'login' && !UserConfig::isLoginUsed()) $data = 'email';
+
 		$this->accessText = array_flip(UserAccess::getArray())[$this->access];
 		return $this->{$data} ?? null;
 	}

@@ -11,6 +11,7 @@ use tsframe\module\Meta;
 use tsframe\module\io\Input;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
+use tsframe\module\user\UserConfig;
 
 /**
  * @route POST /ajax/[user:part]/[:action]
@@ -70,13 +71,22 @@ class UserAJAX extends AbstractAJAXController{
 
 
 				case 'user/register':
-					$data = $input->name('login')->login()
-								  ->name('password')->password()
-								  ->name('email')->email()
-						  		  ->assert();
+					$input->name('password')->password()
+						  ->name('email')->email();
 
-					if(User::exists(['email' => $data['email']]) || User::exists(['login' => $data['login']])){
-						$this->sendError('Login or email already used', 10);
+					if(UserConfig::isLoginUsed()){
+						$input->name('login')->login()->required();
+					}
+
+					$data = $input->assert();
+
+					if(User::exists(['email' => $data['email']])){
+						$this->sendError('Email already used', 10);
+						break;
+					}
+
+					if(UserConfig::isLoginUsed() && User::exists(['login' => $data['login']])){
+						$this->sendError('Login already used', 9);
 						break;
 					}
 
@@ -87,7 +97,7 @@ class UserAJAX extends AbstractAJAXController{
 							throw new UserException('User register error: error by hook', 0, ['error' => $error, 'data' => $data]);
 						});
 
-						$user = User::register($data['login'], $data['email'], $data['password']);
+						$user = User::register(($data['login'] ?? null), $data['email'], $data['password']);
 						if($user->isAuthorized() && $user->createSession()){
 							$this->sendOK();
 							break;
@@ -100,38 +110,53 @@ class UserAJAX extends AbstractAJAXController{
 					break;
 
 				case 'user/edit':
-					$data = $input->name('id')
-									->required()
-									->int()
-								  ->name('login')
-								  	->login()
-								  ->name('email')
-								  	->email()
-								  ->name('access')
-								  	->required()
-								  	->int()
-						  		  ->assert();
+					$input->name('id')->required()->int()
+						  ->name('email')->email()
+						  ->name('access')->required()->int();
 
-					if($data['id'] == $user->get('id')) $this->access(UserAccess::getAccess('user.self'));
-					else $this->access(UserAccess::getAccess('user.edit'));
+					if(UserConfig::isLoginUsed()){
+						$input->name('login')->login()->required();
+					}
 
-					foreach(['login', 'email'] as $item){
-						if($data[$item] != $selectUser->get($item)){
-							// Проверяем, есть ли такие логин и мэйл
-							if(User::exists([$item => $data[$item]])){
-								return $this->sendError('Field value already exists', 14, ['fields' => $item]);
-							} else {
-								$selectUser->set($item, $data[$item]);
-							}
+					$data = $input->assert();
+
+					if($data['id'] == $user->get('id')){
+						// Право на редактирование собственного профиля
+						$this->access(UserAccess::getAccess('user.self'));
+					}
+					else {
+						// Право на редактирование профиля другого пользователя
+						$this->access(UserAccess::getAccess('user.edit'));
+					}
+
+					// Смена email
+					if($data['email'] != $selectUser->get('email')){
+						if(User::exists(['email' => $data['email']])){
+							return $this->sendError('Email already exists', 10, ['fields' => 'email']);
+						} else {
+							$selectUser->set('email', $data['email']);
 						}
 					}
 
-				
-					if(isset($data['access']) && UserAccess::checkUser($user, 'user.editAccess') && in_array($data['access'], UserAccess::getArray())){
-						$selectUser->set('access', $data['access']);
+					// Смена логина
+					if(UserConfig::isLoginUsed() && $data['login'] != $selectUser->get('login')){
+						if(User::exists(['email' => $data['login']])){
+							return $this->sendError('Login already exists', 9, ['fields' => 'login']);
+						} else {
+							$selectUser->set('login', $data['login']);
+						}
+					}
+					
+					// Смена прав доступа				
+					if(isset($data['access']) && intval($selectUser->get('access')) != intval($data['access'])){
+						if(UserAccess::checkUser($user, 'user.editAccess') && in_array($data['access'], UserAccess::getArray())){
+							$selectUser->set('access', $data['access']);
+						} else {
+							return $this->sendError('Can not change user access', 14, ['fields' => 'access']);
+						}
 					}
 
-					$this->sendMessage('Saved!', 1);
+					$this->sendMessage('OK', 1);
 					break;
 
 				case 'user/changePassword':

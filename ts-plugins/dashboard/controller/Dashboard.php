@@ -59,10 +59,11 @@ class Dashboard extends AbstractController{
 		}
 	}
 
-	public function getAuth(){
-		$this->vars['canRegister'] = UserConfig::canRegister();
-		$this->vars['canSocial'] = UserConfig::canSocial();
-		
+	public function getAuth(){	
+		if(isset($_GET['error']) && $_GET['error'] == 'social'){
+			$this->vars['alert']['danger'][] = 'Невозможно войти через данный аккаунт, привязанный к нему e-mail уже зарегистрирован.';
+		}
+
 		if(UserConfig::canSocial()){
 			$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
 		} else {
@@ -98,6 +99,11 @@ class Dashboard extends AbstractController{
 	}
 
 	public function response(){
+		// Переменные, которые будут доступны всему шаблону
+		$this->vars['canRegister'] = UserConfig::canRegister();
+		$this->vars['canSocial'] = UserConfig::canSocial();
+		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
+
 		$this->callActionMethod();
 
 		$action = $this->getAction();

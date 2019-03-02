@@ -5,21 +5,21 @@
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
                     <?
-                    if(isset($alert)) showAlerts($alert);
-
+                    $alert = isset($alert) ? $alert : [];
                     $authTabs = [];
                     $authTabs['login']['title'] = function(){
                         ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?
                     };
-                    $authTabs['login']['content'] = function() use ($socialLoginTemplate, $canSocial){
-                        ?>
+                    $authTabs['login']['content'] = function() use ($socialLoginTemplate, $canSocial, $loginUsed, $alert){
+                        if(isset($alert)) showAlerts($alert); ?>
+
                         <div class="alert hidden">
                             <p class='text'></p>    
                         </div>
 
                         <form role="form" onsubmit="tsUser.login(this); return false;">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Логин или e-mail" name="login" type="text" autofocus required>
+                                <input class="form-control" placeholder="<?=($loginUsed ? 'Логин или ': '')?>E-mail" name="login" type="text" autofocus required>
                             </div>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Пароль" name="password" type="password" required>
@@ -39,7 +39,7 @@
                         $authTabs['register']['title'] =  function(){
                             ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?
                         };
-                        $authTabs['register']['content'] = function(){
+                        $authTabs['register']['content'] = function() use ($loginUsed){
                             ?>
                             <div class="alert hidden">
                                 <p class='text'></p>   
@@ -47,9 +47,11 @@
 
                             <form role="form" onsubmit="tsUser.register(this); return false;">
                                 <fieldset>
+                                    <?if($loginUsed):?>
                                     <div class="form-group">
                                         <input class="form-control" placeholder="Логин" name="login" type="text" required>
                                     </div>          
+                                    <?endif?>
                                     <div class="form-group">
                                         <input class="form-control" placeholder="E-mail" name="email" type="email" required>
                                     </div>
