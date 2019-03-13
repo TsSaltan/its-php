@@ -43,7 +43,7 @@
         var btn = document.querySelector('.js-push-btn');
         var test = document.querySelector('.js-test-btn');
 
-        WebPush.publicKey = "BA_xZ25u4B1faT95glQ09nettLkY2pV2RLhq4PnzHG9uq4cReUD87rW5XAD7JtsjkLgYqz9J0GzCTIQzBsCCIX0";
+        WebPush.publicKey = "<?=$publicKey?>";
         WebPush.init(function(){
             checkPush();
         });

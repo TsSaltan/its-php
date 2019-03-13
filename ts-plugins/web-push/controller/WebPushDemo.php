@@ -19,6 +19,7 @@ class WebPushDemo extends AbstractController {
 			$json = json_decode($_POST['data'], true);
 			if(isset($json['endpoint']) && isset($json['keys']) && isset($json['keys']['p256dh']) && isset($json['keys']['auth'])){
 				$client = new WebPushClient($json['endpoint'], $json['keys']['p256dh'], $json['keys']['auth']);
+				$client->save();
 				$api = new WebPushAPI;
 				$api->addPushMessage($client, ['body' => uniqid('Random text '), 'title' => 'Demo push', 'icon' => 'https://pp.userapi.com/c847021/v847021989/1a09a7/JZPoLafRQsU.jpg', 'link' => 'https://google.by/asd']);
 				return var_dump($api->send());

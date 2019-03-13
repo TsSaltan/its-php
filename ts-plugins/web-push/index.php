@@ -14,9 +14,14 @@ use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
 use tsframe\App;
 use tsframe\Config;
+use tsframe\Http;
+use tsframe\module\menu\MenuItem;
+use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
+	Plugins::required('geodata');
+	
 	return [
 		PluginInstaller::withKey('push.publicKey')
 					->setType('text')
@@ -25,6 +30,16 @@ Hook::registerOnce('plugin.install', function(){
 		PluginInstaller::withKey('push.privateKey')
 					->setType('text')
 					->setDescription("<u>Приватный</u> ключ для Web Push"),
+
+		PluginInstaller::withKey('push.sender')
+					->setType('text')
+					->setDescription("URL aдрес отправителя для Web Push. Может быть вида <u>mailto:email@mail.com</u> или <u>https://mysite.com</u>"),
+
+		PluginInstaller::withKey('access.webpush')
+					->setType('select')
+					->setDescription("Права доступа: доступ к базе данных web-push клиентов")
+					->setDefaultValue(UserAccess::Admin)
+					->setValues(array_flip(UserAccess::getArray())),
 	];
 });
 
@@ -34,6 +49,10 @@ Hook::registerOnce('plugin.install', function(){
 Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('index', __DIR__ . DS . 'template' . DS . 'index');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+});
+
+Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
+	$menu->add(new MenuItem('Web-Push клиенты', ['url' => Http::makeURI('/dashboard/web-push-clients'), 'fa' => 'commenting', 'access' => UserAccess::getAccess('webpush')]));
 });
 
 Hook::registerOnce('app.start', function(){
