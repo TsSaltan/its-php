@@ -64,13 +64,6 @@ class UserDashboard extends Dashboard {
 				$this->vars['tempPass'] = $tempPass;
 			}
 
-			$this->vars['canSocial'] = UserConfig::canSocial();
-			if(UserConfig::canSocial()){
-				$this->vars['socialLoginTemplate'] = SocialLogin::getWidgetCode();
-			} else {
-				$this->vars['socialLoginTemplate'] = null;
-			}
-
 			// Если пользователь перенаправлен со страницы соц. логина
 			if(isset($_GET['social'])){
 				if($_GET['social'] == 'success'){
@@ -84,7 +77,6 @@ class UserDashboard extends Dashboard {
 					$activeTab = 3;
 				});
 			}
-
 		} else {
 			UserAccess::assert($this->currentUser, 'user.edit');
 			$this->vars['title'] = 'Редактирование пользователя №' . $this->selectUser->get('id');
@@ -119,11 +111,13 @@ class UserDashboard extends Dashboard {
 		Input::post()
 			  ->name('canRegister')->required()
 			  ->name('canSocial')->required()
+			  ->name('loginUsed')->required()
 			  ->name('access')->required()->array()
 			 ->assert();
 
 		UserConfig::setRegister(boolval($_POST['canRegister']));
 		UserConfig::setSocial(boolval($_POST['canSocial']));
+		UserConfig::setLoginUsed(boolval($_POST['loginUsed']));
 		Config::set('access', $_POST['access']);
 
 		return Http::redirect(Http::makeURI('/dashboard/config', [], 'user'));

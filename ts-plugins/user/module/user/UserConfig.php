@@ -28,4 +28,17 @@ class UserConfig{
 	public static function setSocial(bool $soc){
 		Config::set('user.canSocial', $soc);
 	}
+
+	/**
+	 * Используется ли логин во время авторизации/регистрации
+	 * @return boolean По умолчанию true
+	 */
+	public static function isLoginUsed(): bool {
+		$loginUsed = Config::get('user.loginUsed');
+		return is_null($loginUsed) ? true : boolval($loginUsed);
+	}
+
+	public static function setLoginUsed(bool $used) {
+		Config::set('user.loginUsed', $used);
+	}
 }

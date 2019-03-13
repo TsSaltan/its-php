@@ -19,15 +19,17 @@
             <?
             $configTabs = [];
             $configTabs['main']['title'] = 'Основные настройки';
-            $configTabs['main']['content'] = function() use ($user, $selectUser, $self){
+            $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginUsed){
                 uiAlert();
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
+                    <?if($loginUsed):?>
                     <div class="form-group">
                         <label>Имя пользователя</label>
                         <input class="form-control" name='login' type='text' value="<?=$selectUser->get('login')?>">
                     </div>                                            
+                    <?endif?>
 
                     <div class="form-group">
                         <label>E-mail</label>
@@ -90,8 +92,9 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th width="50px">#</th>
                                 <th>IP</th>
+                                <th>Дата авторизации</th>
                                 <th>Истекает</th>
                             </tr>
                         </thead>
@@ -100,6 +103,7 @@
                             <tr>
                                 <td><?=$k+1?></td>
                                 <td><?=$session['ip']?></td>
+                                <td><?=$session['start']?></td>
                                 <td><?=$session['expires']?></td>
                             </tr>
                             <?endforeach?>

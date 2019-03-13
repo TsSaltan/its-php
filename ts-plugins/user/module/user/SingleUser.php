@@ -1,10 +1,11 @@
 <?php
 namespace tsframe\module\user;
 
-use tsframe\module\Meta;
-use tsframe\module\database\Database;
 use tsframe\exception\AccessException;
 use tsframe\module\IP;
+use tsframe\module\Meta;
+use tsframe\module\database\Database;
+use tsframe\module\user\UserConfig;
 
 
 class SingleUser{
@@ -149,11 +150,24 @@ class SingleUser{
 				->affectedRows() > 0;
 	}
 
-	public function closeSession(bool $deleteCookies = false) : bool {
-		if($deleteCookies){
-			setcookie(self::SESSION_KEY, null, -1, '/');
-		}
-		
+	/**
+	 * Закрыть текущую сессию пользователя и удалить авторизационные куки
+	 * @return bool
+	 */
+	public function closeSession() : bool {
+		setcookie(self::SESSION_KEY, null, -1, '/');		
+		return Database::prepare('DELETE FROM `sessions` WHERE `user_id` = :id AND `key` = :key')
+				->bind('id', $this->id)
+				->bind('key', $_COOKIE[self::SESSION_KEY])
+				->exec()
+				->affectedRows() > 0;
+	}
+
+	/**
+	 * Закрыть все сессии пользователя
+	 * @return bool
+	 */
+	public function closeAllSessions() : bool {
 		return Database::prepare('DELETE FROM `sessions` WHERE `user_id` = :id OR `expires` < CURRENT_TIMESTAMP')
 				->bind('id', $this->id)
 				->exec()
@@ -161,7 +175,7 @@ class SingleUser{
 	}
 
 	public function delete(): bool {
-		$this->closeSession();
+		$this->closeAllSessions();
 		return Database::prepare('DELETE FROM `users` WHERE `id` = :id')
 				->bind('id', $this->id)
 				->exec()
@@ -171,8 +185,9 @@ class SingleUser{
 	public function getSessions(): array {
 		if(!$this->isAuthorized()) return [];
 
-		return Database::prepare('SELECT * FROM `sessions` WHERE `user_id` = :id')
+		return Database::prepare('SELECT *, (`expires` - INTERVAL :expires SECOND) \'start\' FROM `sessions` WHERE `user_id` = :id')
 				->bind('id', $this->id)
+				->bind('expires', self::SESSION_EXPIRES, TYPE_INT)
 				->exec()
 				->fetch();
 	}

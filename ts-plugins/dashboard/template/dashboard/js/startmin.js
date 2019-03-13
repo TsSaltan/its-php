@@ -31,7 +31,7 @@ $(function() {
 
         // Раскрываем свёрнутые панели
         if($(hash+".collapse").length) {
-            $(hash+".collapse").removeClass('collapse');
+            $(hash+".collapse").addClass('in');
         } 
 
         // Раскрываем табы

@@ -28,15 +28,18 @@ class SocialLoginController extends AbstractController{
 
 		$login = new SocialLogin($data['token']);
 		
+		// Если не авторизован, пытаемся авторизовать
 		if(!$currentUser->isAuthorized()){
 			try{	
 				$user = $login->getUser();
 				$user->createSession();
+				Http::redirect(Http::makeURI('/dashboard/'));
 			} catch (UserException $e){
-
+				Http::redirect(Http::makeURI('/dashboard/auth', ['error' => 'social']));
 			}
-			Http::redirect(Http::makeURI('/dashboard/'));
-		} else {
+		} 
+		// Если авторизован, привязываем аккаунт
+		else {
 			try{
 				$login->saveUserMeta($currentUser);
 				Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['social' => 'success'], 'social'));

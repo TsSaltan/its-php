@@ -72,8 +72,12 @@ var tsResponse = {
                     window.location.reload();
                     break;                
 
+                case 9:
+                    this.setNotifyText(form, 'Такой логин уже используется', type);
+                    break;
+
                 case 10:
-                    this.setNotifyText(form, 'Пользователь с такими данными уже зарегистрирован', type);
+                    this.setNotifyText(form, 'Такой e-mail уже используется', type);
                     break;
 
                 case 11:
@@ -89,7 +93,7 @@ var tsResponse = {
                     break;
 
                 case 14:
-                    this.setNotifyText(form, 'Логин или email уже используются другим пользователем', type);
+                    this.setNotifyText(form, 'Невозможно изменить права доступа', type);
                     break;
 
                 case 15:
