@@ -4,6 +4,11 @@ namespace tsframe\module\Geo;
 use tsframe\module\database\Database;
 
 class Location{
+	
+	public static function NullLocation(){
+		return new self(null, null, null);
+	}
+
 	/**
 	 * @var Country
 	 */
@@ -19,15 +24,19 @@ class Location{
 	 */
 	protected $city;
 
-	public function __construct(string $country, string $region, string $city){
-		try{
-			$this->country = Country::getByAlias($country);
-		} catch(GeoException $e){
-			$this->country = Country::find($country);
+	public function __construct(?string $country, ?string $region, ?string $city){
+		if(is_null($country)){
+			$this->country = new Country(-1, '');
+		} else {
+			try{
+				$this->country = Country::getByAlias($country);
+			} catch(GeoException $e){
+				$this->country = Country::find($country);
+			}
 		}
 
-		$this->region = Region::find($region);
-		$this->city = City::find($city);
+		$this->region = is_null($region) ? new Region(-1, '') : Region::find($region);
+		$this->city = is_null($city) ? new City(-1, '') :  City::find($city);
 	}
 
 	public function getText(): string {
