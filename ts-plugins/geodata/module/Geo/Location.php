@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\module\Geo;
 
+use tsframe\exception\GeoException;
 use tsframe\module\database\Database;
 
 class Location{
