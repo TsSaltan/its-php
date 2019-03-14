@@ -27,53 +27,39 @@ var clickLink = null;
 
 self.addEventListener('push', function(event) {
     console.log(`[Service Worker] Incoming push message: "${event.data.text()}"`);
-    var data = event.data.json();
-    console.log(data);
-
-    var title = "Browser push notification",
+    
+    var data = null,
+        title = "Browser push notification",
         body = event.data.text(),
         icon = "<?=($this->getURI('/push/icon.png'))?>";
 
     clickLink = "<?=($this->makeURI('/', [], 'from=push'))?>";
 
-    if(typeof data === 'object'){
-        if('title' in data) title = data.title;
-        if('body' in data) body = data.body;
-        if('icon' in data) icon = data.icon;
-        if('link' in data) clickLink = data.link;
-    } 
+    try {
+        data = event.data.json();
+
+        if(typeof data === 'object'){
+            if('title' in data) title = data.title;
+            if('body' in data) body = data.body;
+            if('icon' in data) icon = data.icon;
+            if('link' in data) clickLink = data.link;
+        } 
+    } catch (error){
+    }
 
     event.waitUntil(self.registration.showNotification(title, {
         body: body,
-        icon: icon,
+        icon: icon
     }));
 });
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('[Service Worker] Notification click Received.');
-  console.log(event);
+    console.log('[Service Worker] Notification click Received.');
+    console.log(event);
 
-  event.notification.close();
+    event.notification.close();
 
-  event.waitUntil(
-    //clients.openWindow('https://developers.google.com/web/')
-    clients.openWindow(clickLink)
-  );
+    event.waitUntil(
+        clients.openWindow(clickLink)
+    );
 });
-
-/*
-self.addEventListener('pushsubscriptionchange', function(event) {
-  console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
-  const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-  event.waitUntil(
-    self.registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: applicationServerKey
-    })
-    .then(function(newSubscription) {
-      // TODO: Send to application server
-      console.log('[Service Worker] New subscription: ', newSubscription);
-    })
-  );
-});
-*/

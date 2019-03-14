@@ -6,6 +6,9 @@
  * @link https://developers.google.com/web/fundamentals/codelabs/push-notifications/
  * @link https://github.com/web-push-libs/web-push-php
  * @link https://github.com/GoogleChromeLabs/web-push-codelab
+ *
+ * - Необходимо добавить в крон выполнение sheduler, т.к. очередь зависит от крона
+ * - 
  */
 
 namespace tsframe;
@@ -50,6 +53,9 @@ Hook::registerOnce('plugin.load', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 
+/**
+ * Добавляем пункт меню
+ */
 Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
 	$menu->add(new MenuItem('Web-Push клиенты', ['url' => Http::makeURI('/dashboard/web-push-clients'), 'fa' => 'commenting', 'access' => UserAccess::getAccess('webpush')]));
 });
@@ -67,7 +73,6 @@ Hook::registerOnce('app.install', function() {
  */
 Hook::register('scheduler.task.web-push-send', function(Task $task) {
 	$queues = WebPushQueue::getList();
-	var_dump($queues);
 	
 	foreach ($queues as $queue) {
 		$queue->send();

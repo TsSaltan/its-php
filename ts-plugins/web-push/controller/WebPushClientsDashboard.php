@@ -30,6 +30,8 @@ class WebPushClientsDashboard extends UserDashboard {
 	}
 
 	public function postQueue(){
+		UserAccess::assertCurrentUser('webpush');
+		
 		Input::post()
 			->name('country')->required()
 			->name('city')->required()

@@ -13,6 +13,9 @@ use tsframe\module\PaginatorInterface;
 use tsframe\module\database\Database;
 use tsframe\module\push\WebPushAPI;
 
+/**
+ * Работа с Push-клиентами
+ */
 class WebPushClient implements PaginatorInterface {
 
 	/**
@@ -39,22 +42,36 @@ class WebPushClient implements PaginatorInterface {
 		return array_column($q, 'id');
 	}
 
+	/**
+	 * Получить названия стран и горовод, которые есть в базе клиентов
+	 * @return array
+	 */
 	public static function getUniqueValues(): array {
 		$countries = array_column(Database::exec('SELECT DISTINCT `country` FROM `web-push-clients` WHERE `country` IS NOT NULL ORDER BY `country` ASC')->fetch(), 'country');
 		$cities = array_column(Database::exec('SELECT DISTINCT `city` FROM `web-push-clients` WHERE `city` IS NOT NULL ORDER BY `city` ASC')->fetch(), 'city');
-		// $ips = array_column(Database::exec('SELECT DISTINCT `ip` FROM `web-push-clients` ORDER BY `ip` ASC')->fetch(), 'ip');
 
 		return [
 			'country' => $countries, 
 			'city' => $cities, 
-			// 'ip' => $ips
 		];
 	}
 
+	/**
+	 * Получить количество строк в базе
+	 * @override PaginatorInterface
+	 * @return int
+	 */
 	public static function getDataSize(): int {
 		return Database::exec('SELECT COUNT(`id`) c FROM `web-push-clients`')->fetch()[0]['c'];
 	}
 
+	/**
+	 * Получить срез данных, соответствующих данной странице
+	 * @override PaginatorInterface
+	 * @param  int    $offset 
+	 * @param  int    $limit  
+	 * @return WebPushClient[]
+	 */
 	public static function getDataSlice(int $offset, int $limit): array {
 		$data = Database::exec('SELECT * FROM `web-push-clients` LIMIT ' . $limit . ' OFFSET ' . $offset)->fetch();
 		$items = [];
@@ -69,6 +86,13 @@ class WebPushClient implements PaginatorInterface {
 		return $items;
 	}
 
+
+	/**
+	 * Конструктор - получить клиента по его id в базе
+	 * @param  int    $id 
+	 * @return WebPushClient
+	 * @throws BaseException
+	 */
 	public static function byId(int $id): WebPushClient {
 		$q = Database::exec('SELECT * FROM `web-push-clients` WHERE `id` = :id', ['id' => $id])->fetch();
 		if(isset($q[0]['id'])){
@@ -79,7 +103,6 @@ class WebPushClient implements PaginatorInterface {
 		}
 
 		throw new BaseException('Invalid WebPush client_id = ' . $id);
-
 	}
 
 	private $authKey;
@@ -98,6 +121,9 @@ class WebPushClient implements PaginatorInterface {
 		$this->userAgent = is_null($userAgent) ? ($_SERVER['HTTP_USER_AGENT'] ?? null) : $userAgent;
 	}
 
+	/**
+	 * Сохранить клиента в базе данных
+	 */
 	public function save(){
 		$location = $this->getLocation();
 		$q = Database::exec('INSERT INTO `web-push-clients` (`endpoint`, `p256dh`, `auth`, `country`, `city`, `ip`, `user-agent`) VALUES (:endpoint, :p256dh, :auth, :country, :city, :ip, :userAgent)', [
@@ -113,10 +139,18 @@ class WebPushClient implements PaginatorInterface {
 		$this->id = $q->lastInsertId();
 	}
 
+	/**
+	 * Установить месторасположение
+	 * @param Location $location
+	 */
 	public function setLocation(Location $location){
 		$this->location = $location;
 	}
 
+	/**
+	 * Получить месторасположение
+	 * @return Location
+	 */
 	public function getLocation(): Location {
 		try {
 			$this->location = is_null($this->location) ? $this->location = GeoIP::getLocation($this->ip) : $this->location;
@@ -127,26 +161,50 @@ class WebPushClient implements PaginatorInterface {
 		return $this->location;
 	}
 
+	/**
+	 * Получить JSON-строку с oush ключами
+	 * @return string JSON-строка
+	 */
 	public function getPushKeys(): string {
 		return json_encode(['endpoint' => $this->endpoint, 'keys' => ['p256dh' => $this->p256Key, 'auth' => $this->authKey]]);
 	}
 
+	/**
+	 * Получить id записи в базе
+	 * @return int
+	 */
 	public function getId(): int {
 		return $this->id;
 	}
 
+	/**
+	 * Получить ip
+	 * @return string
+	 */
 	public function getIp(): string {
 		return $this->ip;
 	}
 
+	/**
+	 * Установить id записи 
+	 * @param int $id
+	 */
 	public function setId(int $id) {
 		$this->id = $id;
 	}
 
+	/**
+	 * Получить User-Agent
+	 * @return string
+	 */
 	public function getUserAgent(): ?string {
 		return $this->userAgent;
 	}
 
+	/**
+	 * Генерация подписи по ключам клиента
+	 * @return Subscription
+	 */
 	public function getSubscription(): Subscription {
 		// this is the structure for the working draft from october 2018 (https://www.w3.org/TR/2018/WD-push-api-20181026/) 
 		return Subscription::create([ 

@@ -1,18 +1,31 @@
 <?php 	
 namespace tsframe\module\push;
 
+use tsframe\exception\BaseException;
 use tsframe\module\Log;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 use tsframe\module\push\WebPushAPI;
 use tsframe\module\push\WebPushClient;
 
+/**
+ * Очередь пушей
+ */
 class WebPushQueue {
 	/**
 	 * Количество запросов, разбираемых из очереди за один сеанс
 	 */
 	const LIMIT = 50;
 
+	/**
+	 * Добавить пуш в очередь
+	 * @param array  $clients Массив с id клиентов
+	 * @param string $title  
+	 * @param string $body   
+	 * @param string $link   
+	 * @param string $icon   
+	 * @return WebPushQueue
+	 */
 	public static function add(array $clients, string $title, string $body, string $link, string $icon): WebPushQueue {
 		$q = Database::exec('INSERT INTO `web-push-queue` (`clients`, `title`, `body`, `link`, `icon`) VALUES (:clients, :title, :body, :link, :icon)', [
 			'clients' => json_encode($clients), 
@@ -25,6 +38,10 @@ class WebPushQueue {
 		return new self($q->lastInsertId(), $clients, $title, $body, $link, $icon);
 	}
 
+	/**
+	 * Получить список очереди
+	 * @return WebPushQueue[]
+	 */
 	public static function getList(): array {
 		$query = Database::exec('SELECT * FROM `web-push-queue`')->fetch();
 		$items = [];
@@ -68,6 +85,9 @@ class WebPushQueue {
 		return Output::of($this->link)->xss()->quotes()->getData();
 	}
 
+	/**
+	 * Отправить пуш, удалить id клиентов из базы
+	 */
 	public function send(){
 		$i = 0;
 		$webPush = new WebPushAPI;
@@ -79,8 +99,12 @@ class WebPushQueue {
 		];
 
 		foreach($this->clients as $k=>$id){
-			$client = WebPushClient::byId($id);
-			$webPush->addPushMessage($client, $payload);
+			try {
+				$client = WebPushClient::byId($id);
+				$webPush->addPushMessage($client, $payload);
+			} catch (BaseException $e){
+				
+			}
 
 			unset($this->clients[$k]);
 			if(++$i >= self::LIMIT)	break;
@@ -92,6 +116,7 @@ class WebPushQueue {
 		}
 
 		if(sizeof($this->clients) == 0){
+			// Удаляем из очереди, если не осталось id
 			Database::exec('DELETE FROM `web-push-queue` WHERE `id` = :id', ['id' => $this->id]);
 		} else {
 			Database::exec('UPDATE `web-push-queue` SET `clients` = :clients WHERE `id` = :id', ['id' => $this->id, 'clients' => json_encode($this->clients)]);

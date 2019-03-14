@@ -1,6 +1,7 @@
 <?php
 /**
  * Планировщик задач (по типу крона)
+ * - Необходимо добавить задачу в cron: curl https://site.com/scheduler-task/
  */
 namespace tsframe;
 

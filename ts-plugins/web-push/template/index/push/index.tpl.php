@@ -22,18 +22,7 @@
 
     <main>
         <p><button disabled class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Уведомления не поддерживаются</button></p>
-        <p><button disabled class="js-test-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Получить тестовое уведомление</button></p>
-
-        <section class="subscription-details js-subscription-details is-invisible">
-            <p>Once you've subscribed your user, you'd send their subscription to your
-            server to store in a database so that when you want to send a message
-            you can lookup the subscription and send a message to it.</p>
-            <p>To simplify things for this code lab copy the following details
-            into the <a href="https://web-push-codelab.glitch.me//">Push Companion
-            Site</a> and it'll send a push message for you, using the application
-            server keys on the site - so make sure they match.</p>
-            <pre><code class="js-subscription-json"></code></pre>
-        </section>
+        <!--p><button disabled class="js-test-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Получить тестовое уведомление</button></p-->
     </main>
 
     <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
@@ -41,41 +30,39 @@
     <?$this->js('push/scripts/main.js')?>
     <script type="text/javascript">
         var btn = document.querySelector('.js-push-btn');
-        var test = document.querySelector('.js-test-btn');
 
         WebPush.publicKey = "<?=$publicKey?>";
         WebPush.init(function(){
             checkPush();
         });
 
+        /**
+         * Функция для проверки доступности пушей
+         */
         function checkPush(){
             if(WebPush.isSubscribed){
+                // Если разрешено - шлём ключи на сервер
                 btn.textContent = 'Доступ к уведомлениям получен';
-                test.disabled = false;
+                console.log(JSON.stringify(WebPush.subscriptionData));
+                $.ajax({
+                  type: "POST",
+                  url: <?=json_encode($this->makeURI('/web-push/new-client'))?>,
+                  data: {data: JSON.stringify(WebPush.subscriptionData)},
+                });
             } else {
+                // Если же не разрешено, пытаемся отправить уведомление пользователю
                 btn.textContent = 'Доступ к уведомлениям НЕ получен';
-                test.disabled = true;
-
                 setTimeout(function(){
+                    alert('м?');
                     WebPush.subscribe(function(){
                         checkPush();
                     }, function(){
                         btn.textContent = 'Доступ к уведомлениям ЗАПРЕЩЁН';
-                        test.disabled = true;
+
                     });
                 }, 1500);
             }
         }
-
-        test.addEventListener('click', function(){
-            console.log(JSON.stringify(WebPush.subscriptionData));
-            $.ajax({
-              type: "POST",
-              url: <?=json_encode($this->makeURI('/web-push/send-push'))?>,
-              data: {data: JSON.stringify(WebPush.subscriptionData)},
-            });
-        });
-
     </script>
 </body>
 </html>
