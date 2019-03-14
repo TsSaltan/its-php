@@ -1,6 +1,8 @@
 <?php
 namespace tsframe\module;
 
+use tsframe\module\PaginatorInterface;
+
 class Paginator{
 
 	/**
@@ -51,9 +53,21 @@ class Paginator{
 	 */
 	protected $getTotalDataCallback = false;
 
-	public function __construct(array $data = [], int $num = 10){
-		$this->data = $data;
+	public function __construct($data = [], int $num = 10){
 		$this->setItemsNum($num);
+
+		if(is_array($data)){
+			$this->data = $data;
+			$this->setDataSize(sizeof($this->data));
+		} 
+		// Если передан интерфейс PaginatorInterface, то в нём уже определены методы для разбивки данных на страницы
+		elseif (in_array(PaginatorInterface::class, class_implements($data))){
+			$this->data = [];
+			$this->setDataSize($data::getDataSize());
+			$this->setTotalDataCallback(function($offset, $limit) use ($data){
+				return $data::getDataSlice($offset, $limit);
+			});
+		}
 	}	
 
 	/**
@@ -63,7 +77,6 @@ class Paginator{
 	 */
 	public function setItemsNum(int $num){
 		$this->num = (isset($_GET['count']) && is_numeric($_GET['count']) && $_GET['count'] > 0) ? $_GET['count'] : $num;
-		$this->setDataSize();		
 	}
 
 	/**
@@ -79,7 +92,7 @@ class Paginator{
 	 * @param int|integer $size Если не указать параметр, будет рассчитан на основе размера массива данных
 	 */
 	public function setDataSize(int $size = 0){
-		$this->size = ($size < 1) ? sizeof($this->data) : $size;
+		$this->size = $size;
 		$this->last = $this->num > 0 ? ceil($this->size / $this->num) : 1;
 		$this->page = min(max($_GET['page'] ?? 1, 1), $this->last);
 		$this->offset = ($this->page-1) * $this->num;

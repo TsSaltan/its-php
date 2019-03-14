@@ -71,8 +71,12 @@
 			  top: 43%;
 			  width: 100%;
 			}
+			
+			.links {
+				text-align: center;
+			}
 
-			.denied__link {
+			.denied-link {
 			  background: none;
 			  color: #fff;
 			  padding: 10px 0px;
@@ -84,14 +88,14 @@
 			  text-align: center;
 			  margin: 0 auto;
 			  vertical-align: middle;
-			  display: block;
+			  display: inline-block;
 			  margin-bottom: 40px;
 			  margin-top: 25px;
 			  font-family: "Dosis", sans-serif;
 			  font-weight: 400;
 			}
 
-			.denied__link:hover {
+			.denied-link:hover {
 			  color: #ffbb39;
 			  border-color: #ffbb39;
 			  cursor: pointer;
@@ -295,7 +299,11 @@
 			    </g>
 			    	
 			</svg>
-	    	<a href="<?=$this->makeURI('/')?>" class="denied__link">На главную</a>
+
+			<div class="links">
+	    		<a href="<?=$this->makeURI('/')?>" class="denied-link">На главную</a>
+	    		<?if($hasDashboard):?><a href="<?=$this->makeURI('/dashboard/')?>" class="denied-link">Личный кабинет</a><?endif?>
+	    	</div>
 	  	</div>
 
 	  	<?if(isset($debug)):?>

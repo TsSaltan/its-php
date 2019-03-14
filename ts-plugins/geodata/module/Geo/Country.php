@@ -49,7 +49,7 @@ class Country extends GeoItem {
 	 */
 	protected $alias;
 
-	public function __construct(int $id, string $name, ?string $alias){
+	public function __construct(int $id, string $name, ?string $alias = null){
 		$this->id = $id;
 		$this->name = $name;
 		$this->alias = $alias;

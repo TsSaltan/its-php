@@ -13,8 +13,8 @@ class App{
 	 * Версия приложения
 	 * major.minor.release
 	 */
-	const VERSION = "1.1.0";
-
+	const VERSION = "1.1";
+	
 	/**
 	 * Путь к директории на сервере, откуда будет брать начало роутер, ссылки и т.д.
 	 * @var string

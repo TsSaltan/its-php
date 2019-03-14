@@ -2,6 +2,7 @@
 namespace tsframe\controller;
 
 use tsframe\App;
+use tsframe\Plugins;
 use tsframe\exception\BaseException;
 use tsframe\exception\TemplateException;
 use tsframe\view\HtmlTemplate;
@@ -27,7 +28,7 @@ class ErrorController extends AbstractController{
 		$tpl = Template::error();
 
 		$tpl->setHooksUsing(false);
-		$tpl->vars(['code' => $code]);
+		$tpl->vars(['code' => $code, 'hasDashboard' => !Plugins::isDisabled('dashboard')]);
 
 		if(App::isDev()){
 			$tpl->vars(['debug' => $this->error->getDump()]);
