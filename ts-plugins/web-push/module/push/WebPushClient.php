@@ -14,11 +14,41 @@ use tsframe\module\database\Database;
 use tsframe\module\push\WebPushAPI;
 
 class WebPushClient implements PaginatorInterface {
-	public static function getLocations(): array {
+
+	/**
+	 * Найти id клиентов по гео поараметрам
+	 * @param  string|null $country 
+	 * @param  string|null $city    
+	 * @return array
+	 */
+	public static function findIdsByParams(?string $country = null, ?string $city = null): array {
+		$countryQuery = null;
+		$cityQuery = null;
+		$args = [];
+		if(!is_null($country) && $country !== '*'){
+			$countryQuery = ' AND `country` = :country';
+			$args['country'] = $country;
+		}
+
+		if(!is_null($city) && $city !== '*'){
+			$cityQuery = ' AND `city` = :city';
+			$args['city'] = $city;
+		}
+
+		$q = Database::exec('SELECT `id` FROM `web-push-clients` WHERE `id` > 0'.$countryQuery.$cityQuery, $args)->fetch();
+		return array_column($q, 'id');
+	}
+
+	public static function getUniqueValues(): array {
 		$countries = array_column(Database::exec('SELECT DISTINCT `country` FROM `web-push-clients` WHERE `country` IS NOT NULL ORDER BY `country` ASC')->fetch(), 'country');
 		$cities = array_column(Database::exec('SELECT DISTINCT `city` FROM `web-push-clients` WHERE `city` IS NOT NULL ORDER BY `city` ASC')->fetch(), 'city');
+		// $ips = array_column(Database::exec('SELECT DISTINCT `ip` FROM `web-push-clients` ORDER BY `ip` ASC')->fetch(), 'ip');
 
-		return ['country' => $countries, 'city' => $cities];
+		return [
+			'country' => $countries, 
+			'city' => $cities, 
+			// 'ip' => $ips
+		];
 	}
 
 	public static function getDataSize(): int {

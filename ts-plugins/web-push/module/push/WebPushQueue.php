@@ -3,6 +3,7 @@ namespace tsframe\module\push;
 
 use tsframe\module\Log;
 use tsframe\module\database\Database;
+use tsframe\module\io\Output;
 use tsframe\module\push\WebPushAPI;
 use tsframe\module\push\WebPushClient;
 
@@ -25,7 +26,7 @@ class WebPushQueue {
 	}
 
 	public static function getList(): array {
-		$query = Database::exec('SELECT * FROM `web-push-queue`');
+		$query = Database::exec('SELECT * FROM `web-push-queue`')->fetch();
 		$items = [];
 		foreach($query as $q){
 			$items[] = new self($q['id'], json_decode($q['clients'], true), $q['title'], $q['body'], $q['link'], $q['icon']);
@@ -48,6 +49,23 @@ class WebPushQueue {
 		$this->body = $body;
 		$this->link = $link;
 		$this->icon = $icon;
+	}
+
+	public function getId(): int {
+		return $this->id;
+	}
+
+	public function getClients(): array {
+		return $this->clients;
+	}
+
+	public function getTitle(): string {
+		return Output::of($this->title)->xss()->getData();
+	}
+
+	public function getLink(): string {
+		return $this->link;
+		return Output::of($this->link)->xss()->quotes()->getData();
 	}
 
 	public function send(){

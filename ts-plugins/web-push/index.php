@@ -16,6 +16,9 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\Http;
 use tsframe\module\menu\MenuItem;
+use tsframe\module\push\WebPushQueue;
+use tsframe\module\scheduler\Scheduler;
+use tsframe\module\scheduler\Task;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
@@ -49,4 +52,27 @@ Hook::registerOnce('plugin.load', function(){
 
 Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
 	$menu->add(new MenuItem('Web-Push клиенты', ['url' => Http::makeURI('/dashboard/web-push-clients'), 'fa' => 'commenting', 'access' => UserAccess::getAccess('webpush')]));
+});
+
+/**
+ * Очередь для рассылки пушей
+ */
+Hook::registerOnce('app.install', function() {
+	Scheduler::addTask('web-push-send', '*/5 * * * *');
+});
+
+
+/**
+ * Разбор очереди пушей
+ */
+Hook::register('scheduler.task.web-push-send', function(Task $task) {
+	$queues = WebPushQueue::getList();
+	var_dump($queues);
+	
+	foreach ($queues as $queue) {
+		$queue->send();
+		break;
+	}
+
+	return true;
 });
