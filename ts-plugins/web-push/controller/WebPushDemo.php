@@ -3,6 +3,7 @@ namespace tsframe\controller;
 
 use tsframe\Config;
 use tsframe\Http;
+use tsframe\module\IP;
 use tsframe\module\push\WebPushAPI;
 use tsframe\module\push\WebPushClient;
 use tsframe\view\HtmlTemplate;

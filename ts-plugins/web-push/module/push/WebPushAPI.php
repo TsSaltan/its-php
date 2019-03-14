@@ -11,10 +11,6 @@ class WebPushAPI {
 		return Config::get('push.publicKey');
 	}
 
-	public static function getSender(){
-		return Config::get('push.sender');
-	}
-
 	private static function getPrivateKey(){
 		return Config::get('push.privateKey');
 	}

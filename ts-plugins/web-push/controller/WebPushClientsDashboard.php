@@ -12,6 +12,7 @@ use tsframe\module\user\UserAccess;
 
 /**
  * @route GET  /dashboard/[web-push-clients:action]
+ * @route POST /dashboard/web-push-clients/[queue:action]
  */ 
 class WebPushClientsDashboard extends UserDashboard {
 	public function __construct(){
@@ -22,22 +23,11 @@ class WebPushClientsDashboard extends UserDashboard {
 		UserAccess::assertCurrentUser('webpush');
 
 		$this->vars['title'] = 'Список Web-Push клиентов';
-		$pages = new Paginator(WebPushClient::class, 10);
-		$this->vars['clients'] = $pages;
-		/*$this->vars['logTypes'] = Log::getTypes();
-		$this->vars['logType'] = $type;
+		$this->vars['clients'] = new Paginator(WebPushClient::class, 10);
+		$this->vars['location'] = WebPushClient::getLocations();
+	}
 
-		if($type == 'default'){
-			$this->vars['logSize'] = Log::getSize();
-		}
+	public function postQueue(){
 
-		$pages = new Paginator([], 10);
-		$pages->setDataSize(Log::getLogsCount($type));
-		$pages->setTotalDataCallback(function($offset, $limit) use ($type){
-			$logs = Log::getLogs($type, $offset, $limit);
-			return Output::of($logs)->specialChars()->getData();
-		});
-
-		*/
 	}
 }
