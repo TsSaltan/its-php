@@ -114,4 +114,28 @@ class Dashboard extends AbstractController{
 	protected function getAction(string $default = 'index') : string {
 		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? $default);
 	}
+
+	public static function getSiteName(): string {
+		$meta = new Meta('dashboard');
+		$siteName = $meta->get('sitename');
+		$siteName = is_null($siteName) ? $_SERVER['SERVER_NAME'] : $siteName;
+		Output::of($siteName)->xss()->quotes();
+		return $siteName;
+	}
+
+	public static function getSiteHome(): string {
+		$meta = new Meta('dashboard');
+		$siteHome = $meta->get('sitehome');
+		$siteHome = is_null($siteHome) ? '/' : Http::makeURI($siteHome);
+		Output::of($siteHome)->xss()->quotes();
+		return $siteHome;
+	}
+
+	public static function getSiteIcon(): string {
+		$meta = new Meta('dashboard');
+		$siteIcon = $meta->get('siteicon');
+		$siteIcon = is_null($siteIcon) ? 'fa-home' : $siteIcon;
+		Output::of($siteIcon)->xss()->quotes();
+		return $siteIcon;
+	}
 }

@@ -8,14 +8,16 @@
  */
 namespace tsframe;
 
+use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\Config;
+use tsframe\controller\Dashboard;
 use tsframe\module\io\Input;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
-use tsframe\module\user\User;
-use tsframe\module\user\UserConfig;
 use tsframe\module\user\SingleUser;
+use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
+use tsframe\module\user\UserConfig;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
@@ -136,13 +138,18 @@ Hook::registerOnce('app.install', function(){
 	}
 });
 
-
+/**
+ * Информация о пользователе на странице профиля в админ-панели
+ */
 Hook::register('template.dashboard.user.profile', function(Template $tpl, SingleUser $user){
 	?>
 	<p>User ID: <b><?=$user->get('id')?></b></p>
 	<?
 });
 
+/**
+ * Настройки регистрации на странице конфигов
+ */
 Hook::register('template.dashboard.config', function(Template $tpl){
 	$tpl->var('canRegister', UserConfig::canRegister());
 	$tpl->var('canSocial', UserConfig::canSocial());
@@ -150,3 +157,17 @@ Hook::register('template.dashboard.config', function(Template $tpl){
 	$tpl->var('accesses', Config::get('access'));
 	$tpl->inc('user_config');
 });
+
+/**
+ * @todo
+ * Отправка e-mail зарегистрированным пользователям
+ */
+Hook::register('user.register', function(SingleUser $user){
+	/*$mail = new PHPMailer;
+	$mail->addReplyTo('no-reply@' . $_SERVER['SERVER_NAME'], Dashboard::getSiteName());
+	$mail->addAddress($user->get('email'));
+	$mail->subject = 'Успешная регистрация';
+	$mail->altBody = 'Вы успешно зарегистрированы на сайте ' . $_SERVER['SERVER_NAME'];
+	$mail->send();*/
+	mail($user->get('email'), 'Регистрация на сайте ' . Dashboard::getSiteName(), 'Здравствуйте, ' . $user->get('login') . '. Вы зарегистрированы на сайте ' . Dashboard::getSiteHome());
+}, Hook::MIN_PRIORITY);

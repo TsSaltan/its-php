@@ -10,14 +10,15 @@
  */
 namespace tsframe;
 
+use tsframe\controller\Dashboard;
+use tsframe\module\Meta;
 use tsframe\module\database\Database;
-use tsframe\module\user\User;
-use tsframe\module\user\UserAccess;
-use tsframe\module\user\SocialLogin;
 use tsframe\module\io\Output;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
-use tsframe\module\Meta;
+use tsframe\module\user\SocialLogin;
+use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
@@ -41,19 +42,7 @@ Hook::registerOnce('app.start', function(){
 });
 
 Hook::register('template.render', function($tpl){
-	$meta = new Meta('dashboard');
-	$siteName = $meta->get('sitename');
-	$siteName = is_null($siteName) ? $_SERVER['SERVER_NAME'] : $siteName;
-	Output::of($siteName)->xss()->quotes();
-	$tpl->var('siteName', $siteName);
-	
-	$siteHome = $meta->get('sitehome');
-	$siteHome = is_null($siteHome) ? '/' : Http::makeURI($siteHome);
-	Output::of($siteHome)->xss()->quotes();
-	$tpl->var('siteHome', $siteHome);
-	
-	$siteIcon = $meta->get('siteicon');
-	$siteIcon = is_null($siteIcon) ? 'fa-home' : $siteIcon;
-	Output::of($siteIcon)->xss()->quotes();
-	$tpl->var('siteIcon', $siteIcon);
+	$tpl->var('siteName', Dashboard::getSiteName());
+	$tpl->var('siteHome', Dashboard::getSiteHome());
+	$tpl->var('siteIcon', Dashboard::getSiteIcon());
 });
