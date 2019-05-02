@@ -1,11 +1,10 @@
 <?
 /**
- * Система пользователей + авторизация
+ * Система пользователей, их регистрация и авторизация
  *
- * @hook 'template.dashboard.user.edit' (Template $tpl, array &$configTabs = ['tabName' => 'tabContent'], int &$activeTab)
- * @hook 'template.dashboard.user.profile' (Template $tpl, SingleUser $user)
- * @hook 'user.login' (SingleUser $user)
- * @hook 'user.register' (SingleUser $user)
+ * @hooks https://github.com/TsSaltan/ts-framework/wiki/Hooks#user
+ * @hooks https://github.com/TsSaltan/ts-framework/wiki/Hooks#dashboarduser
+ * 
  */
 namespace tsframe;
 
@@ -70,6 +69,9 @@ Hook::register('template.render', function($tpl){
 	]);
 });
 
+/**
+ * Сохраняем права для пользователей после установки скрипта
+ */
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('cache', 'crypto', 'database');
 	return [
