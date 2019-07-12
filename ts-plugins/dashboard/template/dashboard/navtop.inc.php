@@ -24,7 +24,7 @@
     <?if($user->isAuthorized()):?>
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-user fa-fw"></i> <?=($loginUsed ? $login : $email)?> <b class="caret"></b>
+            <i class="fa fa-user fa-fw"></i> <?=((isset($loginUsed) && $loginUsed) ? $login : $email)?> <b class="caret"></b>
         </a>
         <?=$this->menu('dashboard-top', 
             function(string $items){
