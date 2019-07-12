@@ -4,7 +4,7 @@ namespace tsframe\module\Geo;
 use tsframe\exception\GeoException;
 use tsframe\module\database\Database;
 
-class Location{
+class Location {
 	
 	public static function NullLocation(){
 		return new self(null, null, null);
@@ -25,7 +25,17 @@ class Location{
 	 */
 	protected $city;
 
-	public function __construct(?string $country, ?string $region, ?string $city){
+	/**
+	 * @var int
+	 */
+	protected $lat;
+
+	/**
+	 * @var int
+	 */
+	protected $lon;
+
+	public function __construct(?string $country, ?string $region, ?string $city, ?int $lat = null, ?int $lon = null){
 		if(is_null($country)){
 			$this->country = new Country(-1, '');
 		} else {
@@ -38,6 +48,8 @@ class Location{
 
 		$this->region = is_null($region) ? new Region(-1, '') : Region::find($region);
 		$this->city = is_null($city) ? new City(-1, '') :  City::find($city);
+		$this->lat = is_null($lat) ? -1 : $lat;
+		$this->lon = is_null($lon) ? -1 : $lon;
 	}
 
 	public function getText(): string {
@@ -74,5 +86,19 @@ class Location{
 	 */
 	public function getCity(): City {
 	    return $this->city;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLat(): int {
+	    return $this->lat;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLon(): int {
+	    return $this->lon;
 	}
 }
