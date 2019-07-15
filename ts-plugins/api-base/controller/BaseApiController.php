@@ -22,6 +22,10 @@ use tsframe\module\user\UserConfig;
 class BaseApiController extends AbstractAJAXController{
 	use ActionToMethodTrait;
 
+	public function getResponseBody() : string {
+		return json_encode($this->responseBody, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+	}	
+
 	public function response(){
 		try{
 			$apiAction = $this->getAction();
@@ -57,8 +61,8 @@ class BaseApiController extends AbstractAJAXController{
 					  ->name('password')->required()->minLength(1)
 					  ->assert();
 
-		$user = User::login($input['login'], $input['password']);
 		sleep(1);
+		$user = User::login($input['login'], $input['password']);
 		$session = $user->createSession(false);
 		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
 	}
