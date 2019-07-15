@@ -137,7 +137,13 @@ class SingleUser{
 		}
 	}
 
-	public function createSession(bool $setCookies = true) : string {
+	/**
+	 * Создать новую сессию
+	 * @param  bool|boolean $setCookies Установить авторизационные куки
+	 * @return array [session_key, expires]
+	 * @throws UserException
+	 */
+	public function createSession(bool $setCookies = true) : array {
 		$sessionId = Crypto::generateString(100);
 
 		if($setCookies){
@@ -145,14 +151,24 @@ class SingleUser{
 			setcookie(self::SESSION_KEY, $sessionId, time()+self::SESSION_EXPIRES, '/');
 		}
 
-		Database::prepare('INSERT INTO `sessions` (`key`, `user_id`, `expires`, `ip`) VALUES (:key, :id, CURRENT_TIMESTAMP + INTERVAL :expires SECOND, :ip)')
+		$res = Database::prepare('INSERT INTO `sessions` (`key`, `user_id`, `expires`, `ip`) VALUES (:key, :id, CURRENT_TIMESTAMP + INTERVAL :expires SECOND, :ip)')
 			->bind('key', $sessionId)
 			->bind('id', $this->id)
 			->bind('expires', self::SESSION_EXPIRES, TYPE_INT)
 			->bind('ip', IP::current())
-			->exec();
-			//->affectedRows() > 0;
-		return $sessionId;
+			->exec()
+			->affectedRows();
+
+		if($res == 0){
+			throw new UserException('Cannot create session', -1, [
+				'user' => $this
+			]);
+		}
+
+		return [
+			'session_key' => $sessionId,
+			'expires' => time() + self::SESSION_EXPIRES
+		];
 	}
 
 	/**
