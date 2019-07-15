@@ -3,13 +3,14 @@ namespace tsframe\controller;
 
 use tsframe\Config;
 use tsframe\Http;
-use tsframe\module\io\Output;
-use tsframe\module\io\Input;
+use tsframe\exception\ControllerException;
 use tsframe\module\Meta;
-use tsframe\module\user\User;
-use tsframe\module\user\UserConfig;
-use tsframe\module\user\UserAccess;
+use tsframe\module\io\Input;
+use tsframe\module\io\Output;
 use tsframe\module\user\SocialLogin;
+use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
+use tsframe\module\user\UserConfig;
 use tsframe\view\HtmlTemplate;
 
 /**
@@ -99,7 +100,11 @@ class Dashboard extends AbstractController{
 		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
 		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
 
-		$this->callActionMethod();
+		try {
+			$this->callActionMethod();
+		} catch (ControllerException $e){
+			
+		}
 
 		$action = $this->getAction();
 
