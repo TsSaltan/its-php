@@ -42,13 +42,10 @@ class BaseApiController extends AbstractAJAXController{
 			if(!$exec){
 				throw new ApiException('method not found');
 			}
-		
+		} catch (InputException $e){
+			$this->sendError('Input validation error', 13, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
 		} catch (BaseException $e){
-			if($e instanceof InputException){
-				$this->sendError('Validation error', 13, ['fields' => $e->getInvalidKeys(), 'result' => 'error']);
-			} else {
-				$this->sendError('[' . basename(get_class($e)) . '] ' . $e->getMessage(), $e->getCode(), ['result' => 'error']);
-			}
+			$this->sendError('[' . basename(get_class($e)) . '] ' . $e->getMessage(), $e->getCode(), ['result' => 'error']);
 		}
 
 	}
