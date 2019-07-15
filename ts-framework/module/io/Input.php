@@ -158,7 +158,7 @@ class Input extends Filter {
 	}
 
 	public function assert(){
-		if(!$this->isValid()) throw InputException::create('Invalid input data')->setDebug(['invalid' => $this->getInvalid(), 'data' => $this->data]);
+		if(!$this->isValid()) throw new InputException('Invalid input data', -1, ['invalid' => $this->getInvalid(), 'data' => $this->data]);
 		return $this->data;
 	}
 }
