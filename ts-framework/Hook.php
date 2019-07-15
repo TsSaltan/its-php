@@ -31,7 +31,8 @@ class Hook{
 	 * @param  bool|boolean  $once   Если true, то любой хук считается как "одноразовый"
 	 */
 	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
-		if(!isset(self::$hooks[$name])) return;
+		if(!self::exists($name)) return;
+		
 		$hooks = self::$hooks[$name];
 		usort($hooks, function($a, $b){
 			if ($a['priority'] == $b['priority']) {
@@ -60,5 +61,9 @@ class Hook{
 				unset(self::$hooks[$name][$key]);
 			}
 		}
+	}
+
+	public static function exists(string $name): bool {
+		return isset(self::$hooks[$name]);
 	}
 }
