@@ -6,6 +6,7 @@ use tsframe\Http;
 use tsframe\exception\AccessException;
 use tsframe\exception\ApiException;
 use tsframe\exception\BaseException;
+use tsframe\exception\InputException;
 use tsframe\exception\UserException;
 use tsframe\module\io\Input;
 use tsframe\module\user\SingleUser;
