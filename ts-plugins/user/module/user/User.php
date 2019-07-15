@@ -67,7 +67,7 @@ class User{
 	/**
 	 * Cуществоет ли пользователь с заданными параметрами
 	 * @param  array  $params f.e. ['login' => 'Admin', 'email' => 'mail@admin.ru']
-	 * @return bool
+	 * @return SingleUser[]
 	 */
 	public static function get(array $params = [], string $operator = 'OR') : array {
 		if(sizeof($params) > 0){

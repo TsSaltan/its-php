@@ -135,19 +135,22 @@ class SingleUser{
 		}
 	}
 
-	public function createSession() : bool {
-		$sessionId = hash('sha384', time() . uniqid($this->login));
+	public function createSession(bool $setCookies = true) : string {
+		$sessionId = Crypto::generateString(100);
 
-		$_COOKIE[self::SESSION_KEY] = $sessionId;
-		setcookie(self::SESSION_KEY, $sessionId, time()+self::SESSION_EXPIRES, '/');
+		if($setCookies){
+			$_COOKIE[self::SESSION_KEY] = $sessionId;
+			setcookie(self::SESSION_KEY, $sessionId, time()+self::SESSION_EXPIRES, '/');
+		}
 
-		return Database::prepare('INSERT INTO `sessions` (`key`, `user_id`, `expires`, `ip`) VALUES (:key, :id, CURRENT_TIMESTAMP + INTERVAL :expires SECOND, :ip)')
-				->bind('key', $sessionId)
-				->bind('id', $this->id)
-				->bind('expires', self::SESSION_EXPIRES, TYPE_INT)
-				->bind('ip', IP::current())
-				->exec()
-				->affectedRows() > 0;
+		Database::prepare('INSERT INTO `sessions` (`key`, `user_id`, `expires`, `ip`) VALUES (:key, :id, CURRENT_TIMESTAMP + INTERVAL :expires SECOND, :ip)')
+			->bind('key', $sessionId)
+			->bind('id', $this->id)
+			->bind('expires', self::SESSION_EXPIRES, TYPE_INT)
+			->bind('ip', IP::current())
+			->exec();
+			//->affectedRows() > 0;
+		return $sessionId;
 	}
 
 	/**
