@@ -20,25 +20,22 @@ use tsframe\view\HtmlTemplate;
 trait ActionToMethodTrait{
 	function callActionMethod(){
 		$methodName = $this->getActionMethod();
-		if(!is_null($methodName)){
-			return call_user_func([$this, $methodName]);
-		}
-
-		$action = (method_exists($this, 'getAction')) ? $this->getAction() : $this->params['action'];
-		throw new ControllerException('Method for action' . $action . ' not found', 404, ['controller' => get_class($this)]);
+		return call_user_func([$this, $methodName]);
 	}
 
 	function getActionMethod(): ?string {
 		$request = Http::getRequestMethod();
 		$action = (method_exists($this, 'getAction')) ? $this->getAction() : $this->params['action'];
-		$method = ucfirst(preg_replace('#[^\w\d_]#Ui', '', $action));
+		$method = ucfirst(preg_replace('#([^\w\d]|[_])#Ui', '', $action));
 		
-		$methodName = strtolower($request) . $method;
-		if(method_exists($this, $methodName)) return $methodName;
+		$methodName1 = strtolower($request) . $method;
+		if(method_exists($this, $methodName1)) return $methodName1;
 
-		$methodName = 'def' . $method;
-		if(method_exists($this, $methodName)) return $methodName;
+		$methodName2 = 'def' . $method;
+		if(method_exists($this, $methodName2)) return $methodName2;
 
-		return null;
+		throw new ControllerException('Method for action ' . $action . ' not found', 404, ['controller' => get_class($this), 'findMethods' => [
+			$methodName1, $methodName2
+		]]);
 	}
 }
