@@ -2,10 +2,11 @@
 namespace tsframe;
 
 use AltoRouter;
-use tsframe\exception\RouteException;
-use tsframe\controller\AbstractController;
+use tsframe\Hook;
 use tsframe\Http;
 use tsframe\Reflect;
+use tsframe\controller\AbstractController;
+use tsframe\exception\RouteException;
 
 /**
  * Роутер парсит список контроллеров, извлекает из phpDoc параметра @route URL-маску
@@ -55,10 +56,26 @@ class Router{
 			if($match = self::$router->match()){			
 				return self::callController($match);
 			}
-
 		}
 
-		throw new RouteException('Router does not found', 404);
+		$hookController = false;
+		$requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+		$requestUrl = substr($requestUrl, strlen($routerBase));
+		if (($strpos = strpos($requestUrl, '?')) !== false) {
+			$requestUrl = substr($requestUrl, 0, $strpos);
+		}
+
+		Hook::call('router', [Http::getRequestMethod(), $requestUrl], function($return) use (&$hookController){
+			if($return instanceof AbstractController){
+				$hookController = $return;
+			}
+		});
+
+		if($hookController !== false){
+			return $hookController;
+		}
+
+		throw new RouteException('Controller does not found', 404);
 	}
 
 	/**

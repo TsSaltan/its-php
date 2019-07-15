@@ -12,6 +12,17 @@ use tsframe\view\TemplateRoot;
 die('Access denied');
 
 /**
+ * Если среди определенных контроллеров не найден подходящий
+ * @hook router
+ * @param string $method HTTP-метод GET|POST|etc...
+ * @param string $uri Путь от роутера
+ * @return AbstractController|mixed Если вернуть контроллер, то ошибки не будет
+ */
+Hook::registerOnce('router', function(string $method, string $uri){
+
+});
+
+/**
  * Требование необходимых данных перед установкой системы
  * @hook plugin.install
  * @return array|null возвращает массив с данными, которые должен заполнить пользователь, данные будут сохранены в файл конфига
