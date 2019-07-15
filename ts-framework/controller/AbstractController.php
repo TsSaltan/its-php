@@ -23,7 +23,7 @@ abstract class AbstractController{
 	}
 
 	public function getRequestMethod() : string {
-		return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+		return Http::getRequestMethod();
 	}
 
 	protected $responseBody = '';

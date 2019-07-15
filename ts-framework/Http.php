@@ -119,4 +119,7 @@ class Http{
 			   stripos($_SERVER['HTTP_USER_AGENT'], 'webkit'));
 	}
 
+	public static function getRequestMethod(): string {
+		return isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
+	}
 }
