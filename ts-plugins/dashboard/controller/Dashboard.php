@@ -100,11 +100,11 @@ class Dashboard extends AbstractController{
 		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
 		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
 
-		//try {
+		try {
 			$this->callActionMethod();
-		/*} catch (ControllerException $e){
+		} catch (ControllerException $e){
 			
-		}*/
+		}
 
 		$action = $this->getAction();
 
