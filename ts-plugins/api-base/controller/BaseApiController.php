@@ -10,6 +10,7 @@ use tsframe\exception\UserException;
 use tsframe\module\io\Input;
 use tsframe\module\user\SingleUser;
 use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
 use tsframe\module\user\UserConfig;
 
 /**
@@ -106,12 +107,7 @@ class BaseApiController extends AbstractAJAXController{
 	public function defMe(){
 		$user = $this->checkAuth();
 
-		$this->sendData(['result' => 'ok', 'user' => [
-			'id' => $user->get('id'),
-			'login' => $user->get('login'),
-			'email' => $user->get('email'),
-			'access' => $user->get('access'),
-		]]);
+		$this->sendData(['result' => 'ok', 'user' => $this->dumpUser($user)]);
 	}
 
 	public function checkAuth(): SingleUser {
@@ -123,6 +119,16 @@ class BaseApiController extends AbstractAJAXController{
 		}
 
 		return $user;
+	}
+
+	protected function dumpUser(SingleUser $user): array {
+		return [
+			'id' => $user->get('id'),
+			'login' => $user->get('login'),
+			'email' => $user->get('email'),
+			'accessLevel' => $user->get('access'),
+			'access' => UserAccess::getAccessName($user->get('access')),
+		];
 	}
 
 	protected function getAction(string $default = 'notfound') : string {

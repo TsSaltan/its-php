@@ -16,8 +16,22 @@ class UserAccess{
 		return self::User;
 	}
 
+    /**
+     * Получить массив уровней доступа
+     * @return array [(string) roleName => (int) $level, ...]
+     */
 	public static function getArray() : array {
 		return Reflect::getConstants(__CLASS__);
+    }
+
+    /**
+     * Получить текстовое описание для уровня доступа
+     * @param  int    $level
+     * @return string
+     */
+    public static function getAccessName(int $level) : string {
+        $consts = array_flip(self::getArray());
+        return $consts[$level] ?? $consts[self::default()];
     }
 
     public static function setAccess(string $rule, int $access){
