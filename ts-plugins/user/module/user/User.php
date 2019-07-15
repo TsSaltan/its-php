@@ -103,9 +103,9 @@ class User{
 	 * Возвращает текущего пользователя
 	 * @return SingleUser
 	 */
-	public static function current() : SingleUser {
-		return Cache::toVar('currentUser', function(){
-			return SingleUser::current();
+	public static function current(?string $sessionKey = null) : SingleUser {
+		return Cache::toVar('currentUser', function() use ($sessionKey){
+			return SingleUser::current($sessionKey);
 		});
 	}
 
