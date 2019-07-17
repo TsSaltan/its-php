@@ -17,9 +17,6 @@ use tsframe\module\user\SocialLogin;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
-/**
- * @todo  Проверка уникальности платежей
- */
 class CashInstaller {
 	public static function install(){
 		Plugins::required('database', 'user', 'dashboard');
