@@ -11,6 +11,7 @@ use tsframe\module\user\SocialLogin;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\UserConfig;
+use tsframe\view\DashboardTemplate;
 use tsframe\view\HtmlTemplate;
 
 /**
@@ -35,6 +36,11 @@ class Dashboard extends AbstractController{
 	 * @var UserSingle
 	 */
 	protected $currentUser;
+
+	/**
+	 * @var DashboardTemplate
+	 */
+	protected $tpl;
 
 	public function setParams(array $params){
 		parent::setParams($params);
@@ -100,23 +106,27 @@ class Dashboard extends AbstractController{
 		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
 		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
 
+		$action = $this->getAction();
+
+		$this->tpl = new DashboardTemplate('dashboard', $action);
+
 		try {
 			$this->callActionMethod();
 		} catch (ControllerException $e){
 			
 		}
-
-		$action = $this->getAction();
-
-		$tpl = new HtmlTemplate('dashboard', $action);
-		$tpl->vars($this->vars);
-
-		$this->responseBody = $tpl->render();
+		
+		$this->tpl->vars($this->vars);
+		$this->responseBody = $this->tpl->render();
 		$this->responseType = 'text/html';
 	}
 
 	// f.e. action tests/new -> template tests_new
 	protected function getAction(string $default = 'index') : string {
 		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? $default);
+	}
+
+	public function alert(string $message, string $type = 'info'){
+		$this->tpl->alert($message, $type);
 	}
 }
