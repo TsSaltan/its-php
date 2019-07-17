@@ -216,7 +216,7 @@ Input::addFilter('double', function(Input $input){
 });
 
 Input::addFilter('float', function(Input $input){
-	return is_float($input->getCurrentData());
+	return is_float($input->getCurrentData()) || floatval($input->getCurrentData()) != 0;
 });
 
 Input::addFilter(['int', 'integer'], function(Input $input){
