@@ -20,8 +20,9 @@ class UserAccess{
      * Получить массив уровней доступа
      * @return array [(string) roleName => (int) $level, ...]
      */
-	public static function getArray() : array {
-		return Reflect::getConstants(__CLASS__);
+	public static function getArray(bool $reverse = false) : array {
+		$consts = Reflect::getConstants(__CLASS__);
+        return $reverse ? array_flip($consts) : $consts;
     }
 
     /**
@@ -30,7 +31,7 @@ class UserAccess{
      * @return string
      */
     public static function getAccessName(int $level) : string {
-        $consts = array_flip(self::getArray());
+        $consts = self::getArray(true);
         return $consts[$level] ?? $consts[self::default()];
     }
 
