@@ -51,6 +51,7 @@ class Autoload{
 	public static function load(string $className){
 		$paths = self::getPaths($className);
 		foreach ($paths as $path) {
+			if(is_dir($path)) continue;
 			// Используем первый найденный файл
 			require $path;
 			return;
