@@ -1,6 +1,6 @@
-<?use tsframe\module\user\UserAccess;?>
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php use tsframe\module\user\UserAccess;?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -12,7 +12,9 @@
             </div>
 
             <div class="row">
-                <?showAlerts()?>
+                <div class="col-lg-12">
+                <?php showAlerts()?>
+                </div>
             </div>
             <!-- /.row -->
 
