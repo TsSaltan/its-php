@@ -20,7 +20,7 @@ class CashCodesDashboard extends UserDashboard {
 
 	public $actionPrefix = null;
 
-	function getCashCodes(){
+	public function getCashCodes(){
 		UserAccess::assertCurrentUser('access.cash.codes');
 
 		$codes = Codes::getCodes();
@@ -31,7 +31,7 @@ class CashCodesDashboard extends UserDashboard {
 		}
 	}
 
-	function postCashCodes(){
+	public function postCashCodes(){
 		UserAccess::assertCurrentUser('access.cash.codes');
 
 		Input::post()
@@ -43,7 +43,7 @@ class CashCodesDashboard extends UserDashboard {
 		return Http::redirect(Http::makeURI('/dashboard/cash-codes', ['code' => $code]));
 	}
 
-	function postCashCode(){
+	public function postCashCode(){
 		Input::post()
 			->name('code')
 			->required()
@@ -54,7 +54,7 @@ class CashCodesDashboard extends UserDashboard {
 		if($this->self){
 			UserAccess::assertCurrentUser('access.cash.self');
 		} else {
-			UserAccess::assertCurrentUser('ccess.cash.payment');
+			UserAccess::assertCurrentUser('access.cash.payment');
 		}
 
 		$balance = Codes::getCodeBalance($_POST['code']); // string | null
