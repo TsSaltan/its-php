@@ -213,7 +213,7 @@
 							</td>
 							<td class="pluginSlider">
 								<label class="switch">
-						  			<input id="plugin_<?=$pluginName?>" type="checkbox" name="param[plugins][disabled][<?=$pluginName?>]" <?=(in_array($pluginName, $disabled)?'checked':'')?>>
+						  			<input id="plugin_<?=$pluginName?>" type="checkbox" name="param[plugins][disabled][<?=$pluginName?>]" <?=(!in_array($pluginName, $enabled)?'checked':'')?>>
 						  			<span class="slider round"></span>
 								</label>
 							</td>

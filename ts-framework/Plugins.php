@@ -142,14 +142,12 @@ class Plugins{
 	 * @param string ...
 	 */
 	public static function disable(){
-		$disabled = self::getDisabled();
-		Config::set('plugins.disabled', array_unique(array_merge($disabled, func_get_args())));
+		$enabled = self::getEnabled();
 
-		foreach(func_get_args() as $pluginName){
-			if(in_array($pluginName, self::$loaded)){
-				unset(self::$loaded[array_search($pluginName, self::$loaded)]);
-			}
-		}
+		$enabled = array_unique(array_diff($enabled, func_get_args()));
+		self::$loaded = array_unique(array_diff(self::$loaded, func_get_args()));
+
+		Config::set('plugins.enabled', $enabled);
 	}
 
 	/**
@@ -159,8 +157,9 @@ class Plugins{
 	 * @param string ...
 	 */
 	public static function enable(){
-		$disabled = self::getDisabled();
-		Config::set('plugins.disabled', array_unique(array_diff($disabled, func_get_args())));
+		$enabled = self::getEnabled();
+		$enabled = array_merge($enabled, func_get_args());
+		Config::set('plugins.enabled', array_unique($enabled));
 	}
 
 	/**
@@ -169,8 +168,18 @@ class Plugins{
 	 * @return bool
 	 */
 	public static function isDisabled(string $pluginName): bool {
-		$disabled = self::getDisabled();
-		return in_array($pluginName, $disabled);
+		$enabled = self::getEnabled();
+		return !in_array($pluginName, $enabled);
+	}
+
+	/**
+	 * Является ли плагин включенным
+	 * @param string $pluginName
+	 * @return bool
+	 */
+	public static function isEnabled(string $pluginName): bool {
+		$enabled = self::getEnabled();
+		return in_array($pluginName, $enabled);
 	}
 
 	/**
@@ -178,7 +187,29 @@ class Plugins{
 	 * @return array
 	 */
 	public static function getDisabled(): array {
-		$disabled = Config::get('plugins.disabled');
-		return !is_array($disabled) ? [] : $disabled;
+		return array_diff(array_keys(self::getList()), self::getEnabled());
+	}
+
+	/**
+	 * Получить список включенных плагинов
+	 * @return array
+	 */
+	public static function getEnabled(): array {
+		$enabled = Config::get('plugins.enabled');
+		if((!is_array($enabled) || sizeof($enabled) == 0) && Config::isset('plugins.disabled')){
+			// migrate from disabled list to enabled
+			$disabled = Config::get('plugins.disabled');
+			$list = self::getList();
+			foreach ($list as $plugin => $path) {
+				if(!in_array($plugin, $disabled)){
+					$enabled[] = $plugin;
+				}
+			}
+
+			Config::set('plugins.disabled', null);
+			Config::set('plugins.enabled', $enabled);
+		}
+
+		return !is_array($enabled) ? [] : $enabled;
 	}
 }
