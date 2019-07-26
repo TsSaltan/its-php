@@ -71,22 +71,21 @@ if(Plugins::isEnabled('api-base')){
 	Hook::register('api.post.pay-code', function(BaseApiController $apiController){
 		$user = $apiController->checkAuth();
 
-		Input::post()
-			->name('code')
+		$input = $apiController->getInput()->name('code')
 			->string()
 			->required()
 			->assert();
 
 		UserAccess::assertCurrentUser('access.cash.self');
 
-		$balance = Codes::getCodeBalance($_POST['code']);
+		$balance = Codes::getCodeBalance($input['code']);
 		if(strlen($balance) == 0 || $balance == '0'){ 
 			return $apiController->sendError('Invalid pay code', Http::CODE_BAD_REQUEST, ['result' => 'error']);
 		}
 
 		$cash = new Cash($user);
-		$cash->add($balance, 'Использование платёжного кода (via API) ' . $_POST['code']);
-		Codes::deleteCode($_POST['code']);
+		$cash->add($balance, 'Использование платёжного кода (via API) ' . $input['code']);
+		Codes::deleteCode($input['code']);
 		return $apiController->sendData(['result' => 'ok', 'user' => $apiController->dumpUser($user)]);
 	});
 }

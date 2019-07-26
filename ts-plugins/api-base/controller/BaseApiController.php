@@ -51,14 +51,14 @@ class BaseApiController extends AbstractAJAXController{
 				throw new ApiException('Api method \'' . $httpAction . ' ' . $apiAction . '\' not found', Http::CODE_NOT_FOUND);
 			} 
 		} catch (InputException $e){
-			$this->sendError('Input validation error', Http::CODE_BAD_REQUEST, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
+			$this->sendError('Input data validation error: ' . $e->getMessage(), Http::CODE_BAD_REQUEST, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
 		} catch (BaseException $e){
-			$this->sendError('[' . basename(get_class($e)) . '] ' . $e->getMessage(), $e->getCode(), ['result' => 'error']);
+			$this->sendError($e->getMessage(), $e->getCode(), ['result' => 'error']);
 		}
 	}
 
 	public function defLogin(){
-		$input = Input::request()
+		$input = $this->getInput()
 					  ->name('login')->required()->minLength(1)
 					  ->name('password')->required()->minLength(1)
 					  ->assert();
@@ -69,7 +69,7 @@ class BaseApiController extends AbstractAJAXController{
 	}
 
 	public function defRegister(){
-		$input = Input::request();
+		$input = $this->getInput();
 		$input->name('password')->password()
 			  ->name('email')->email();
 
@@ -112,14 +112,19 @@ class BaseApiController extends AbstractAJAXController{
 	}
 
 	public function checkAuth(): SingleUser {
-		if(!isset($_REQUEST['session_key'])) throw new AccessException('Invalid access: unauthorized', Http::CODE_UNAUTHORIZED);
+		try {
+			$input = $this->getInput()->name('session_key')->required()->assert();
+			$user = User::current($input['session_key']);
 
-		$user = User::current($_REQUEST['session_key']);
-		if(!$user->isAuthorized()){
-			throw new AccessException('Invalid access: bad session key', Http::CODE_UNAUTHORIZED);
+			if(!$user->isAuthorized()){
+				throw new AccessException('Invalid session_key', Http::CODE_UNAUTHORIZED);
+			}
+
+			return $user;
+
+		} catch (InputException $e){
+			throw new AccessException('Session_key required', Http::CODE_UNAUTHORIZED);
 		}
-
-		return $user;
 	}
 
 	public function dumpUser(SingleUser $user): array {
@@ -144,7 +149,12 @@ class BaseApiController extends AbstractAJAXController{
 
 	protected function getAction() : string {
 		return $this->params['action'] ?? (
-			str_replace(['/api/', '/api'], '', $_SERVER['REQUEST_URI'])
+			str_replace(['/api/', '/api'], '', explode('?', $_SERVER['REQUEST_URI'])[0] )
 		);
+	}
+
+	protected function getInput(): Input {
+		if(is_array($_REQUEST) && sizeof($_REQUEST) > 0) return Input::request();
+		return Input::stdin('json');
 	}
 }
