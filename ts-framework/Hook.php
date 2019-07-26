@@ -11,6 +11,7 @@ class Hook{
 	 * @param  int 		$priority Приоритет: чем меньше значение, тем раньше будет вызван коллбэк
 	 */
 	public static function register(string $name, callable $function, int $priority = 10){
+		$name = strtolower($name);
 		self::$hooks[$name][] = ['function' => $function, 'once' => false, 'priority' => $priority];
 	}
 
@@ -19,6 +20,7 @@ class Hook{
 	 * см. Hook::register
 	 */
 	public static function registerOnce(string $name, callable $function, int $priority = 10){
+		$name = strtolower($name);
 		self::$hooks[$name][] = ['function' => $function, 'once' => true, 'priority' => $priority];
 	}
 
@@ -31,6 +33,7 @@ class Hook{
 	 * @param  bool|boolean  $once   Если true, то любой хук считается как "одноразовый"
 	 */
 	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
+		$name = strtolower($name);
 		if(!self::exists($name)) return;
 		
 		$hooks = self::$hooks[$name];
@@ -64,6 +67,7 @@ class Hook{
 	}
 
 	public static function exists(string $name): bool {
+		$name = strtolower($name);
 		return isset(self::$hooks[$name]);
 	}
 }
