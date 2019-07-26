@@ -153,7 +153,7 @@ class BaseApiController extends AbstractAJAXController{
 		);
 	}
 
-	protected function getInput(): Input {
+	public function getInput(): Input {
 		if(is_array($_REQUEST) && sizeof($_REQUEST) > 0) return Input::request();
 		return Input::stdin('json');
 	}
