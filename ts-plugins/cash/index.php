@@ -109,6 +109,19 @@ class CashInstaller {
 		<?
 	}
 
+	public static function showUserBalanceApi(SingleUser $user, array &$data){
+		$currentUser = User::current();
+		if(
+			($currentUser->get('id') == $user->get('id') && UserAccess::checkCurrentUser('cash.self')) ||
+			($currentUser->get('id') != $user->get('id') && UserAccess::checkCurrentUser('cash.view')) 
+		){
+			$data['balance'] = (new Cash($user))->getBalance();
+			$data['balance_currency'] = Cash::getCurrency();
+
+			//return $data;
+		}
+	}
+
 	public static function userBalance(Template $tpl, SingleUser $selectUser){
 		if(UserAccess::checkCurrentUser('cash.payment')){
 			$tpl->inc('edit-balance');
@@ -121,4 +134,5 @@ Hook::registerOnce('plugin.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);
 Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);
+Hook::register('api.user.data', [CashInstaller::class, 'showUserBalanceApi']);
 Hook::register('template.dashboard.user.edit.balance', [CashInstaller::class, 'userBalance']);
