@@ -48,10 +48,10 @@ class BaseApiController extends AbstractAJAXController{
 					return;
 				}
 				
-				throw new ApiException('Api method \'' . $httpAction . ' ' . $apiAction . '\' not found');
+				throw new ApiException('Api method \'' . $httpAction . ' ' . $apiAction . '\' not found', Http::CODE_NOT_FOUND);
 			} 
 		} catch (InputException $e){
-			$this->sendError('Input validation error', 13, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
+			$this->sendError('Input validation error', Http::CODE_BAD_REQUEST, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
 		} catch (BaseException $e){
 			$this->sendError('[' . basename(get_class($e)) . '] ' . $e->getMessage(), $e->getCode(), ['result' => 'error']);
 		}
