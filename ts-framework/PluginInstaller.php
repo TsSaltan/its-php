@@ -87,6 +87,7 @@ class PluginInstaller{
 
 	/**
 	 * Указать возможные значения (для типа select)
+	 * @param  array $values [значение => текст]
 	 */
 	public function setValues(array $values): PluginInstaller {
 		$this->values = $values;
