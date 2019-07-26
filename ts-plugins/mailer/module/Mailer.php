@@ -4,12 +4,14 @@ namespace tsframe\module;
 use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\App;
 use tsframe\Config;
+use tsframe\module\Log;
 
 class Mailer extends PHPMailer {
 	/**
+	 * Автоматическая установка параметров для отправки из конфигурационного файла
 	 * @override
 	 */
-	public function __construct($exceptions = null){
+	public function __construct($exceptions = true){
 		parent::__construct($exceptions);
 
 		$this->Timelimit = 30;
@@ -28,13 +30,45 @@ class Mailer extends PHPMailer {
     		$this->SMTPAuth = true;
 
     		$this->Username   = Config::get('mailer.email');                  
-    		$this->setFrom(Config::get('mailer.email'));                  
+
+			$meta = new Meta('dashboard');
+			$sitename = $meta->get('sitename');
+    		$this->setFrom(Config::get('mailer.email'), $sitename);                  
 
     		$this->Password   = Config::get('mailer.password');
 		}
 
 		if(Config::isset('mailer.secure') && (Config::get('mailer.secure') != 'none')){
     		$this->SMTPSecure = Config::get('mailer.secure');
+		}
+	}
+
+	/**
+	 * Логирование отправляемых писем
+	 * @override
+	 */
+	public function send(){
+		Log::Mail('Sending email #' . $this->MessageID, [
+			'From' => $this->From . " (" . $this->FromName . ")",
+			'To' => $this->all_recipients,
+			'Subject' => $this->Subject,
+			'Body' => $this->Body,
+			'AltBody' => $this->AltBody,
+			'Mailer_method' => $this->Mailer,
+			'Host' => $this->Host,
+			'Port' => $this->Port,
+			'SMTPAuth' => $this->SMTPAuth ? 'true' : 'false',
+			'Username' => $this->Username,
+			'Password' => (strlen($this->Password) > 0) ? substr($this->Password, 0, 3) . '*** (length:' . strlen($this->Password) .')' : 'false',
+		]);
+
+		try {
+			parent::send();
+		} catch(\Exception $e){
+			Log::Mail('Mailer #' . $this->MessageID . ' error', [
+				'message' => $e->getMessage(),
+				'code' => $e->getCode(),
+			]);
 		}
 	}
 }
