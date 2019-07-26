@@ -1,13 +1,14 @@
 <?php
 namespace tsframe\module\user;
 
-use tsframe\module\database\Database;
-use tsframe\module\database\Query;
-use tsframe\module\Crypto;
 use tsframe\Config;
 use tsframe\Hook;
+use tsframe\Http;
 use tsframe\exception\UserException;
 use tsframe\module\Cache;
+use tsframe\module\Crypto;
+use tsframe\module\database\Database;
+use tsframe\module\database\Query;
 
 class User{
 	/**
@@ -34,7 +35,7 @@ class User{
 				->bind('access', $access)
 				->exec();
 
-		if($query->affectedRows() == 0) throw new UserException('User registration error', 400, ['login' => $login, 'email' => $email, 'password' => $password, 'access' => $access]);
+		if($query->affectedRows() == 0) throw new UserException('Registration error: login or email invalid or already used', Http::CODE_UNAUTHORIZED, ['login' => $login, 'email' => $email, 'password' => $password, 'access' => $access]);
 
 		$uid = $query->lastInsertId();
 		$user = new SingleUser($uid, $login, $email, $access);
@@ -54,7 +55,7 @@ class User{
 			}
 		}
 
-		throw new UserException('User login error', 400, ['loginOrMail' => $loginOrMail, 'password' => $password]);
+		throw new UserException('User login error: invalid login or password', Http::CODE_UNAUTHORIZED, ['loginOrMail' => $loginOrMail, 'password' => $password]);
 	}
 
 	/**
