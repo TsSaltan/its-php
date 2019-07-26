@@ -59,6 +59,50 @@ class Input extends Filter {
 	}
 
 	/**
+	 * Входящие данные
+	 * @param  string $parser = json | urlquery
+	 * @return Input
+	 */
+	public static function stdin(string $parser){
+		$input = file_get_contents("php://input");
+
+		switch ($parser) {
+			case 'json':
+				return self::json($input);
+
+			case 'urlquery':
+				return self::urlquery($input);
+		
+		}
+
+		throw new InputException('Invalid stdin parser: ' . $parser);
+	}
+
+	/**
+	 * JSON парсер входящих данных
+	 * @param  string $json 
+	 * @return Input
+	 */
+	public static function json(string $json){
+		$data = json_decode($json, true);
+		if(json_last_error() != JSON_ERROR_NONE){
+			throw new InputException('JSON string parse error: ' . json_last_error_msg() );
+		}
+
+		return new self($data);
+	}
+
+	/**
+	 * Парсер строки в формате URL query
+	 * @param  string $query 
+	 * @return Input
+	 */
+	public static function urlquery(string $query){
+		parse_str($query, $data);
+		return new self($data);
+	}
+
+	/**
 	 * Установка текущего ключа
 	 * @param  string $key
 	 */
@@ -237,7 +281,12 @@ Input::addFilter('json', function(Input $input){
 });
 
 Input::addFilter('email', function(Input $input){
-	return substr_count($input->getCurrentData(), '@') == 1;
+	$input->varProcess(function($value){
+		return str_replace('%40', '@', $value);
+	});
+
+	return substr_count($input->getCurrentData(), '@') == 1 || substr_count($input->getCurrentData(), '%40') == 1;
+
 });
 
 Input::addFilter('ip', function(Input $input){
