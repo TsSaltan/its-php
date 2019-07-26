@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\module;
 
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\App;
 use tsframe\Config;
@@ -11,7 +12,7 @@ class Mailer extends PHPMailer {
 	 * Автоматическая установка параметров для отправки из конфигурационного файла
 	 * @override
 	 */
-	public function __construct($exceptions = true){
+	public function __construct($exceptions = null){
 		parent::__construct($exceptions);
 
 		$this->Timelimit = 30;
@@ -62,12 +63,11 @@ class Mailer extends PHPMailer {
 			'Password' => (strlen($this->Password) > 0) ? substr($this->Password, 0, 3) . '*** (length:' . strlen($this->Password) .')' : 'false',
 		]);
 
-		try {
-			parent::send();
-		} catch(\Exception $e){
-			Log::Mail('Mailer #' . $this->MessageID . ' error', [
-				'message' => $e->getMessage(),
-				'code' => $e->getCode(),
+		if(parent::send()){
+			Log::Mail('Mail #' . $this->MessageID . ' send successfully');
+		} else {
+			Log::Mail('[Error] Mail #' . $this->MessageID . ' send failure', [
+				'error' => $this->ErrorInfo
 			]);
 		}
 	}
