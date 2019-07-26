@@ -8,12 +8,13 @@
             "email": "tssaltan@gmail.com"
         }
     ],
-    "version":"0.0.0.2",
+    "version":"1.0.0.0",
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",
         "andr-04/jquery.inputmask-multi": "1.2.0",
         "dragonmantank/cron-expression": "2.2",
-        "minishlink/web-push": "^5.2"
+        "minishlink/web-push": "^5.2",
+        "phpmailer/phpmailer": "~6.0"
     }
 }
