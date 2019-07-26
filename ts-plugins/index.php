@@ -11,6 +11,22 @@ use tsframe\view\TemplateRoot;
 
 die('Access denied');
 
+
+/**
+ * API Возвращает данные о пользователе
+ * @hook api.user.data
+ * @param SingleUser $user Пользователь, чьи данные нужно вернуть
+ * @param array $data Массив данных, которые будут возвращены
+ * @return array|null Дополнительные поля, которые необходимо вернуть
+ */
+Hook::registerOnce('api.user.data', function(SingleUser $user, array &$data){
+	// Можно вернуть массив с дополнительными полями
+	return ['balance' => $user->getBalance()];
+
+	// Или добавить поле в мессив $data
+	$data['balance'] = $user->getBalance();
+});
+
 /**
  * Если среди определенных контроллеров не найден подходящий
  * @hook router
