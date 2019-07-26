@@ -6,6 +6,7 @@ use tsframe\Http;
 use tsframe\exception\AccessException;
 use tsframe\exception\ApiException;
 use tsframe\exception\BaseException;
+use tsframe\exception\ControllerException;
 use tsframe\exception\InputException;
 use tsframe\exception\UserException;
 use tsframe\module\io\Input;
@@ -27,32 +28,33 @@ class BaseApiController extends AbstractAJAXController{
 	}	
 
 	public function response(){
+		$apiAction = $this->getAction();
+		$httpAction = Http::getRequestMethod();
 		try{
-			$apiAction = $this->getAction();
-			$httpAction = Http::getRequestMethod();
-			$method = $this->getActionMethod();
-			$hookKey = 'api.' . $method;
-			$exec = false;
-
-			if(method_exists($this, $method)){
-				$exec = true;
+			try{
 				$this->callActionMethod();
-			}
+			} catch (ControllerException $e){
+				// Если метод или контроллер не найдены, поищем в хуках
+				$hookKey1 = 'api.' . $httpAction . '.' . $apiAction;
+				$hookKey2 = 'api.def.' . $apiAction;
 
-			if(Hook::exists($hookKey)){
-				$exec = true;
-				Hook::call($hookKey, [$this]);
-			}
-
-			if(!$exec){
-				throw new ApiException('method not found');
-			}
+				if(Hook::exists($hookKey1)){
+					Hook::call($hookKey1, [$this]);
+					return;
+				}
+				
+				if(Hook::exists($hookKey2)){
+					Hook::call($hookKey2, [$this]);
+					return;
+				}
+				
+				throw new ApiException('Api method \'' . $httpAction . ' ' . $apiAction . '\' not found');
+			} 
 		} catch (InputException $e){
 			$this->sendError('Input validation error', 13, ['bad_fields' => $e->getInvalidKeys(), 'result' => 'error']);
 		} catch (BaseException $e){
 			$this->sendError('[' . basename(get_class($e)) . '] ' . $e->getMessage(), $e->getCode(), ['result' => 'error']);
 		}
-
 	}
 
 	public function defLogin(){
@@ -61,7 +63,6 @@ class BaseApiController extends AbstractAJAXController{
 					  ->name('password')->required()->minLength(1)
 					  ->assert();
 
-		sleep(1);
 		$user = User::login($input['login'], $input['password']);
 		$session = $user->createSession(false);
 		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
@@ -76,7 +77,6 @@ class BaseApiController extends AbstractAJAXController{
 			$input->name('login')->login()->required();
 		}
 		$data = $input->assert();
-		sleep(1);
 
 		if(User::exists(['email' => $data['email']])){
 			$this->sendError('Email already used', 10);
@@ -108,7 +108,6 @@ class BaseApiController extends AbstractAJAXController{
 
 	public function defMe(){
 		$user = $this->checkAuth();
-
 		$this->sendData(['result' => 'ok', 'user' => $this->dumpUser($user)]);
 	}
 
@@ -123,17 +122,29 @@ class BaseApiController extends AbstractAJAXController{
 		return $user;
 	}
 
-	protected function dumpUser(SingleUser $user): array {
-		return [
+	public function dumpUser(SingleUser $user): array {
+		$data = [
 			'id' => $user->get('id'),
 			'login' => $user->get('login'),
 			'email' => $user->get('email'),
 			'accessLevel' => $user->get('access'),
 			'access' => UserAccess::getAccessName($user->get('access')),
 		];
+
+		Hook::call('api.user.data', [$user, &$data], function($res) use (&$data){
+			if(is_array($res) && sizeof($res) > 0){
+				$data = array_merge($data, $res);
+			}
+		}, function(){
+			// error callback. nope.
+		});
+
+		return $data;
 	}
 
-	protected function getAction(string $default = 'notfound') : string {
-		return $this->params['action'] ?? $default;
+	protected function getAction() : string {
+		return $this->params['action'] ?? (
+			str_replace(['/api/', '/api'], '', $_SERVER['REQUEST_URI'])
+		);
 	}
 }

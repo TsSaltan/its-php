@@ -25,7 +25,7 @@ trait ActionToMethodTrait{
 
 	function getActionMethod(): ?string {
 		$request = Http::getRequestMethod();
-		$action = (method_exists($this, 'getAction')) ? $this->getAction() : $this->params['action'];
+		$action = (method_exists($this, 'getAction')) ? $this->getAction() : ($this->params['action'] ?? null);
 		$method = ucfirst(preg_replace('#([^\w\d]|[_])#Ui', '', $action));
 		
 		$methodName1 = strtolower($request) . $method;
@@ -34,7 +34,7 @@ trait ActionToMethodTrait{
 		$methodName2 = 'def' . $method;
 		if(method_exists($this, $methodName2)) return $methodName2;
 
-		throw new ControllerException('Method for action ' . $action . ' not found', 404, ['controller' => get_class($this), 'findMethods' => [
+		throw new ControllerException('Method for action "' . $action . '" not found', 404, ['controller' => get_class($this), 'findMethods' => [
 			$methodName1, $methodName2
 		]]);
 	}
