@@ -44,4 +44,31 @@ class Crypto{
 		$salt = is_null($salt) ? self::getAppId() : $salt;
 		return hash($method, $data . $salt);
 	}
+
+	/**
+	 * Прервать выполнение скрипта на случайный промежуток времени
+	 * @param  int $min Минимум (в милисекундах)
+	 * @param  int $max Максимум (в милисекундах)
+	 */
+	public static function wait(int $min = 500, int $max = 2500){
+		usleep(self::randomInt($min, $max));
+	}
+
+	/**
+	 * Генерирует рандомное число
+	 * @param  int    $from 
+	 * @param  int    $to   
+	 * @return int
+	 */
+	public static function randomInt(int $from, int $to): int {
+		if(function_exists('random_int')){
+			return random_int($from, $to);
+		}
+
+		if(function_exists('mt_rand')){
+			return mt_rand($from, $to);
+		}
+
+		return rand($from, $to);
+	}
 }

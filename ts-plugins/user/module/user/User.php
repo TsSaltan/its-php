@@ -20,6 +20,8 @@ class User{
 	 * @throws UserException
 	 */
 	public static function register(?string $login, string $email, ?string $password, int $access = null) : SingleUser {
+		Crypto::wait();
+		
 		if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
 
 		// Если логин не используется, сгенерируем его на основе email
@@ -42,8 +44,9 @@ class User{
 	}
 
 	public static function login(string $loginOrMail, string $password) : SingleUser {
+		Crypto::wait();
 		$users = self::get(['login' => $loginOrMail, 'email' => $loginOrMail], 'OR');
-
+	
 		foreach($users as $user){
 			if(self::getPasswordHash($user->get('id'), $password) == $user->get('password')){
 				Hook::call('user.login', [$user]);
