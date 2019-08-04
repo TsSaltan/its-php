@@ -37,7 +37,7 @@ Hook::registerOnce('plugin.install', function(){
 });
 
 Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Платёжные коды', ['url' => Http::makeURI('/dashboard/cash-codes'), 'fa' => 'rub', 'access' => UserAccess::getAccess('access.cash.codes')]));
+	$menu->add(new MenuItem('Платёжные коды', ['url' => Http::makeURI('/dashboard/cash-codes'), 'fa' => 'rub', 'access' => UserAccess::getAccess('cash.codes')]));
 });
 
 
