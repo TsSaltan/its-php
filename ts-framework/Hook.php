@@ -1,7 +1,7 @@
 <?php
 namespace tsframe;
 
-class Hook{
+class Hook {
 	protected static $hooks = [];
 
 	/**
@@ -22,6 +22,15 @@ class Hook{
 	public static function registerOnce(string $name, callable $function, int $priority = 10){
 		$name = strtolower($name);
 		self::$hooks[$name][] = ['function' => $function, 'once' => true, 'priority' => $priority];
+	}
+
+	/**
+	 * Удалить все хуки с данным именем
+	 */
+	public static function unregister(string $name){
+		if(isset(self::$hooks[$name])){
+			unset(self::$hooks[$name]);
+		}
 	}
 
 	/**
