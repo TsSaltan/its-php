@@ -23,13 +23,15 @@
     <main>
         <p><button disabled id="access-btn" class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Уведомления не поддерживаются</button></p>
         <!--p><button disabled class="js-test-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Получить тестовое уведомление</button></p-->
+        <p id="description">Во всплывающем окне нажмите "Разрешить"</p>
     </main>
 
     <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
 
     <?php $this->js('push/scripts/main.js')?>
     <script type="text/javascript">
-        var btn = document.querySelector('.js-push-btn');
+        var btn = document.querySelector('#access-btn');
+        var descript = document.querySelector('#description');
 
         WebPush.publicKey = "<?=$publicKey?>";
         WebPush.init(function(){
@@ -44,6 +46,7 @@
                 // Если разрешено - шлём ключи на сервер
                 btn.textContent = 'Доступ к push-уведомлениям получен';
                 btn.className += ' access-granted';
+                descript.textContent = 'Вы подписаны на web-push уведомления';
 
                 console.log(JSON.stringify(WebPush.subscriptionData));
                 $.ajax({
@@ -53,13 +56,14 @@
                 });
             } else {
                 // Если же не разрешено, пытаемся отправить уведомление пользователю
-                btn.textContent = 'Нажмите "Разрешить", чтоб получать Push-рассылку';
+                btn.textContent = 'Нужен доступ к push уведомлениям';
                 setTimeout(function(){
                     WebPush.subscribe(function(){
                         checkPush();
-                    }, function(){
-                        btn.textContent = 'Доступ к push-уведомлениям ЗАПРЕЩЁН';
+                    }, function(err){
+                        btn.textContent = 'Доступ к push-уведомлениям не получен';
                         btn.className += ' access-denied';
+                        descript.textContent = 'Ошибка: ' + err.message;
                     });
                 }, 1500);
             }

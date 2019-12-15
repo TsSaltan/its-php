@@ -10,6 +10,7 @@ use tsframe\view\HtmlTemplate;
 use tsframe\view\Template;
 
 /**
+ * @route GET /web-push
  * @route GET /web-push-demo
  * @route GET /web-push-demo/
  */ 

@@ -71,3 +71,7 @@ h1 {
 #access-btn.access-denied {
     background-color: #ff9393;
 }
+
+#description {
+  color: #999;
+}

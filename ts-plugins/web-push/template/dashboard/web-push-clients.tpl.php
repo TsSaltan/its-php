@@ -23,7 +23,7 @@
                             </div>
 
                             <div class="pull-right">
-                                <a href="<?=$this->makeURI('/web-push-demo')?>" target="_blank" class="btn btn-sm btn-primary">Подключиться к push-рассылке</a>
+                                <a href="<?=$this->makeURI('/web-push')?>" target="_blank" class="btn btn-sm btn-primary">Подключиться к push-рассылке</a>
                             </div>
                         </div>
 

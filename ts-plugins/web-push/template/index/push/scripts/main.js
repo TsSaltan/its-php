@@ -103,22 +103,27 @@ var WebPush = {
         if(this.isSubscribed && this.subscriptionData !== null){
             return onSuccess(this.subscriptionData);
         }
-
-        var that = this;
-        const applicationServerKey = this.urlB64ToUint8Array(this.publicKey);
-        this.swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: applicationServerKey
-        })
-        .then(function(subscription) {
-            console.log('[WebPush] Client IS subscribed.');
-            that.subscriptionData = subscription;
-            that.isSubscribed = true;
-            onSuccess(subscription);
-        })
-        .catch(function(err) {
-            console.log('[WebPush] Failed to subscribe the client: ', err);
+        try {
+            var that = this;
+            const applicationServerKey = this.urlB64ToUint8Array(this.publicKey);
+            this.swRegistration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+            .then(function(subscription) {
+                console.log('[WebPush] Client subscribed.');
+                that.subscriptionData = subscription;
+                that.isSubscribed = true;
+                onSuccess(subscription);
+            })
+            .catch(function(err) {
+                console.log('[WebPush] Failed to subscribe the client: ', err);
+                onError(err);
+            });
+        }
+        catch(err){
+            console.log('[WebPush] Failed to init subscribtion: ', err);
             onError(err);
-        });
+        }
     }
 };
