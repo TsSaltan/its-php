@@ -21,7 +21,7 @@
     </header>
 
     <main>
-        <p><button disabled id="access-btn" class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Уведомления не поддерживаются</button></p>
+        <p><button disabled id="access-btn" class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Необходим доступ к push уведомлениям</button></p>
         <!--p><button disabled class="js-test-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Получить тестовое уведомление</button></p-->
         <p id="description">Во всплывающем окне нажмите "Разрешить"</p>
     </main>
@@ -34,6 +34,8 @@
         var descript = document.querySelector('#description');
 
         WebPush.publicKey = "<?=$publicKey?>";
+        WebPush.swPath = "<?=$this->makeURI('/service-worker.js')?>";
+        
         WebPush.init(function(){
             checkPush();
         });
@@ -56,7 +58,6 @@
                 });
             } else {
                 // Если же не разрешено, пытаемся отправить уведомление пользователю
-                btn.textContent = 'Нужен доступ к push уведомлениям';
                 setTimeout(function(){
                     WebPush.subscribe(function(){
                         checkPush();

@@ -24,6 +24,7 @@ var WebPush = {
      * @type String
      */
     publicKey: "", // applicationServerPublicKey
+    swPath: "/service-worker.js",
 
     /**
      * Is current client subscribed
@@ -56,7 +57,7 @@ var WebPush = {
         if('serviceWorker' in navigator && 'PushManager' in window){
             console.log('[WebPush] Service Worker and Push is supported');
 
-            navigator.serviceWorker.register('/service-worker.js')
+            navigator.serviceWorker.register(that.swPath)
             .then(function(swReg) {
                 console.log('[WebPush] Service Worker is registered', swReg);
 
