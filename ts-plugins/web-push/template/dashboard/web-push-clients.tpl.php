@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 <style type="text/css">
     .clients .for-pre *{
         width: 500px;
@@ -21,6 +21,10 @@
                             <div class="panel-title pull-left">
                                 Отправка Push-сообщений
                             </div>
+
+                            <div class="pull-right">
+                                <a href="<?=$this->makeURI('/web-push-demo')?>" target="_blank" class="btn btn-sm btn-primary">Подключиться к push-рассылке</a>
+                            </div>
                         </div>
 
                         <div class="panel-body">
@@ -29,9 +33,9 @@
                                     <label>Страна получателя</label>
                                     <select class="form-control" name="country">
                                         <option value="*">Любая страна</option>
-                                        <?foreach($location['country'] as $country):?>
+                                        <?php foreach($location['country'] as $country):?>
                                         <option value="<?=$country?>"><?=$country?></option>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </select>
                                 </div>
 
@@ -39,9 +43,9 @@
                                     <label>Город получателя</label>
                                     <select class="form-control" name="city">
                                         <option value="*">Любой город</option>
-                                        <?foreach($location['city'] as $city):?>
+                                        <?php foreach($location['city'] as $city):?>
                                         <option value="<?=$city?>"><?=$city?></option>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </select>
                                 </div>
 
@@ -96,14 +100,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?foreach ($queues as $queue):?>
+                                        <?php foreach ($queues as $queue):?>
                                         <tr>
                                             <td><?=$queue->getId()?></td>
                                             <td><?=$queue->getTitle()?></td>
                                             <td><a href="<?=$queue->getLink()?>" target="_blank"><?=$queue->getLink()?></a></td>
                                             <td><?=sizeof($queue->getClients())?></td>
                                         </tr>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                     
                                     </tbody>
                                 </table>
@@ -125,7 +129,7 @@
                             </div>
                         </div>
 
-                    <?if($clients->isData()):?>
+                    <?php if($clients->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover clients">
@@ -140,7 +144,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?foreach($clients->getData() as $client):
+                                        <?php foreach($clients->getData() as $client):
                                             $location = $client->getLocation();
                                         ?>
 
@@ -154,7 +158,7 @@
                                             </td>
                      
                                         </tr>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </tbody>
                                 </table>
                             </div>
@@ -162,7 +166,7 @@
                         </div>
 
                         <div class="panel-footer"><?uiPaginatorFooter($clients)?></div>
-                    <?endif?>
+                    <?php endif?>
                     </div>
                     <!-- /.panel -->
                 </div>
@@ -178,4 +182,4 @@
         window.getSelection().addRange(range); 
     });
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

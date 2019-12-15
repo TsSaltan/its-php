@@ -41,6 +41,10 @@ pre code {
   word-break: break-word;
 }
 
+h1 {
+  font-size: 36px;
+}
+
 .is-invisible {
   opacity: 0;
 }
@@ -51,6 +55,19 @@ pre code {
 
 @media (max-width: 600px) {
   header > h1 {
-    font-size: 36px;
+    font-size: 30px;
   }
+}
+
+#access-btn {
+    background-color: #4c7b88;
+    color: #f7f7f7;
+}
+
+#access-btn.access-granted {
+    background-color: #84c584;
+}
+
+#access-btn.access-denied {
+    background-color: #ff9393;
 }
