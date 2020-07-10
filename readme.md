@@ -44,3 +44,18 @@
 ```bash
 composer install
 ```
+
+### .gitignore file example
+```
+# Ignore all framework files
+/~dir/*.*
+/~dir/storage/*
+/~dir/ts-framework/*
+/~dir/ts-plugins/*
+/~dir/ts-template/*
+/~dir/vendor/*
+
+# Instead of your project files 
+!/~dir/composer.json
+!/~dir/ts-plugins/my-plugin-name/
+```
