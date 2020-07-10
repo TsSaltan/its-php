@@ -3,7 +3,7 @@ namespace tsframe\module;
 
 use tsframe\module\database\Database;
 
-class Meta{
+class Meta {
 
 	protected $parent;
 	protected $data = [];

@@ -62,6 +62,8 @@ class UserDashboard extends Dashboard {
 			$tempPass = $meta->get('temp_password');
 			if(strlen($tempPass) > 1){
 				$this->vars['tempPass'] = $tempPass;
+			} else {
+				$this->vars['tempPass'] = false;
 			}
 
 			// Если пользователь перенаправлен со страницы соц. логина

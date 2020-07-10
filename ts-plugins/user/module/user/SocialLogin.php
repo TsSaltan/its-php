@@ -11,7 +11,7 @@ use tsframe\Http;
 /**
  * @link https://ulogin.ru
  */
-class SocialLogin{
+class SocialLogin {
 	protected static $callbackURI = '/dashboard/social-login';
 
 	/**

@@ -2,7 +2,7 @@
 namespace tsframe\module\user;
 use tsframe\Config;
 
-class UserConfig{
+class UserConfig {
 	/**
 	 * Разрешена ли регистрация
 	 * @return bool
@@ -40,5 +40,18 @@ class UserConfig{
 
 	public static function setLoginUsed(bool $used) {
 		Config::set('user.loginUsed', $used);
+	}
+
+	/**
+	 * Разрешена ли регистрация только по e-mail (пароль будет сгенерирован)
+	 * @return bool
+	 */
+	public static function isRegisterEmailOnly(): bool {
+		$reg = Config::get('user.isRegisterEmailOnly');
+		return self::canRegister() && (is_null($reg) ? true : boolval($reg));
+	}
+
+	public static function setRegisterEmailOnly(bool $reg){
+		Config::set('user.canRegisterEmailOnly', $reg);
 	}
 }

@@ -3,7 +3,7 @@ namespace tsframe\module;
 
 use tsframe\Config;
 
-class Crypto{
+class Crypto {
 	/**
 	 * Возвращает уникальный ID для текущего приложения
 	 * @return [type] [description]
