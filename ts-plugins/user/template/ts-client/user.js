@@ -26,7 +26,8 @@ var tsResponse = {
         processResponse: function(response, form){
 
         if(response == 'OK'){
-            window.location.reload();
+            //window.location.reload();
+            window.location.replace('?from=auth');
         }
 
         if(response.message && response.code){

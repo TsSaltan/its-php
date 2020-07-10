@@ -71,7 +71,7 @@ Hook::register('template.render', function($tpl){
 });
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('cache', 'crypto', 'database');
+	Plugins::required('cache', 'crypto', 'database', 'mailer');
 	return [
 		PluginInstaller::withKey('access.user.onRegister')
 					->setType('select')
@@ -144,8 +144,10 @@ Hook::register('template.dashboard.user.profile', function(Template $tpl, Single
 Hook::register('template.dashboard.config', function(Template $tpl){
 	$tpl->var('registerEnabled', UserConfig::isRegisterEnabled());
 	$tpl->var('socialEnabled', UserConfig::isSocialEnabled());
-
+	$tpl->var('passwordEnabled', UserConfig::isPasswordEnabled());
 	$tpl->var('loginEnabled', UserConfig::isLoginEnabled());
+	$tpl->var('emailOnRegister', UserConfig::isEmailOnRegister());
+	$tpl->var('loginOnRegister', UserConfig::isLoginOnRegister());
 	$tpl->var('accesses', Config::get('access'));
 	$tpl->inc('user_config');
 });

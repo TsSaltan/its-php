@@ -115,6 +115,8 @@ class UserDashboard extends Dashboard {
 			  ->name('socialEnabled')->required()
 			  ->name('loginEnabled')->required()
 			  ->name('passwordEnabled')->required()
+			  ->name('emailOnRegister')->required()
+			  ->name('loginOnRegister')->required()
 			  ->name('access')->required()->array()
 			 ->assert();
 
@@ -122,6 +124,8 @@ class UserDashboard extends Dashboard {
 		UserConfig::setSocialEnabled(boolval($_POST['socialEnabled']));
 		UserConfig::setLoginEnabled(boolval($_POST['loginEnabled']));
 		UserConfig::setPasswordEnabled(boolval($_POST['passwordEnabled']));
+		UserConfig::setEmailOnRegister(boolval($_POST['emailOnRegister']));
+		UserConfig::setLoginOnRegister(boolval($_POST['loginOnRegister']));
 
 		Config::set('access', $_POST['access']);
 

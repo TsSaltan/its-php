@@ -55,4 +55,30 @@ class UserConfig {
 	public static function setPasswordEnabled(bool $enabled) {
 		Config::set('user.auth.password', $enabled);
 	}
+
+	/**
+	 * Отправлять e-mail после регистрации
+	 * @return boolean (default: false)
+	 */
+	public static function isEmailOnRegister(): bool {
+		$email = Config::get('user.auth.emailOnRegister');
+		return is_null($email) ? false : boolval($email);
+	}
+
+	public static function setEmailOnRegister(bool $value) {
+		Config::set('user.auth.emailOnRegister', $value);
+	}
+
+	/**
+	 * Автоматически авторизовывать после регистрации
+	 * @return boolean (default: true)
+	 */
+	public static function isLoginOnRegister(): bool {
+		$k = Config::get('user.auth.loginOnRegister');
+		return is_null($k) ? true : boolval($k);
+	}
+
+	public static function setLoginOnRegister(bool $value) {
+		Config::set('user.auth.loginOnRegister', $value);
+	}
 }

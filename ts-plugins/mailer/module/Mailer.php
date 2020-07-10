@@ -7,6 +7,15 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\module\Log;
 
+/**
+ * Класс для отправки почты
+ * @example $mail = new Mailer;
+ *			$mail->addAddress('email', 'name');
+ *			$mail->isHTML(true);  // Set email format to HTML
+ *    		$mail->Subject = $subl;
+ *    		$mail->Body = $message;
+ *    		$mail->send();
+ */
 class Mailer extends PHPMailer {
 	/**
 	 * Автоматическая установка параметров для отправки из конфигурационного файла

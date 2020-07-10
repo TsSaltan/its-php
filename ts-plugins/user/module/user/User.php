@@ -7,6 +7,7 @@ use tsframe\Http;
 use tsframe\exception\UserException;
 use tsframe\module\Cache;
 use tsframe\module\Crypto;
+use tsframe\module\Mailer;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 
@@ -46,8 +47,31 @@ class User{
 			$password = Crypto::generateString(8);
 			$user->getMeta()->set('temp_password', $password);
 		}
-
 		$user->set('password', $password); // Пароль устанавливается отдельно, чтоб сгенерировался его хеш
+
+		if(UserConfig::isEmailOnRegister()){
+			$mail = new Mailer;
+			$mail->addAddress($email);
+			$mail->isHTML(true);  // Set email format to HTML
+    		$mail->Subject = "Данные авторизации " . $_SERVER['HTTP_HOST'];
+    		$link = Http::makeURI('/dashboard/login');
+    		$message = "<p>Ссылка для авторизации: <a href='$link'>$link</a></p>";
+
+    		if(UserConfig::isLoginEnabled()){
+				$message .= "<p>Имя пользователя: <b>" . $login . "</b></p>";
+			}
+			else $message .= "<p>E-mail: <b>" . $email . "</b></p>";
+
+    		if(UserConfig::isPasswordEnabled()){
+				$message .= "<p>Пароль: <i>указанный вами пароль при регистрации</i></p>";
+			} else {
+				$message .= "<p>Пароль: <b>" . $password . "</b></p>";
+			}
+
+    		$mail->Body = $message;
+    		$mail->send();
+		}
+
 		Hook::call('user.register', [$user]);
 		return $user;
 	}

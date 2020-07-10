@@ -106,7 +106,12 @@ class UserAJAX extends AbstractAJAXController{
 						});
 
 						$user = User::register(($data['login'] ?? null), $data['email'], ($data['password'] ?? null));
-						if($user->isAuthorized() && $user->createSession()){
+						
+						if($user->isAuthorized()){
+							if(UserConfig::isLoginOnRegister()){
+								$user->createSession();
+							}
+
 							$this->sendOK();
 							break;
 						}

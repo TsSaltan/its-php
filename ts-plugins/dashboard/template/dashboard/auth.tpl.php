@@ -56,7 +56,7 @@
 
                     <?php if(!$passwordEnabled): ?>
                     <div class="alert alert-info">
-                        <p class='text'>Пароль будет создан автоматически, вы его сможете изменить в настройках!</p>   
+                        <p class='text'>Пароль будет создан автоматически</p>   
                     </div>
                     <?php endif; ?>
 

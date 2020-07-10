@@ -1,5 +1,5 @@
 <form action="<?=$this->makeURI('/dashboard/config/user')?>" method="POST">
-<?php uiCollapsePanel('Настройки пользователей', function() use ($registerEnabled, $socialEnabled, $loginEnabled, $passwordEnabled, $accesses){
+<?php uiCollapsePanel('Настройки пользователей', function() use ($registerEnabled, $socialEnabled, $loginEnabled, $passwordEnabled, $emailOnRegister, $loginOnRegister, $accesses){
     ?>
     <h3 style="margin: 0 10px 10px 0;">Настройка авторизации</h3>
     <div class="row">
@@ -53,6 +53,32 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Авторизация после регистрации</label>
+                <div class="radio">
+                    <label><input type="radio" name="loginOnRegister" value="1" <?=($loginOnRegister)?'checked':''?>> Автоматически авторизовывать пользователя после регистрации</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="loginOnRegister" value="0" <?=(!$loginOnRegister)?'checked':''?>> После регистрации пользователь должен ввести логин/пароль вручную</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Письмо при регистрации</label>
+                <div class="radio">
+                    <label><input type="radio" name="emailOnRegister" value="1" <?=($emailOnRegister)?'checked':''?>> Отправить пользователю письмо после регистрации</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="emailOnRegister" value="0" <?=(!$emailOnRegister)?'checked':''?>> Не отправлять письмо</label>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <h3>Настройка прав доступа</h3> 
     <?php 
@@ -64,6 +90,7 @@
                 }
                 else {
                     $name = ucfirst($prefixTitle . $key);
+                    $access = intval($access);
                     uiSelectAccess($name, $access, (strlen($prefix) > 0 ? 'access[' .$prefix . ']['.$key.']': 'access[' . $key . ']'));
                 }
             }

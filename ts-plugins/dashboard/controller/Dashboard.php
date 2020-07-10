@@ -70,6 +70,14 @@ class Dashboard extends AbstractController{
 		if(isset($_GET['error']) && $_GET['error'] == 'social'){
 			$this->vars['alert']['danger'][] = 'Невозможно войти через данный аккаунт, привязанный к нему e-mail уже зарегистрирован.';
 		}
+		
+		if(isset($_GET['from']) && $_GET['from'] == 'auth' && !UserConfig::isLoginOnRegister()){
+			if(UserConfig::isEmailOnRegister()){
+				$this->vars['alert']['info'][] = 'Данные для авторизации отправлены на e-mail';
+			} else {
+				$this->vars['alert']['info'][] = 'Введите данные указанные при регистрации';
+			}
+		}
 	}
 
 	public function getLogout(){
