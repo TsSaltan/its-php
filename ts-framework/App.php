@@ -7,13 +7,13 @@ use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 use tsframe\view\Template;
 
-class App{
+class App {
 
 	/**
 	 * Версия приложения
 	 * major.minor.release
 	 */
-	const VERSION = "1.1";
+	const VERSION = "2.0";
 	
 	/**
 	 * Путь к директории на сервере, откуда будет брать начало роутер, ссылки и т.д.
@@ -50,10 +50,13 @@ class App{
 	 * @param  string $rule    Правило для сравнения, по умлочанию >=
 	 * @throws BaseException
 	 */
-	public static function requiredVersion(string $version, string $rule = ">="){
+	public static function requiredVersion(string $version, string $rule = ">=", bool $throwException = true): bool {
 		if(!version_compare(self::VERSION, $version, $rule)){
-			throw new BaseException("Required framework version " . $rule . " " . $version . ". Current version: " . self::VERSION);
+			if($throwException) throw new BaseException("Required framework version " . $rule . " " . $version . ". Current version: " . self::VERSION);
+			return false;
 		}
+
+		return true;
 	}
 
 	/**
