@@ -104,6 +104,7 @@ class Dashboard extends AbstractController{
 		$this->vars['canRegister'] = UserConfig::canRegister();
 		$this->vars['canSocial'] = UserConfig::canSocial();
 		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
+		$this->vars['registerEmailOnly'] = UserConfig::isRegisterEmailOnly();
 		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
 
 		$action = $this->getAction();

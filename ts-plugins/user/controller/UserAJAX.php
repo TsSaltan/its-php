@@ -71,8 +71,11 @@ class UserAJAX extends AbstractAJAXController{
 
 
 				case 'user/register':
-					$input->name('password')->password()
-						  ->name('email')->email();
+					$input->name('email')->email();
+
+					if(UserConfig::isRegisterEmailOnly()){
+						$input->name('password')->password()->required();
+					}
 
 					if(UserConfig::isLoginUsed()){
 						$input->name('login')->login()->required();

@@ -19,6 +19,8 @@ class User{
 	 * @param  int|null 	 $access (optional) Если null, будут установлены права доступа по умолчанию (Config: access.user.onRegister)
 	 * @return SingleUser
 	 * @throws UserException
+	 * 
+	 * @todo E-mail оповещение
 	 */
 	public static function register(?string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		Crypto::wait();
@@ -39,6 +41,12 @@ class User{
 
 		$uid = $query->lastInsertId();
 		$user = new SingleUser($uid, $login, $email, $access);
+
+		if(UserConfig::isRegisterEmailOnly()){
+			$password = Crypto::generateString(8);
+			$user->getMeta()->set('temp_password', $password);
+		}
+
 		$user->set('password', $password); // Пароль устанавливается отдельно, чтоб сгенерировался его хеш
 		Hook::call('user.register', [$user]);
 		return $user;
@@ -116,4 +124,6 @@ class User{
 	public static function getPasswordHash(int $userId, string $password) : string {
 		return Crypto::saltHash($userId . $password, 'sha512');
 	}
+
+	// public function
 }
