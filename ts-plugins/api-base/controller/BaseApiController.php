@@ -69,6 +69,11 @@ class BaseApiController extends AbstractAJAXController{
 	}
 
 	public function defRegister(){
+		if(!UserConfig::isRegisterEnabled()){
+			$this->sendError('User register error: registration disabled', 18);
+			return;
+		}
+
 		$input = $this->getInput();
 		$input->name('email')->email();
 

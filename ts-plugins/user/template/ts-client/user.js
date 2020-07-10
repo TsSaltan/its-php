@@ -106,7 +106,11 @@ var tsResponse = {
 
                 case 17:
                     this.setNotifyText(form, 'Невозможно удалить пользователя', type);
-                    break;              
+                    break;   
+
+                case 18:
+                    this.setNotifyText(form, 'Регистрация отключена', type);
+                    break;           
 
                 default:
                     this.setNotifyText(form, response.error, type);

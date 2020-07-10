@@ -24,9 +24,6 @@ class User{
 	 */
 	public static function register(?string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		Crypto::wait();
-		
-		// @todo Возможно, стоит оставить функцию для создания новых польхователй и поместить эту проверку в контроллер регистрации
-		// if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
 
 		// Если логин не используется, сгенерируем его на основе email
 		if(!UserConfig::isLoginEnabled() && is_null($login)){

@@ -71,6 +71,11 @@ class UserAJAX extends AbstractAJAXController{
 
 
 				case 'user/register':
+					if(!UserConfig::isRegisterEnabled()){
+						$this->sendError('User register error: registration disabled', 18);
+						break;
+					}
+
 					$input->name('email')->email();
 
 					if(UserConfig::isPasswordEnabled()){
@@ -106,7 +111,8 @@ class UserAJAX extends AbstractAJAXController{
 							break;
 						}
 					} catch(UserException $e){
-						
+						$this->sendError('User register error: ' . $e->getMessage(), 11);
+						break;
 					}
 
 					$this->sendError('User register error', 11);
