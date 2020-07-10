@@ -8,7 +8,7 @@ namespace tsframe;
  * Config::set('param', 'value');
  * Config::set('param,path', 'value');
  */
-class Config{
+class Config {
 
 	/**
 	 * Файл с настройками
@@ -72,6 +72,25 @@ class Config{
 			$data = &$data[$p];
 		}
 
+		return true;
+	}
+
+	public static function unset(string $path): bool {
+		$path = explode('.', $path);
+		$data = &self::$cache;
+		$len = sizeof($path);
+
+		foreach ($path as $k => $p) {
+			if(!isset($data[$p])) return false;
+
+			if($k == $len-1){
+				unset($data[$p]);
+			} else {
+				$data = &$data[$p];
+			}
+		}
+
+		self::save();
 		return true;
 	}
 }
