@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Система приёма платежей
  * @hook template.dashboard.user.edit.balance (Template $tpl, SingleUser $selectUser)

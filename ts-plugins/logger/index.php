@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Логирование
  * @todo  clear logs

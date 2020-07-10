@@ -1,14 +1,14 @@
-<?$this->incHeader()?>
-<?uiNavbar(true, false)?>
+<?php $this->incHeader()?>
+<?php uiNavbar(true, false)?>
 
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
-                    <?
+                    <?php
                     $alert = isset($alert) ? $alert : [];
                     $authTabs = [];
                     $authTabs['login']['title'] = function(){
-                        ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?
+                        ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?php
                     };
                     $authTabs['login']['content'] = function() use ($socialLoginTemplate, $canSocial, $loginUsed, $alert){
                         if(isset($alert)) showAlerts($alert); ?>
@@ -37,7 +37,7 @@
                     };
                     if($canRegister){       
                         $authTabs['register']['title'] =  function(){
-                            ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?
+                            ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?php
                         };
                         $authTabs['register']['content'] = function() use ($loginUsed){
                             ?>
@@ -62,7 +62,7 @@
                                     <button class="btn btn-lg col-md-6 btn-success btn-block">Регистрация</button>
                                 </fieldset>
                             </form>
-                            <?
+                            <?php
                         };
                     }
                     

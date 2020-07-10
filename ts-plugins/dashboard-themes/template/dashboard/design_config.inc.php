@@ -5041,11 +5041,11 @@
         <label>Ссылка на домашнюю страницу</label>
         <input class="form-control" name="sitehome" value="<?=$siteHome?>"/>
     </div>
-    <?
+    <?php
 }, 
 
 function(){
-    ?><button class='btn btn-primary'>Сохранить</button><?
+    ?><button class='btn btn-primary'>Сохранить</button><?php
 },
 "panel-default",
 "eye",

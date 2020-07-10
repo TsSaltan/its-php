@@ -17,7 +17,7 @@
                     uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'warning');
                     uiJsonEditor($systemConfigs, 'config');
                 }, function(){
-                    ?><button class='btn btn-success'>Сохранить</button><?
+                    ?><button class='btn btn-success'>Сохранить</button><?php
                 },
                 "panel-default",
                 "file-text-o",

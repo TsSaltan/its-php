@@ -34,7 +34,7 @@ class Http{
 		?>
 			<meta http-equiv="refresh" content="0; url=<?=$path?>">
 			<script>window.location.replace('<?=$path?>');</script>
-		<?
+		<?php
 		die;
 	}
 

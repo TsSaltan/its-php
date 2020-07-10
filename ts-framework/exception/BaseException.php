@@ -73,7 +73,7 @@ class BaseException extends \Exception{
 			<?=$pre_h?>Message:<?=$post_h?> <?=$this->getMessage().$eol?>
 			<?=$pre_h?>Code:<?=$post_h?> <?=$this->getCode().$eol?>
 			<?=$pre_h?>Debug:<?=$post_h?> <?=$pre_c.var_export($this->getDebug(), true).$post_c?>
-		<?
+		<?php
 	}
 
 	public function throw(){

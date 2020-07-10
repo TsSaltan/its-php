@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Интеграция с платежной системой paysera
  * @link https://developers.paysera.com/ru/payments/current

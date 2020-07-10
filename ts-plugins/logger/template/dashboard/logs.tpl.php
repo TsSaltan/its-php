@@ -88,8 +88,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?foreach($logs->getData() as $log):?>
-                                        <?
+                                        <?php foreach($logs->getData() as $log): ?>
+                                        <?php
                                         $logMessage = null;
                                         if(isset($log['data']['message'])){
                                             $logMessage = $log['data']['message'];
@@ -100,14 +100,14 @@
                                             <td><?=$log['date']?></td>
                                             <td><?=$logMessage?></td>
                                             <td>
-                                                <?if(sizeof($log['data'])>0):?>
+                                                <?php if(sizeof($log['data'])>0):?>
                                                     <table class="table meta">
-                                                        <?foreach ($log['data'] as $key => $value):?>
+                                                        <?php foreach ($log['data'] as $key => $value):?>
                                                             <tr>
                                                                 <td width="100px"><?=$key?></td>
                                                                 <td><pre><?=(is_string($value)?$value:var_export($value, true))?></pre></td>
                                                             </tr>
-                                                        <?endforeach?>
+                                                        <?php endforeach?>
                                                     </table>
                                                 <?endif?>
                                             </td>

@@ -15,7 +15,7 @@ function uiNavbar(bool $top = true, bool $side = true){
         <?if($top)  $that->incNavtop()?>
         <?if($side) $that->incNavside()?>
     </nav>
-    <?
+    <?php
 }
 
 /**
@@ -45,12 +45,12 @@ function showAlerts(array $alerts = null){
  */
 function uiAlert(string $message = null, string $type='info'){
     $view = is_null($message) ? 'hidden' : '';
-?>
+    ?>
     <div class="alert alert-<?=$type?> <?=$view?>">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <p class='text'><?=$message?></p>
     </div>
-<?
+    <?php
 }
 
 /**
@@ -59,7 +59,7 @@ function uiAlert(string $message = null, string $type='info'){
 function jsFrame(){
     global $that;
     $that->js('ts-client/frame.js', 'ts-client/user.js');
-    ?><script type="text/javascript">tsFrame.basePath = <?=json_encode(\tsframe\App::getBasePath())?>;</script><?
+    ?><script type="text/javascript">tsFrame.basePath = <?=json_encode(\tsframe\App::getBasePath())?>;</script><?php
 }
 
 /**
@@ -127,7 +127,7 @@ function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
             });
         });
     </script>
-    <?
+    <?php
 }
 
 /**
@@ -137,7 +137,7 @@ function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
  */
 function uiPaginatorNav($paginator, string $btnClass = "btn-primary"){
     foreach($paginator->getPages() as $page){
-        ?><a class="btn <?=$btnClass?> <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a> <?
+        ?><a class="btn <?=$btnClass?> <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a> <?php
     }
 }
 
@@ -161,7 +161,7 @@ function uiPaginatorCount($paginator){
             </select>
         </div>
     </form>
-    <?
+    <?php
 }
 
 /**
@@ -178,7 +178,7 @@ function uiPaginatorFooter($paginator){
         <div class="col-lg-6 pull-right">
             <?uiPaginatorCount($paginator)?>
         </div>
-    </div><?
+    </div><?php
 }
 
 /**
@@ -210,7 +210,7 @@ function uiCollapsePanel($headerContent, $bodyContent, $footerContent = null, st
                 </div>
             </div>
         </div>
-    </div><?
+    </div><?php
 }
 
 /**
@@ -236,7 +236,7 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
 
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
-                            <?
+                            <?php
                             $tabN = 0;
                             foreach ($tabs as $k => $tab):
                                 $tabId = is_numeric($k) ? uniqid('tab' . $k . '_') : $k;
@@ -255,7 +255,7 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
                 <div class="panel-body">
 
                     <div class="tab-content">
-                    <?
+                    <?php
                     $tabN = 0;
                     foreach ($tabs as $k => $tab):
                         $isActive = $activeTab === $tab['id'] || is_numeric($activeTab) && $activeTab == $tabN;

@@ -1,5 +1,5 @@
 <form action="<?=$this->makeURI('/dashboard/config/sendsms')?>" method="POST">
-<?uiCollapsePanel('Отправка SMS', 
+<?php uiCollapsePanel('Отправка SMS', 
 
 function(){
     if(isset($_GET['sms']) && $_GET['sms'] == 'ok'):
@@ -12,12 +12,12 @@ function(){
     ?><div class="form-group">
         <label>Текст сообщения</label>
         <textarea class='form-control' name='message'></textarea>
-    </div><?
+    </div><?php 
 }, 
 
 function(){
     ?><button class='btn btn-primary'>Отправить</button>
-    <a href="<?=$this->makeURI('/dashboard/logs/sms')?>" class='btn btn-default'>Открыть логи</a><?
+    <a href="<?=$this->makeURI('/dashboard/logs/sms')?>" class='btn btn-default'>Открыть логи</a><?php 
 },
 "panel-default",
 "send",

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Плагин для работы с https://anti-captcha.com/
  * Github https://github.com/AdminAnticaptcha/anticaptcha-php
