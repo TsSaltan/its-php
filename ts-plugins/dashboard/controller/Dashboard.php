@@ -101,11 +101,11 @@ class Dashboard extends AbstractController{
 
 	public function response(){
 		// Переменные, которые будут доступны всему шаблону
-		$this->vars['canRegister'] = UserConfig::canRegister();
-		$this->vars['canSocial'] = UserConfig::canSocial();
-		$this->vars['loginUsed'] = UserConfig::isLoginUsed();
-		$this->vars['registerEmailOnly'] = UserConfig::isRegisterEmailOnly();
-		$this->vars['socialLoginTemplate'] = (UserConfig::canSocial()) ? SocialLogin::getWidgetCode() : null;
+		$this->vars['registerEnabled'] = UserConfig::isRegisterEnabled();
+		$this->vars['socialEnabled'] = UserConfig::isSocialEnabled();
+		$this->vars['loginEnabled'] = UserConfig::isLoginEnabled();
+		$this->vars['passwordEnabled'] = UserConfig::isPasswordEnabled();
+		$this->vars['socialLoginTemplate'] = (UserConfig::isSocialEnabled()) ? SocialLogin::getWidgetCode() : null;
 
 		$action = $this->getAction();
 

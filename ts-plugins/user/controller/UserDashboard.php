@@ -111,15 +111,18 @@ class UserDashboard extends Dashboard {
 	public function postUserConfig(){
 		UserAccess::checkCurrentUser('user.editConfig');
 		Input::post()
-			  ->name('canRegister')->required()
-			  ->name('canSocial')->required()
-			  ->name('loginUsed')->required()
+			  ->name('registerEnabled')->required()
+			  ->name('socialEnabled')->required()
+			  ->name('loginEnabled')->required()
+			  ->name('passwordEnabled')->required()
 			  ->name('access')->required()->array()
 			 ->assert();
 
-		UserConfig::setRegister(boolval($_POST['canRegister']));
-		UserConfig::setSocial(boolval($_POST['canSocial']));
-		UserConfig::setLoginUsed(boolval($_POST['loginUsed']));
+		UserConfig::setRegisterEnabled(boolval($_POST['registerEnabled']));
+		UserConfig::setSocialEnabled(boolval($_POST['socialEnabled']));
+		UserConfig::setLoginEnabled(boolval($_POST['loginEnabled']));
+		UserConfig::setPasswordEnabled(boolval($_POST['passwordEnabled']));
+
 		Config::set('access', $_POST['access']);
 
 		return Http::redirect(Http::makeURI('/dashboard/config', [], 'user'));

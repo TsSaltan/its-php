@@ -86,7 +86,8 @@ HTML;
 			}
 		}
 
-		if(!UserConfig::canRegister()) throw new UserException('Social register disabled');
+		// Если пользователь не найден, будем его регистрировать
+		if(!UserConfig::isRegisterEnabled()) throw new UserException('Social register disabled');
 
 		$email = $this->data['email'] ?? $this->data['identity'] . '@' . $this->data['network'];
 		if(User::exists(['email' => $email])){

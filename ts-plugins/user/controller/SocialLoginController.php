@@ -17,7 +17,7 @@ use tsframe\module\io\Input;
  */
 class SocialLoginController extends AbstractController{
 	public function response(){
-		if(!UserConfig::canSocial()) throw new AccessException('Social login is disabled');
+		if(!UserConfig::isSocialEnabled()) throw new AccessException('Social login is disabled');
 
 		$currentUser = User::current();
 		$data = Input::post(false)
@@ -30,7 +30,7 @@ class SocialLoginController extends AbstractController{
 		
 		// Если не авторизован, пытаемся авторизовать
 		if(!$currentUser->isAuthorized()){
-			try{	
+			try {	
 				$user = $login->getUser();
 				$user->createSession();
 				Http::redirect(Http::makeURI('/dashboard/'));

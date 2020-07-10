@@ -70,12 +70,17 @@ class BaseApiController extends AbstractAJAXController{
 
 	public function defRegister(){
 		$input = $this->getInput();
-		$input->name('password')->password()
-			  ->name('email')->email();
+		$input->name('email')->email();
 
-		if(UserConfig::isLoginUsed()){
+
+		if(UserConfig::isLoginEnabled()){
 			$input->name('login')->login()->required();
 		}
+		
+		if(UserConfig::isPasswordEnabled()){
+			$input->name('password')->password();
+		}
+
 		$data = $input->assert();
 
 		if(User::exists(['email' => $data['email']])){
@@ -83,7 +88,7 @@ class BaseApiController extends AbstractAJAXController{
 			return;	
 		}
 
-		if(UserConfig::isLoginUsed() && User::exists(['login' => $data['login']])){
+		if(UserConfig::isLoginEnabled() && User::exists(['login' => $data['login']])){
 			$this->sendError('Login already used', 9);
 			return;
 		}

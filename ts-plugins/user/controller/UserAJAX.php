@@ -73,11 +73,11 @@ class UserAJAX extends AbstractAJAXController{
 				case 'user/register':
 					$input->name('email')->email();
 
-					if(UserConfig::isRegisterEmailOnly()){
+					if(UserConfig::isPasswordEnabled()){
 						$input->name('password')->password()->required();
 					}
 
-					if(UserConfig::isLoginUsed()){
+					if(UserConfig::isLoginEnabled()){
 						$input->name('login')->login()->required();
 					}
 
@@ -88,7 +88,7 @@ class UserAJAX extends AbstractAJAXController{
 						break;
 					}
 
-					if(UserConfig::isLoginUsed() && User::exists(['login' => $data['login']])){
+					if(UserConfig::isLoginEnabled() && User::exists(['login' => $data['login']])){
 						$this->sendError('Login already used', 9);
 						break;
 					}
@@ -100,7 +100,7 @@ class UserAJAX extends AbstractAJAXController{
 							throw new UserException('User register error: error by hook', 0, ['error' => $error, 'data' => $data]);
 						});
 
-						$user = User::register(($data['login'] ?? null), $data['email'], $data['password']);
+						$user = User::register(($data['login'] ?? null), $data['email'], ($data['password'] ?? null));
 						if($user->isAuthorized() && $user->createSession()){
 							$this->sendOK();
 							break;
@@ -117,7 +117,7 @@ class UserAJAX extends AbstractAJAXController{
 						  ->name('email')->email()
 						  ->name('access')->required()->int();
 
-					if(UserConfig::isLoginUsed()){
+					if(UserConfig::isLoginEnabled()){
 						$input->name('login')->login()->required();
 					}
 
@@ -142,7 +142,7 @@ class UserAJAX extends AbstractAJAXController{
 					}
 
 					// Смена логина
-					if(UserConfig::isLoginUsed() && $data['login'] != $selectUser->get('login')){
+					if(UserConfig::isLoginEnabled() && $data['login'] != $selectUser->get('login')){
 						if(User::exists(['email' => $data['login']])){
 							return $this->sendError('Login already exists', 9, ['fields' => 'login']);
 						} else {

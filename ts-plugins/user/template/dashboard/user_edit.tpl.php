@@ -21,12 +21,12 @@
             <?php 
             $configTabs = [];
             $configTabs['main']['title'] = 'Основные настройки';
-            $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginUsed){
+            $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginEnabled){
                 uiAlert();
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                    <?php if($loginUsed):?>
+                    <?php if($loginEnabled):?>
                     <div class="form-group">
                         <label>Имя пользователя</label>
                         <input class="form-control" name='login' type='text' value="<?=$selectUser->get('login')?>">
@@ -60,7 +60,7 @@
             $configTabs['password']['title'] = 'Изменение пароля';
             $configTabs['password']['content'] = function() use ($selectUser, $self){
                 if(isset($this->vars['tempPass']) && $this->vars['tempPass'] !== false){
-                    uiAlert('Вам установлен автоматически сгенерированный пароль <b>'.$this->vars['tempPass'].'</b>. Смените его в настройках!', 'warning');
+                    uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b>', 'warning');
                 }
 
                 if($self): ?>
@@ -122,7 +122,7 @@
                 <?php 
             };
 
-            if(isset($canSocial) && $canSocial){
+            if(isset($socialEnabled) && $socialEnabled){
                 $configTabs['social']['title'] = 'Социальные сети';
                 $configTabs['social']['content'] = function() use ($self, $social, $selectUser, $socialLoginTemplate) {
                     showAlerts($this->vars['socialAlert'] ?? []);

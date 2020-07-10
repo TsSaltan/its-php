@@ -25,10 +25,13 @@ class User{
 	public static function register(?string $login, string $email, ?string $password, int $access = null) : SingleUser {
 		Crypto::wait();
 		
-		if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
+		// @todo Возможно, стоит оставить функцию для создания новых польхователй и поместить эту проверку в контроллер регистрации
+		// if(!UserConfig::canRegister()) throw new UserException('Registration disabled', 403);
 
 		// Если логин не используется, сгенерируем его на основе email
-		if(!UserConfig::isLoginUsed() && is_null($login))$login = explode('@', $email)[0] . '_' . strrev(uniqid()); // Токены, сгенерированные через uniqid уж очень похожи один на другого, переверну их через strrev
+		if(!UserConfig::isLoginEnabled() && is_null($login)){
+			$login = explode('@', $email)[0] . '_' . strrev(uniqid()); // Токены, сгенерированные через uniqid уж очень похожи один на другого, переверну их через strrev
+		}
 
 		$access = is_null($access) ? UserAccess::getAccess('user.onRegister') : $access;
 		$query = Database::prepare('INSERT INTO `users` (`login`, `email`, `access`) VALUES (:login, :email, :access)')
@@ -42,7 +45,7 @@ class User{
 		$uid = $query->lastInsertId();
 		$user = new SingleUser($uid, $login, $email, $access);
 
-		if(UserConfig::isRegisterEmailOnly()){
+		if(!UserConfig::isPasswordEnabled()){
 			$password = Crypto::generateString(8);
 			$user->getMeta()->set('temp_password', $password);
 		}

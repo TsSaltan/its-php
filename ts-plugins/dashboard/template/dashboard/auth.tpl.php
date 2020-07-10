@@ -14,7 +14,7 @@
                 <i class='fa fa-user-md'></i>&nbsp;Авторизация
                 <?php
             };
-            $authTabs['login']['content'] = function() use ($socialLoginTemplate, $canSocial, $loginUsed, $alert){
+            $authTabs['login']['content'] = function() use ($socialLoginTemplate, $socialEnabled, $loginEnabled, $alert){
                 if(isset($alert)) showAlerts($alert); ?>
 
                 <div class="alert hidden">
@@ -23,7 +23,7 @@
 
                 <form role="form" onsubmit="tsUser.login(this); return false;">
                     <div class="form-group">
-                        <input class="form-control" placeholder="<?=($loginUsed ? 'Логин или ': '')?>E-mail" name="login" type="text" autofocus required>
+                        <input class="form-control" placeholder="<?=($loginEnabled ? 'Логин или ': '')?>E-mail" name="login" type="text" autofocus required>
                     </div>
                     <div class="form-group">
                         <input class="form-control" placeholder="Пароль" name="password" type="password" required>
@@ -31,7 +31,7 @@
                     <?php $this->hook('auth.login')?>
                     <button class="btn btn-lg col-md-6 btn-success btn-block">Войти</button>
                 </form>
-                <?php if($canSocial):?>
+                <?php if($socialEnabled): ?>
                 <div class="row">
                     <div class="col-md-8 col-md-offset-3" style="margin-top: 18px">
                         <?=$socialLoginTemplate?>
@@ -41,21 +41,28 @@
             };
 
             // Tab: register / Регистрация
-            if($canRegister){       
+            if($registerEnabled){       
                 $authTabs['register']['title'] =  function(){
                     ?>
                     <i class='fa fa-user-plus'></i>&nbsp;Регистрация
                     <?php
                 };
-                $authTabs['register']['content'] = function() use ($loginUsed, $registerEmailOnly){
+                $authTabs['register']['content'] = function() use ($loginEnabled, $passwordEnabled){
                     ?>
                     <div class="alert hidden">
                         <p class='text'></p>   
                     </div>
 
+
+                    <?php if(!$passwordEnabled): ?>
+                    <div class="alert alert-info">
+                        <p class='text'>Пароль будет создан автоматически, вы его сможете изменить в настройках!</p>   
+                    </div>
+                    <?php endif; ?>
+
                     <form role="form" onsubmit="tsUser.register(this); return false;">
                         <fieldset>
-                            <?php if($loginUsed): ?>
+                            <?php if($loginEnabled): ?>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Логин" name="login" type="text" required>
                             </div>          
@@ -64,7 +71,7 @@
                                 <input class="form-control" placeholder="E-mail" name="email" type="email" required>
                             </div>
 
-                            <?php if($registerEmailOnly): ?>
+                            <?php if($passwordEnabled): ?>
                             <div class="form-group">
                                 <input class="form-control" placeholder="Пароль" name="password" type="password" value="" required>
                             </div>

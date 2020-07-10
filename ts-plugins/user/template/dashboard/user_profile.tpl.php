@@ -21,7 +21,7 @@
                         ];?>
                         <div class="panel tabbed-panel <?=$colors[$selectUser->get('access')]?>">
                             <div class="panel-heading clearfix">
-                                <div class="panel-title pull-left"><b><?=$selectUser->get('login')?></b></div>
+                                <div class="panel-title pull-left"><b><?=($loginEnabled ? $selectUser->get('login') : $selectUser->get('email'))?></b></div>
                                 <div class="pull-right">
                                     <p style='margin: 5px;'><?=$selectUser->get('accessText')?></p>
                                 </div>

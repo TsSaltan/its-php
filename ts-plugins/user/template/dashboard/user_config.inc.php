@@ -1,40 +1,54 @@
 <form action="<?=$this->makeURI('/dashboard/config/user')?>" method="POST">
-<?php uiCollapsePanel('Настройки пользователей', function() use ($canRegister, $canSocial, $loginUsed, $accesses){
+<?php uiCollapsePanel('Настройки пользователей', function() use ($registerEnabled, $socialEnabled, $loginEnabled, $passwordEnabled, $accesses){
     ?>
     <h3 style="margin: 0 10px 10px 0;">Настройка авторизации</h3>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="form-group">
                 <label>Регистрация на сайте</label>
                 <div class="radio">
-                    <label><input type="radio" name="canRegister" value="1" <?=($canRegister)?'checked':''?>> Разрешена</label>
+                    <label><input type="radio" name="registerEnabled" value="1" <?=($registerEnabled)?'checked':''?>> Разрешена</label>
                 </div>
                 <div class="radio">
-                    <label><input type="radio" name="canRegister" value="0" <?=(!$canRegister)?'checked':''?>> Запрещена</label>
+                    <label><input type="radio" name="registerEnabled" value="0" <?=(!$registerEnabled)?'checked':''?>> Запрещена</label>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="form-group">
                 <label>Авторизация через социальные сети</label>
                 <div class="radio">
-                    <label><input type="radio" name="canSocial" value="1" <?=($canSocial)?'checked':''?>> Разрешена</label>
+                    <label><input type="radio" name="socialEnabled" value="1" <?=($socialEnabled)?'checked':''?>> Разрешена</label>
                 </div>
                 <div class="radio">
-                    <label><input type="radio" name="canSocial" value="0" <?=(!$canSocial)?'checked':''?>> Запрещена</label>
+                    <label><input type="radio" name="socialEnabled" value="0" <?=(!$socialEnabled)?'checked':''?>> Запрещена</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Данные для авторизации/регистрации</label>
+                <div class="radio">
+                    <label><input type="radio" name="loginEnabled" value="1" <?=($loginEnabled)?'checked':''?>> Логин и e-mail</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="loginEnabled" value="0" <?=(!$loginEnabled)?'checked':''?>> Только e-mail</label>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="form-group">
-                <label>Данные для авторизации</label>
+                <label>Пароль при регистрации</label>
                 <div class="radio">
-                    <label><input type="radio" name="loginUsed" value="1" <?=($loginUsed)?'checked':''?>> Логин и e-mail</label>
+                    <label><input type="radio" name="passwordEnabled" value="1" <?=($passwordEnabled)?'checked':''?>> Пароль вводится пользователем при регистрации</label>
                 </div>
                 <div class="radio">
-                    <label><input type="radio" name="loginUsed" value="0" <?=(!$loginUsed)?'checked':''?>> Только e-mail</label>
+                    <label><input type="radio" name="passwordEnabled" value="0" <?=(!$passwordEnabled)?'checked':''?>> Генерируется случайный пароль</label>
                 </div>
             </div>
         </div>

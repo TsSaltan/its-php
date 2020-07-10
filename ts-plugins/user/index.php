@@ -142,9 +142,10 @@ Hook::register('template.dashboard.user.profile', function(Template $tpl, Single
 });
 
 Hook::register('template.dashboard.config', function(Template $tpl){
-	$tpl->var('canRegister', UserConfig::canRegister());
-	$tpl->var('canSocial', UserConfig::canSocial());
-	$tpl->var('loginUsed', UserConfig::isLoginUsed());
+	$tpl->var('registerEnabled', UserConfig::isRegisterEnabled());
+	$tpl->var('socialEnabled', UserConfig::isSocialEnabled());
+
+	$tpl->var('loginEnabled', UserConfig::isLoginEnabled());
 	$tpl->var('accesses', Config::get('access'));
 	$tpl->inc('user_config');
 });
