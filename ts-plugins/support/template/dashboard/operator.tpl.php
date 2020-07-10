@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -34,21 +34,21 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?foreach ($chats->getData() as $chat):?>
+                                                <?php foreach ($chats->getData() as $chat):?>
                                                 <tr class="chat-item <?=((!$chat->isAnswered() && $chat->getStatus() > 0) ? 'chat-danger' : '')?>" onclick="document.location.replace('<?=$this->makeURI('/dashboard/operator/chat/' . $chat->getId())?>')">
                                                     <td>
-                                                        <?$owner = $chat->getOwner()?>
+                                                        <?php $owner = $chat->getOwner()?>
                                                         <a href="<?=$this->makeURI('/dashboard/user/' . $owner->get('id'))?>" class='btn btn-default btn-block' target="_blank"><?=$owner->get('login')?></a>
                                                     </td>
                                                     <td><?=$chat->getTitle()?></td>
-                                                    <?if($chat->getStatus() == 1):?>
+                                                    <?php if($chat->getStatus() == 1):?>
                                                         <td class="chat-open">Открыт</td>
                                                         <td>
                                                             <form action="<?=$this->makeURI('/dashboard/operator/close')?>" method="POST">
                                                                 <input type="hidden" name="chat_id" value="<?=$chat->getId()?>"/>
                                                                 <button class="btn btn-warning"><i class="fa fa-close"></i> Закрыть</button></td>
                                                             </form>
-                                                    <?else:?>
+                                                    <?php else:?>
                                                         <td class="chat-close">Закрыт</td>
                                                         <td>
                                                             <form action="<?=$this->makeURI('/dashboard/operator/delete')?>" method="POST">
@@ -56,9 +56,9 @@
                                                                 <button class="btn btn-danger"><i class="fa fa-trash"></i> Удалить</button>
                                                             </form>
                                                         </td>
-                                                    <?endif?>
+                                                    <?php endif?>
                                                 </tr>
-                                                <?endforeach?>
+                                                <?php endforeach?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                         
-                        <div class="panel-footer"><?uiPaginatorFooter($chats)?></div>
+                        <div class="panel-footer"><?php uiPaginatorFooter($chats)?></div>
                     </div>
                     <!-- /.panel -->
                 </div>
@@ -83,4 +83,4 @@
         window.getSelection().addRange(range); 
     });
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

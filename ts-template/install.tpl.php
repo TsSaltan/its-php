@@ -196,17 +196,17 @@
 		</ul>
 
 		<div id="content">
-			<?switch($step){
+			<?php switch($step){
 				// 1. Плагины
 				case 1:?>
 					<h2>Выберите плагины, которые будут включены в работу системы</h2>
 					<table>
-					<?if(sizeof($errors) > 0):?>
+					<?php if(sizeof($errors) > 0):?>
 						<tr>
 							<td colspan="3"><p class="error">Решите ошибки, возникшие во врем установки. Возможно, необходимо отключить конфликтующие плагины!</p></td>	
 						</tr>
-					<?endif?>
-					<?foreach ($plugins as $pluginName => $value):?>
+					<?php endif?>
+					<?php foreach ($plugins as $pluginName => $value):?>
 						<tr>	
 							<td class="pluginName">
 							<?=ucfirst(str_replace('-', ' ', $pluginName))?>
@@ -217,15 +217,15 @@
 						  			<span class="slider round"></span>
 								</label>
 							</td>
-							<?if(isset($errors[$pluginName])):?>	
+							<?php if(isset($errors[$pluginName])):?>	
 							<td class="pluginError">
 								<p class='error'>Ошибка: <?=$errors[$pluginName]?></p>
 							</td>
-							<?endif?>
+							<?php endif?>
 						</tr>
-					<?endforeach?>
+					<?php endforeach?>
 					</table>
-				<?break;
+				<?php break;
 
 				// 2. Параметры
 				case 2:
@@ -233,66 +233,66 @@
 					?>
 					<h2>Укажите необходимые параметры</h2>
 					<table>
-					<?foreach($fields as $param):
+					<?php foreach($fields as $param):
 						$id = $param->getId();
 						$part = $param->getConfigPart();
 						$params = $param->getParams();
 					?>
 					<tr class="<?=($part!=$lastPart) ? "newLine": ""?>">
-						<td><?if($param->getType() != 'error'):?><label for="<?=$id?>"><?=$param->getDescription()?></label><?endif?></td>
+						<td><?php if($param->getType() != 'error'):?><label for="<?=$id?>"><?=$param->getDescription()?></label><?php endif?></td>
 						<td>
-						<?switch ($param->getType()):
+						<?php switch ($param->getType()):
 							case 'error':?>
 								<b style="color:rgba(255,100,100)"><?=$param->getDescription()?></b>
-								<?break;
+								<?php break;
 
 							case 'select':?>
-								<select id="<?=$id?>" name="param[<?=$param->getKey()?>]" <? array_walk($param->getParams(), function($value, $key){ ?><?=$key?>="<?=$value?>"<? }) ?> <?=$param->getRequired() ? 'required': ''?>>
-									<?foreach($param->getValues() as $value => $valueText):?>
+								<select id="<?=$id?>" name="param[<?=$param->getKey()?>]" <?php  array_walk($param->getParams(), function($value, $key){ ?><?=$key?>="<?=$value?>"<?php  }) ?> <?=$param->getRequired() ? 'required': ''?>>
+									<?php foreach($param->getValues() as $value => $valueText):?>
 									<option value="<?=$value?>" <?=($value==$param->getValue()) ? "selected" : ''?>><?=$valueText?></option>
-									<?endforeach?>
+									<?php endforeach?>
 								</select>
 
-								<?break;
+								<?php break;
 
 							case 'text':
 							case 'numeric':
 							case 'email':
 							default:?>
-								<input type="<?=$param->getType()?>" id="<?=$id?>" name="param[<?=$param->getKey()?>]" <? array_walk($params, function($value, $key){ ?><?=$key?>="<?=$value?>"<? }) ?> placeholder="<?=$param->getPlaceholder()?>" value="<?=$param->getValue()?>" <?=$param->getRequired() ? 'required': ''?>/>
-								<?break;
+								<input type="<?=$param->getType()?>" id="<?=$id?>" name="param[<?=$param->getKey()?>]" <?php  array_walk($params, function($value, $key){ ?><?=$key?>="<?=$value?>"<?php  }) ?> placeholder="<?=$param->getPlaceholder()?>" value="<?=$param->getValue()?>" <?=$param->getRequired() ? 'required': ''?>/>
+								<?php break;
 							
 						endswitch;
 						?>
 						</td>
-						<td class="keyText"><?if($param->getType() != 'error'):?><i>(<?=$param->getKey()?>)</i><?endif?></td>
+						<td class="keyText"><?php if($param->getType() != 'error'):?><i>(<?=$param->getKey()?>)</i><?php endif?></td>
 					</tr>
-					<?
+					<?php 
 					$lastPart = $part;
 					endforeach?>
 					</table>
-				<?break;
+				<?php break;
 
 				case 3:?>
 					<h2>Установка успешно завершена!</h2>
 					<p>Следующие плагины были отключены, т.к. либо вы их отметили на первом этапе установке, либо они использовали функционал отключенных плагинов, либо произошла ошибка во время установки.</p>
 					<p><b>Отключенные плагины:</b><ul><li><?=implode('</li><li>', $disabled)?></li></ul></p>
 					<p>Для предотвращения запуска процесса установки файл <b>install.php</b> будет переименован.</p>
-				<?
+				<?php 
 			}
 			?>
 		</div>
 
 		<div id="buttons">
 		
-		<?if($step < 3):?>
-			<?if($step > 1):?>
+		<?php if($step < 3):?>
+			<?php if($step > 1):?>
 				<a href="?step=<?=($step-1)?>" class="button" style="float:left;">Назад</a>
-			<?endif?>
+			<?php endif?>
 			<button class="button">Далее</button>
-		<?else:?>
+		<?php else:?>
 			<a href="./" class="button">На главную</a>
-		<?endif?>
+		<?php endif?>
 		</div>
 	</form>
 </body>

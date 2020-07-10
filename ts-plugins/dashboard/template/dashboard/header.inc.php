@@ -1,4 +1,4 @@
-<?$this->incFunctions()?>
+<?php $this->incFunctions()?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,10 +10,10 @@
 
     <title><?=$this->title?></title>
 
-    <?jsFrame()?>
+    <?php jsFrame()?>
 
     <!-- Bootstrap Core CSS -->
-    <?$this->css(
+    <?php $this->css(
         "css/style.css", 
         "css/bootstrap.min.css", 
         "css/metisMenu.min.css", 
@@ -35,25 +35,25 @@
 
 
     <!-- jQuery -->
-    <?$this->js("js/jquery.min.js")?>
+    <?php $this->js("js/jquery.min.js")?>
 
     <!-- Bootstrap Core JavaScript -->
-    <?$this->js("js/bootstrap.min.js")?>
+    <?php $this->js("js/bootstrap.min.js")?>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <?$this->js("js/metisMenu.min.js")?>
+    <?php $this->js("js/metisMenu.min.js")?>
 
     <!-- Custom Theme JavaScript -->
-    <?$this->js("js/startmin.js")?>
+    <?php $this->js("js/startmin.js")?>
 
-    <?$this->js('js/dataTables/jquery.dataTables.min.js')?>
-    <?$this->js('js/dataTables/dataTables.bootstrap.min.js')?>
+    <?php $this->js('js/dataTables/jquery.dataTables.min.js')?>
+    <?php $this->js('js/dataTables/dataTables.bootstrap.min.js')?>
 
     <!-- JSON editor -->
-    <?$this->css("css/jsoneditor.css")?>
-    <?$this->js("js/jquery.jsoneditor.min.js")?>
+    <?php $this->css("css/jsoneditor.css")?>
+    <?php $this->js("js/jquery.jsoneditor.min.js")?>
 
-    <?$this->hook("header")?>
+    <?php $this->hook("header")?>
 </head>
 <body>
 

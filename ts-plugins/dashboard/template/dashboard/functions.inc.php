@@ -12,8 +12,8 @@ function uiNavbar(bool $top = true, bool $side = true){
     ?>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-top" role="navigation">
-        <?if($top)  $that->incNavtop()?>
-        <?if($side) $that->incNavside()?>
+        <?php if($top)  $that->incNavtop()?>
+        <?php if($side) $that->incNavside()?>
     </nav>
     <?php
 }
@@ -172,11 +172,11 @@ function uiPaginatorCount($paginator){
 function uiPaginatorFooter($paginator){
     ?><div class="row">
         <div class="col-lg-6">
-            <?uiPaginatorNav($paginator)?>
+            <?php uiPaginatorNav($paginator)?>
         </div>
 
         <div class="col-lg-6 pull-right">
-            <?uiPaginatorCount($paginator)?>
+            <?php uiPaginatorCount($paginator)?>
         </div>
     </div><?php
 }
@@ -199,14 +199,14 @@ function uiCollapsePanel($headerContent, $bodyContent, $footerContent = null, st
             <div class="panel panel-collapsable <?=$panelClass?>">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#<?=$paneId?>"><?if(!is_null($icon)):?><i class='fa fa-<?=$icon?>'></i>&nbsp;&nbsp;<?endif?><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></a>
+                        <a data-toggle="collapse" href="#<?=$paneId?>"><?php if(!is_null($icon)):?><i class='fa fa-<?=$icon?>'></i>&nbsp;&nbsp;<?php endif?><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></a>
                     </h4>
                 </div>
                 <div id="<?=$paneId?>" class="panel-collapse collapse">
                     <div class="panel-body"><?=(is_callable($bodyContent) ? call_user_func($bodyContent) : $bodyContent)?></div>
-                    <?if(!is_null($footerContent)):?>
+                    <?php if(!is_null($footerContent)):?>
                     <div class="panel-footer"><?=(is_callable($footerContent) ? call_user_func($footerContent) : $footerContent)?></div>
-                    <?endif?>
+                    <?php endif?>
                 </div>
             </div>
         </div>
@@ -227,12 +227,12 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
         <div class="col-lg-12">
             <div class="panel tabbed-panel <?=$panelClass?>">
                 <div class="panel-heading clearfix">
-                    <?if($hasHeader):?>
+                    <?php if($hasHeader):?>
                     <div class="panel-title pull-left"><?=(is_callable($headerContent) ? call_user_func($headerContent) : $headerContent)?></div>
                     <div class="pull-right">
-                    <?else:?>
+                    <?php else:?>
                     <div class="pull-left">
-                    <?endif?>
+                    <?php endif?>
 
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
@@ -247,7 +247,7 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
                             <li <?=$isActive ? 'class="active"' : ''?>>
                                 <a href="#<?=$tabId?>" data-toggle="tab"><?=is_callable($tab['title']) ? call_user_func($tab['title']) : $tab['title'] ?></a>
                             </li>
-                            <?endforeach?>
+                            <?php endforeach?>
                         </ul>
                     </div>
                 </div>
@@ -264,10 +264,10 @@ function uiTabPanel($headerContent = null, array $tabs = [], $activeTab = null, 
                         <div class="tab-pane fade <?=$isActive ? 'in active' : ''?>" id="<?=$tab['id']?>">
                              <?=is_callable($tab['content']) ? call_user_func($tab['content']) : $tab['content']?>           
                         </div>
-                    <?endforeach?>
+                    <?php endforeach?>
                     </div>
                 </div>
             </div>
         </div>
-    </div><?
+    </div><?php 
 }

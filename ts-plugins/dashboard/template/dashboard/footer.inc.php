@@ -1,5 +1,5 @@
 </div>
 
-<?$this->hook("footer")?>
+<?php $this->hook("footer")?>
 </body>
 </html>

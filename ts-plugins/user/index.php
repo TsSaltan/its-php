@@ -1,4 +1,4 @@
-<?
+<?php 
 /**
  * Система пользователей + авторизация
  *
@@ -138,7 +138,7 @@ Hook::registerOnce('app.install', function(){
 Hook::register('template.dashboard.user.profile', function(Template $tpl, SingleUser $user){
 	?>
 	<p>User ID: <b><?=$user->get('id')?></b></p>
-	<?
+	<?php 
 });
 
 Hook::register('template.dashboard.config', function(Template $tpl){

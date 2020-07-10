@@ -1,13 +1,13 @@
 <form action="<?=$this->makeURI('/dashboard/config/theme')?>" method="POST">
-<?uiCollapsePanel('Настройки внешнего вида', function() use ($current_theme, $themes, $siteName, $siteIcon, $siteHome){
+<?php uiCollapsePanel('Настройки внешнего вида', function() use ($current_theme, $themes, $siteName, $siteIcon, $siteHome){
     ?>
     <div class="form-group">
         <label>Текущая тема</label>
         <select class="form-control" name="theme">
             <option value="">По умолчанию</option>
-            <?foreach($themes as $theme):?>
+            <?php foreach($themes as $theme):?>
                 <option value="<?=$theme?>" <?=($theme==$current_theme ? 'selected' : '')?>><?=ucfirst($theme)?></option>
-            <?endforeach?>
+            <?php endforeach?>
         </select>
     </div>
     <div class="form-group">

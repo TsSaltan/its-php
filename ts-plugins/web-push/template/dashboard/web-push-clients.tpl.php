@@ -165,7 +165,7 @@
                             <!-- /.table-responsive -->
                         </div>
 
-                        <div class="panel-footer"><?uiPaginatorFooter($clients)?></div>
+                        <div class="panel-footer"><?php uiPaginatorFooter($clients)?></div>
                     <?php endif?>
                     </div>
                     <!-- /.panel -->

@@ -63,5 +63,5 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
             $('#checkbox_<?=$id?>').change();
     	});
     </script>
-	<?
+	<?php 
 }

@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 <style>
     table.meta pre{
         max-height: 100px; overflow-y: auto;
@@ -24,9 +24,9 @@
                                 <b><?=$logs->getDataSize()?></b> записей
                             </div>
                             <div class="pull-right">
-                                <?foreach ($logTypes as $type):?>
+                                <?php foreach ($logTypes as $type):?>
                                 <a class="btn btn-primary btn-xs <?=($logType==$type?'':'btn-outline')?>" href="<?=$this->makeURI('/dashboard/logs/' . $type)?>"><?=ucfirst($type)?></a>
-                                <?endforeach?>
+                                <?php endforeach?>
                                 <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#clearConfirm" href="#clearConfirm">Очистить</a>
                             </div>
                         </div>
@@ -46,9 +46,9 @@
                                                 <label>Выберите группу</label>
                                                 <select class="form-control" name="group">
                                                     <option value="*">Все</option>
-                                                    <?foreach ($logTypes as $type):?>
+                                                    <?php foreach ($logTypes as $type):?>
                                                     <option value="<?=$type?>"<?=($logType == $type) ? ' selected':''?>><?=ucfirst($type)?></option>
-                                                    <?endforeach?>
+                                                    <?php endforeach?>
                                                 </select>
                                             </div>
 
@@ -76,7 +76,7 @@
                         </div>
                         <!-- /.modal -->
 
-                    <?if($logs->isData()):?>
+                    <?php if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
@@ -109,23 +109,23 @@
                                                             </tr>
                                                         <?php endforeach?>
                                                     </table>
-                                                <?endif?>
+                                                <?php endif?>
                                             </td>
                      
                                         </tr>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
                         </div>
 
-                        <div class="panel-footer"><?uiPaginatorFooter($logs)?></div>
-                    <?endif?>
+                        <div class="panel-footer"><?php uiPaginatorFooter($logs)?></div>
+                    <?php endif?>
                     </div>
                     <!-- /.panel -->
 
-                    <?if(isset($logSize) && $logSize > 0){
+                    <?php if(isset($logSize) && $logSize > 0){
                         uiAlert('Логи занимают <b>' . round($logSize / 1024 / 1024, 2) . ' MiB</b> в базе данных', 'info');
                     }?>
                 </div>
@@ -141,4 +141,4 @@
         window.getSelection().addRange(range); 
     });
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

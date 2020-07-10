@@ -1,5 +1,5 @@
 <form action="<?=$this->makeURI('/dashboard/config/user')?>" method="POST">
-<?uiCollapsePanel('Настройки пользователей', function() use ($canRegister, $canSocial, $loginUsed, $accesses){
+<?php uiCollapsePanel('Настройки пользователей', function() use ($canRegister, $canSocial, $loginUsed, $accesses){
     ?>
     <h3 style="margin: 0 10px 10px 0;">Настройка авторизации</h3>
     <div class="row">
@@ -41,7 +41,7 @@
     </div>
     
     <h3>Настройка прав доступа</h3> 
-    <?
+    <?php 
         function showUserAccess(?string $prefix, array $accesses){
             $prefixTitle = strlen($prefix) > 0 ? $prefix . '.': null;
             foreach($accesses as $key => $access){
@@ -60,7 +60,7 @@
 }, 
 
 function(){
-    ?><button class='btn btn-primary'>Сохранить</button><?
+    ?><button class='btn btn-primary'>Сохранить</button><?php 
 },
 "panel-default",
 "user",

@@ -1,4 +1,4 @@
-<?
+<?php 
 /**
  * Система поддержки
  * @hook template.dashboard.support.menu (HtmlTemplate $tpl, int $chatId, string $chatRole="operator|client")

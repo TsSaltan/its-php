@@ -106,7 +106,7 @@ class CashInstaller {
 
 		?>
 		<p>Текущий счёт: <b><?=$balance?></b> <?=$currency?></p>
-		<?
+		<?php 
 	}
 
 	public static function showUserBalanceApi(SingleUser $user, array &$data){

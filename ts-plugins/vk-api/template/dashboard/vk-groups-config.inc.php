@@ -1,5 +1,5 @@
 <form action="<?=$this->makeURI('/dashboard/config/vk-api/callback')?>" method="POST">
-<?uiCollapsePanel('Настройка Callback-API', function() use ($vkRandom, $vkGroups){
+<?php uiCollapsePanel('Настройка Callback-API', function() use ($vkRandom, $vkGroups){
     if(is_array($vkGroups) && sizeof($vkGroups) > 0):
     ?>
     <h3 style="margin: 0 10px 10px 0;">Список групп</h3>
@@ -14,18 +14,18 @@
                 </tr>
             </thead>
             <tbody>
-                <?foreach($vkGroups as $groupId => $fields):?>
+                <?php foreach($vkGroups as $groupId => $fields):?>
                     <tr>
                         <td><?=$groupId?></td>
                         <td><?=($fields['secret'] ?? 'null')?></td>
                         <td><?=($fields['confirm'] ?? 'null')?></td>
                         <td><input class="form-control" type="text" value="<?=$this->makeURI('/vk-callback/'. $groupId)?>" readonly></td>
                     </tr>
-                <?endforeach?>
+                <?php endforeach?>
             </tbody>
         </table>
     </div>
-    <?endif?>
+    <?php endif?>
 
     <h3 style="margin: 0 10px 10px 0;">Добавление группы</h3>
     <div class="row">
@@ -51,7 +51,7 @@
             </div>
         </div>
     </div> 
-    <?  
+    <?php   
 }, 
 
 function(){
@@ -65,7 +65,7 @@ function(){
             $('#vk-api-link').val(baseURI + group);
         });
     </script>
-    <?
+    <?php 
 },
 "panel-default",
 "vk",

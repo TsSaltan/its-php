@@ -18,7 +18,7 @@
             </div>
             <!-- /.row -->
 
-            <?
+            <?php 
             $configTabs = [];
             $configTabs['main']['title'] = 'Основные настройки';
             $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginUsed){
@@ -26,12 +26,12 @@
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                    <?if($loginUsed):?>
+                    <?php if($loginUsed):?>
                     <div class="form-group">
                         <label>Имя пользователя</label>
                         <input class="form-control" name='login' type='text' value="<?=$selectUser->get('login')?>">
                     </div>                                            
-                    <?endif?>
+                    <?php endif?>
 
                     <div class="form-group">
                         <label>E-mail</label>
@@ -41,20 +41,20 @@
                     <div class="form-group">
                         <label>Группа</label>
                         <select name='access' class="form-control" <?=($self || !UserAccess::checkUser($user, 'user.editAccess') ? 'disabled' : '')?>>
-                            <?foreach ($this->accessList as $name => $value):?>
+                            <?php foreach ($this->accessList as $name => $value):?>
                                 <option value="<?=$value?>"<?=($value==$selectUser->get('access')?' selected':'')?>><?=$name?></option>
-                            <?endforeach?>
+                            <?php endforeach?>
                         </select>
                     </div>                                            
                     
                     <button type="submit" class="btn btn-success">Сохранить</button>
                     <button type="reset" class="btn btn-default">Отмена</button>
                     <div class='pull-right'>
-                    <?if(UserAccess::checkCurrentUser('user.delete') || $self):?>
-                        <a href="<?=$this->makeURI('/dashboard/user/' . $selectUser->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i> Удалить профиль</a><?endif?>
+                    <?php if(UserAccess::checkCurrentUser('user.delete') || $self):?>
+                        <a href="<?=$this->makeURI('/dashboard/user/' . $selectUser->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i> Удалить профиль</a><?php endif?>
                     </div>
                 </form>
-                <?
+                <?php 
             };
 
             $configTabs['password']['title'] = 'Изменение пароля';
@@ -77,13 +77,13 @@
                     
                     <button type="submit" class="btn btn-success">Изменить</button>
                 </form>
-                <?endif?>
+                <?php endif?>
                 <hr/>
                 <form role="form" onsubmit="tsUser.query('resetPassword', this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
                     <button type="submit" class="btn btn-warning">Сбросить пароль</button>
                 </form>
-                <?
+                <?php 
             };
 
             $configTabs['sessions']['title'] = 'Сессии';
@@ -101,14 +101,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?foreach($selectUser->getSessions() as $k => $session):?>
+                            <?php foreach($selectUser->getSessions() as $k => $session):?>
                             <tr>
                                 <td><?=$k+1?></td>
                                 <td><?=$session['ip']?></td>
                                 <td><?=$session['start']?></td>
                                 <td><?=$session['expires']?></td>
                             </tr>
-                            <?endforeach?>
+                            <?php endforeach?>
                         </tbody>
                     </table>
                 </div>
@@ -118,7 +118,7 @@
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
                     <button type="submit" class="btn btn-primary">Закрыть все сессии</button>
                 </form>
-                <?
+                <?php 
             };
 
             if(isset($canSocial) && $canSocial){
@@ -129,26 +129,26 @@
 
                     <div class="panel-body col-lg-6">
                         <div class="col-lg-12">
-                            <?if($self):?>
+                            <?php if($self):?>
                             <h3 style="margin-top:0px">Привязать аккаунт</h3>
                             <div class="form-group">
                                 <label>Выберите социальную сеть</label>
                                 <?=$socialLoginTemplate?>
                             </div>
-                            <?endif?>
+                            <?php endif?>
                     
-                            <?if(sizeof($social)>0):?><h3>Присоединённые аккаунты</h3><?endif?>
+                            <?php if(sizeof($social)>0):?><h3>Присоединённые аккаунты</h3><?php endif?>
                         </div>
 
-                        <?foreach ($social as $networkName => $id):?>
+                        <?php foreach ($social as $networkName => $id):?>
                         <div class="col-lg-12" style="margin-top:15px">
                             <div class="alert hidden">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 <p class='text'></p>
                             </div>
                             <div class="col-lg-10">
-                                <? $replace = ['google' => 'google-plus', 'vkontakte' => 'vk']; ?>
-                                <? $network = $replace[$networkName] ?? $networkName ; ?>
+                                <?php  $replace = ['google' => 'google-plus', 'vkontakte' => 'vk']; ?>
+                                <?php  $network = $replace[$networkName] ?? $networkName ; ?>
                                 <a href="<?=$id?>" target="_blank" class="btn btn-block btn-default btn-social btn-<?=$network?>"><i class="fa fa-<?=$network?>"></i> <?=basename($id)?></a>
                                 
                             </div> 
@@ -160,12 +160,12 @@
                                 </form>
                             </div> 
                         </div>
-                        <?endforeach?>
+                        <?php endforeach?>
 
                         
 
                     </div>                                        
-                    <?
+                    <?php 
                 };
             }
 
@@ -176,4 +176,4 @@
         </div>
     </div>
 
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

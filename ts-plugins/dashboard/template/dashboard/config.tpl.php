@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -7,13 +7,13 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header"><?=$this->title?></h1>
-                    <?showAlerts()?>
+                    <?php showAlerts()?>
                 </div>
             </div>
-            <?$this->hook('config')?>
+            <?php $this->hook('config')?>
             
             <form method="POST">
-                <?uiCollapsePanel('Системный файл настроек', function() use ($systemConfigs){
+                <?php uiCollapsePanel('Системный файл настроек', function() use ($systemConfigs){
                     uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'warning');
                     uiJsonEditor($systemConfigs, 'config');
                 }, function(){
@@ -27,4 +27,4 @@
         </div>
     </div>
 
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

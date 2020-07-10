@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <div id="sidebar" class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
-        <?if($user->isAuthorized()):?>
+        <?php if($user->isAuthorized()):?>
             <?=$this->menu('dashboard-sidebar', 
                 function(string $items, int $level){
                     if($level == 0){
@@ -32,7 +32,7 @@
                     return '<li><a href="'. $item->getData('url') .'"><i class="fa fa-fw fa-'. $item->getData('fa') .'"></i> '. $item->getTitle() . ($counter > 0 ? ' <span class="counter btn-danger btn-xs">'.$counter.'</span>' : '') . ($item->hasChildren() ? '<span class="fa arrow"></span>' : '') . '</a>' . $sub . '</li>';
                 }
             )?>
-        <?endif?>
-        <?$this->hook('navbar.side')?>
+        <?php endif?>
+        <?php $this->hook('navbar.side')?>
     </div>
 </div>

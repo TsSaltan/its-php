@@ -1,6 +1,6 @@
-<?use tsframe\module\user\UserAccess; ?>
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php use tsframe\module\user\UserAccess; ?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -30,7 +30,7 @@
                                                 <th>Имя</th>
                                                 <th>Email</th>
                                                 <th>Группа</th>
-                                                <?$this->hook('user.list.column')?>
+                                                <?php $this->hook('user.list.column')?>
                                                 <th width="130px" align="center">Действия</th>
                                             </tr>
                                         </thead>
@@ -43,9 +43,9 @@
                                                 <td><?=array_flip($accessList)[$userItem->get('access')]?></td>
                                                 <?php $this->hook('user.list.item', [$userItem])?>
                                                 <td>
-                                                    <?php if(UserAccess::checkCurrentUser('user.view')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id'))?>" class="btn btn-default btn-sm btn-outline" title='Профиль'><i class='fa fa-user'></i></a><?endif?>
-                                                    <?php if(UserAccess::checkCurrentUser('user.edit')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/edit')?>" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i></a><?endif?>
-                                                    <?php if(UserAccess::checkCurrentUser('user.delete')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i></a><?endif?>
+                                                    <?php if(UserAccess::checkCurrentUser('user.view')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id'))?>" class="btn btn-default btn-sm btn-outline" title='Профиль'><i class='fa fa-user'></i></a><?php endif?>
+                                                    <?php if(UserAccess::checkCurrentUser('user.edit')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/edit')?>" class="btn btn-primary btn-outline btn-sm" title='Редактировать'><i class='fa fa-pencil'></i></a><?php endif?>
+                                                    <?php if(UserAccess::checkCurrentUser('user.delete')):?><a href="<?=$this->makeURI('/dashboard/user/' . $userItem->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i></a><?php endif?>
                                                 </td>
                                             </tr>
                                             <?php endforeach?>
@@ -69,4 +69,4 @@
         </div>
     </div>
 
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

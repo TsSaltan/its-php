@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
     <style>
         .meta-editor .item-header:nth-child(n+2) th{
             padding-top:35px;
@@ -37,39 +37,39 @@
                                 <div class="tab-pane fade in active" id="meta-editor">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover meta-editor">
-                                           <?foreach($metaData->getData() as $m):?>
+                                           <?php foreach($metaData->getData() as $m):?>
                                            <tr class='item-header'>     
                                                 <th colspan="2">
                                                     <code>
-                                                    <?$parts = explode('_',  $m['parent'])?>
-                                                    <?for($i = 0; $i < sizeof($parts); ++$i):?>
-                                                        <?$part = implode('_', array_slice($parts, 0, $i+1))?>
+                                                    <?php $parts = explode('_',  $m['parent'])?>
+                                                    <?php for($i = 0; $i < sizeof($parts); ++$i):?>
+                                                        <?php $part = implode('_', array_slice($parts, 0, $i+1))?>
                                                         <a class="" href="?filter=<?=$part?>"><?=$parts[$i]?></a>
-                                                        <?if(isset($parts[$i+1])):?> &gt; <?endif?>
-                                                    <?endfor?>
+                                                        <?php if(isset($parts[$i+1])):?> &gt; <?php endif?>
+                                                    <?php endfor?>
                                                     </code>
                                                 </th>
                                             </tr>
-                                                <?foreach ($m['data'] as $key => $value):?>
+                                                <?php foreach ($m['data'] as $key => $value):?>
                                                 <tr>  
                                                     <th class="key-label"><?=$key?></th>    
                                                     <td>
                                                         <input class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" value="<?=$value?>" placeholder="delete"/>
                                                     </td>    
                                                 </tr>    
-                                                <?endforeach?>
-                                           <?endforeach?>
+                                                <?php endforeach?>
+                                           <?php endforeach?>
                                         </table>
                                     </div>
                                     <!-- /.table-responsive -->
 
-                                    <?if($metaData->hasPages()):?>
+                                    <?php if($metaData->hasPages()):?>
                                         <div class="well">
-                                            <?foreach($metaData->getPages() as $page):?>
+                                            <?php foreach($metaData->getPages() as $page):?>
                                             <a class="btn btn-primary <?=($page['current'] ? "disabled" : "btn-outline")?>" href="<?=$page['url']?>"><?=$page['title']?></a>
-                                            <?endforeach?>
+                                            <?php endforeach?>
                                         </div>
-                                    <?endif?>
+                                    <?php endif?>
                                 </div>
 
                                 <div class="tab-pane fade" id="meta-add">
@@ -123,4 +123,4 @@
         return saveMeta($field.attr('data-parent'), $field.attr('data-key'), $field.val());
     });
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

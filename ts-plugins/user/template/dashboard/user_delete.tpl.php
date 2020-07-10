@@ -1,6 +1,6 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
-<?use tsframe\module\user\UserAccess;?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
+<?php use tsframe\module\user\UserAccess;?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -23,11 +23,11 @@
                                     <div class="panel-title pull-left">Удаление профиля</div>
                                 </div>
                                 <div class="panel-body">
-                                    <?if($self):?>
+                                    <?php if($self):?>
                                     <p>Вы собираетесь удалить собственный профиль</p>
-                                    <?else:?>
+                                    <?php else:?>
                                     <p>Вы собираетесь удалить пользователя <b><?=$selectUser->get('login')?></b> (ID: <b><?=$selectUser->get('id')?></b>).</p>
-                                    <?endif?>
+                                    <?php endif?>
                                     <p>Это действие невозможно отменить</p>
                                 </div>
                                 <div class="panel-footer">
@@ -45,4 +45,4 @@
         </div>
     </div>
 
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

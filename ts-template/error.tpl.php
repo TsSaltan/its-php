@@ -175,7 +175,7 @@
 
 		<div class="denied__wrapper">
 	    	<h1><?=$code?></h1>
-	    	<?
+	    	<?php 
 	    	$showBrick = false; // Показывать знак "кирпич"
 	    	$errorText = "Произошла ошибка"; // Базовый текст
 	    	$planetColor = "#bf9660"; // Цвет планеты
@@ -261,13 +261,13 @@
 			    <g class="saturn-2" fill="<?=$planetColor?>">
 			      <path d="M109.388 285.56c42.515 1.428 157.943-2.613 289.462-73.807-5.11-16.448-13.02-31.882-23.322-45.604-42.716 29.386-140.403 83.922-268.457 76.27-1.354 14.666-.508 29.175 2.318 43.14zM400.734 293.587c3.976-15.31 5.422-30.68 4.614-45.672-33.75 25.31-137.237 92.367-277.65 84.876 6.507 10.874 14.383 20.93 23.472 29.88 44.354.286 137.696-6.443 245.93-57.163 1.362-3.89 2.58-7.86 3.634-11.92zM245.488 405.184c35.427 2.537 69.784-7.742 97.543-27.59-27.972 11.533-60.787 21.76-97.542 27.59zM348.02 138.097c-15.645-12.225-33.99-21.522-54.434-26.832-71.883-18.667-145.126 18.253-174.25 84.01 49.02-1.676 133.073-12.256 228.685-57.178z"></path>
 					
-					<?if($showBrick):?>
+					<?php if($showBrick):?>
 					<!-- Знак "кирпич" -->
 					<rect x="369" y="-142" width="10" height="60" fill="#eee" rx="5" ry="5" transform="rotate(40)"></rect>
 			      	<circle cx="389" cy="114" r="37" fill="#ff5757"></circle>
 					<circle cx="389" cy="114" r="30" fill="#ffffff"></circle>
 					<rect x="356" y="-162" width="38" height="12" fill="#000" rx="5" ry="5" transform="rotate(39)"></rect>
-					<?endif?>
+					<?php endif?>
 			    </g>
 			    <circle class="hover" cx="319.166" cy="208.081" r="28.389" fill="<?=$planetCrater?>"></circle>
 			    <path d="M331.25 189.492c6.04 1.568 11.114 4.97 14.792 9.452-2.98-8.73-10.143-15.848-19.74-18.34-15.175-3.94-30.672 5.167-34.613 20.342-2.373 9.136-.012 18.384 5.55 25.162-1.73-5.075-2.05-10.695-.602-16.273 3.94-15.177 19.438-24.284 34.613-20.343z" opacity=".1"></path>
@@ -302,17 +302,17 @@
 
 			<div class="links">
 	    		<a href="<?=$this->makeURI('/')?>" class="denied-link">На главную</a>
-	    		<?if($hasDashboard):?><a href="<?=$this->makeURI('/dashboard/')?>" class="denied-link">Личный кабинет</a><?endif?>
+	    		<?php if($hasDashboard):?><a href="<?=$this->makeURI('/dashboard/')?>" class="denied-link">Личный кабинет</a><?php endif?>
 	    	</div>
 	  	</div>
 
-	  	<?if(isset($debug)):?>
+	  	<?php if(isset($debug)):?>
 	  	<div style="position: absolute; overflow: auto; top:-10px; left:10%; right: 10%; background-color: rgba(255,255,255,0.8); padding:15px 10px; border: 2px solid gray;" ondblclick="this.remove()">
 	  		<p style="text-align: center;"><em>Включен режим отладки. Двойной клик закроет это окно.</em></p>
 	  		<hr/>
 	  		<?=$debug?>
 	  	</div>
-	  	<?endif?>
+	  	<?php endif?>
 
 	</body>
 </html>

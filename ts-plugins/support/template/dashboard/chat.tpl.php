@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 <style type="text/css">
     .chat li:nth-last-child(1){
         border-bottom: none;
@@ -12,18 +12,18 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    <?if(isset($chatRole) && $chatRole == 'operator'):?>
+                    <?php if(isset($chatRole) && $chatRole == 'operator'):?>
                     Оператор поддержки
-                    <?else:?>
+                    <?php else:?>
                     Поддержка
-                    <?endif?>
+                    <?php endif?>
                 </h1>
             </div>
         </div>
-        <?$this->hook('support.header', [$chatId, $chatRole])?>
+        <?php $this->hook('support.header', [$chatId, $chatRole])?>
         <div class="row">
             <div class="col-lg-12">
-                <?
+                <?php 
                 if($isClosed){
                     if($chatRole == 'operator'){
                         uiAlert('Данный диалог закрыт. Пользователь не может отвечать.', 'warning');
@@ -53,7 +53,7 @@
                                         <i class="fa fa-sign-out fa-fw"></i> Назад к списку диалогов
                                     </a>
                                 </li>
-                                <?if($chatRole == 'operator'):?>
+                                <?php if($chatRole == 'operator'):?>
                                 <li class="divider"></li>
                                 <li>
                                     <form action="<?=$this->makeURI('/dashboard/operator/close')?>" method="POST" id="closeChat">
@@ -67,25 +67,25 @@
                                     </form>
                                     <a href="#" onclick="$('#deleteChat').submit();"><i class="fa fa-trash fa-fw"></i> Удалить диалог</a>
                                 </li>
-                                <?endif?>
-                                <?$this->hook('support.menu', [$chatId, $chatRole])?>
+                                <?php endif?>
+                                <?php $this->hook('support.menu', [$chatId, $chatRole])?>
                             </ul>
                         </div>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body" id="chat-container">
                         <ul class="chat" id="chat-content">
-                            <?foreach($chatMessages as $message):?>
-                                <? $this->vars['messageAuthor'] = $message->getOwner()->get('login') ?>
-                                <? $this->vars['messageTime'] = date('Y-m-d h:i:s', $message->getDate()) ?>
-                                <? $this->vars['messageText'] = $message->getMessage() ?>
-                                <? $this->incMessage() ?>
-                            <?endforeach?>
+                            <?php foreach($chatMessages as $message):?>
+                                <?php  $this->vars['messageAuthor'] = $message->getOwner()->get('login') ?>
+                                <?php  $this->vars['messageTime'] = date('Y-m-d h:i:s', $message->getDate()) ?>
+                                <?php  $this->vars['messageText'] = $message->getMessage() ?>
+                                <?php  $this->incMessage() ?>
+                            <?php endforeach?>
                         </ul>
                     </div>
                     <!-- /.panel-body -->
                     <div class="panel-footer">
-                        <? if((!$isClosed && $chatRole == 'client') || $chatRole == 'operator'):?>
+                        <?php  if((!$isClosed && $chatRole == 'client') || $chatRole == 'operator'):?>
                         <div class="input-group">
                             <input id="message" type="text" class="form-control input-sm" placeholder="Введите текст сообщения"/>
                             <span class="input-group-btn">
@@ -94,14 +94,14 @@
                                 </button>
                             </span>
                         </div>
-                        <?endif?>
+                        <?php endif?>
                     </div>
                     <!-- /.panel-footer -->
                 </div>
                 <!-- /.panel .chat-panel -->
             </div>
         </div>
-        <?$this->hook('support.footer', [$chatId, $chatRole])?>
+        <?php $this->hook('support.footer', [$chatId, $chatRole])?>
     </div>
 </div>
 
@@ -116,18 +116,18 @@
         let text = $message.val();
         $message.val('');
 
-        <?if($chatRole == 'operator'):?>
+        <?php if($chatRole == 'operator'):?>
         tsFrame.query('POST', 'support/message-operator', {chat: chat_id, message: text}, function(){
             updateMessages();
         });
-        <?else:?>
+        <?php else:?>
         tsFrame.query('POST', 'support/message', {chat: chat_id, message: text}, function(data){
             updateMessages();
             if(data.error){
                 document.location.reload();
             }
         });
-        <?endif?>
+        <?php endif?>
     }
 
     function updateMessages(){
@@ -163,4 +163,4 @@
 
     scrollChat();
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
 
     <!-- Page Content -->
     <div id="page-wrapper">
@@ -25,12 +25,12 @@
                             <div class="form-group">
                                 <label>Выша ссылка для приглашения пользователей</label>
                                 <input class="form-control" value="<?=$userRefLink?>" onfocus="this.select()">
-                                <?if(!is_null($userRefStatLink)):?>
+                                <?php if(!is_null($userRefStatLink)):?>
                                 <p class="help-block"><a href="<?=$userRefStatLink?>" target="_blank">Статистика переходов по ссылке</a></p>
-                                <?endif?>
-                                <?if(!is_null($userReferrer)):?>
+                                <?php endif?>
+                                <?php if(!is_null($userReferrer)):?>
                                 <p class="help-block">Вас пригласил: <a href="<?=$this->makeURI('/dashboard/user/' . $userReferrer->get('id'))?>"><b><?=$userReferrer->get('login')?></b></a></p>
-                                <?endif?>
+                                <?php endif?>
                             </div>
                         </div>
                     </div>
@@ -47,9 +47,9 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            <?if(sizeof($userReferrals) == 0):?>
+                            <?php if(sizeof($userReferrals) == 0):?>
                             <p>Вы ещё никого не пригласили</p>
-                            <?else:?>
+                            <?php else:?>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -59,18 +59,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?foreach($userReferrals as $user):?>
+                                        <?php foreach($userReferrals as $user):?>
                                         <tr>
                                             <td><?=$user->get('id')?></td>
                                             <td><a href="<?=$this->makeURI('/dashboard/user/' . $user->get('id'))?>"><?=$user->get('login')?></a></td>
                      
                                         </tr>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
-                            <?endif?>
+                            <?php endif?>
                         </div>
                     </div>
                     <!-- /.panel -->
@@ -80,4 +80,4 @@
         </div>
     </div>
 
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

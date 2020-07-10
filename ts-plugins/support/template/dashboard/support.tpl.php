@@ -1,5 +1,5 @@
-<?$this->incHeader()?>
-<?$this->incNavbar()?>
+<?php $this->incHeader()?>
+<?php $this->incNavbar()?>
     <!-- Page Content -->
     <div id="page-wrapper">
         <div class="container-fluid">
@@ -62,7 +62,7 @@
                             </div>
                             
                             <div class="row">
-                            <?if($userChats->isData()):?>
+                            <?php if($userChats->isData()):?>
                                 <div class="col-lg-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover">
@@ -73,24 +73,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?foreach ($userChats->getData() as $chat):?>
+                                                <?php foreach ($userChats->getData() as $chat):?>
                                                 <tr class="chat-item <?=($chat->hasNewMessages() ? 'chat-update' : '')?>" onclick="document.location.replace('<?=$this->makeURI('/dashboard/support/chat/' . $chat->getId())?>')">
                                                     <td><?=$chat->getTitle()?></td>
                                                     <td class="chat-<?=($chat->getStatus() == 1) ? 'open' : 'close'?>"><?=($chat->getStatus() == 1) ? 'Открыт' : 'Закрыт'?></td>
                                                 </tr>
-                                                <?endforeach?>
+                                                <?php endforeach?>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             <!-- /.table-responsive -->
-                            <?endif?>
+                            <?php endif?>
                             </div>
                         </div>
                         
-                        <?if($userChats->isData()):?>
-                        <div class="panel-footer"><?uiPaginatorFooter($userChats)?></div>
-                        <?endif?>
+                        <?php if($userChats->isData()):?>
+                        <div class="panel-footer"><?php uiPaginatorFooter($userChats)?></div>
+                        <?php endif?>
                     </div>
                     <!-- /.panel -->
                 </div>
@@ -106,4 +106,4 @@
         window.getSelection().addRange(range); 
     });
 </script>
-<?$this->incFooter()?>
+<?php $this->incFooter()?>

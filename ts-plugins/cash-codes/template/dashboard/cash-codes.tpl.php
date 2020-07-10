@@ -50,12 +50,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?foreach($codes as $code):?>
+                                        <?php foreach($codes as $code):?>
                                         <tr>
                                             <td><?=$code['code']?></td>
                                             <td><?=$code['balance']?></td>
                                         </tr>
-                                        <?endforeach?>
+                                        <?php endforeach?>
                                     </tbody>
                                 </table>
                             </div>

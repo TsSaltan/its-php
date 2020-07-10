@@ -1,12 +1,12 @@
 <div id="navbar-top-left" class="navbar-header">
     <a class="navbar-brand" href="<?=$siteHome?>">
-        <?if(strpos($siteIcon, '://') !== false):?>
+        <?php if(strpos($siteIcon, '://') !== false):?>
             <img src="<?=$siteIcon?>" class="site-icon" alt="Site icon">
-        <?elseif(strpos($siteIcon, 'fa-') !== false):?>
+        <?php elseif(strpos($siteIcon, 'fa-') !== false):?>
             <i class="fa <?=$siteIcon?> fa-fw"></i>
-        <?else:?>
+        <?php else:?>
             <?=$siteIcon?>
-        <?endif?>
+        <?php endif?>
         <?=$siteName?>
     </a>
 </div>
@@ -20,8 +20,8 @@
 
 <!-- Top Navigation: Right Menu -->
 <ul id="navbar-top-right" class="nav navbar-right navbar-top-links">
-    <?$this->hook('navbar.top')?>
-    <?if($user->isAuthorized()):?>
+    <?php $this->hook('navbar.top')?>
+    <?php if($user->isAuthorized()):?>
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="fa fa-user fa-fw"></i> <?=((isset($loginUsed) && $loginUsed) ? $login : $email)?> <b class="caret"></b>
@@ -36,5 +36,5 @@
             }
         )?>
     </li>
-    <?endif?>
+    <?php endif?>
 </ul>
