@@ -1,6 +1,13 @@
 <?php
 /**
  * Базовая система API
+ * API hooks: api.method.action
+ * method = def | get | post | etc ...
+ * function(BaseApiController $api){
+ * 		$api->sendError('Error ...');
+ * 		// or
+ * 		$api->sendData(['result' => 'success', ...]);
+ * }
  */
 namespace tsframe;
 

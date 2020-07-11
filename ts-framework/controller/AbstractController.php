@@ -13,7 +13,7 @@ use tsframe\Http;
  * 5. Вызывается метод send для отправки http ответа,
  * 6. Для генерации ответа берутся данные из getResponseType, getResponseCode, getResponseBody
  */
-abstract class AbstractController{
+abstract class AbstractController {
 	public function response(){
 	}
 

@@ -66,6 +66,9 @@ class Dashboard extends AbstractController{
 		}
 	}
 
+	/**
+	 * Страница авторизации
+	 **/
 	public function getAuth(){	
 		if(isset($_GET['error']) && $_GET['error'] == 'social'){
 			$this->vars['alert']['danger'][] = 'Невозможно войти через данный аккаунт, привязанный к нему e-mail уже зарегистрирован.';
@@ -80,11 +83,17 @@ class Dashboard extends AbstractController{
 		}
 	}
 
+	/**
+	 * Выход из аккаунта 
+	 **/
 	public function getLogout(){
 		$this->currentUser->closeSession();
 		return Http::redirect(Http::makeURI('/dashboard/'));
 	}
 
+	/**
+	 * Отображение файла настроек
+	 **/
 	public function getConfig(){
 		UserAccess::assertCurrentUser('user.editConfig');
 		$this->vars['title'] = 'Редактирование системных настроек';
@@ -95,6 +104,9 @@ class Dashboard extends AbstractController{
 		}
 	}
 
+	/**
+	 * Сохранение файла настроек
+	 **/
 	public function postConfig(){
 		UserAccess::assertCurrentUser('user.editConfig');
 		$data = Input::post()
@@ -104,7 +116,7 @@ class Dashboard extends AbstractController{
 
 		Config::set('*', json_decode($data['config'], true));
 
-		return Http::redirect(Http::makeURI('/dashboard/config?save=success'));
+		return Http::redirect(Http::makeURI('/dashboard/config', ['save' => 'success']));
 	}
 
 	public function response(){

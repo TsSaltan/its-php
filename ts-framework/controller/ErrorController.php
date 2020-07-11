@@ -12,7 +12,8 @@ use tsframe\view\TemplateRoot;
 /**
  * Контроллер для ошибок
  */
-class ErrorController extends AbstractController{
+class ErrorController extends AbstractController {
+	
 	/**
 	 * @var BaseException
 	 */

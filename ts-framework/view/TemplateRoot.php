@@ -4,7 +4,7 @@ namespace tsframe\view;
 use tsframe\exception\TemplateException;
 use tsframe\Log;
 
-class TemplateRoot{
+class TemplateRoot {
 	const TPL_EXT = '.tpl.php';
 	const INC_EXT = '.inc.php';
 

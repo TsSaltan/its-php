@@ -20,7 +20,7 @@ use tsframe\module\user\UserConfig;
  * @route POST /api/[register:action]
  * @route GET|POST /api/[me:action]
  */
-class BaseApiController extends AbstractAJAXController{
+class BaseApiController extends AbstractAJAXController {
 	use ActionToMethodTrait;
 
 	public function getResponseBody() : string {

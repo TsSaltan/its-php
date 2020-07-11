@@ -16,8 +16,9 @@ use tsframe\view\HtmlTemplate;
  * Запрос HTTP: GET /mypath/test
  * Будет выызван метод getTest
  * (или defTest - универсальный для всех методов GET|POST ...)
- */
-trait ActionToMethodTrait{
+ **/
+trait ActionToMethodTrait {
+
 	function callActionMethod(){
 		$methodName = $this->getActionMethod();
 		return call_user_func([$this, $methodName]);
