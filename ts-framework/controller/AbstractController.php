@@ -20,6 +20,16 @@ abstract class AbstractController {
 	protected $params = [];
 	public function setParams(array $params){
 		$this->params = $params;
+		$this->apply();
+	}
+
+	/**
+	 * Метод вызывается после применения параметров через метод setParams
+	 * Необходим как метод "конструктор", который вызывается в контроллере,
+	 * после применения параметров через setParams()
+	 **/
+	protected function apply(){
+		// any code from child class 
 	}
 
 	public function getRequestMethod() : string {

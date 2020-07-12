@@ -42,9 +42,7 @@ class Dashboard extends AbstractController{
 	 */
 	protected $tpl;
 
-	public function setParams(array $params){
-		parent::setParams($params);
-
+	protected function apply(){
 		$action = $this->getAction();
 		$this->currentUser = User::current();
 
@@ -68,6 +66,8 @@ class Dashboard extends AbstractController{
 
 	/**
 	 * Страница авторизации
+	 * @uri GET /dashboard/auth
+	 * @access *
 	 **/
 	public function getAuth(){	
 		if(isset($_GET['error']) && $_GET['error'] == 'social'){
@@ -85,6 +85,8 @@ class Dashboard extends AbstractController{
 
 	/**
 	 * Выход из аккаунта 
+	 * @uri GET /dashboard/logout
+	 * @access *
 	 **/
 	public function getLogout(){
 		$this->currentUser->closeSession();
@@ -93,6 +95,8 @@ class Dashboard extends AbstractController{
 
 	/**
 	 * Отображение файла настроек
+	 * @uri GET /dashboard/config
+	 * @access user.editConfig
 	 **/
 	public function getConfig(){
 		UserAccess::assertCurrentUser('user.editConfig');
@@ -106,6 +110,8 @@ class Dashboard extends AbstractController{
 
 	/**
 	 * Сохранение файла настроек
+	 * @uri POST /dashboard/config
+	 * @access user.editConfig
 	 **/
 	public function postConfig(){
 		UserAccess::assertCurrentUser('user.editConfig');
@@ -145,9 +151,5 @@ class Dashboard extends AbstractController{
 	// f.e. action tests/new -> template tests_new
 	protected function getAction(string $default = 'index') : string {
 		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? $default);
-	}
-
-	public function alert(string $message, string $type = 'info'){
-		$this->tpl->alert($message, $type);
 	}
 }
