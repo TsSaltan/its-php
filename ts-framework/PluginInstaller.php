@@ -5,7 +5,7 @@ use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 use tsframe\module\io\Output;
 
-class PluginInstaller{
+class PluginInstaller {
 	private $key,
 			$type = "text",
 			$description,

@@ -6,7 +6,7 @@ use tsframe\controller\InstallController;
 use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 
-class Plugins{
+class Plugins {
 	/**
 	 * Loaded plugins name => path
 	 * @var array
