@@ -66,6 +66,8 @@ class Template{
 		if($this->useHooks) Hook::call('template.render', [$this]);
 
 		ob_start();
+			global $tpl;
+			$tpl = $GLOBALS['tpl'] = $this;
 			extract($this->vars);
 			$tplFiles = TemplateRoot::getTemplateFiles($this->part, $this->name);
 			foreach($tplFiles as $tplFile){
