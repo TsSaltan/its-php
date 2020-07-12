@@ -1,19 +1,16 @@
 <?php
-global $that;
-$that = $this;
-
 /**
  * Отображение навигационного меню
  * @param  bool|boolean $top  Показать верхний бар
  * @param  bool|boolean $side Показать боковой бар
  */
 function uiNavbar(bool $top = true, bool $side = true){
-    global $that;
+    global $tpl;
     ?>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-top" role="navigation">
-        <?php if($top)  $that->incNavtop()?>
-        <?php if($side) $that->incNavside()?>
+        <?php if($top)  $tpl->incNavtop()?>
+        <?php if($side) $tpl->incNavside()?>
     </nav>
     <?php
 }
@@ -25,9 +22,9 @@ function uiNavbar(bool $top = true, bool $side = true){
  */
 function showAlerts(array $alerts = null){
     if(!is_array($alerts)){
-        global $that;
-        if(!is_array($that->alert)) return;
-        $alerts = $that->alert;
+        global $tpl;
+        if(!is_array($tpl->alert)) return;
+        $alerts = $tpl->alert;
     }
 
     foreach($alerts as $type => $messages){
@@ -57,8 +54,8 @@ function uiAlert(string $message = null, string $type='info'){
  * Подключить js-скрипты фреймворка
  */
 function jsFrame(){
-    global $that;
-    $that->js('ts-client/frame.js', 'ts-client/user.js');
+    global $tpl;
+    $tpl->js('ts-client/frame.js', 'ts-client/user.js');
     ?><script type="text/javascript">tsFrame.basePath = <?=json_encode(\tsframe\App::getBasePath())?>;</script><?php
 }
 

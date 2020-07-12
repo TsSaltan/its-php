@@ -1,1 +1,1 @@
-<?php  uiNavbar() ?>
+<?php uiNavbar() ?>

@@ -1,13 +1,14 @@
 <div id="navbar-top-left" class="navbar-header">
-    <a class="navbar-brand" href="<?=$siteHome?>">
-        <?php if(strpos($siteIcon, '://') !== false):?>
+    <a class="navbar-brand" href="<?=$this->getDesigner()->getSitehome();?>">
+        <?php $siteIcon = $this->getDesigner()->getSiteicon(); ?>
+        <?php if(strpos($siteIcon, '://') !== false): ?>
             <img src="<?=$siteIcon?>" class="site-icon" alt="Site icon">
-        <?php elseif(strpos($siteIcon, 'fa-') !== false):?>
+        <?php elseif(strpos($siteIcon, 'fa-') !== false): ?>
             <i class="fa <?=$siteIcon?> fa-fw"></i>
-        <?php else:?>
+        <?php else: ?>
             <?=$siteIcon?>
-        <?php endif?>
-        <?=$siteName?>
+        <?php endif; ?>
+        <?=$this->getDesigner()->getSitename();?>
     </a>
 </div>
 

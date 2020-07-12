@@ -20,6 +20,8 @@ use tsframe\module\menu\MenuItem;
 use tsframe\module\Meta;
 use tsframe\view\TemplateRoot;
 
+define('DASHBOARD_THEMES', __DIR__ . DS . 'template' . DS . 'dashboard' . DS . 'themes' . DS);
+
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database', 'user');
 });

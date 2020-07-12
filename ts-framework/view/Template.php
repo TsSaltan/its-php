@@ -6,7 +6,7 @@ use tsframe\Http;
 use tsframe\Hook;
 use tsframe\exception\TemplateException;
 
-class Template{
+class Template {
 	public static function error(){
 		return new self('default', 'error');
 	}

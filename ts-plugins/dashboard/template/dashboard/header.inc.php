@@ -1,4 +1,4 @@
-<?php $this->incFunctions()?>
+<?php $this->incFunctions(); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,7 +10,7 @@
 
     <title><?=$this->title?></title>
 
-    <?php jsFrame()?>
+    <?php jsFrame(); ?>
 
     <!-- Bootstrap Core CSS -->
     <?php $this->css(
@@ -24,7 +24,7 @@
         "css/font-awesome.min.css",
         "css/dataTables/dataTables.bootstrap.css",
         "css/dataTables/dataTables.responsive.css"
-    )?>
+    ); ?>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,25 +35,26 @@
 
 
     <!-- jQuery -->
-    <?php $this->js("js/jquery.min.js")?>
+    <?php $this->js("js/jquery.min.js"); ?>
 
     <!-- Bootstrap Core JavaScript -->
-    <?php $this->js("js/bootstrap.min.js")?>
+    <?php $this->js("js/bootstrap.min.js"); ?>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <?php $this->js("js/metisMenu.min.js")?>
+    <?php $this->js("js/metisMenu.min.js"); ?>
 
     <!-- Custom Theme JavaScript -->
-    <?php $this->js("js/startmin.js")?>
+    <?php $this->js("js/startmin.js"); ?>
 
-    <?php $this->js('js/dataTables/jquery.dataTables.min.js')?>
-    <?php $this->js('js/dataTables/dataTables.bootstrap.min.js')?>
+    <?php $this->js('js/dataTables/jquery.dataTables.min.js'); ?>
+    <?php $this->js('js/dataTables/dataTables.bootstrap.min.js'); ?>
 
     <!-- JSON editor -->
-    <?php $this->css("css/jsoneditor.css")?>
-    <?php $this->js("js/jquery.jsoneditor.min.js")?>
+    <?php $this->css("css/jsoneditor.css"); ?>
+    <?php $this->js("js/jquery.jsoneditor.min.js"); ?>
 
-    <?php $this->hook("header")?>
+    <?php $this->themeCSS(); ?>
+    <?php $this->hook("header"); ?>
 </head>
 <body>
 

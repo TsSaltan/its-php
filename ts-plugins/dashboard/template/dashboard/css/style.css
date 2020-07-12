@@ -37,3 +37,46 @@ span.counter{
 	float:right;
 	padding: 0px 8px;
 }
+
+.row.awesome-icons-list {
+    max-height: 250px;
+    margin: 20px 0;
+    padding: 5px;
+    overflow-y: scroll;
+    border: 1px solid #cecece;
+    border-radius: 3px;
+}
+
+.row.awesome-icons-list .awesome-icon {
+    cursor: pointer;
+}
+
+.row.awesome-icons-list .awesome-icon:hover {
+    background: rgba(0,0,0,0.15);
+    color: #666;
+}
+
+.input-group span.input-group-addon.input-addon-xs {
+    min-width: 80px;
+    text-align: left;
+}
+
+.input-group span.input-group-addon.input-addon-sm {
+    min-width: 80px;
+    text-align: left;
+}
+
+.input-group span.input-group-addon.input-addon-md {
+    min-width: 120px;
+    text-align: left;
+}
+
+.input-group span.input-group-addon.input-addon-lg {
+    min-width: 150px;
+    text-align: left;
+}
+
+.input-group span.input-group-addon.input-addon-xl {
+    min-width: 200px;
+    text-align: left;
+}

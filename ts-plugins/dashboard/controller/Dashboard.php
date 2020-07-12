@@ -20,8 +20,9 @@ use tsframe\view\HtmlTemplate;
  * @route GET /dashboard/login -> /dashboard/auth#login
  * @route GET /dashboard/register -> /dashboard/auth#register
  * 
- * @route GET /dashboard/[auth|index|logout|config:action]
+ * @route GET /dashboard/[auth|index|logout|config|config:action]
  * @route POST /dashboard/[config:action]
+ * @route POST /dashboard/config/[theme|siteinfo:action]
  */
 class Dashboard extends AbstractController{
 	use ActionToMethodTrait;
@@ -123,6 +124,41 @@ class Dashboard extends AbstractController{
 		Config::set('*', json_decode($data['config'], true));
 
 		return Http::redirect(Http::makeURI('/dashboard/config', ['save' => 'success']));
+	}
+
+	/**
+	 * Сохранение файла настроек
+	 * @uri POST /dashboard/config/theme
+	 * @access user.editConfig
+	 **/
+	public function postTheme(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		$data = Input::post()
+			->name('theme')->required()->minLength(0)
+			->assert();
+		
+		$this->tpl->getDesigner()->setCurrentTheme($data['theme']);	
+		return Http::redirect(Http::makeURI('/dashboard/config#theme'));
+	}
+
+	/**
+	 * Сохранение файла настроек
+	 * @uri POST /dashboard/config/siteinfo
+	 * @access user.editConfig
+	 **/
+	public function postSiteinfo(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		$data = Input::post()
+			->name('sitename')->required()->minLength(0)
+			->name('sitehome')->required()->minLength(0)
+			->name('siteicon')->required()->minLength(0)
+		->assert();
+		
+		$this->tpl->getDesigner()->setSitename($data['sitename']);	
+		$this->tpl->getDesigner()->setSitehome($data['sitehome']);	
+		$this->tpl->getDesigner()->setSiteicon($data['siteicon']);	
+
+		return Http::redirect(Http::makeURI('/dashboard/config#siteinfo'));
 	}
 
 	public function response(){

@@ -12,6 +12,34 @@
             </div>
             <?php $this->hook('config')?>
             
+            <form action="<?=$this->makeURI('/dashboard/config/theme')?>" method="POST">
+                <?php uiCollapsePanel('Настройки внешнего вида', function(){ 
+                    $this->inc('config-theme');
+                }, 
+
+                function(){
+                ?><button class='btn btn-primary'>Сохранить</button><?php
+                },
+                
+                "panel-default",
+                "eye",
+                "theme"); ?>
+            </form>            
+            
+            <form action="<?=$this->makeURI('/dashboard/config/siteinfo')?>" method="POST">
+                <?php uiCollapsePanel('Изменить информацию о сайте', function(){ 
+                    $this->inc('config-siteinfo');
+                }, 
+
+                function(){
+                ?><button class='btn btn-primary'>Сохранить</button><?php
+                },
+                
+                "panel-default",
+                "info-circle",
+                "siteinfo"); ?>
+            </form>
+
             <form method="POST">
                 <?php uiCollapsePanel('Системный файл настроек', function() use ($systemConfigs){
                     uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'warning');
