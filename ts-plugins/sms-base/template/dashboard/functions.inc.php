@@ -4,7 +4,7 @@
  * @url http://andr-04.github.io/inputmask-multi/ru.html
  */
 function uiPhoneField(string $value = null, string $name = 'phone', string $id = 'phoneField'){
-	global $that;
+	global $tpl;
 
 	?>
 	<div class="form-group">
@@ -20,7 +20,7 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 
     <script type="text/javascript">
     	$(function(){
-    		var maskList = $.masksSort($.masksLoad("<?=$that->getURI("data/phone-codes.json")?>"), ['#'], /[0-9]|#/, "mask");
+    		var maskList = $.masksSort($.masksLoad("<?=$tpl->getURI("data/phone-codes.json")?>"), ['#'], /[0-9]|#/, "mask");
 			var maskOpts = {
 				inputmask: {
 					definitions: {
