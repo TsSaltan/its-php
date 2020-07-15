@@ -6,13 +6,19 @@ use tsframe\module\menu\Menu;
 class HtmlTemplate extends Template {
 	public function css(){
 		foreach(func_get_args() as $arg){
-			echo '<link rel="stylesheet" type="text/css" href="'. $this->getURI($arg) .'">' . "\n";
+			$uris = $this->getURIs($arg);
+			foreach ($uris as $uri) {
+				echo '<link rel="stylesheet" type="text/css" href="'. $uri .'">' . "\n";
+			}
 		}
 	}
 
 	public function js(){
 		foreach(func_get_args() as $arg){
-			echo '<script src="'. $this->getURI($arg) .'"></script>' . "\n";
+			$uris = $this->getURIs($arg);
+			foreach ($uris as $uri) {
+				echo '<script src="'. $uri .'"></script>' . "\n";
+			}
 		}
 	}
 

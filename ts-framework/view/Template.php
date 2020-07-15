@@ -94,33 +94,46 @@ class Template {
 
 
 	/**
-	 * Получить ссылку (на ресурсы, стили, скрипты) в текущей директории 
-	 * @return string
+	 * Получить ссылку на первый найденный ресурс 
+	 * @return string | null
 	 */
-	public function getURI(string $path){
+	public function getURI(string $path): ?string {
+		$uri = $this->getURIs($path);
+		return $uri[0] ?? null;
+	}
+
+	/**
+	 * Получить ссылки на все доступные ресурсы, стили, скрипты в текущей директории 
+	 * @return array
+	 */
+	public function getURIs(string $path): array {
+		$files = [];
+
 		if(substr($path, 0, 4) == 'http' || substr($path, 0, 2) == '//'){
 			// Абсолютные ссылки оставляем без изменения
 		} else {
 			try{
 				$files = TemplateRoot::findFiles($this->part, $path);
-				$file = $files[0];
 			} catch (TemplateException $e){
-				$file = $path;
+				$files[] = $path;
 			}
 
-			$path = $this->toURI($file);
+			foreach ($files as $key => $file) {
+				$file = $this->toURI($file);
+				// Если включен режим разработчика, убираем кеширование ресурсов
+				if(App::isDev()){
+					if(strpos($file, '?') !== false){
+						$file .= '&';
+					} else {
+						$file .= '?';
+					}
+					$file .= '__nocache=' . (time().rand(0,100));
+				}
+				$files[$key] = $file;
+			}
 		}
 
-		// Если включен режим разработчика, убираем кеширование ресурсов
-		if(App::isDev()){
-			if(strpos($path, '?') !== false){
-				$path .= '&';
-			} else {
-				$path .= '?';
-			}
-			$path .= '__nocache=' . (time().rand(0,100));
-		}
-		return $path;
+		return $files;
 	}	
 
 	/**
