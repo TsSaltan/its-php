@@ -61,6 +61,8 @@
             $configTabs['password']['content'] = function() use ($selectUser, $self){
                 if(isset($this->vars['tempPass']) && $this->vars['tempPass'] !== false){
                     uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b>', 'warning');
+                } else {
+                    uiAlert();
                 }
 
                 if($self): ?>
@@ -79,11 +81,12 @@
                     <button type="submit" class="btn btn-success">Изменить</button>
                 </form>
                 <?php endif; ?>
-                <hr/>
-                <form role="form" onsubmit="tsUser.query('resetPassword', this); return false;">
-                    <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                    <button type="submit" class="btn btn-warning">Сбросить пароль</button>
-                </form>
+                <p>
+                    <form role="form" onsubmit="tsUser.query('resetPassword', this); return false;">
+                        <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
+                        <button type="submit" class="btn btn-warning">Сбросить пароль</button>
+                    </form>
+                </p>
                 <?php 
             };
 
