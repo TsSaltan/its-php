@@ -50,8 +50,8 @@
     <?php $this->js('js/dataTables/dataTables.bootstrap.min.js'); ?>
 
     <!-- JSON editor -->
-    <?php $this->css("css/jsoneditor.css"); ?>
-    <?php $this->js("js/jquery.jsoneditor.min.js"); ?>
+    <?php $this->css("css/jsoneditor/jsoneditor.css"); ?>
+    <?php $this->js("js/jsoneditor.js"); ?>
 
     <?php $this->themeCSS(); ?>
     <?php $this->hook("header"); ?>

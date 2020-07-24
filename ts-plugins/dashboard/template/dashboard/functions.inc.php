@@ -88,10 +88,51 @@ function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
 
     <script type="text/javascript">   
         $(function(){
-            var $textarea = $(<?=json_encode('#' . $fieldID . '-textarea')?>);
-            var $editor = $(<?=json_encode('#' . $fieldID . '-editor')?>);
             var $formGroup = $(<?=json_encode('#' . $fieldID . '-form-group')?>);
-            var data = <?=json_encode($data)?>;
+            var $textarea = $(<?=json_encode('#' . $fieldID . '-textarea')?>);
+            var jeditor, data = <?=json_encode($data)?>;
+            var container = document.getElementById(<?=json_encode($fieldID . '-editor')?>);
+            var options = {
+                onChange: function(){
+                    var sourceJson = jeditor.get();
+                    $textarea.val(JSON.stringify(sourceJson, null, 2));
+                }
+            };
+            
+            jeditor = new JSONEditor(container, options);
+            jeditor.set(data);
+
+            // Обработчик редактора исходного JSON кода
+            $textarea.change(function() {
+                var val = $textarea.val();
+
+                if (val) {
+                    try { 
+                        json = JSON.parse(val); 
+                        $formGroup.removeClass('has-error');
+                        jeditor.set(json);
+                    }
+                    catch (e) { 
+                        console.log('[Parse Error] Incorrect JSON syntax: ' + e); 
+                        $formGroup.addClass('has-error');
+                    }
+                } else {
+                    jeditor.set({});
+                }
+            });
+
+            /*
+            // get json
+            document.getElementById('getJSON').onclick = function () {
+                var json = editor.get();
+                document.getElementById('jdata').value = (JSON.stringify(json, null, 2));
+                document.getElementById('saveForm').submit();
+            };
+
+            
+            var $editor = $();
+           
+            
 
             var editorParams = {
                 // При изменении данных в редакторе - сохраняем исходный код в textarea
@@ -103,25 +144,7 @@ function uiJsonEditor(array $data, string $fieldName, int $rows = 10){
             
             $editor.jsonEditor(data, editorParams);
 
-            // И наоборот - при изменении данных в текстовом поле - меняем данные в визуальном редакторе
-            $textarea.change(function() {
-                var val = $textarea.val();
-
-                if (val) {
-                    try { 
-                        json = JSON.parse(val); 
-                        $formGroup.removeClass('has-error');
-                    }
-                    catch (e) { 
-                        //alert('Error in parsing json. ' + e); 
-                        $formGroup.addClass('has-error');
-                    }
-                } else {
-                    json = {};
-                }
-                
-                $editor.jsonEditor(json, editorParams);
-            });
+            */
         });
     </script>
     <?php
