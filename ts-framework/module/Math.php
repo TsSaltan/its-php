@@ -1,7 +1,7 @@
 <?php
-namespace tsframe;
+namespace tsframe\module;
 
-class Math{
+class Math {
 	public static function calculate(string $statement) {
 
 	    $calcQueue = array();
