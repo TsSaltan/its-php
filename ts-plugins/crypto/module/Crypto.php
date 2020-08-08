@@ -8,7 +8,7 @@ class Crypto {
 	 * Возвращает уникальный ID для текущего приложения
 	 * @return [type] [description]
 	 */
-	protected static function getAppId(): string {
+	public static function getAppId(): string {
 		return Config::get('appId');
 	}
 

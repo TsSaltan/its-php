@@ -1,13 +1,14 @@
 <?php
 namespace tsframe\module\user;
 
+use tsframe\Config;
+use tsframe\Hook;
+use tsframe\exception\CashException;
 use tsframe\module\Crypto;
+use tsframe\module\Log;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\module\interkassa\Payment;
-use tsframe\module\Log;
-use tsframe\Config;
-use tsframe\Hook;
 
 /**
  * Используется тип string, т.к. нужны функции повышенной точности bc
@@ -209,22 +210,50 @@ class Cash {
 	 * @return string
 	 */
 	public static function createPayId(int $userId): string {
-		$keyLength = rand(5,12);
+		$keyLength = rand(5,10);
 		$idLength = strlen($userId);
-		return $keyLength . '-' . $idLength . '-' . Crypto::generateString($keyLength) . $userId . Crypto::generateString(rand(1,6));
+		$randBefore = Crypto::generateString($keyLength);
+		$randAfter = Crypto::generateString(rand(3,8));
+		$check = md5(Crypto::getAppId() . $randBefore . $randAfter . $userId);
+		return $keyLength . '-' . $idLength . '-' . $randBefore . $userId . $randAfter . '-' . $check;
 	}
 
 	/**
 	 * Получить ID пользователя из ID платежа
 	 * @param  string $payId
 	 * @return int
+	 * @throws CashException
 	 */
-	public static function decodePayId(string $payId): int {
+	public static function decodePayId(string $payId, bool $checkKey = true): int {
 		$keys = explode('-', $payId);
+
+		if(sizeof($keys) < 3) throw new CashException('Invalid input payId', 0, ['method' => 'decodePayId', 'inputPayId' => $payId]);
+
 		$keyLength = $keys[0];
 		$idLength = $keys[1];
 		$key = $keys[2];
+
 		$userId = substr($key, $keyLength, $idLength);
+
+		if($checkKey){
+			$check_key = $keys[3] ?? null;
+			$randBefore = substr($key, 0, $keyLength);
+			$randAfter = substr($key, $keyLength + $idLength);
+			$check = md5(Crypto::getAppId() . $randBefore . $randAfter . $userId);
+			if($check_key != $check) throw new CashException('Error on checking payId', 0, [
+				'method' => 'decodePayId', 
+				'inputPayId' => $payId,
+				'keyLength' => $keyLength,
+				'idLength' => $idLength,
+				'key' => $key,
+				'userId' => $userId,
+				'randBefore' => $randBefore,
+				'randAfter' => $randAfter,
+				'check_key' => $check_key,
+				'check' => $check,
+				'is_check' => $check == $check_key
+			]);
+		}
 
 		return intval($userId);
 	}
