@@ -10,6 +10,7 @@ use tsframe\module\Crypto;
 use tsframe\module\Mailer;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
+use tsframe\module\user\SingleUser;
 
 class User{
 	/**
@@ -134,6 +135,16 @@ class User{
 
 		return $users;
 	}	
+
+	public static function getById(int $id): SingleUser {
+		$user = self::get(['id' => $id]);
+		if(sizeof($user) > 0){
+			$user = array_values($user);
+			return $user[0];
+		}
+
+		throw new UserException('Invalid user id: ' . $id);
+	}
 
 	/**
 	 * Возвращает текущего пользователя
