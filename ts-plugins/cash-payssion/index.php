@@ -6,7 +6,9 @@
  */
 namespace tsframe;
 
+use tsframe\Http;
 use tsframe\PluginInstaller;
+use tsframe\module\PayssionModule;
 use tsframe\module\user\Cash;
 use tsframe\module\user\SingleUser;
 use tsframe\view\Template;
@@ -34,12 +36,28 @@ Hook::registerOnce('plugin.install', function(){
 						->setDescription("Production mode")
 						->setValues([1 => "Disabled / Test mode", 0 => "Enabled / Production mode"])
 						->setRequired(true),
+
+		PluginInstaller::withKey('payssion.payment_types')
+						->setType('text')
+						->setDescription("Payment methods (comma separated words) from <a href='https://payssion.com/en/docs/#api-reference-pm-id' target='_blank'>here (pm_id values)</a>.")
+						->setRequired(true),
+
+		PluginInstaller::withKey('payssion.set-notify-helper')
+						->setType('helper-text')
+						->setDescription("Set application <b>Notify URL</b> as: ")
+						->setDefaultValue(Http::makeURI('/payssion/notify')),
+
+		PluginInstaller::withKey('payssion.set-return-helper')
+						->setType('helper-text')
+						->setDescription("Set application <b>Return URL</b> as: ")
+						->setDefaultValue(Http::makeURI('/payssion/return')),
 	];
 });
 
 
 Hook::register('template.dashboard.user.edit.balance', function(Template $tpl, SingleUser $selectUser){
 	$tpl->var('currency', Cash::getCurrency());
-	// $tpl->inc('pay-form');
+	$tpl->var('payssionTypes', PayssionModule::getPaymentTypes());
+	$tpl->inc('payssion-form');
 	// @todo
 });
