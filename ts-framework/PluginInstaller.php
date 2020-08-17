@@ -46,7 +46,7 @@ class PluginInstaller {
 
 	/**
 	 * Установить тип поля
-	 * @param string $type = error|text|numeric|email|select
+	 * @param string $type = error|text|numeric|email|select|helper-text
 	 */
 	public function setType(string $type): PluginInstaller {
 		$this->type = $type;

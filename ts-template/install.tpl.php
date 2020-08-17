@@ -255,6 +255,10 @@
 
 								<?php break;
 
+							case 'helper-text':
+								?><input type="text" name="" value="<?=$param->getValue()?>" readonly/><?php
+							break;
+
 							case 'text':
 							case 'numeric':
 							case 'email':
