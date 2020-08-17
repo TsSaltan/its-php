@@ -4,6 +4,7 @@ namespace tsframe\controller;
 use tsframe\Hook;
 use tsframe\Http;
 use tsframe\exception\AccessException;
+use tsframe\exception\CashException;
 use tsframe\module\Log;
 use tsframe\module\Paysera;
 use tsframe\module\PayssionModule;
@@ -41,8 +42,8 @@ class PayssionProcessor extends AbstractController {
 
 					$details = PayssionModule::getPaymentDetails($input['order_id']);
 					if(isset($details['transaction'])){
-						PayssionModule::acceptPayment($details['transaction']);
-						return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'success'], 'balance'));
+						$result = PayssionModule::acceptPayment($details['transaction']);
+						return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => $result], 'balance'));
 					}
 				break;
 
@@ -51,11 +52,13 @@ class PayssionProcessor extends AbstractController {
 					PayssionModule::getInputPaymentData();
 					return Http::sendBody('OK', Http::CODE_OK, Http::TYPE_PLAIN);
 			}
+
 		} catch (CashException $e){
 
 		} 
 
-		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance'=>'fail'], 'balance'));
+		// Иногда запрос от сервера возвращается раньше пользователя, возможно стоит всегшда перенаправлять на страницу без ошибки
+		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => 'fail'], 'balance'));
 	}
 
 	/**

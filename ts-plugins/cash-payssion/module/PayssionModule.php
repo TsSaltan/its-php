@@ -17,7 +17,7 @@ class PayssionModule {
             self::$client = new PayssionClient(
                 Config::get('payssion.api_key'),
                 Config::get('payssion.secret_key'),
-                (intval(Config::get('payssion.production_mode')) == 1),
+                (intval(Config::get('payssion.production_mode')) == 1)
             );
         }
 
@@ -25,9 +25,11 @@ class PayssionModule {
     }
 
     public static function getInputPaymentData(){
-        $inputData = [];
-        if (isset($_SERVER['CONTENT_TYPE']) && false !== strpos($_SERVER['CONTENT_TYPE'], 'json')) {
-            $input = file_get_contents("php://input");
+        $input = file_get_contents("php://input");
+
+        // В официальных доках почему-то указано, что данные поступают в JSON, но в реальности приходят в формате url_string
+        parse_str($input, $inputData);
+        if(!is_array($inputData) || sizeof($inputData) == 0){
             $inputData = json_decode($input, true);
         }
 
@@ -56,16 +58,20 @@ class PayssionModule {
         $notify_sig = $inputData['notify_sig'];
         if ($notify_sig == $check_sig) {
             if($state == 'completed'){
-                Log::cash('[Payssion] Input payment data (from callback): completed!', ['type' => 'notify', 'inputData' => $inputData]);
+                Log::cash('[Payssion] Input payment data (from callback): completed!', ['type' => 'notify', 'input' => $input]);
+                self::acceptPayment($inputData);
             } else {
-                Log::cash('[Payssion] Input payment data (from callback): uncompleted operation', ['type' => 'notify', 'inputData' => $inputData]);
+                Log::cash('[Payssion] Input payment data (from callback): uncompleted operation', ['type' => 'notify', 'input' => $input]);
             }
         } else {
-            Log::cash('[Payssion] Input payment data (from callback): invalid signature', ['type' => 'error', 'inputData' => $inputData]);
+            Log::cash('[Payssion] Input payment data (from callback): invalid signature', ['type' => 'error', 'input' => $input]);
         }
     }
 
-    public static function acceptPayment(array $data): bool {
+    /**
+     * @return string completed|pending|cancelled|failed
+     */
+    public static function acceptPayment(array $data): string {
         $tId = $data['transaction_id'];
         $orderId = $data['order_id'];
         $userId = Cash::decodePayId($orderId, true);
@@ -73,17 +79,26 @@ class PayssionModule {
         $currency = $data['currency'];
         $state = $data['state'];
 
-        if($state != 'completed') return false;
         if($currency != Cash::getCurrency()) throw new CashException('acceptPayment error: invalid payment currency', 0, $data);
-    
-        $cash = Cash::ofUserId($userId);
-        if(!$cash->isTransactionExists($orderId)){
-            $description = 'Пополнение баланса через Payssion (transaction #'.$tId.')';
-            $cash->add($amount, $description, $orderId);
-            return true;
-        } else {
-            throw new CashException('acceptPayment error: transaction # ' . $orderId . ' already accepted !' , 0, $data);
+        
+        if($state == 'completed'){
+            $cash = Cash::ofUserId($userId);
+            if(!$cash->isTransactionExists($orderId)){
+                $description = 'Пополнение баланса через Payssion (transaction #'.$tId.')';
+                $cash->add($amount, $description, $orderId);
+            } else {
+                Log::cash('acceptPayment warning: transaction # ' . $orderId . ' already accepted !' , $data);
+            }
+            return $state;
+        } 
+
+        if($state == 'pending' || $state == 'cancelled'){
+            return $state;
         }
+
+        return 'failed';
+
+        
     }
 
     /**
@@ -111,7 +126,7 @@ class PayssionModule {
         try {
             $currency = Cash::getCurrency();
             $orderId = Cash::createPayId($forUser->get('id'));
-            $description = 'Пополнение баланса пользователя "' . $forUser->get('name') . '" через Payssion / ' . $amount . ' ' . $currency . ' / ID платежа: ' . $orderId;
+            $description = 'Пополнение баланса пользователя "' . $forUser->get('login') . '" (ID:' . $forUser->get('login') . ') через Payssion / ' . $amount . ' ' . $currency . ' / ID платежа: ' . $orderId;
             $response = $payssion->create([
                 'amount' => $amount,
                 'currency' => $currency,
