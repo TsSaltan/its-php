@@ -27,7 +27,7 @@ class CashCodesDashboard extends UserDashboard {
 		$this->vars['codes'] = $codes;
 
 		if(isset($_GET['code'])){
-			$this->tpl->alert('Добавлен код: <b>' . Output::of($_GET['code'])->xss()->getData() . '</b>');
+			$this->tpl->alert('Добавлен код: <b>' . Output::of($_GET['code'])->specialChars()->getData() . '</b>');
 		}
 	}
 
