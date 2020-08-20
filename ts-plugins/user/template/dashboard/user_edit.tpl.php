@@ -60,7 +60,7 @@
             $configTabs['password']['title'] = 'Изменение пароля';
             $configTabs['password']['content'] = function() use ($selectUser, $self){
                 if(isset($this->vars['tempPass']) && $this->vars['tempPass'] !== false){
-                    uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b>', 'warning');
+                    uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b><br/>Рекомендуется его сменить', 'warning');
                 } else {
                     uiAlert();
                 }
