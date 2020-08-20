@@ -25,6 +25,7 @@ class Mailer extends PHPMailer {
 		parent::__construct($exceptions);
 
 		$this->Timelimit = 30;
+		$this->CharSet = 'utf-8';
 		$this->SMTPDebug = /*App::isDev() ? 2 :*/ 0;  
 
 		if(Config::isset('mailer.host')){
