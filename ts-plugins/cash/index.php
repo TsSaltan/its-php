@@ -134,6 +134,17 @@ class CashInstaller {
 			$tpl->inc('edit-balance');
 		}
 	}
+
+	public static function userListColumn(Template $tpl){
+		?><th>Баланс</th><?php
+	}
+
+	public static function userListItem(Template $tpl, SingleUser $selectUser){
+		$cash = new Cash($selectUser);
+		$balance = $cash->getBalance();
+		$currency = Cash::getCurrency();
+		?><td><b><?=$balance?></b> <?=$currency?></td><?php
+	}
 }
 
 Hook::registerOnce('plugin.load', [CashInstaller::class, 'load']);
@@ -143,3 +154,5 @@ Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTa
 Hook::register('template.dashboard.user.profile', [CashInstaller::class, 'showUserBalance']);
 Hook::register('api.user.data', [CashInstaller::class, 'showUserBalanceApi']);
 Hook::register('template.dashboard.user.edit.balance', [CashInstaller::class, 'userBalance']);
+Hook::register('template.dashboard.user.list.column', [CashInstaller::class, 'userListColumn']);
+Hook::register('template.dashboard.user.list.item', [CashInstaller::class, 'userListItem']);
