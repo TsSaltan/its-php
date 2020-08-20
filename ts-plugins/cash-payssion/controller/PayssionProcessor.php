@@ -43,7 +43,7 @@ class PayssionProcessor extends AbstractController {
 					$details = PayssionModule::getPaymentDetails($input['order_id']);
 					if(isset($details['transaction'])){
 						$result = PayssionModule::acceptPayment($details['transaction']);
-						return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => $result], 'balance'));
+						return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => $result]));
 					}
 				break;
 
@@ -58,13 +58,6 @@ class PayssionProcessor extends AbstractController {
 		} 
 
 		// Иногда запрос от сервера возвращается раньше пользователя, возможно стоит всегшда перенаправлять на страницу без ошибки
-		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => 'fail'], 'balance'));
-	}
-
-	/**
-	 * Создать новый платёж и перенаправить полльщователя на ссылку для оплаты
-	 */
-	protected function createPayment(){
-
+		return Http::redirect(Http::makeURI('/dashboard/user/me/edit', ['balance' => 'fail']));
 	}
 }
