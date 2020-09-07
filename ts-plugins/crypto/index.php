@@ -1,13 +1,11 @@
 <?php
-/**
- * Добавление криптографических функций
- */
 namespace tsframe;
+use tsframe\Plugins;
 
-use tsframe\module\Crypto;
+/**
+ * @deprecated
+ * Plugin migrated to framework standart modules
+ */
 
-Hook::registerOnce('app.install', function(){
-	if(Config::get('appId') == null){
-		Config::set('appId', Crypto::generateString(64));
-	}
-});
+Plugins::disable('crypto');
+throw new \Exception('Plugin "crypto" was deprecated! Reload this page ...');

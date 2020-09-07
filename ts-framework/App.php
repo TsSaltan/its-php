@@ -1,10 +1,12 @@
 <?php
 namespace tsframe;
 
+use tsframe\Config;
 use tsframe\controller\ErrorController;
 use tsframe\controller\InstallController;
 use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
+use tsframe\module\Crypto;
 use tsframe\view\Template;
 
 class App {
@@ -106,6 +108,10 @@ class App {
 			return false;
 		}
 
+		if(strlen(Config::get('appId')) < 64){
+			Config::set('appId', Crypto::generateString(64));
+		}
+		
 		Hook::call('app.install');
 		return true;
 	}

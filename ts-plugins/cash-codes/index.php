@@ -25,7 +25,7 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('cash', 'database', 'user', 'dashboard', 'crypto');
+	Plugins::required('cash', 'database', 'user', 'dashboard');
 
 	return [
 		PluginInstaller::withKey('access.cash.codes')

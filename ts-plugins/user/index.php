@@ -71,7 +71,7 @@ Hook::register('template.render', function($tpl){
 });
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('cache', 'crypto', 'database', 'mailer');
+	Plugins::required('cache', 'database', 'mailer');
 	return [
 		PluginInstaller::withKey('access.user.onRegister')
 					->setType('select')
