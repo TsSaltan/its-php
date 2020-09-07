@@ -4,8 +4,7 @@ namespace tsframe\module;
 /**
  * Класс позволяет создавать подготовленные запросы (как в PDO)
  */
-class Prepare
-{
+class Prepare {
     const STRING = 'STRING';
     const STR = 'STRING';
     const INTEGER = 'INTEGER';
@@ -129,20 +128,6 @@ class Prepare
             }   
             else return $matches[0];
         }, $this->source);
-        /*
-        $reg = Regex::of('', Regex::UNICODE_CASE | Regex::CASE_INSENSITIVE | Regex::MULTILINE)->with();
-        return $reg->replaceWithCallback(function($reg){
-            $key = str::lower($reg->group(1));
-   
-            if(isset($this->vars[$key])){
-                return $this->vars[$key];
-            }
-            
-            if($this->replaceEmpty === true){
-                return 'NULL';
-            }   
-            else return $reg->group(0);
-        });*/
     }
     
     public static function Query($query, $params = []){
