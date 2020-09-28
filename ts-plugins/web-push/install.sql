@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS `web-push-queue` (
 	`icon` TEXT NOT NULL, 
 	PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `web-push-user-to-clients` ( 
+	`id` INT(11) NOT NULL AUTO_INCREMENT , 
+	`user` INT(11) NOT NULL , 
+	`client` INT(11) NOT NULL , 
+	PRIMARY KEY (`id`)
+) ENGINE = InnoDB; 

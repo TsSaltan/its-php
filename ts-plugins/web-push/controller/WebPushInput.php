@@ -6,6 +6,7 @@ use tsframe\Http;
 use tsframe\module\IP;
 use tsframe\module\push\WebPushAPI;
 use tsframe\module\push\WebPushClient;
+use tsframe\module\user\User;
 use tsframe\view\HtmlTemplate;
 use tsframe\view\Template;
 
@@ -21,6 +22,12 @@ class WebPushInput extends AbstractController {
 			if(isset($json['endpoint']) && isset($json['keys']) && isset($json['keys']['p256dh']) && isset($json['keys']['auth'])){
 				$client = new WebPushClient($json['endpoint'], $json['keys']['p256dh'], $json['keys']['auth']);
 				$client->save();
+
+				$user = User::current();
+				if($user->isAuthorized()){
+					$client->addUser($user);
+				}
+
 				return "OK";
 			}
 		}

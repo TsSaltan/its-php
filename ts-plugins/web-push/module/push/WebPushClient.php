@@ -12,6 +12,7 @@ use tsframe\module\IP;
 use tsframe\module\PaginatorInterface;
 use tsframe\module\database\Database;
 use tsframe\module\push\WebPushAPI;
+use tsframe\module\user\SingleUser;
 
 /**
  * Работа с Push-клиентами
@@ -19,7 +20,7 @@ use tsframe\module\push\WebPushAPI;
 class WebPushClient implements PaginatorInterface {
 
 	/**
-	 * Найти id клиентов по гео поараметрам
+	 * Найти id клиентов по гео параметрам
 	 * @param  string|null $country 
 	 * @param  string|null $city    
 	 * @return array
@@ -214,5 +215,24 @@ class WebPushClient implements PaginatorInterface {
                 "auth" => $this->authKey 
             ],
         ]);
+	}
+
+	public function delete(){
+		Database::exec('DELETE FROM `web-push-user-to-clients` WHERE `client` = :client', [
+			'client' => $this->getId()
+		]);
+
+		Database::exec('DELETE FROM `web-push-clients` WHERE `id` = :client', [
+			'client' => $this->getId()
+		]);
+	}
+
+	public function addUser(SingleUser $user){
+		$q = Database::exec('INSERT INTO `web-push-user-to-clients` (`user`, `client`) VALUES (:user, :client)', [
+			'endpoint' => $user->get('id'),
+			'client' => $this->getId(),
+		]);
+
+		return $q->lastInsertId();
 	}
 }
