@@ -18,6 +18,12 @@ use tsframe\module\user\SingleUser;
  * Работа с Push-клиентами
  */
 class WebPushClient implements PaginatorInterface {
+	/**
+	 * @return array [['user' => (object) SingleUser, 'clients' => WebPushClient[] ], ... ]
+	 */
+	public static function getUsersClients(): array {
+		// @todo
+	}
 
 	/**
 	 * Найти id клиентов по гео параметрам
