@@ -71,4 +71,79 @@ class Crypto {
 
 		return rand($from, $to);
 	}
+
+	/**
+	 * Генерирует массив с символами a-z и 0-9
+	 * используется в методе Crypto::getCodeByIndex()
+	 */
+	protected static function getCharList(): array {
+	    $chars = [];
+	    $ca = 97;
+	    $cz = 122;
+	    $c0 = 48;
+	    $c9 = 57;
+
+	    // a - z
+	    for ($i=$ca; $i <= $cz; $i++) { 
+	        $chars[] = chr($i);
+	    }
+
+	    // 0 - 9
+	    for ($i=$c0; $i <= $c9; $i++) { 
+	        $chars[] = chr($i);
+	    }
+
+	    return $chars; 
+	}
+
+	/**
+	 * Генерирует последовательные идентификаторы в зависимости от индекса
+	 * например, 1 - a, 2 - b, 3 - c, 4 - aa, 5 - ab, etc ...
+	 * 
+	 * @param int 	$i Индекс
+	 * @param array $chars Массив с используемыми символами, если не указан по умолчанию символы a-z0-9
+	 * 
+	 * @return string
+	 */
+	public static function getCodeByIndex(int $i, array $chars = []): string {
+	    if(sizeof($chars) == 0) $chars = self::getCharList();
+
+	    $num = sizeof($chars);
+	    $index = [];
+	    $ii = 0;
+	    $ci = 0;
+
+	    for($a = 0; $a <= $i; ++$a){
+	        if(!isset($chars[$ci])){
+	            $ci = 0;
+
+	            if(isset($index[$ii-1])){
+	                $ni = $ii;
+	                while($ni >= 0){
+	                    if(++$index[$ni] >= $num){
+	                        $index[$ni] = 0;
+	                        $ni--;
+	                    } else {
+	                        break;
+	                    }
+	                }
+
+	                if($ni < 0){
+	                    $ii++;
+	                }
+
+	            } else {
+	                $index[$ii] = 0;
+	                $ii++;
+	            }
+	        }
+
+	        $index[$ii] = $ci++;
+	    }
+
+	    foreach ($index as $key => $value) {
+	        $index[$key] = $chars[$value];
+	    }
+	    return implode('', $index);
+	} 
 }
