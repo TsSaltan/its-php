@@ -31,6 +31,7 @@ class MailReceiver {
     }
 
 	protected $connection, $login, $password, $imapServer, $imapPort;
+
 	public function __construct(string $login, string $password, string $imapServer, int $imapPort = 993){
 		if (!function_exists('imap_open')){
 			throw new BaseException('IMAP extension does not configurated');
@@ -42,7 +43,12 @@ class MailReceiver {
         $this->imapPort = $imapPort;
 	}
 
-	protected function connect(){
+    /**
+     * Подключиться к IMAP-серверу
+     * @return bool
+     * @throws BaseException
+     */
+	public function connect(): bool {
         $this->connection = imap_open('{'.$this->imapServer.':'.$this->imapPort.'/imap/ssl}INBOX', $this->login, $this->password);
         if(!$this->connection){
         	throw new BaseException('IMAP connection error: ' . imap_last_error(), 0, [
@@ -52,9 +58,11 @@ class MailReceiver {
 	        	'password' => $this->password,
         	]);
         }
+
+        return true;
 	}
 
-	protected function close(){
+	public function close(){
 		imap_close($this->connection);
 	}
 
