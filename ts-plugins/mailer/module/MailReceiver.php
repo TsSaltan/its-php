@@ -7,8 +7,30 @@ use tsframe\exception\BaseException;
  * Класс для получения почты по IMAP
  */
 class MailReceiver {
-	protected $connection, $login, $password, $imapServer, $imapPort;
+    public static $IMAPServers = [
+        'gmail.com' => 'imap.gmail.com',
+        'googlemail.com' => 'imap.gmail.com',
+        'onet.pl' => 'imap.poczta.onet.pl',
+        'mail.ru' => 'map.mail.ru',
+        'inbox.ru' => 'map.mail.ru',
+        'list.ru' => 'map.mail.ru',
+        'bk.ru' => 'map.mail.ru',
+        'ya.ru' => 'imap.yandex.ru',
+        'yandex.ru' => 'imap.yandex.ru',
+        'yandex.by' => 'imap.yandex.ru',
+        'yandex.ua' => 'imap.yandex.ru',
+        'yandex.com' => 'imap.yandex.ru',
+        'yandex.kz' => 'imap.yandex.ru',
+    ];
 
+    public static function detectIMAPServer(string $mail): ?string {
+        $exp = explode('@', $mail);
+        $domain = end($exp);
+
+        return self::$IMAPServers[$domain] ?? null;
+    }
+
+	protected $connection, $login, $password, $imapServer, $imapPort;
 	public function __construct(string $login, string $password, string $imapServer, int $imapPort = 993){
 		if (!function_exists('imap_open')){
 			throw new BaseException('IMAP extension does not configurated');
