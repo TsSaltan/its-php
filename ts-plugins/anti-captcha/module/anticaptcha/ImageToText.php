@@ -1,8 +1,10 @@
 <?php
 namespace tsframe\module\anticaptcha;
 
+use tsframe\module\anticaptcha\AntiCaptcha;
+use tsframe\module\anticaptcha\AntiCaptchaTaskProtocol;
 
-class ImageToText extends Anticaptcha implements AntiCaptchaTaskProtocol {
+class ImageToText extends AntiCaptcha implements AntiCaptchaTaskProtocol {
 
     private $body;
     private $phrase = false;
