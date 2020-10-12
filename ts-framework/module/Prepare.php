@@ -114,10 +114,9 @@ class Prepare {
     
     public function getQuery($bindParams = []){
         $this->bindAll($bindParams);
-        var_dump(['vars' => $this->vars]);
+
         return preg_replace_callback('#' . $this->varType . '#Uis', function(array $matches){
             $key = mb_strtolower($matches[1]);
-            var_dump($matches);
    
             if(isset($this->vars[$key])){
                 return $this->vars[$key];
