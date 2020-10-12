@@ -87,12 +87,27 @@ class Meta {
 	}
 	
 	public static function findByParent(string $parentMask): array {
-		$metas = Database::prepare('SELECT * FROM `meta` WHERE `parent` LIKE :parent')
-						->bind('parent', $parentMask)
-						->exec()
-						->fetch();
+		return self::find('*', '*', $parentMask);
+	}
+
+	public static function find(string $key = '*', string $value = '*', string $parentMask = '*'): array {
 		$found = [];
-		foreach ($metas as $meta) {
+		
+		$keyQuery = ($key == '*') ? '1 = 1' : '`key` = :key';
+		$valQuery = ($value == '*') ? '1 = 1' : '`value` = :value';
+		$parentQuery = ($parentMask == '*') ? '1 = 1' : '`parent` LIKE :parent';
+
+		$query = Database::prepare('SELECT * FROM `meta` WHERE ' . $keyQuery . ' AND ' . $valQuery . ' AND ' . $parentQuery);
+
+		if($key != '*') $query->bind('key', $key);
+		if($value != '*') $query->bind('value', $value);
+		if($parentMask != '*') $query->bind('parent', $parentMask);
+				
+		
+		$data = $query->exec()
+					  ->fetch();
+
+		foreach ($data as $meta) {
 			$found[$meta['parent']][$meta['key']] = $meta['value'];
 		}
 
@@ -102,30 +117,6 @@ class Meta {
 		}
 
 		return $found;
-	}
-
-	public static function find(string $key = '*', string $value = '*'): array {
-		$return = [];
-		
-		$keyQuery = ($key == '*') ? '1 = 1' : '`key` = :key';
-		$valQuery = ($value == '*') ? '1 = 1' : '`value` = :value';
-
-		$query = Database::prepare('SELECT * FROM `meta` WHERE ' . $keyQuery . ' AND ' . $valQuery);
-
-		if($key != '*') $query->bind('key', $key);
-		if($value != '*') $query->bind('value', $value);
-				
-		
-		$data = $query->exec()
-					  ->fetch();
-
-		foreach($data as $item){
-			$parent = $item['parent'];
-			if(!isset($return[$parent])){
-				$return[$parent] = new self($parent);
-			}
-		}
-		return $return;
 	}
 
 	public static function getParentList(?string $filter = null): array {

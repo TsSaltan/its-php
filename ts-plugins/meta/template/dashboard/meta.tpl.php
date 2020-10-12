@@ -110,6 +110,8 @@
                 document.location.replace('?filter=' + parent);
             }
         );
+
+        return false;
     }
 
     function saveMeta(parent, key, value, callback){
