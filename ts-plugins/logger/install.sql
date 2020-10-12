@@ -7,3 +7,5 @@ CREATE TABLE IF NOT EXISTS `log` (
 
 -- DROP INDEX IF EXISTS `type` ON `log`; -- MariaDB only
 ALTER TABLE `log` ADD INDEX(`type`);
+
+ALTER TABLE `log` CHANGE `data` `data` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'JSON'; 
