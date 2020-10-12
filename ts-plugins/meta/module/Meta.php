@@ -103,17 +103,12 @@ class Meta {
 		if($value != '*') $query->bind('value', $value);
 		if($parentMask != '*') $query->bind('parent', $parentMask);
 				
-		
 		$data = $query->exec()
 					  ->fetch();
 
 		foreach ($data as $meta) {
-			$found[$meta['parent']][$meta['key']] = $meta['value'];
-		}
-
-		foreach ($found as $parent => $data) {
+			$parent = $meta['parent'];
 			$found[$parent] = new self($parent);
-			$found[$parent]->setLoadedData($data);
 		}
 
 		return $found;
