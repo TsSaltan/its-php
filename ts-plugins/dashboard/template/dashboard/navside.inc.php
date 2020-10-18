@@ -34,5 +34,11 @@
             )?>
         <?php endif?>
         <?php $this->hook('navbar.side')?>
+
+        <ul class="nav">
+            <li id="collapse-sidebar" title="Свернуть/развернуть меню" onclick="toggleSidebar();">
+                <i class="fa fa-fw"></i>
+            </li>
+        </ul>
     </div>
 </div>

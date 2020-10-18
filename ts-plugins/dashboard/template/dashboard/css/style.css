@@ -80,3 +80,49 @@ span.counter{
     min-width: 200px;
     text-align: left;
 }
+
+/**
+ * Сворачивание бокового меню
+ */
+ul.nav li#collapse-sidebar {
+    text-align: center;
+    cursor: pointer;
+    display: none;
+}
+
+@media(min-width:768px) {
+    ul.nav li#collapse-sidebar i:before{
+        content:"\f104";
+    }
+
+    ul.nav li#collapse-sidebar {
+        display: block;
+        padding: 5px 0px;
+    }
+
+    #sidebar.collapse-width ul.nav li#collapse-sidebar i:before{
+        content:"\f105";
+    }
+
+    #sidebar.collapse-width ul.nav li#collapse-sidebar {
+        text-align: right; 
+        padding: 5px 15px 5px 0px;
+    }
+
+    #sidebar.collapse-width ul.nav li a {
+        direction: rtl;
+        text-align: right;
+    }
+
+    #sidebar.collapse-width ul.nav li a i {
+        padding: 0 2px 0 30px;
+    }
+
+    #sidebar.collapse-width {
+        margin-left: -200px !important;
+    }
+
+    #page-wrapper.full-width {
+        margin-left: 50px !important;
+    }
+}
