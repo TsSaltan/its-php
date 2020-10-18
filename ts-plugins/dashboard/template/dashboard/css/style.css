@@ -97,7 +97,7 @@ ul.nav li#collapse-sidebar {
 
     ul.nav li#collapse-sidebar {
         display: block;
-        padding: 2px 0px;
+        padding: 4px 0px;
     }
 
     #sidebar.collapse-width ul.nav li#collapse-sidebar i:before{
@@ -106,16 +106,18 @@ ul.nav li#collapse-sidebar {
 
     #sidebar.collapse-width ul.nav li#collapse-sidebar {
         text-align: right; 
-        padding: 2px 15px 2px 0px;
+        padding: 4px 15px 4px 0px;
     }
 
     #sidebar.collapse-width ul.nav li a {
         direction: rtl;
         text-align: right;
+        font-size: 0.5px;
     }
 
     #sidebar.collapse-width ul.nav li a i {
         padding: 0 2px 0 30px;
+        font-size: 14px;
     }
 
     #sidebar.collapse-width {
