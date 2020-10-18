@@ -1,6 +1,11 @@
 <!-- Sidebar -->
 <div id="sidebar" class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
+        <ul class="nav">
+            <li id="collapse-sidebar" title="Свернуть/развернуть меню" onclick="toggleSidebar();">
+                <i class="fa fa-fw"></i>
+            </li>
+        </ul>
         <?php if($user->isAuthorized()):?>
             <?=$this->menu('dashboard-sidebar', 
                 function(string $items, int $level){
@@ -34,11 +39,5 @@
             )?>
         <?php endif?>
         <?php $this->hook('navbar.side')?>
-
-        <ul class="nav">
-            <li id="collapse-sidebar" title="Свернуть/развернуть меню" onclick="toggleSidebar();">
-                <i class="fa fa-fw"></i>
-            </li>
-        </ul>
     </div>
 </div>

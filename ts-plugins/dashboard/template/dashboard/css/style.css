@@ -97,7 +97,7 @@ ul.nav li#collapse-sidebar {
 
     ul.nav li#collapse-sidebar {
         display: block;
-        padding: 5px 0px;
+        padding: 2px 0px;
     }
 
     #sidebar.collapse-width ul.nav li#collapse-sidebar i:before{
@@ -106,7 +106,7 @@ ul.nav li#collapse-sidebar {
 
     #sidebar.collapse-width ul.nav li#collapse-sidebar {
         text-align: right; 
-        padding: 5px 15px 5px 0px;
+        padding: 2px 15px 2px 0px;
     }
 
     #sidebar.collapse-width ul.nav li a {
