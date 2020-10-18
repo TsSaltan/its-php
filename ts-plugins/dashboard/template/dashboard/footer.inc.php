@@ -14,7 +14,7 @@
 	$(function(){
 		try {
 			let collapsed = sessionStorage.getItem('collapsedSidebar');
-			if(collapsed !== false && collapsed !== 'false'){
+			if(collapsed === true || collapsed === 'true'){
 				toggleSidebar();
 			}
 		} catch (e){
