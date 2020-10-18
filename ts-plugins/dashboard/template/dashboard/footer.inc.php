@@ -13,11 +13,12 @@
 
 	$(function(){
 		try {
-			if(sessionStorage.getItem('collapsedSidebar')){
+			let collapsed = sessionStorage.getItem('collapsedSidebar');
+			if(collapsed !== false && collapsed !== 'false'){
 				toggleSidebar();
 			}
 		} catch (e){
-			
+
 		}
 	});
 </script>
