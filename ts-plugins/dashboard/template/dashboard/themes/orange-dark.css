@@ -76,6 +76,10 @@ html, #wrapper{
     border-color: #4c4c4c;
 }
 
+.navbar ul.nav-admin li a {
+    color: #ae8369;
+}
+
 /**
  * Кнопки
  */

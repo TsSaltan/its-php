@@ -30,6 +30,7 @@ html{
     background-color: #f9f9fb;
 }
 
+.sidebar-nav .nav li,
 .sidebar-nav .nav li a{
     font-weight: 700;
     color: #4d4d4d;
@@ -41,6 +42,9 @@ html{
     color: #6c9b45;
 }
 
+.navbar ul.nav-admin li a {
+    color: #912f2b;
+}
 
 .btn-success.active, 
 .btn-success.focus, 
