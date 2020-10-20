@@ -3,6 +3,9 @@
  * Система приёма платежей
  * @hook template.dashboard.user.edit.balance (Template $tpl, SingleUser $selectUser)
  * @hook cash.pay (int $userId, $amount, $description, $payId) - Поступление средств на счёт
+ * @hook cash.balance.change (SingleUser $user, string $amountChange, ?string $description, ?string $payId) - Изменение средств на счёт
+ * @hook cash.balance.add (SingleUser $user, string $amount, ?string $description, ?string $payId) - Поступление средств на счёт
+ * @hook cash.balance.sub (SingleUser $user, string $amount, ?string $description, ?string $payId) - Списание средств со счёта
  */
 namespace tsframe;
 

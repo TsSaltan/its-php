@@ -163,10 +163,15 @@ class Cash {
 	 */
 	public function add(string $sum, string $description = null, string $payId = null){
 		$this->balance = bcadd($this->balance, $sum, self::ACCURACY);
+		$payId = !is_null($payId) ? $payId : self::createPayId($this->user->get('id'));
+
+		Hook::call('cash.balance.add', [$this->user, $sum, $description, $payId]);
+		Hook::call('cash.balance.change', [$this->user, '+' . $sum, $description, $payId]);
+
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '+' . $sum,
-			'pay_id' => !is_null($payId) ? $payId : self::createPayId($this->user->get('id'))
+			'pay_id' => $payId
 		]);
 		$this->setBalance();
 	}
@@ -179,10 +184,15 @@ class Cash {
 	 */
 	public function sub(string $sum, string $description = null, string $payId = null){
 		$this->balance = bcsub($this->balance, $sum, self::ACCURACY);
+		$payId = !is_null($payId) ? $payId : self::createPayId($this->user->get('id'));
+
+		Hook::call('cash.balance.sub', [$this->user, $sum, $description, $payId]);
+		Hook::call('cash.balance.change', [$this->user, '-' . $sum, $description, $payId]);
+
 		Log::Cash($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '-' . $sum,
-			'pay_id' => !is_null($payId) ? $payId : self::createPayId($this->user->get('id'))
+			'pay_id' => $payId
 		]);
 		$this->setBalance();
 	}
