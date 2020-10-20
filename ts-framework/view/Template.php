@@ -118,21 +118,27 @@ class Template {
 				$files[] = $path;
 			}
 
-			foreach ($files as $key => $file) {
-				$file = $this->toURI($file);
-				// Если включен режим разработчика, убираем кеширование ресурсов
-				if(App::isDev()){
-					if(strpos($file, '?') !== false){
-						$file .= '&';
-					} else {
-						$file .= '?';
-					}
-					$file .= '__nocache=' . (time().rand(0,100));
+			foreach ($files as $key => $fileOring) {
+				$file = $this->toURI($fileOring);
+
+				if(strpos($file, '?') !== false){
+					$file .= '&';
+				} else {
+					$file .= '?';
 				}
-				$files[$key] = $file;
+
+				// Если включен режим разработчика, добавляем версию файла, чтоб измененный файл не кешировался
+				if(App::isDev()){
+					$version = implode('-', str_split(filemtime($fileOring), 4));
+				}
+				// Иначе, версия файла (=кеширование) равно текущему месяцу (менее ресурсозатратно)
+				else {
+					$version = date('my');
+				}
+
+				$files[$key] = $file . 'v=' . $version;
 			}
 		}
-
 		return $files;
 	}	
 
