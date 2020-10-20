@@ -58,6 +58,6 @@ Hook::registerOnce('plugin.install', function(){
 Hook::register('template.dashboard.user.edit.balance', function(Template $tpl, SingleUser $selectUser){
 	$tpl->var('currency', Cash::getCurrency());
 	$tpl->var('payssionTypes', PayssionModule::getPaymentTypes());
+	$tpl->var('payssionDescription', PayssionModule::$payDescription);
 	$tpl->inc('payssion-form');
-	// @todo
 });

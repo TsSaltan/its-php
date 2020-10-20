@@ -8,6 +8,12 @@ use tsframe\module\user\SingleUser;
 
 class PayssionModule {
     /**
+     * Описание метода платежа в панели управления для пользователя
+     * @var string
+     */
+    public static $payDescription = 'via Payssion';
+
+    /**
      * @var PayssionClient
      */
     private static $client;

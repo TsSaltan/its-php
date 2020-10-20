@@ -1,6 +1,6 @@
 <div class="col-md-3">
 	<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#payssion-form">Пополнить баланс</button>
-	<label class="description"><i style="opacity: 0.5">Через Payssion</i></label>
+	<label class="description"><i style="opacity: 0.5"><?=$payssionDescription?></i></label>
 </div>
 <style type="text/css">
 	.payssion-form-group {
@@ -61,7 +61,7 @@
 				        	<div class="row">
 				        		
 					        <?php foreach ($payssionTypes as $key => $value): ?>
-				        		<div class="col-lg-2"><label style="background-image: url('<?=$value['icon']?>')"><input type="radio" class="form-control" name="payment_type" value="<?=$value['type']?>"/><span><?=$value['name']?></span></label></div>
+				        		<div class="col-lg-2"><label style="background-image: url('<?=$value['icon']?>')"><input type="radio" class="form-control" name="payment_type" value="<?=$value['type']?>" <?php if($key == 0): ?>checked<?php endif ?>/><span><?=$value['name']?></span></label></div>
 				        	<?php if($key > 0 && (($key+1) % 6 == 0)): ?>
 				        	</div>
 				        	<div class="row">
