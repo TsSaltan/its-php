@@ -88,7 +88,9 @@ class Parser{
 			CURLOPT_TIMEOUT => 60,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_RETURNTRANSFER => true,
-			CURLINFO_HEADER_OUT => true
+			CURLINFO_HEADER_OUT => true,
+			CURLOPT_PROXY => null,
+			CURLOPT_HTTPPROXYTUNNEL => 0
 		]);
 	}
 
@@ -259,6 +261,18 @@ class Parser{
 		$this->logPolicy = $policy;
 	}
 
+	/**
+	 * Установить прокси для запроса
+	 * @param string $proxy прокси-сервер в виде login:password@domain:port
+	 * @param bool $tunnel 
+	 * 
+	 */
+	public function setProxy(string $proxy, bool $tunnel = false){
+		return $this->setParams([
+			CURLOPT_PROXY => $proxy,
+			CURLOPT_HTTPPROXYTUNNEL => ($tunnel ? 1 : 0)
+		]);
+	}
 
 	/**
 	 * Выполнить GET запрос
