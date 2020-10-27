@@ -261,15 +261,23 @@ class Parser{
 		$this->logPolicy = $policy;
 	}
 
+	const PROXY_HTTP = CURLPROXY_HTTP;
+	const PROXY_SOCKS4 = CURLPROXY_SOCKS4;
+	const PROXY_SOCKS4A = CURLPROXY_SOCKS4A;
+	const PROXY_SOCKS5 = CURLPROXY_SOCKS5;
+	const PROXY_SOCKS5HOST = CURLPROXY_SOCKS5_HOSTNAME;
+	
 	/**
 	 * Установить прокси для запроса
 	 * @param string $proxy прокси-сервер в виде login:password@domain:port
+	 * @param int $type тип прокси-сервера
 	 * @param bool $tunnel 
 	 * 
 	 */
-	public function setProxy(string $proxy, bool $tunnel = false){
+	public function setProxy(string $proxy, int $type = CURLPROXY_HTTP, bool $tunnel = false){
 		return $this->setParams([
 			CURLOPT_PROXY => $proxy,
+			CURLOPT_PROXYTYPE => $type,
 			CURLOPT_HTTPPROXYTUNNEL => ($tunnel ? 1 : 0)
 		]);
 	}
