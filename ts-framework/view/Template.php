@@ -127,13 +127,21 @@ class Template {
 					$file .= '?';
 				}
 
+				
+				// По умолчанию версия файла (=кеширование) равно текущему месяцу (менее ресурсозатратно)
+				$version = date('my');
+
 				// Если включен режим разработчика, добавляем версию файла, чтоб измененный файл не кешировался
 				if(App::isDev()){
-					$version = implode('-', str_split(filemtime($fileOring), 4));
-				}
-				// Иначе, версия файла (=кеширование) равно текущему месяцу (менее ресурсозатратно)
-				else {
-					$version = date('my');
+					$ftime = 0;
+					if(file_exists($fileOring)){
+						// В некоторых случаях невозможно получить точное время изменения файла, поэтому нужно подавление warning
+						$ftime = @filemtime($fileOring);
+					}
+
+					if(!is_null($ftime) && $ftime > 0){
+						$version = implode('-', str_split($ftime, 4));
+					}
 				}
 
 				$files[$key] = $file . 'v=' . $version;
