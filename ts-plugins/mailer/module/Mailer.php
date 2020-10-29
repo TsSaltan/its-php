@@ -36,16 +36,22 @@ class Mailer extends PHPMailer {
 			$this->Port = Config::get('mailer.port');
 		}
 
+
+		$meta = new Meta('dashboard');
+		$sitename = $meta->get('sitename');
+		if(Config::isset('mailer.from')){
+			$this->setFrom(Config::get('mailer.from'), $sitename);   	
+		}
+		elseif(Config::isset('mailer.email')){
+			$this->setFrom(Config::get('mailer.email'), $sitename);   	
+		}else{
+			$this->setFrom('admin@'.$_SERVER['SERVER_NAME'], $sitename);  
+		}
+
 		if(Config::isset('mailer.email') && Config::isset('mailer.password')){
     		$this->isSMTP();
     		$this->SMTPAuth = true;
-
-    		$this->Username   = Config::get('mailer.email');                  
-
-			$meta = new Meta('dashboard');
-			$sitename = $meta->get('sitename');
-    		$this->setFrom(Config::get('mailer.email'), $sitename);                  
-
+    		$this->Username   = Config::get('mailer.email');                                 
     		$this->Password   = Config::get('mailer.password');
 		}
 
