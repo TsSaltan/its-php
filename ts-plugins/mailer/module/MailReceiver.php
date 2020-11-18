@@ -88,7 +88,10 @@ class MailReceiver {
      * @param array $params массив с curl параметрами ключ => значение
      */
     public function setCurlParams(array $params){
-        $this->chParams = array_merge($this->chParams, $params);
+        foreach ($params as $key => $value) {
+            if(isset($this->chParams[$key])) continue;
+            $this->chParams[$key] = $value;
+        }
     }
 
     public function setMailbox(string $mailbox){
