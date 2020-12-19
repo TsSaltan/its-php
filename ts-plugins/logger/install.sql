@@ -1,11 +1,8 @@
-CREATE TABLE IF NOT EXISTS `log` (
-	`id` varchar(36) NOT NULL, `type` varchar(250) NOT NULL,
-  	`data` text NOT NULL COMMENT 'JSON',
-  	`date` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- DROP INDEX IF EXISTS `type` ON `log`; -- MariaDB only
-ALTER TABLE `log` ADD INDEX(`type`);
-
-ALTER TABLE `log` CHANGE `data` `data` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'JSON'; 
+CREATE TABLE IF NOT EXISTS `logger` ( 
+	`id` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , 
+	`section` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'default' , 
+	`level` INT(1) NOT NULL , 
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+	`data` MEDIUMTEXT NOT NULL DEFAULT '[]' , 
+	PRIMARY KEY (`id`)
+) ENGINE = InnoDB; 

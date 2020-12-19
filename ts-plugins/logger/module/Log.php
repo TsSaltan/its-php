@@ -4,7 +4,11 @@ namespace tsframe\module;
 use tsframe\Config;
 use tsframe\module\database\Database;
 
-class Log{
+/**
+ * Used for old-compatibility
+ * @deprecated
+ */
+class Log {
 	protected static $logs = [];
 
 	public static function add(string $message, string $type = 'default', array $meta = []): bool {

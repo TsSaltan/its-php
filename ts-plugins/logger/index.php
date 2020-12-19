@@ -7,12 +7,14 @@ namespace tsframe;
 
 use tsframe\Hook;
 use tsframe\Plugins;
+use tsframe\module\database\Database;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('dashboard');
+	Plugins::required('dashboard', 'database');
+
 	return [
 		PluginInstaller::withKey('access.log')
 					->setType('select')
