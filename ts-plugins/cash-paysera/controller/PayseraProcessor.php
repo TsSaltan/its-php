@@ -4,7 +4,7 @@ namespace tsframe\controller;
 use tsframe\Hook;
 use tsframe\Http;
 use tsframe\exception\AccessException;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\Paysera;
 use tsframe\module\interkassa\API;
 use tsframe\module\interkassa\Payment;
@@ -40,10 +40,10 @@ class PayseraProcessor extends AbstractController{
 			case 'callback':
 				try{
 					Paysera::checkPayment();
-					Log::cash("Успешный запрос от платёжного сервера", ['data' => $_REQUEST]);
+					Logger::cash()->debug("Успешный запрос от платёжного сервера", ['cash-provider' => 'paysera', 'data' => $_REQUEST]);
 					return "OK";
 				} catch(\Exception $e){
-					Log::cash("Ошибка при обработке запроса от платёжного сервера", ['data' => $_REQUEST, 'error' => $e->getMessage(), 'error_type' => get_class($e)]);
+					Logger::cash()->error("Ошибка при обработке запроса от платёжного сервера", ['cash-provider' => 'paysera','data' => $_REQUEST, 'error' => $e->getMessage(), 'error_type' => get_class($e)]);
 					return "Payment error: " . $e->getMessage();
 				}
 		}

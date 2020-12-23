@@ -4,7 +4,7 @@ namespace tsframe\controller;
 use tsframe\module\interkassa\API;
 use tsframe\module\interkassa\Payment;
 use tsframe\module\user\Cash;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\Http;
 use tsframe\Hook;
 
@@ -21,7 +21,8 @@ class IKPayProcessor extends AbstractController{
 			$payId = $_REQUEST['ik_pm_no'];
 			$userId = Cash::decodePayId($payId);
 
-			Log::Cash('Успешный запрос от платёжного сервера', [
+			Logger::cash()->debug('Успешный запрос от платёжного сервера', [
+				'cash-provider' => 'interkassa',
 				'pay_id' => $payId, 
 				'check' => $check, 
 				'request' => $_REQUEST
@@ -33,14 +34,14 @@ class IKPayProcessor extends AbstractController{
 				$cash->add($am, $description, $payId);
 				Hook::call('cash.pay', [$userId, $am, $description, $payId]);
 			} else {
-				Log::Cash('Ошибка: платёж уже обработан!', ['pay_id' => $payId]);
+				Logger::cash()->error('Платёж уже обработан!', ['cash-provider' => 'interkassa', 'pay_id' => $payId]);
 			}
 
 			Http::sendBody('OK', 200);
 			die;
 
 		} elseif(isset($_REQUEST['ik_inv_st'])){
-			Log::Cash('Запрос от платёжного сервера', ['check' => $check, 'request' => $_REQUEST]);
+			Logger::cash()->debug('Запрос от платёжного сервера', ['cash-provider' => 'interkassa', 'check' => $check, 'request' => $_REQUEST]);
 		}
 
 	

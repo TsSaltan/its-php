@@ -3,6 +3,7 @@ namespace tsframe\module;
 
 use tsframe\Config;
 use tsframe\exception\CashException;
+use tsframe\module\Logger;
 use tsframe\module\user\Cash;
 use tsframe\module\user\SingleUser;
 
@@ -64,13 +65,13 @@ class PayssionModule {
         $notify_sig = $inputData['notify_sig'];
         if ($notify_sig == $check_sig) {
             if($state == 'completed'){
-                Log::cash('[Payssion] Input payment data (from callback): completed!', ['type' => 'notify', 'input' => $input]);
+                Logger::cash()->debug('[Payssion] Input payment data (from callback): completed!', ['cash-provider' => 'payssion', 'type' => 'notify', 'input' => $input]);
                 self::acceptPayment($inputData);
             } else {
-                Log::cash('[Payssion] Input payment data (from callback): uncompleted operation', ['type' => 'notify', 'input' => $input]);
+                Logger::cash()->debug('[Payssion] Input payment data (from callback): uncompleted operation', ['cash-provider' => 'payssion', 'type' => 'notify', 'input' => $input]);
             }
         } else {
-            Log::cash('[Payssion] Input payment data (from callback): invalid signature', ['type' => 'error', 'input' => $input]);
+            Logger::cash()->error('[Payssion] Input payment data (from callback): invalid signature', ['cash-provider' => 'payssion', 'type' => 'error', 'input' => $input]);
         }
     }
 
@@ -93,7 +94,7 @@ class PayssionModule {
                 $description = 'Пополнение баланса через Payssion (transaction #'.$tId.')';
                 $cash->add($amount, $description, $orderId);
             } else {
-                Log::cash('acceptPayment warning: transaction # ' . $orderId . ' already accepted !' , $data);
+                Logger::cash()->notice('transaction # ' . $orderId . ' already accepted !' , ['cash-provider' => 'payssion', 'data' => $data]);
             }
             return $state;
         } 
@@ -115,7 +116,7 @@ class PayssionModule {
         $payssion = self::getClient();
         try {
             $response = $payssion->getDetails(['order_id' => $orderId]);
-            Log::cash('[Payssion] Input payment data by order: ' . $orderId, $response);
+            Logger::cash()->debug('[Payssion] Input payment data by order: ' . $orderId, ['cash-provider' => 'payssion', 'response' => $response]);
         } catch (\Exception $e){
             throw new CashException('Payssion::getPaymentDetails error: ' . $e->getMessage(), 0, ['orderId' => $orderId]);
         }
