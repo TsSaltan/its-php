@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\App;
 use tsframe\Config;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 
 /**
  * Класс для отправки почты
@@ -65,7 +65,7 @@ class Mailer extends PHPMailer {
 	 * @override
 	 */
 	public function send(){
-		Log::Mail('Sending email #' . $this->MessageID, [
+		Logger::mail()->debug('Sending email #' . $this->MessageID, [
 			'From' => $this->From . " (" . $this->FromName . ")",
 			'To' => $this->all_recipients,
 			'Subject' => $this->Subject,
@@ -80,9 +80,9 @@ class Mailer extends PHPMailer {
 		]);
 
 		if(parent::send()){
-			Log::Mail('Mail #' . $this->MessageID . ' send successfully');
+			Logger::mail()->info('Mail #' . $this->MessageID . ' send successfully');
 		} else {
-			Log::Mail('[Error] Mail #' . $this->MessageID . ' send failure', [
+			Logger::mail()->error('[Error] Mail #' . $this->MessageID . ' send failure', [
 				'error' => $this->ErrorInfo
 			]);
 		}

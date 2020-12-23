@@ -4,7 +4,7 @@ namespace tsframe\controller;
 use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Http;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\vk\CallbackAPI;
 
 /**
@@ -63,6 +63,6 @@ class VKCallbackController extends AbstractController {
 			$this->responseBody = 'null query';
 		}
 
-		if(self::$log) Log::VKCallback('Incoming query from group_id=' . $groupId . '. Response: ' . $this->responseBody , $data);
+		if(self::$log) Logger::vkcallback()->debug('Incoming query from group_id=' . $groupId . '. Response: ' . $this->responseBody , $data);
 	}
 }

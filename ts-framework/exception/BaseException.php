@@ -3,7 +3,6 @@ namespace tsframe\exception;
 
 use tsframe\App;
 use tsframe\Http;
-use tsframe\Log;
 
 class BaseException extends \Exception{
 

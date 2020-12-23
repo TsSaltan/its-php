@@ -3,13 +3,13 @@ namespace tsframe\module;
 
 use tsframe\Config;
 use tsframe\exception\SMSCException;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 
 /**
  * Отправка SMS через API
  * https://smsc.ru/api/http/
  */
-class SMSC{
+class SMSC {
 	/**
 	 * Отправить SMS
 	 * @param  string|array $phones
@@ -22,13 +22,13 @@ class SMSC{
 		try{
 			$query = self::apiQuery('send', ['phones' => $phones, 'mes' => $message, 'id' => uniqid('sms_')]);
 			
-			Log::sms('Send message to ' . $phones, [
+			Logger::sms()->debug('Send message to ' . $phones, [
 				'phone' => $phones,
 				'message_text' => $message,
 				'api_answer' => $query
 			]);
 		} catch(SMSException $e){
-			Log::sms('Send sms error', [
+			Logger::sms()->error('Send sms error', [
 				'phone' => $phones,
 				'message_text' => $message,
 				'errorDebug' => $e->getDebug()

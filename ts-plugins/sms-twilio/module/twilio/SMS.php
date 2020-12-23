@@ -3,7 +3,7 @@ namespace tsframe\module\twilio;
 
 use tsframe\Config;
 use tsframe\exception\SMSException;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 
 /**
  * Отправка SMS через API Twilio
@@ -25,14 +25,14 @@ class SMS{
 				'Body' => $message
 			]);
 
-			Log::sms('Send message to ' . $phone, [
+			Logger::sms()->debug('Send message to ' . $phone, [
 				'phone' => $phone,
 				'message_text' => $message,
 				'api_answer' => $query
 			]);
 
 		} catch(SMSException $e){
-			Log::sms('Send sms error', [
+			Logger::sms()->error('Send sms error', [
 				'phone' => $phone,
 				'message_text' => $message,
 				'errorDebug' => $e->getDebug()

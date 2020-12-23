@@ -2,7 +2,7 @@
 namespace tsframe\module\push;
 
 use tsframe\exception\BaseException;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 use tsframe\module\push\WebPushAPI;
@@ -112,7 +112,7 @@ class WebPushQueue {
 
 		$result = $webPush->send();
 		foreach ($result as $item) {
-			Log::WebPush('WebPush sended', $item);
+			Logger::webpush()->debug('WebPush sended', $item);
 		}
 
 		if(sizeof($this->clients) == 0){

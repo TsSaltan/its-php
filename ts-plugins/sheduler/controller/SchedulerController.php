@@ -5,7 +5,7 @@ use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Http;
 use tsframe\Plugins;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\scheduler\Scheduler;
 
 /**
@@ -46,12 +46,12 @@ class SchedulerController extends AbstractController{
 						$lresult = 'unsuccessfully';
 					}
 
-					if(self::$log) Log::Scheduler('Task "'.$task->getName().'" '.$lresult.' runned', $logData);
+					if(self::$log) Logger::scheduler()->debug('Task "'.$task->getName().'" '.$lresult.' runned', $logData);
 
 				}, function($error) use ($task, $logData){
 					$logData['error_message'] = $error->getMessage();
 					$logData['error_code'] = $error->getCode();
-					if(self::$log) Log::Scheduler('Catch exception ('.get_class($error).') on running task "'.$task->getName().'"', $logData);
+					if(self::$log) Logger::scheduler()->error('Catch exception ('.get_class($error).') on running task "'.$task->getName().'"', $logData);
 				});
 			}
 		}
