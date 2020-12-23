@@ -68,17 +68,25 @@ class Logger {
 
 	/**
 	 * Очистить логи
-	 * @param  string      $type      Тип логов ('*' = все)
-	 * @param  int|integer $timestamp Метка времени, ДО которой логи будут очищены
+	 * @param  string      $section 	'*' = все
+	 * @param  int|integer $level 		уровень ошибки, до которого будет удалены логи
+	 * @param  int|integer $timestamp 	Метка времени, ДО которой логи будут очищены
 	 * @return bool
+	 * 
+	 * @todo !!!
 	 */
-	public static function delete(string $type = '*', int $timestamp = 0): bool {
-		$query = ($type == '*') 
-					? Database::prepare('DELETE FROM `log` WHERE 1 = 1')
-					: Database::prepare('DELETE FROM `log` WHERE `type` = :type AND `date` <= from_unixtime(:ts)');
-		
-		$query->bind('ts', $timestamp);
-		if($type != '*') $query->bind('type', $type);
+	public static function delete(string $section = '*', int $level = -1, int $timestamp = -1): bool {
+		$sql = 'DELETE FROM `log` WHERE 1=1';
+
+		if($section != '*') $sql .= ' AND `section` = :section';
+		if($level > -1) $sql .= ' AND `level` = :level';
+		if($timestamp > -1) $sql .= ' AND `date` <= from_unixtime(:ts)';
+
+		$query = Database::prepare($sql); 
+
+		if($section != '*') $query->bind('section', $section);
+		if($level > -1) $query->bind('level', $level);
+		if($timestamp > -1) $query->bind('ts', $timestamp);
 
 		return $query->exec()->affectedRows() > 0;
 	}
