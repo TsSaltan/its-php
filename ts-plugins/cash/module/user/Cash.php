@@ -5,7 +5,7 @@ use tsframe\Config;
 use tsframe\Hook;
 use tsframe\exception\CashException;
 use tsframe\module\Crypto;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\database\Database;
 use tsframe\module\database\Query;
 use tsframe\module\interkassa\Payment;
@@ -29,16 +29,6 @@ class Cash {
 	 * @var string
 	 */
 	protected $balance = '0';
-
-	/**
-	 * Получить историю всех платежей
-	 * @param  int|integer $offset 
-	 * @param  int|integer $count  
-	 * @return array
-	 */
-	public static function getGlobalHistory(int $offset = 0, int $count = 0): array {
-		return Log::getLogs('Cash', $offset, $count);
-	}
 
 	/**
 	 * Получить текущую валюту
@@ -98,8 +88,8 @@ class Cash {
 	 * @return boolean      
 	 */
 	public function isTransactionExists(string $trId): bool {
-		$logs = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND `data` LIKE :trId')
-					->bind(':type', 'Cash')
+		$logs = Database::prepare('SELECT * FROM `logger` WHERE `section` = :section AND `data` LIKE :trId')
+					->bind(':section', 'cash')
 					->bind(':trId', '%' . $trId . '%')
 					->exec()
 					->fetch();
@@ -122,8 +112,8 @@ class Cash {
 		$data = [];
 
 		// Только недавно mysql научился работать с json, поэтому для кроссплатформенности использую LIKE
-		$history = Database::prepare('SELECT * FROM `log` WHERE `type` = :type AND (`data` LIKE :userId OR `data` LIKE :userId2) ORDER BY `date` DESC')
-					->bind(':type', 'Cash')
+		$history = Database::prepare('SELECT * FROM `logger` WHERE `section` = :section AND (`data` LIKE :userId OR `data` LIKE :userId2) ORDER BY `date` DESC')
+					->bind(':section', 'cash')
 					->bind(':userId', '%"user":' . $this->user->get('id') . '%')
 					->bind(':userId2', '%"user":"' . $this->user->get('id') . '"%')
 					->exec()
@@ -168,7 +158,7 @@ class Cash {
 		Hook::call('cash.balance.add', [$this->user, $sum, $description, $payId]);
 		Hook::call('cash.balance.change', [$this->user, '+' . $sum, $description, $payId]);
 
-		Log::Cash($description, [
+		Logger::cash()->info($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '+' . $sum,
 			'pay_id' => $payId
@@ -189,7 +179,7 @@ class Cash {
 		Hook::call('cash.balance.sub', [$this->user, $sum, $description, $payId]);
 		Hook::call('cash.balance.change', [$this->user, '-' . $sum, $description, $payId]);
 
-		Log::Cash($description, [
+		Logger::cash()->info($description, [
 			'user' => $this->user->get('id'),
 			'balance' => '-' . $sum,
 			'pay_id' => $payId
