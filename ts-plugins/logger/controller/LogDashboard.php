@@ -11,8 +11,8 @@ use tsframe\module\Paginator;
 
 /**
  * @route GET  /dashboard/[logs:action]
- * @route POST /dashboard/[logs-clear:action]/
- * @route POST /dashboard/[logs-clear:action]
+ * @route POST /dashboard/[logs-delete:action]/
+ * @route POST /dashboard/[logs-delete:action]
  */ 
 class LogDashboard extends UserDashboard {
 	public function __construct(){
@@ -46,16 +46,17 @@ class LogDashboard extends UserDashboard {
 		$this->vars['logs'] = $pages;
 	}
 
-	public function postLogsClear(){
-		Input::post()
-			 ->name('group')->required()
+	public function postLogsDelete(){
+		$input = Input::post()
+			 ->name('section')->required()
+			 ->name('level')->required()
 			 ->name('date')->required()
 		->assert();
 
-		$date = max(0, getdate(strtotime($_POST['date']))[0]);
-		Log::clear($_POST['group'], $date);
+		$date = max(0, getdate(strtotime($input['date']))[0]);
+		Logger::delete($input['section'], $input['level'], $date);
 		
-		return Http::redirect(Http::makeURI('/dashboard/logs' . ($_POST['group'] != '*' ? '/' . urlencode($_POST['group']) : '')));
+		return Http::redirect(Http::makeURI('/dashboard/logs', ['level' => $input['level'], 'section' => $input['section']]));
 	}
 
 }

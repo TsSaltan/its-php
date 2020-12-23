@@ -70,12 +70,12 @@ class Logger {
 	/**
 	 * Очистить логи
 	 * @param  string      $section 	'*' = все
-	 * @param  int|integer $level 		уровень ошибки, до которого будет удалены логи
+	 * @param  int|integer $level 		уровень ошибки, c которым будет удалены логи
 	 * @param  int|integer $timestamp 	Метка времени, ДО которой логи будут очищены
 	 * @return bool
 	 */
 	public static function delete(string $section = '*', int $level = -1, int $timestamp = -1): bool {
-		$sql = 'DELETE FROM `log` WHERE 1=1';
+		$sql = 'DELETE FROM `logger` WHERE 1=1';
 
 		if($section != '*') $sql .= ' AND `section` = :section';
 		if($level > -1) $sql .= ' AND `level` = :level';
