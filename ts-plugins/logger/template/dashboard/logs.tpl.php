@@ -22,7 +22,7 @@
                                 Всего в базе: <b><?=$logTotalCount?></b> записей размером в <b><?=round($logTotalSize / 1024 / 1024, 2)?> MiB</b>
                             </div>
                             <div class="pull-right">
-                                <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#logs-delete" href="#logs-delete">Очистить логи</a>
+                                <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#logs-delete" href="#logs-delete"><i class='fa fa-trash'></i>&nbsp;Удалить логи</a>
                             </div>
                         </div>
 
@@ -44,7 +44,7 @@
                                         <div class="form-group">
                                             <label>Минимальный уровень критичности</label>
                                             <select class="form-control" name="level">
-                                                <option value="-1">Все типы ошибок</option>    
+                                                <option value="-1">Все типы логов</option>    
                                                 <?php foreach ($logLevels as $levelName => $level): ?>
                                                 <option value="<?=$level?>" class="log-<?=$levelName?>" <?php if($level == $logMinLevel):?>selected<?php endif ?>><?=$level?>. <?=ucfirst($levelName)?></option>  
                                                 <?php endforeach?>
@@ -68,28 +68,51 @@
                         <div class="modal fade" id="logs-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form action="<?=$this->makeURI('/dashboard/logs-clear/')?>" method="POST">
+                                    <form action="<?=$this->makeURI('/dashboard/logs-delete/')?>" method="POST">
                                         <input type="hidden" name="action" value="clear">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">Очистить логи</h4>
+                                            <h4 class="modal-title">Удалить логи</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="form-group">
-                                                <label>Выберите группу</label>
-                                                <select class="form-control" name="group">
-                                                    <option value="*">Все</option>
-                                                    <?php /*foreach ($logTypes as $type):?>
-                                                    <option value="<?=$type?>"<?=($logType == $type) ? ' selected':''?>><?=ucfirst($type)?></option>
-                                                    <?php endforeach */?>
-                                                </select>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Раздел</label>
+                                                        <select class="form-control" name="section">
+                                                            <option value="*">Все разделы</option>    
+                                                            <?php foreach ($logSections as $section): ?>
+                                                            <option value="<?=$section?>" <?php if($section == $logSection):?>selected<?php endif ?>><?=ucfirst($section)?></option>  
+                                                            <?php endforeach?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Типы логов</label>
+                                                        <select class="form-control" name="level">
+                                                            <option value="-1">Все типы логов</option>    
+                                                            <?php foreach ($logLevels as $levelName => $level): ?>
+                                                            <option value="<?=$level?>" class="log-<?=$levelName?>" <?php if($level == $logMinLevel):?>selected<?php endif ?>><?=$level?>. <?=ucfirst($levelName)?></option>  
+                                                            <?php endforeach?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <p class="help-block">Будут удалены логи только выбранного типа и раздела   </p>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Выберите время и дату, до которой будет проведено удаление</label>
                                                 <input class="form-control" id="clearDate" name="date" type="datetime-local" value="<?=date('Y-m-d')?>T<?=date('H:i')?>:00"/>
                                                 <ul>
-                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d', time()+60*60*24)?>T00:00:00')">Удалить за всё время</a></li>
+                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d', time()+60*60*24)?>T00:00:00')">Удалить записи за всё время</a></li>
                                                     <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d')?>T00:00:00')">Оставить записи за сегодня</a></li>
                                                     <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m')?>-01T00:00:00')">Оставить записи этого месяца</a></li>
                                                 </ul>
@@ -99,7 +122,7 @@
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                            <button type="submit" class="btn btn-danger">Очистить</button>
+                                            <button type="submit" class="btn btn-danger">Удалить</button>
                                         </div>
                                     </form>
                                 </div>
@@ -128,7 +151,7 @@
                                             unset($log['data']['message']);
                                         }
                                         ?>
-                                        <tr class="log-entry log--<?=$log['levelName']?>">
+                                        <tr class="log-entry">
                                             <td class="log-type log-<?=$log['levelName']?>">
                                                 <?=ucfirst($log['levelName'])?>
                                             </td>
@@ -138,24 +161,28 @@
                                                 <p class="log-section"><?=$log['section']?></p>
                                             </td>
 
-                                            <?php if(strlen($logMessage)>0): ?>
                                             <td class="log-message">
                                                 <p><?=$logMessage?></p>
                                             </td>
                                             <td>
-                                            <?php else: ?>
-                                            <td colspan="2">
-                                            <?php endif ?>
-                                                <?php if(sizeof($log['data'])>0):?>
-                                                    <table class="table log-meta">
-                                                        <?php foreach ($log['data'] as $key => $value):?>
-                                                            <tr>
-                                                                <td><?=$key?></td>
-                                                                <td><pre><?=var_export($value, true)?></pre></td>
-                                                            </tr>
-                                                        <?php endforeach?>
-                                                    </table>
-                                                <?php endif?>
+                                            <?php if(sizeof($log['data'])>0):?>
+                                                <table class="table log-meta">
+                                                    <?php foreach ($log['data'] as $key => $value):?>
+                                                        <tr>
+                                                            <td width="100px"><?=$key?></td>
+                                                            <td>
+                                                                <?php if(is_array($value) || is_object($value)): ?>
+                                                                <pre><?php var_export($value)?></pre>
+                                                                <?php elseif(is_string($value) && strlen($value) == 0): ?>
+                                                                <span>NULL</span>
+                                                                <?php else: ?>
+                                                                <pre><?=($value)?></pre>
+                                                                <?php endif ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach?>
+                                                </table>
+                                            <?php endif?>
                                             </td>
                      
                                         </tr>
