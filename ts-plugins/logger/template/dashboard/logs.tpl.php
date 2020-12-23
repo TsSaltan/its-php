@@ -1,9 +1,7 @@
 <?php $this->incHeader()?>
 <?php $this->incNavbar()?>
 <style>
-    table.meta pre{
-        max-height: 100px; overflow-y: auto;
-    }
+
 </style>
 
     <!-- Page Content -->
@@ -21,18 +19,53 @@
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left">
-                                <b><?=$logs->getDataSize()?></b> записей
+                                Всего в базе: <b><?=$logTotalCount?></b> записей размером в <b><?=round($logTotalSize / 1024 / 1024, 2)?> MiB</b>
                             </div>
                             <div class="pull-right">
-                                <?php foreach ($logTypes as $type):?>
-                                <a class="btn btn-primary btn-xs <?=($logType==$type?'':'btn-outline')?>" href="<?=$this->makeURI('/dashboard/logs/' . $type)?>"><?=ucfirst($type)?></a>
-                                <?php endforeach?>
-                                <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#clearConfirm" href="#clearConfirm">Очистить</a>
+                                <a class="btn btn-danger btn-xs btn-outline" data-toggle="modal" data-target="#logs-delete" href="#logs-delete">Очистить логи</a>
                             </div>
                         </div>
 
+                        <div class="panel-heading clearfix">
+                            <form action="" method="GET">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Раздел</label>
+                                            <select class="form-control" name="section">
+                                                <option value="*">Все разделы</option>    
+                                                <?php foreach ($logSections as $section): ?>
+                                                <option value="<?=$section?>" <?php if($section == $logSection):?>selected<?php endif ?>><?=ucfirst($section)?></option>  
+                                                <?php endforeach?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Минимальный уровень критичности</label>
+                                            <select class="form-control" name="level">
+                                                <option value="-1">Все типы ошибок</option>    
+                                                <?php foreach ($logLevels as $levelName => $level): ?>
+                                                <option value="<?=$level?>" class="log-<?=$levelName?>" <?php if($level == $logMinLevel):?>selected<?php endif ?>><?=$level?>. <?=ucfirst($levelName)?></option>  
+                                                <?php endforeach?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <button class="form-control btn btn-block btn-primary">Применить фильтр</button>
+                                            <p class="help-block">
+                                                Фильтру соответствует <b><?=$logs->getDataSize()?></b> записей
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
                         <!-- Modal -->
-                        <div class="modal fade" id="clearConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="logs-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <form action="<?=$this->makeURI('/dashboard/logs-clear/')?>" method="POST">
@@ -46,9 +79,9 @@
                                                 <label>Выберите группу</label>
                                                 <select class="form-control" name="group">
                                                     <option value="*">Все</option>
-                                                    <?php foreach ($logTypes as $type):?>
+                                                    <?php /*foreach ($logTypes as $type):?>
                                                     <option value="<?=$type?>"<?=($logType == $type) ? ' selected':''?>><?=ucfirst($type)?></option>
-                                                    <?php endforeach?>
+                                                    <?php endforeach */?>
                                                 </select>
                                             </div>
 
@@ -79,13 +112,12 @@
                     <?php if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
+                                <table id="table-logger" class="table table-striped table-bordered table-hover">
                                     <thead>
-                                        <tr>
-                                            <th>Дата</th>
-                                            <th>Сообщение</th>
-                                            <th>Мета</th>
-                                        </tr>
+                                        <th width="40px">Тип</th>
+                                        <th width="125px">Дата / Раздел</th>
+                                        <th>Сообщение </th>
+                                        <th style="min-width: 500px">Мета</th>
                                     </thead>
                                     <tbody>
                                         <?php foreach($logs->getData() as $log): ?>
@@ -96,16 +128,30 @@
                                             unset($log['data']['message']);
                                         }
                                         ?>
-                                        <tr>
-                                            <td><?=$log['date']?></td>
-                                            <td><?=$logMessage?></td>
+                                        <tr class="log-entry log--<?=$log['levelName']?>">
+                                            <td class="log-type log-<?=$log['levelName']?>">
+                                                <?=ucfirst($log['levelName'])?>
+                                            </td>
+
                                             <td>
+                                                <p class="log-date"><?=$log['date']?></p>
+                                                <p class="log-section"><?=$log['section']?></p>
+                                            </td>
+
+                                            <?php if(strlen($logMessage)>0): ?>
+                                            <td class="log-message">
+                                                <p><?=$logMessage?></p>
+                                            </td>
+                                            <td>
+                                            <?php else: ?>
+                                            <td colspan="2">
+                                            <?php endif ?>
                                                 <?php if(sizeof($log['data'])>0):?>
-                                                    <table class="table meta">
+                                                    <table class="table log-meta">
                                                         <?php foreach ($log['data'] as $key => $value):?>
                                                             <tr>
-                                                                <td width="100px"><?=$key?></td>
-                                                                <td><pre><?=(is_string($value)?$value:var_export($value, true))?></pre></td>
+                                                                <td><?=$key?></td>
+                                                                <td><pre><?=var_export($value, true)?></pre></td>
                                                             </tr>
                                                         <?php endforeach?>
                                                     </table>
@@ -124,17 +170,13 @@
                     <?php endif?>
                     </div>
                     <!-- /.panel -->
-
-                    <?php if(isset($logSize) && $logSize > 0){
-                        uiAlert('Логи занимают <b>' . round($logSize / 1024 / 1024, 2) . ' MiB</b> в базе данных', 'info');
-                    }?>
                 </div>
             </div>
         </div>
     </div>
 <script type="text/javascript">
     // При клике выделяем содержимое pre
-    $('.meta pre').click(function(e){ 
+    $('.log-meta pre').dblclick(function(e){ 
         var range = document.createRange(); 
         range.selectNode($(this)[0]); 
         window.getSelection().removeAllRanges(); 

@@ -32,20 +32,20 @@ class Logger {
     	return $levels;
     }
 
-	public static function getCount(string $section = '*'): int {
+	public static function getCount(string $section = '*', int $level = -1): int {
 		if($section == '*'){
-			$q = Database::prepare('SELECT COUNT(*) c FROM `logger`');
+			$q = Database::prepare('SELECT COUNT(*) c FROM `logger` WHERE `level` >= :level');
 		} 
 		else {
-			$q = Database::prepare('SELECT COUNT(*) c FROM `logger` WHERE `section` = :section')->bind('section', $section);
+			$q = Database::prepare('SELECT COUNT(*) c FROM `logger` WHERE `section` = :section AND `level` >= :level')->bind('section', $section);
 		}
 		
+		$q->bind('level', $level);
 		$logs = $q->exec()->fetch();
 		return $logs[0]['c'] ?? -1;
 	}
 
 	public static function getList(string $section = '*', int $level = -1, int $offset = 0, int $count = 0): array {
-		$return = [];
 		$limits = (($count > 0) ? 'LIMIT ' . $count : '') . ' ' . (($offset > 0) ? 'OFFSET ' . $offset : '');
 
 		if($section == '*'){
@@ -57,12 +57,13 @@ class Logger {
 		} 
 		$q->bind('level', $level);
 		$logs = $q->exec()->fetch();
-
-		foreach ($logs as $log) {
-			$return[] = ['date' => $log['date'], 'data' => json_decode($log['data'], true)];
+		$levels = array_flip(self::getLevels());
+		foreach ($logs as $k => $log) {
+			$logs[$k]['data'] = json_decode($log['data'], true);
+			$logs[$k]['levelName'] = $levels[$log['level']] ?? -1;
 		}
 
-		return $return;
+		return $logs;
 	}
 
 
@@ -72,8 +73,6 @@ class Logger {
 	 * @param  int|integer $level 		уровень ошибки, до которого будет удалены логи
 	 * @param  int|integer $timestamp 	Метка времени, ДО которой логи будут очищены
 	 * @return bool
-	 * 
-	 * @todo !!!
 	 */
 	public static function delete(string $section = '*', int $level = -1, int $timestamp = -1): bool {
 		$sql = 'DELETE FROM `log` WHERE 1=1';
@@ -102,6 +101,14 @@ class Logger {
 		return $return;		
 	}
 
+	/**
+	 * Получить размер логов в базе данных
+	 * @return int
+	 */
+	public static function getSize(): int {
+		return Database::getSize('logger');
+	}
+
 	public static function __callStatic(string $name, array $args){
 		return new self($name);
 	}
@@ -116,14 +123,14 @@ class Logger {
 		$data['message'] = $message;
 
 		try {
-			return Database::prepare('INSERT INTO `logger` (`id`, `level`, `section`. `data`) VALUES (UUID(), :level, :section, :data)')
+			return Database::prepare('INSERT INTO `logger` (`id`, `level`, `section`, `data`) VALUES (UUID(), :level, :section, :data)')
 				->bind('level', $level)
 				->bind('section', strtolower($this->section))
 				->bind('data', json_encode($data))
 				->exec()
-				->lastInsertId() > 0;
+				->affectedRows() > 0;
 		} catch (\Exception $e){
-			return false;
+			throw new BaseException('Cannot add log entry: ' . $e->getMessage(), 0, ['level' => $level, 'section' => strtolower($this->section), 'message' => $message, 'data' => $data]);
 		}
 	}
 

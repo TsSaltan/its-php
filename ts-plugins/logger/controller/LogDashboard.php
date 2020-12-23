@@ -4,14 +4,13 @@ namespace tsframe\controller;
 use tsframe\Http;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
-use tsframe\module\Log;
+use tsframe\module\Logger;
 use tsframe\module\io\Output;
 use tsframe\module\io\Input;
 use tsframe\module\Paginator;
 
 /**
  * @route GET  /dashboard/[logs:action]
- * @route GET  /dashboard/[logs:action]/[*:type]
  * @route POST /dashboard/[logs-clear:action]/
  * @route POST /dashboard/[logs-clear:action]
  */ 
@@ -23,20 +22,24 @@ class LogDashboard extends UserDashboard {
 	public function getLogs(){
 		UserAccess::assertCurrentUser('log');
 
-		$type = $this->params['type'] ?? 'default';
+		$section = $_GET['section'] ?? '*';
+		$minLevel = $_GET['level'] ?? -1;
 
-		$this->vars['title'] = 'Системные логи';
-		$this->vars['logTypes'] = Log::getTypes();
-		$this->vars['logType'] = $type;
-
-		if($type == 'default'){
-			$this->vars['logSize'] = Log::getSize();
-		}
+		$this->vars['title'] = 'Система логирования';
+		$this->vars['logSection'] = $section;
+		$this->vars['logMinLevel'] = $minLevel;
+		$this->vars['logLevels'] = Logger::getLevels();
+		$this->vars['logSections'] = Logger::getSections();
+		$this->vars['logTotalSize'] = Logger::getSize();
+		$this->vars['logTotalCount'] = Logger::getCount();
+		
+		$logsCount = Logger::getCount($section, $minLevel);
 
 		$pages = new Paginator([], 10);
-		$pages->setDataSize(Log::getLogsCount($type));
-		$pages->setTotalDataCallback(function($offset, $limit) use ($type){
-			$logs = Log::getLogs($type, $offset, $limit);
+		$pages->setDataSize($logsCount);
+
+		$pages->setTotalDataCallback(function($offset, $limit) use ($section, $minLevel){
+			$logs = Logger::getList($section, $minLevel, $offset, $limit);
 			return Output::of($logs)->specialChars()->getData();
 		});
 
