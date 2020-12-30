@@ -26,7 +26,7 @@ class Mailer extends PHPMailer {
 
 		$this->Timelimit = 30;
 		$this->CharSet = 'utf-8';
-		$this->SMTPDebug = /*App::isDev() ? 2 :*/ 0;  
+		$this->SMTPDebug = 0;  
 
 		if(Config::isset('mailer.host')){
 			$this->Host = Config::get('mailer.host');
@@ -76,13 +76,13 @@ class Mailer extends PHPMailer {
 			'Port' => $this->Port,
 			'SMTPAuth' => $this->SMTPAuth ? 'true' : 'false',
 			'Username' => $this->Username,
-			'Password' => (strlen($this->Password) > 0) ? substr($this->Password, 0, 3) . '*** (length:' . strlen($this->Password) .')' : 'false',
+			'Password_length' => strlen($this->Password),
 		]);
 
 		if(parent::send()){
-			Logger::mail()->info('Mail #' . $this->MessageID . ' send successfully');
+			Logger::mail()->info('Mail #' . $this->MessageID . ' successfully send');
 		} else {
-			Logger::mail()->error('[Error] Mail #' . $this->MessageID . ' send failure', [
+			Logger::mail()->error('Error on sending #' . $this->MessageID, [
 				'error' => $this->ErrorInfo
 			]);
 		}
