@@ -2,6 +2,21 @@
 namespace tsframe;
 
 class Hook {
+	/**
+	 * Максимальный приоритет выполнения хука
+	 */
+	const MAX_PRIORITY = -1;
+
+	/**
+	 * Минимальный приоритет выполнения хука
+	 */
+	const MIN_PRIORITY = 100;
+
+	/**
+	 * Список хуков
+	 * @var array
+	 */
+
 	protected static $hooks = [];
 
 	/**
