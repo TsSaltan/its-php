@@ -26,14 +26,16 @@ class EditBalanceDashboard extends UserDashboard {
 		->assert();
 
 		$users = User::get(['id' => $data['user_id']]);
+		$currentUser = User::current();
 		if(sizeof($users) > 0){
 			$user = current($users);
 			$balance = floatval($data['balance']);
 			$cash = new Cash($user);
+			$description = $currentUser->get('login') . ' (id:' . $currentUser->get('id') . '): ' . $data['description'];
 			if($balance >= 0){
-				$cash->add($balance, $data['description']);
+				$cash->add($balance, $description);
 			} else {
-				$cash->sub($balance * -1, $data['description']);
+				$cash->sub($balance * -1, $description);
 			}
 
 			return Http::redirect(Http::makeURI('/dashboard/user/'.$data['user_id'].'/edit', ['balance' => '1']));

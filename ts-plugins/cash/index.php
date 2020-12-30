@@ -10,19 +10,20 @@
 namespace tsframe;
 
 use tsframe\Config;
+use tsframe\module\Logger;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
-use tsframe\module\user\User;
 use tsframe\module\user\Cash;
 use tsframe\module\user\SingleUser;
-use tsframe\module\user\UserAccess;
 use tsframe\module\user\SocialLogin;
+use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
 class CashInstaller {
 	public static function install(){
-		Plugins::required('database', 'user', 'dashboard');
+		Plugins::required('database', 'user', 'dashboard', 'logger');
 		
 		return [
 			PluginInstaller::withKey('cash.currency')
@@ -59,6 +60,7 @@ class CashInstaller {
 
 	public static function load(){
 		TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+		Logger::setUnremovableSection('cash');
 	}
 	
 	public static function addMenuTop(MenuItem $menu){
@@ -159,3 +161,26 @@ Hook::register('api.user.data', [CashInstaller::class, 'showUserBalanceApi']);
 Hook::register('template.dashboard.user.edit.balance', [CashInstaller::class, 'userBalance']);
 Hook::register('template.dashboard.user.list.column', [CashInstaller::class, 'userListColumn']);
 Hook::register('template.dashboard.user.list.item', [CashInstaller::class, 'userListItem']);
+
+
+
+/**
+ * Логирование изменения баланса пользователей
+ */
+Hook::register('cash.balance.add', function(SingleUser $user, $sum, $description, $payId){
+	Logger::cash()->info($description, [
+		'operation_type' => 'add',
+		'user' => $user->get('id'),
+		'balance' => '+' . $sum,
+		'pay_id' => $payId
+	]);
+});
+
+Hook::register('cash.balance.sub', function(SingleUser $user, $sum, $description, $payId){
+	Logger::cash()->info($description, [
+		'operation_type' => 'sub',
+		'user' => $user->get('id'),
+		'balance' => '-' . $sum,
+		'pay_id' => $payId
+	]);
+});
