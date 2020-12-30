@@ -154,7 +154,7 @@ class Logger {
 		foreach ($types as $key => $value) {
 			$return[] = $value['section'];
 		}
-
+		sort($return);
 		return $return;		
 	}
 
