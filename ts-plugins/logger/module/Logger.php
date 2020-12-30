@@ -143,8 +143,12 @@ class Logger {
 		return Database::getSize('logger');
 	}
 
-	public static function __callStatic(string $name, array $args){
+	public static function section(string $name): Logger {
 		return new self($name);
+	}
+
+	public static function __callStatic(string $name, array $args){
+		return self::section($name);
 	}
 
 	protected $section;
