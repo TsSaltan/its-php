@@ -7,6 +7,8 @@ use tsframe\exception\ControllerException;
 use tsframe\module\Meta;
 use tsframe\module\io\Input;
 use tsframe\module\io\Output;
+use tsframe\module\menu\Menu;
+use tsframe\module\menu\MenuItem;
 use tsframe\module\user\SocialLogin;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
@@ -15,10 +17,11 @@ use tsframe\view\DashboardTemplate;
 use tsframe\view\HtmlTemplate;
 
 /**
- * @route GET /dashboard -> /dashboard/index
- * @route GET /dashboard/ -> /dashboard/index
  * @route GET /dashboard/login -> /dashboard/auth#login
  * @route GET /dashboard/register -> /dashboard/auth#register
+ * 
+ * @route GET /dashboard/
+ * @route GET /dashboard
  * 
  * @route GET /dashboard/[auth|index|logout|config|config:action]
  * @route POST /dashboard/[config:action]
@@ -162,6 +165,13 @@ class Dashboard extends AbstractController{
 	}
 
 	public function response(){
+		// Автоматическое перенаправление на первый пункт меню
+		if(!isset($this->params['action']) || is_null($this->params['action'])){
+			return Menu::render('dashboard-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
+				Http::redirect($menu->getData('url'));
+			});
+		}
+
 		// Переменные, которые будут доступны всему шаблону
 		$this->vars['registerEnabled'] = UserConfig::isRegisterEnabled();
 		$this->vars['socialEnabled'] = UserConfig::isSocialEnabled();
