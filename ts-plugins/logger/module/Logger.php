@@ -90,9 +90,10 @@ class Logger {
      * @param  string      $section 
      * @param  int|integer $level   Минимальный уровень
      * @param  int|integer $fromTs  Метка времени, с которой считтать логи
+     * @param  int|integer $toTs  Метка времени, до которой считтать логи
      * @return int
      */
-	public static function getCount(string $section = '*', int $level = -1, int $fromTs = -1): int {
+	public static function getCount(string $section = '*', int $level = -1, int $fromTs = -1, int $toTs = -1): int {
 		$sql = 'SELECT COUNT(*) c FROM `logger` WHERE `level` >= :level';
 		
 		if($section != '*'){
@@ -100,7 +101,11 @@ class Logger {
 		}
 
 		if($fromTs > -1){
-			$sql .= ' AND `date` >= from_unixtime(:ts)';
+			$sql .= ' AND `date` >= from_unixtime(:from_ts)';
+		}
+
+		if($toTs >= $fromTs && $toTs > 0){
+			$sql .= ' AND `date` <= from_unixtime(:to_ts)';
 		}
 
 		$q = Database::prepare($sql);
@@ -111,23 +116,49 @@ class Logger {
 		}
 
 		if($fromTs > -1){
-			$q->bind('ts', $fromTs);
+			$q->bind('from_ts', $fromTs);
+		}
+
+
+		if($toTs >= $fromTs && $toTs > 0){
+			$q->bind('to_ts', $toTs);
 		}
 
 		$logs = $q->exec()->fetch();
 		return $logs[0]['c'] ?? -1;
 	}
 
-	public static function getList(string $section = '*', int $level = -1, int $offset = 0, int $count = 0): array {
+	public static function getList(string $section = '*', int $level = -1, int $fromTs = -1, int $toTs = -1, int $offset = 0, int $count = 0): array {
 		$limits = (($count > 0) ? 'LIMIT ' . $count : '') . ' ' . (($offset > 0) ? 'OFFSET ' . $offset : '');
 
-		if($section == '*'){
-			$q = Database::prepare('SELECT * FROM `logger` WHERE `level` >= :level ORDER BY `date` DESC ' . $limits);
+		$sqlWhere = '`level` >= :level';
+
+		if($section != '*'){
+			$sqlWhere .= ' AND `section` = :section';
 		} 
-		else {
-			$q = Database::prepare('SELECT * FROM `logger` WHERE `section` = :section AND `level` >= :level ORDER BY `date` DESC ' . $limits);
+
+		if($fromTs > -1){
+			$sqlWhere .= ' AND `date` >= from_unixtime(:from_ts)';
+		}
+
+		if($toTs >= $fromTs && $toTs > 0){
+			$sqlWhere .= ' AND `date` <= from_unixtime(:to_ts)';
+		}
+
+		$q = Database::prepare('SELECT * FROM `logger` WHERE ' . $sqlWhere . ' ORDER BY `date` DESC ' . $limits);
+
+		if($section != '*'){
 			$q->bind('section', $section);
 		} 
+
+		if($fromTs > -1){
+			$q->bind('from_ts', $fromTs);
+		}
+
+		if($toTs >= $fromTs && $toTs > 0){
+			$q->bind('to_ts', $toTs);
+		}
+
 		$q->bind('level', $level);
 		$logs = $q->exec()->fetch();
 		$levels = array_flip(self::getLevels());

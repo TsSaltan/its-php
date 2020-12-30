@@ -25,12 +25,18 @@ class LogDashboard extends UserDashboard {
 		$section = $_GET['section'] ?? '*';
 		$minLevel = $_GET['level'] ?? -1;
 
+
+		$tsFrom = isset($_GET['ts_from_date']) 	? \DateTime::createFromFormat('Y-m-d H:i', $_GET['ts_from_date'] . ' ' . ($_GET['ts_from_time'] ?? '00:00'))->format('U') : -1;
+		$tsTo 	= isset($_GET['ts_to_date']) 	? \DateTime::createFromFormat('Y-m-d H:i', $_GET['ts_to_date'] . ' ' . ($_GET['ts_to_time'] ?? '00:00'))->format('U') : -1;
+
 		$this->vars['title'] = 'Система логирования';
 		$this->vars['logSection'] = $section;
 		$this->vars['logMinLevel'] = $minLevel;
 		$this->vars['logLevels'] = Logger::getLevels();
 		$this->vars['logTotalSize'] = Logger::getSize();
 		$this->vars['logTotalCount'] = Logger::getCount();
+		$this->vars['logTsFrom'] = $tsFrom;
+		$this->vars['logTsTo'] = ($tsTo > 0) ? $tsTo : time() + 24*60*60;
 		
 		// Sections and removable sections
 		$sections = Logger::getSections();
@@ -43,12 +49,12 @@ class LogDashboard extends UserDashboard {
 		$this->vars['logRemovableSections'] = $sections;
 
 		// Count and pages
-		$logsCount = Logger::getCount($section, $minLevel);
+		$logsCount = Logger::getCount($section, $minLevel, $tsFrom, $tsTo);
 		$pages = new Paginator([], 10);
 		$pages->setDataSize($logsCount);
 
-		$pages->setTotalDataCallback(function($offset, $limit) use ($section, $minLevel){
-			$logs = Logger::getList($section, $minLevel, $offset, $limit);
+		$pages->setTotalDataCallback(function($offset, $limit) use ($section, $minLevel, $tsFrom, $tsTo){
+			$logs = Logger::getList($section, $minLevel, $tsFrom, $tsTo, $offset, $limit);
 			return Output::of($logs)->specialChars()->getData();
 		});
 

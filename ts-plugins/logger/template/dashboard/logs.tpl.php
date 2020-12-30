@@ -29,7 +29,7 @@
                         <div class="panel-heading clearfix">
                             <form action="" method="GET">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Раздел</label>
                                             <select class="form-control" name="section">
@@ -40,7 +40,8 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Минимальный уровень критичности</label>
                                             <select class="form-control" name="level">
@@ -51,7 +52,28 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Интервал времени</label>
+  
+                                            <div class="row">
+                                                <div class="col-md-1"><p class="form-control-static">От</p></div>
+                                                <div class="col-md-6"><input type="date" class="form-control" name="ts_from_date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsFrom)?>"/></div>
+                                                <div class="col-md-5"><input type="time" class="form-control" name="ts_from_time" value="<?=date('H:i', $logTsFrom)?>"/></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-1"><p class="form-control-static">До</p></div>
+                                                <div class="col-md-6"><input type="date" class="form-control" name="ts_to_date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsTo)?>"/></div>
+                                                <div class="col-md-5"><input type="time" class="form-control" name="ts_to_time" value="<?=date('H:i', $logTsTo)?>"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>&nbsp;</label>
                                             <button class="form-control btn btn-block btn-primary">Применить фильтр</button>
