@@ -158,11 +158,6 @@ class Cash {
 		Hook::call('cash.balance.add', [$this->user, $sum, $description, $payId]);
 		Hook::call('cash.balance.change', [$this->user, '+' . $sum, $description, $payId]);
 
-		Logger::cash()->info($description, [
-			'user' => $this->user->get('id'),
-			'balance' => '+' . $sum,
-			'pay_id' => $payId
-		]);
 		$this->setBalance();
 	}
 
@@ -179,11 +174,6 @@ class Cash {
 		Hook::call('cash.balance.sub', [$this->user, $sum, $description, $payId]);
 		Hook::call('cash.balance.change', [$this->user, '-' . $sum, $description, $payId]);
 
-		Logger::cash()->info($description, [
-			'user' => $this->user->get('id'),
-			'balance' => '-' . $sum,
-			'pay_id' => $payId
-		]);
 		$this->setBalance();
 	}
 

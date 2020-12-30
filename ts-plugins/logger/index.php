@@ -39,8 +39,29 @@ Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
  * Логирование регистрации пользователей
  */
 Hook::register('user.register', function(SingleUser $user){
-	Logger::section('user-registration')->info('User "'. $user->get('login') .'" was registered', [
+	(new Logger('user-registration'))->info('User "'. $user->get('login') .'" was registered', [
 		'id' => $user->get('id'), 
 		'email' => $user->get('email'),
+	]);
+});
+
+/**
+ * Логирование изменения баланса пользователей
+ */
+Hook::call('cash.balance.add', function(SingleUser $user, $sum, $description, $payId){
+	Logger::cash()->info($description, [
+		'operation_type' => 'balance.add',
+		'user' => $this->user->get('id'),
+		'balance' => '+' . $sum,
+		'pay_id' => $payId
+	]);
+});
+
+Hook::call('cash.balance.sub', function(SingleUser $user, $sum, $description, $payId){
+	Logger::cash()->info($description, [
+		'operation_type' => 'balance.sub',
+		'user' => $this->user->get('id'),
+		'balance' => '-' . $sum,
+		'pay_id' => $payId
 	]);
 });
