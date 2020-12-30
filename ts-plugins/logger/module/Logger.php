@@ -53,6 +53,25 @@ class Logger {
      */
     CONST LEVEL_EMERGENCY = 7;
 
+    /**
+     * Список неудаляемых типов
+     * @var array
+     */
+    protected static $unremovableSections = [];
+
+    public static function getUnremovableSections(): array {
+    	return self::$unremovableSections;
+    }
+
+    public static function isUnremovableSection(string $section): bool {
+    	return in_array(strtolower($section), self::$unremovableSections);
+    }
+
+    public static function setUnremovableSection(string $section){
+    	self::$unremovableSections[] = strtolower($section);
+    	self::$unremovableSections = array_unique(self::$unremovableSections);
+    }
+
     public static function getLevels(): array {
     	$constants = Reflect::getConstants(__CLASS__);
     	$levels = [];
@@ -108,16 +127,20 @@ class Logger {
 	 * @param  int|integer $timestamp 	Метка времени, ДО которой логи будут очищены
 	 * @return bool
 	 */
-	public static function delete(string $section = '*', int $level = -1, int $timestamp = -1): bool {
-		$sql = 'DELETE FROM `logger` WHERE 1=1';
+	public static function delete(string $section, int $level = -1, int $timestamp = -1): bool {
+		if(self::isUnremovableSection($section)){
+			throw new BaseException('Try to delete unremovable section "'. $section .'"');
+			return false;
+		}
 
-		if($section != '*') $sql .= ' AND `section` = :section';
+		$sql = 'DELETE FROM `logger` WHERE `section` = :section';
+
 		if($level > -1) $sql .= ' AND `level` = :level';
 		if($timestamp > -1) $sql .= ' AND `date` <= from_unixtime(:ts)';
 
 		$query = Database::prepare($sql); 
+		$query->bind('section', $section);
 
-		if($section != '*') $query->bind('section', $section);
 		if($level > -1) $query->bind('level', $level);
 		if($timestamp > -1) $query->bind('ts', $timestamp);
 
@@ -182,5 +205,16 @@ class Logger {
 		$message = (string) $params[0];
 		$data = (array) ($params[1] ?? []);
 		return $this->add($level, $message, $data);
+	}
+
+	/**
+	 * Сделать текущий раздел неудаляемым (т.е. нельзя удалить через админку)
+	 */
+	public function makeUnremovable(){
+		self::setUnremovableSection($this->section);
+	}
+
+	public function isUnremovable(): bool {
+		return self::isUnremovableSection($this->section);
 	}
 }

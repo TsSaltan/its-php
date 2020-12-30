@@ -29,12 +29,21 @@ class LogDashboard extends UserDashboard {
 		$this->vars['logSection'] = $section;
 		$this->vars['logMinLevel'] = $minLevel;
 		$this->vars['logLevels'] = Logger::getLevels();
-		$this->vars['logSections'] = Logger::getSections();
 		$this->vars['logTotalSize'] = Logger::getSize();
 		$this->vars['logTotalCount'] = Logger::getCount();
 		
-		$logsCount = Logger::getCount($section, $minLevel);
+		// Sections and removable sections
+		$sections = Logger::getSections();
+		$this->vars['logSections'] = $sections;
+		foreach ($sections as $k => $s) {
+			if(Logger::isUnremovableSection($s)){
+				unset($sections[$k]);
+			}
+		}
+		$this->vars['logRemovableSections'] = $sections;
 
+		// Count and pages
+		$logsCount = Logger::getCount($section, $minLevel);
 		$pages = new Paginator([], 10);
 		$pages->setDataSize($logsCount);
 

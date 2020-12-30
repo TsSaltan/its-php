@@ -79,9 +79,8 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Раздел</label>
-                                                        <select class="form-control" name="section">
-                                                            <option value="*">Все разделы</option>    
-                                                            <?php foreach ($logSections as $section): ?>
+                                                        <select class="form-control" name="section">  
+                                                            <?php foreach ($logRemovableSections as $section): ?>
                                                             <option value="<?=$section?>" <?php if($section == $logSection):?>selected<?php endif ?>><?=ucfirst($section)?></option>  
                                                             <?php endforeach?>
                                                         </select>
