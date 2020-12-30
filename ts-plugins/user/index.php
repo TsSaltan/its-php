@@ -12,6 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\Config;
 use tsframe\Http;
 use tsframe\controller\Dashboard;
+use tsframe\module\Logger;
 use tsframe\module\Mailer;
 use tsframe\module\io\Input;
 use tsframe\module\menu\Menu;
@@ -163,7 +164,6 @@ Hook::register('template.dashboard.config', function(Template $tpl){
 });
 
 /**
- * @todo
  * Отправка e-mail зарегистрированным пользователям
  */
 Hook::register('user.register', function(SingleUser $user){
@@ -190,3 +190,14 @@ Hook::register('user.register', function(SingleUser $user){
     	$mail->send();
 	}
 }, Hook::MIN_PRIORITY);
+
+
+/**
+ * Логирование регистрации пользователей
+ */
+Hook::register('user.register', function(SingleUser $user){
+	(new Logger('user-registration'))->info('User "'. $user->get('login') .'" was registered', [
+		'id' => $user->get('id'), 
+		'email' => $user->get('email'),
+	]);
+});
