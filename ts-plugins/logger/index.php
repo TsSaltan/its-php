@@ -48,7 +48,7 @@ Hook::register('user.register', function(SingleUser $user){
 /**
  * Логирование изменения баланса пользователей
  */
-Hook::call('cash.balance.add', function(SingleUser $user, $sum, $description, $payId){
+Hook::register('cash.balance.add', function(SingleUser $user, $sum, $description, $payId){
 	Logger::cash()->info($description, [
 		'operation_type' => 'balance.add',
 		'user' => $this->user->get('id'),
@@ -57,7 +57,7 @@ Hook::call('cash.balance.add', function(SingleUser $user, $sum, $description, $p
 	]);
 });
 
-Hook::call('cash.balance.sub', function(SingleUser $user, $sum, $description, $payId){
+Hook::register('cash.balance.sub', function(SingleUser $user, $sum, $description, $payId){
 	Logger::cash()->info($description, [
 		'operation_type' => 'balance.sub',
 		'user' => $this->user->get('id'),
