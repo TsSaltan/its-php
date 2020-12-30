@@ -7,8 +7,10 @@ namespace tsframe;
 
 use tsframe\Hook;
 use tsframe\Plugins;
+use tsframe\module\Logger;
 use tsframe\module\database\Database;
 use tsframe\module\menu\MenuItem;
+use tsframe\module\user\SingleUser;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
@@ -30,4 +32,15 @@ Hook::registerOnce('plugin.load', function(){
 
 Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
 	$menu->add(new MenuItem('Логи', ['url' => Http::makeURI('/dashboard/logs'), 'fa' => 'list-alt', 'access' => UserAccess::getAccess('log')]));
+});
+
+
+/**
+ * Логирование регистрации пользователей
+ */
+Hook::register('user.register', function(SingleUser $user){
+	Logger::section('user-registration')->info('User "'. $user->get('login') .'" was registered', [
+		'id' => $user->get('id'), 
+		'email' => $user->get('email'),
+	]);
 });
