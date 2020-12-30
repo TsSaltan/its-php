@@ -14,7 +14,8 @@
         <div class="row">
             <?php $this->hook('dashboard.stat.before') ?>
     
-            <!-- Users critical errors -->
+            <!-- Critical errors -->
+            <?php if(isset($summary_critical_total)): ?>
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-<?=($summary_critical_total > 0) ? 'red' : 'green'?>">
                     <div class="panel-heading">
@@ -40,8 +41,10 @@
                     </a>
                 </div>
             </div>
+            <?php endif ?>
 
             <!-- Users stats-->
+            <?php if(isset($summary_users_total)): ?>
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -86,6 +89,7 @@
                     </a>
                 </div>
             </div>
+            <?php endif ?>
 
             <?php $this->hook('dashboard.stat.after') ?>
         </div>
