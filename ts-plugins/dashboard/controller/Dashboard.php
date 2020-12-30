@@ -166,7 +166,7 @@ class Dashboard extends AbstractController{
 
 	public function response(){
 		// Автоматическое перенаправление на первый пункт меню
-		if(!isset($this->params['action']) || is_null($this->params['action'])){
+		if(strlen($this->getAction('')) == 0){
 			return Menu::render('dashboard-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
 				Http::redirect($menu->getData('url'));
 			});
