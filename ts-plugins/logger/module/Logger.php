@@ -85,15 +85,35 @@ class Logger {
     	return $levels;
     }
 
-	public static function getCount(string $section = '*', int $level = -1): int {
-		if($section == '*'){
-			$q = Database::prepare('SELECT COUNT(*) c FROM `logger` WHERE `level` >= :level');
-		} 
-		else {
-			$q = Database::prepare('SELECT COUNT(*) c FROM `logger` WHERE `section` = :section AND `level` >= :level')->bind('section', $section);
-		}
+    /**
+     * Получить количество запичей
+     * @param  string      $section 
+     * @param  int|integer $level   Минимальный уровень
+     * @param  int|integer $fromTs  Метка времени, с которой считтать логи
+     * @return int
+     */
+	public static function getCount(string $section = '*', int $level = -1, int $fromTs = -1): int {
+		$sql = 'SELECT COUNT(*) c FROM `logger` WHERE `level` >= :level';
 		
+		if($section != '*'){
+			$sql .= ' AND `section` = :section';
+		}
+
+		if($fromTs > -1){
+			$sql .= ' AND `date` >= from_unixtime(:ts)';
+		}
+
+		$q = Database::prepare($sql);
 		$q->bind('level', $level);
+
+		if($section != '*'){
+			$q->bind('section', $section);
+		}
+
+		if($fromTs > -1){
+			$q->bind('ts', $fromTs);
+		}
+
 		$logs = $q->exec()->fetch();
 		return $logs[0]['c'] ?? -1;
 	}
