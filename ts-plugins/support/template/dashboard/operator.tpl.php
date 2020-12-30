@@ -67,7 +67,7 @@
                             </div>
                         </div>
                         
-                        <div class="panel-footer"><?php uiPaginatorFooter($chats)?></div>
+                        <div class="panel-footer"><?php $this->uiPaginatorFooter($chats)?></div>
                     </div>
                     <!-- /.panel -->
                 </div>

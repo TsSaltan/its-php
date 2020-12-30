@@ -1,39 +1,31 @@
 <?php $this->incHeader(); ?>
-<?php uiNavbar(true, false); ?>
+<?php $this->uiNavbar(true, false); ?>
 
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <?php
-            $alert = isset($alert) ? $alert : [];
-            $authTabs = [];
 
-            // Tab: login / Авторизация
-            $authTabs['login']['title'] = function(){
-                ?>
-                <i class='fa fa-user-md'></i>&nbsp;Авторизация
-                <?php
-            };
+            echo   $this->uiTabPanel('panel-default login-panel')
+                        ->tab('login',
+                            function(){
+                                ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?php
+                            }, 
+                            
+                            function() use ($socialLoginTemplate, $socialEnabled, $loginEnabled){ 
+                                $this->inc('auth-login');              
+                            }
+                        )
 
-            $authTabs['login']['content'] = function() use ($socialLoginTemplate, $socialEnabled, $loginEnabled, $alert){ 
-                $this->inc('auth-login');              
-            };
+                        ->tab('register', 
+                            function(){
+                                ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?php
+                            },
 
-            // Tab: register / Регистрация
-            if($registerEnabled){       
-                $authTabs['register']['title'] =  function(){
-                    ?>
-                    <i class='fa fa-user-plus'></i>&nbsp;Регистрация
-                    <?php
-                };
-
-                $authTabs['register']['content'] = function() use ($loginEnabled, $passwordEnabled){                    
-                    $this->inc('auth-register');              
-                };
-            }
-            
-            $this->hook('auth', [&$authTabs]);
-            uiTabPanel(null, $authTabs, 0, 'panel-default login-panel');
+                            function() use ($loginEnabled, $passwordEnabled){                    
+                                $this->inc('auth-register');              
+                            }
+                        );  
             ?>
         </div>
     </div>

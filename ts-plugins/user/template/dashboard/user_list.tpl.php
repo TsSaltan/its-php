@@ -54,7 +54,7 @@
                                 </div>
                                 <!-- /.table-responsive -->
                             </div>
-                            <div class="panel-footer"><?php uiPaginatorFooter($userList)?></div>
+                            <div class="panel-footer"><?php $this->uiPaginatorFooter($userList)?></div>
                         </div>
                         <!-- /.panel -->
 

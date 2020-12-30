@@ -1,5 +1,5 @@
 <div class="col-lg-12">
-    <?php showAlerts($this->vars['cashAlert'] ?? [])?>
+    <?php $this->uiAlerts($this->vars['cashAlert'] ?? [])?>
     <h3>Текущий счёт</h3>
     <p>Ваш баланс составляет: <b><?=$this->balance?></b> <?=$this->balanceCurrency?></p>
 </div>

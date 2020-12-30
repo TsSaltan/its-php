@@ -214,7 +214,7 @@
                             <!-- /.table-responsive -->
                         </div>
 
-                        <div class="panel-footer"><?php uiPaginatorFooter($logs)?></div>
+                        <div class="panel-footer"><?php $this->uiPaginatorFooter($logs)?></div>
                     <?php endif?>
                     </div>
                     <!-- /.panel -->

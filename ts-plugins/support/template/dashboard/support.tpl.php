@@ -89,7 +89,7 @@
                         </div>
                         
                         <?php if($userChats->isData()):?>
-                        <div class="panel-footer"><?php uiPaginatorFooter($userChats)?></div>
+                        <div class="panel-footer"><?php $this->uiPaginatorFooter($userChats)?></div>
                         <?php endif?>
                     </div>
                     <!-- /.panel -->

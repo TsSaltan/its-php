@@ -13,7 +13,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                <?php showAlerts()?>
+                <?php $this->uiAlerts(); ?>
                 </div>
             </div>
             <!-- /.row -->
@@ -22,7 +22,7 @@
             $configTabs = [];
             $configTabs['main']['title'] = 'Основные настройки';
             $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginEnabled){
-                uiAlert();
+                $this->uiAlert();
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
@@ -60,9 +60,9 @@
             $configTabs['password']['title'] = 'Изменение пароля';
             $configTabs['password']['content'] = function() use ($selectUser, $self){
                 if(isset($this->vars['tempPass']) && $this->vars['tempPass'] !== false){
-                    uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b><br/>Рекомендуется его сменить', 'warning');
+                    $this->uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b><br/>Рекомендуется его сменить', 'warning');
                 } else {
-                    uiAlert();
+                    $this->uiAlert();
                 }
 
                 if($self): ?>
@@ -92,7 +92,7 @@
 
             $configTabs['sessions']['title'] = 'Сессии';
             $configTabs['sessions']['content'] = function() use ($user, $selectUser){
-                uiAlert();
+                $this->uiAlert();
                 ?>
                 <div class="table-responsive" id='sessions'>
                     <table class="table table-striped table-bordered table-hover">
@@ -128,7 +128,7 @@
             if(isset($socialEnabled) && $socialEnabled){
                 $configTabs['social']['title'] = 'Социальные сети';
                 $configTabs['social']['content'] = function() use ($self, $social, $selectUser, $socialLoginTemplate) {
-                    showAlerts($this->vars['socialAlert'] ?? []);
+                    $this->uiAlerts($this->vars['socialAlert'] ?? []);
                     ?>
 
                     <div class="panel-body col-lg-6">

@@ -1,7 +1,5 @@
-<?php if(isset($alert)) showAlerts($alert); ?>
-<div class="alert hidden">
-	<p class='text'></p>    
-</div>
+<?php $this->uiAlerts(); ?>
+<?php $this->uiAlert(); ?>
 
 <form role="form" onsubmit="tsUser.login(this); return false;">
 	<div class="form-group">

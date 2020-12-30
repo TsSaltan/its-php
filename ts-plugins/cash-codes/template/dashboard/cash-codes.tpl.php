@@ -13,7 +13,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-        			<?php showAlerts()?>
+        			<?php $this->uiAlerts()?>
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left">Добавить код</div>
@@ -33,36 +33,31 @@
                 
 
                 <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading clearfix">
-                            <div class="panel-title pull-left">Список платёжных кодов</div>
-                            <div class="pull-right">
-                                
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Код</th>
-                                            <th>Сумма</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($codes as $code):?>
-                                        <tr>
-                                            <td><?=$code['code']?></td>
-                                            <td><?=$code['balance']?></td>
-                                        </tr>
-                                        <?php endforeach?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
-                        </div>
-                    </div>
-                    <!-- /.panel -->
+                    <?php echo $this->uiPanel('panel-primary')
+                                    ->header('Список платёжных кодов')
+                                    ->body(function(){
+                                        ?>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Код</th>
+                                                        <th>Сумма</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach($this->vars['codes'] as $code):?>
+                                                    <tr>
+                                                        <td><?=$code['code']?></td>
+                                                        <td><?=$code['balance']?></td>
+                                                    </tr>
+                                                    <?php endforeach?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <?php
+                                    });
+                    ?>
                 </div>
             </div>
         </div>
