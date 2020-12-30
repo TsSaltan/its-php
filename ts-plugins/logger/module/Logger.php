@@ -143,12 +143,11 @@ class Logger {
 		return Database::getSize('logger');
 	}
 
-	public static function section(string $name): Logger {
-		return new self($name);
-	}
-
+	/**
+	 * Выбрать раздел логов для их дальнейшего добавления (алиас для конструктора)
+	 */
 	public static function __callStatic(string $name, array $args){
-		return self::section($name);
+		return new self($name);
 	}
 
 	protected $section;
