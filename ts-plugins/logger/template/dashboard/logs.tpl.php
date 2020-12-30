@@ -137,9 +137,9 @@
                                 <table id="table-logger" class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <th width="40px">Тип</th>
-                                        <th width="125px">Дата / Раздел</th>
-                                        <th>Сообщение </th>
-                                        <th style="min-width: 500px">Мета</th>
+                                        <th width="135px">Дата / Раздел</th>
+                                        <th width="300px">Сообщение</th>
+                                        <th>Мета</th>
                                     </thead>
                                     <tbody>
                                         <?php foreach($logs->getData() as $log): ?>
