@@ -137,6 +137,7 @@ class UserDashboard extends Dashboard {
 
 		if(isset($this->params['user_id'])){
 			$this->self = $this->params['user_id'] == 'me' || $this->params['user_id'] == $this->currentUser->get('id');
+			$this->params['action'] = 'profile';
 
 			if(!$this->self){
 				$select = array_values(User::get(['id' => $this->params['user_id']]));
