@@ -4,7 +4,7 @@ namespace tsframe;
 use tsframe\exception\AutoloadException;
 use tsframe\Logger;
 
-class Autoload{
+class Autoload {
 	/**
 	 * Расширение скриптов
 	 * @var string

@@ -19,7 +19,7 @@ use tsframe\exception\RouteException;
  * @link https://github.com/dannyvankooten/AltoRouter
  * 
  */
-class Router{
+class Router {
 
 	/**
 	 * @var AltoRouter

@@ -3,7 +3,7 @@ namespace tsframe;
 
 use tsframe\Hook;
 
-class Http{
+class Http {
 
 	const CODE_OK = 			200;
 	const CODE_CREATED = 		201;

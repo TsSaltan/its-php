@@ -10,7 +10,7 @@ if(App::install()){
 
 	// Migrate scripts
 
-	// 
+	// Migrate from v 1.0
 	$canReg = Config::get('user.canRegister');
 	if(!is_null($canReg)){
 		Config::set('user.auth.register', $canReg);

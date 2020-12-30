@@ -4,7 +4,8 @@ namespace tsframe;
 /**
  * Reflection functions
  */
-class Reflect{
+class Reflect {
+	
 	/**
 	 * Получить список классов и их расположение по namespace
 	 * @param  string $namespace [description]
