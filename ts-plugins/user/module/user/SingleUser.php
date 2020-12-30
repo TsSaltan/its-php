@@ -9,7 +9,7 @@ use tsframe\module\database\Database;
 use tsframe\module\user\UserConfig;
 
 
-class SingleUser{
+class SingleUser {
 	/**
 	 * Время действия пользовательской сессии (сек)
 	 */
@@ -84,6 +84,7 @@ class SingleUser{
 		$this->login = $login;
 		$this->email = $email;
 		$this->access = $access;
+		$this->accessText = array_flip(UserAccess::getArray())[$this->access];
 		$this->password = $password;
 
 		if(is_null($this->login)){
@@ -96,7 +97,6 @@ class SingleUser{
 	}
 
 	public function get(string $data){
-		$this->accessText = array_flip(UserAccess::getArray())[$this->access];
 		return $this->{$data} ?? null;
 	}
 
@@ -108,6 +108,9 @@ class SingleUser{
 		elseif($key == 'id' || !property_exists($this, $key)){
 			// ID и несуществующие поля не меняем
 			return false;
+		}
+		elseif($key == 'access'){
+			$this->accessText = array_flip(UserAccess::getArray())[$value];
 		}
 		
 		$this->{$key} = $value;

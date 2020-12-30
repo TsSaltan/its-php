@@ -10,7 +10,9 @@ namespace tsframe;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\Config;
+use tsframe\Http;
 use tsframe\controller\Dashboard;
+use tsframe\module\Mailer;
 use tsframe\module\io\Input;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
@@ -25,7 +27,6 @@ use tsframe\view\TemplateRoot;
  * Загрузка плагина
  */
 Hook::registerOnce('plugin.load', function(){
-
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 
@@ -166,11 +167,26 @@ Hook::register('template.dashboard.config', function(Template $tpl){
  * Отправка e-mail зарегистрированным пользователям
  */
 Hook::register('user.register', function(SingleUser $user){
-	/*$mail = new PHPMailer;
-	$mail->addReplyTo('no-reply@' . $_SERVER['SERVER_NAME'], Dashboard::getSiteName());
-	$mail->addAddress($user->get('email'));
-	$mail->subject = 'Успешная регистрация';
-	$mail->altBody = 'Вы успешно зарегистрированы на сайте ' . $_SERVER['SERVER_NAME'];
-	$mail->send();*/
-	mail($user->get('email'), 'Регистрация на сайте ' . Dashboard::getSiteName(), 'Здравствуйте, ' . $user->get('login') . '. Вы зарегистрированы на сайте ' . Dashboard::getSiteHome());
+	if(UserConfig::isEmailOnRegister()){
+		$mail = new Mailer;
+		$mail->addAddress($user->get('email'));
+		$mail->isHTML(true);  // Set email format to HTML
+    	$mail->Subject = "Данные авторизации " . $_SERVER['HTTP_HOST'];
+    	$link = Http::makeURI('/dashboard/login');
+    	$message = "<p>Ссылка для авторизации: <a href='$link'>$link</a></p>";
+
+    	if(UserConfig::isLoginEnabled()){
+			$message .= "<p>Имя пользователя: <b>" . $user->get('login') . "</b></p>";
+		}
+		else $message .= "<p>E-mail: <b>" . $user->get('email') . "</b></p>";
+
+    	if(UserConfig::isPasswordEnabled()){
+			$message .= "<p>Пароль: <i>указанный вами пароль при регистрации</i></p>";
+		} else {
+			$message .= "<p>Пароль: <b>" . $user->get('password') . "</b></p>";
+		}
+
+    	$mail->Body = $message;
+    	$mail->send();
+	}
 }, Hook::MIN_PRIORITY);
