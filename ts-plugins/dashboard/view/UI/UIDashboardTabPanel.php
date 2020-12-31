@@ -57,11 +57,6 @@ class UIDashboardTabPanel extends UIAbstractElement {
 			'content' => $content
 		];
 
-		// Активным будет первый таб по умолчанию
-		if(is_null($this->activeTab)){
-			$this->activeTab = $id;
-		}
-
 		return $this;
 	}
 
@@ -69,6 +64,11 @@ class UIDashboardTabPanel extends UIAbstractElement {
 		if(is_null($this->uiTabBase)){
 			$this->uiTabBase();
 			$this->header = $this->panel->header($this->uiTabBase);
+		}
+
+		// Активным будет первый таб по умолчанию
+		if(is_null($this->activeTab) || !isset($this->tabs[$this->activeTab])){
+			$this->activeTab = array_keys($this->tabs)[0] ?? null;
 		}
 
 		foreach ($this->tabs as $tabId => $tabData){
