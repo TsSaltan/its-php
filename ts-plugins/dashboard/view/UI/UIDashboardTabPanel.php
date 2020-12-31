@@ -61,7 +61,7 @@ class UIDashboardTabPanel extends UIAbstractElement {
 	}
 
 
-	public function render(): string {
+	public function render(){
 		$tabHeader = function(){ 
 			?>
 			<ul class="nav nav-tabs">

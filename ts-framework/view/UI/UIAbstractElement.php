@@ -1,17 +1,38 @@
 <?php
 namespace tsframe\view\UI;
 
+use tsframe\view\Template;
+
 
 abstract class UIAbstractElement {
+	abstract function render();
 
-	abstract function render(): string ;
+	protected $tpl;
+
+	public function setTemplate(Template $tpl){
+		$this->tpl = $tpl;
+	}
+
+	protected $id;
+
+	public function setId(string $id){
+		$this->id = $id;
+	}
+
+	public function getId(): string {
+		if(strlen($this->id) == 0){
+			$this->id = uniqid('ui-');
+		}
+
+		return $this->id;
+	}
 
 	protected function getContent($content): ?string {
 		if(is_string($content)){
 			return $content;
 		}
 
-		if(is_callable($content)){
+		elseif(is_callable($content)){
 			ob_start();
 			echo call_user_func($content);
 			return ob_get_clean();
@@ -47,6 +68,8 @@ abstract class UIAbstractElement {
 	}
 
 	public function __toString(){
-		return $this->render();
+		return $this->getContent(function(){ 
+			return $this->render(); 
+		});
 	}
 }

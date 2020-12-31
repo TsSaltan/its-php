@@ -41,7 +41,7 @@ class UIDashboardPanel extends UIAbstractElement {
 		return $this;
 	}
 
-	public function render(): string {
+	public function render(){
 		return $this->getContent(function(){ 
 			?>
 			<!-- .panel --><div id="<?=$this->panelId?>" class="<?=$this->getClassString('panel', $this->panelClass)?>"><?=$this->html?></div><!-- /.panel -->
