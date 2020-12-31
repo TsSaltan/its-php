@@ -4,17 +4,18 @@
     "type": "framework",
     "authors": [
         {
-            "name": "Ts.Saltan",
+            "name": "tssaltan",
             "email": "tssaltan@gmail.com"
         }
     ],
-    "version":"1.0.0.0",
+    "version":"dev-3.0",
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",
         "andr-04/jquery.inputmask-multi": "1.2.0",
         "dragonmantank/cron-expression": "2.2",
-        "minishlink/web-push": "^5.2",
-        "phpmailer/phpmailer": "~6.0"
+        "minishlink/web-push": "5.2",
+        "phpmailer/phpmailer": "6.0",
+        "Airmanbzh/php-html-generator": "dev-master"
     }
 }
