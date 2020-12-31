@@ -13,44 +13,43 @@
             <?php $this->hook('config')?>
             
             <form action="<?=$this->makeURI('/dashboard/config/theme')?>" method="POST">
-                <?php uiCollapsePanel('Настройки внешнего вида', function(){ 
+                <?php 
+                $themePane = $this->uiCollapsePanel('default');
+                $themePane->setId('theme');
+                $themePane->header($this->uiIcon('eye') . '&nbsp;Настройки внешнего вида');
+                $themePane->body(function(){ 
                     $this->inc('config-theme');
-                }, 
-
-                function(){
-                    ?><button class='btn btn-primary'>Сохранить</button><?php
-                },
-                
-                "panel-default",
-                "eye",
-                "theme"); ?>
+                });
+                $themePane->footer(function(){ ?><button class='btn btn-primary'>Сохранить</button><?php });
+                echo $themePane;
+                ?>
             </form>            
             
             <form action="<?=$this->makeURI('/dashboard/config/siteinfo')?>" method="POST">
-                <?php uiCollapsePanel('Изменить информацию о сайте', function(){ 
+                <?php 
+                $siteinfoPane = $this->uiCollapsePanel('default');
+                $siteinfoPane->setId('siteinfo');
+                $siteinfoPane->header($this->uiIcon('info-circle') . '&nbsp;Изменить информацию о сайте');
+                $siteinfoPane->body(function(){ 
                     $this->inc('config-siteinfo');
-                }, 
-
-                function(){
-                    ?><button class='btn btn-primary'>Сохранить</button><?php
-                },
-                
-                "panel-default",
-                "info-circle",
-                "siteinfo"); ?>
+                });
+                $siteinfoPane->footer(function(){ ?><button class='btn btn-primary'>Сохранить</button><?php });
+                echo $siteinfoPane;
+                ?>
             </form>
 
             <form method="POST">
-                <?php uiCollapsePanel('Системный файл настроек', function() use ($systemConfigs){
-                    echo $this->uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'warning', false);
+                <?php 
+                $cfgPane = $this->uiCollapsePanel('primary');
+                $cfgPane->setId('configFile');
+                $cfgPane->header($this->uiIcon('file-text-o') . ' Системный файл настроек');
+                $cfgPane->body(function() use ($systemConfigs){ 
+                    echo $this->uiAlert('Будьте осторожны при редактировании системного файла настроек!', 'info', false);
                     echo $this->uiJsonEditor($systemConfigs, 'config');
-                }, function(){
-                    ?><button class='btn btn-success'>Сохранить</button><?php
-                },
-                "panel-default",
-                "file-text-o",
-                "configFile"
-                )?>
+                });
+                $cfgPane->footer(function(){ ?><button class='btn btn-primary'>Сохранить</button><?php });
+                echo $cfgPane;
+                ?>
             </form>
         </div>
     </div>

@@ -5,6 +5,7 @@ use tsframe\module\DashboardDesigner;
 use tsframe\module\Meta;
 use tsframe\module\menu\Menu;
 use tsframe\view\HtmlTag;
+use tsframe\view\UI\UIDashboardCollapsePanel;
 use tsframe\view\UI\UIDashboardNavbar;
 use tsframe\view\UI\UIDashboardPanel;
 use tsframe\view\UI\UIDashboardTabPanel;
@@ -90,7 +91,7 @@ class DashboardTemplate extends HtmlTemplate {
 	    $text->addClass('text');
 	    $text->text($message);
 
-	    return $text;
+	    return $alert;
 	}
 
 
@@ -273,5 +274,22 @@ class DashboardTemplate extends HtmlTemplate {
 	 */
 	public function uiTabPanel(?string $panelType = 'default'): UIDashboardTabPanel {
 		return new UIDashboardTabPanel($panelType);
+	}
+
+	/**
+	 * Отобразить сворачиваемую панель
+	 * @param  string $panelType
+	 * @return UIDashboardCollapsePanel
+	 */
+	public function uiCollapsePanel(?string $panelType = 'default'): UIDashboardCollapsePanel {
+		return new UIDashboardCollapsePanel($panelType);
+	}
+
+	public function uiIcon(string $icon): HtmlTag {
+		$i = HtmlTag::createElement('i');
+		$i->addClass('fa');
+		$i->addClass('fa-' . $icon);
+
+		return $i;
 	}
 }
