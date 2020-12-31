@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\view\UI;
 
+use tsframe\view\HtmlTag;
 use tsframe\view\UI\UIAbstractElement;
 use tsframe\view\UI\UIDashboardPanel;
 
@@ -13,14 +14,14 @@ class UIDashboardTabPanel extends UIAbstractElement {
 	protected $panel;
 
 	/**
-	 * @var callable|string|null
+	 * @var HtmlTag
 	 */
-	protected $header = null;
+	protected $header;
 
 	/**
-	 * @var callable|string|null
+	 * @var HtmlTag
 	 */
-	protected $footer = null;
+	protected $uiTabBase = null;
 
 	/**
 	 * @var array
@@ -32,18 +33,17 @@ class UIDashboardTabPanel extends UIAbstractElement {
 	 */
 	protected $activeTab = null;
 
-	public function __construct($panelClass = null){
-		$this->panel = new UIDashboardPanel($this->getClassString('tabbed-panel', $panelClass));
+	public function __construct(string $panelType = null){
+		$this->panel = new UIDashboardPanel($panelType);
 	}
 
-	public function header($header){
-		$this->header = $header;
-		return $this;
+	public function header($header): HtmlTag {
+		$this->header = $this->panel->header($header, $this->uiTabBase());	
+		return $this->header;
 	}
 
-	public function footer($footer){
-		$this->footer = $footer;
-		return $this;
+	public function footer($footer): HtmlTag {
+		return $this->panel->footer($footer);	
 	}
 
 	public function setActiveTab(string $id){
@@ -57,47 +57,65 @@ class UIDashboardTabPanel extends UIAbstractElement {
 			'content' => $content
 		];
 
+		// Активным будет первый таб по умолчанию
+		if(is_null($this->activeTab)){
+			$this->activeTab = $id;
+		}
+
 		return $this;
 	}
 
-
-	public function render(){
-		$tabHeader = function(){ 
-			?>
-			<ul class="nav nav-tabs">
-                <?php foreach ($this->tabs as $tabId => $tabData):?>
-                <li<?php if($tabId == $this->activeTab):?> class="active"<?php endif ?>>
-                    <a href="#<?=$tabId?>" data-toggle="tab"><?=$this->getContent($tabData['title'])?></a>
-                </li>
-                <?php endforeach?>
-            </ul>
-			<?php
-		};
-
-		if(is_null($this->header)){
-			$this->panel->header($tabHeader, null, null, null, null);
-		} 
-		else {
-			$this->panel->header($this->header, $tabHeader, null, "panel-title", null);
+	public function render(): HtmlTag {
+		if(is_null($this->uiTabBase)){
+			$this->uiTabBase();
+			$this->header = $this->panel->header($this->uiTabBase);
 		}
 
+		foreach ($this->tabs as $tabId => $tabData){
+			$li = $this->uiTabBase->addElement('li');
+			$a = $li->addElement('a');
 
-		$tabBody = function(){ 
-			?><div class="tab-content"><?php 
-				foreach ($this->tabs as $tabId => $tabData):
-                	?><div class="tab-pane fade<?php if($tabId == $this->activeTab):?> in active<?php endif ?>" id="<?=$tabId?>"><?php
-     				echo $this->getContent($tabData['content']);
-            		?></div><?php 
-            	endforeach; 
-            ?></div><?php
-		};
-		$this->panel->body($tabBody);
+			if($tabId == $this->activeTab){
+				$li->addClass('active');
+			}
 
-		if(!is_null($this->footer)){
-			$this->panel->footer($this->footer);
-		} 
+			$a->set('href', '#' . $tabId);
+			$a->set('data-toggle', 'tab');
+			$a->text($this->getContent($tabData['title']));
+		}
 
-		return $this->getContent($this->panel);
+		$headerItems = $this->header->getChild();
+		$tabHeader = end($headerItems);
+		$tabHeader->removeClass('panel-title');
+
+		$body = $this->panel->body()->addElement('div');
+		$body->addClass('tab-content');
+
+		foreach ($this->tabs as $tabId => $tabData){
+			$pane = $body->addElement('div');
+			$pane->addClass('tab-pane');
+			$pane->addClass('fade');
+
+			if($tabId == $this->activeTab){
+				$pane->addClass('in');
+				$pane->addClass('active');
+			}
+
+			$pane->id($tabId);
+			$pane->text($this->getContent($tabData['content']));
+		}
+
+		$panel = $this->panel->render();
+		$panel->addClass('tabbed-panel');
+
+		return $panel;
 	}
-	
+
+	protected function uiTabBase(): HtmlTag {
+		$this->uiTabBase = HtmlTag::createElement('ul');
+		$this->uiTabBase->addClass('nav');
+		$this->uiTabBase->addClass('nav-tabs');
+
+		return $this->uiTabBase;
+	}	
 }

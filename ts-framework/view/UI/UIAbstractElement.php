@@ -1,17 +1,18 @@
 <?php
 namespace tsframe\view\UI;
 
+use tsframe\view\HtmlTag;
 use tsframe\view\Template;
 
-
 abstract class UIAbstractElement {
-	abstract function render();
+	abstract function render(): HtmlTag ;
 
 	protected $tpl;
 
 	public function setTemplate(Template $tpl){
 		$this->tpl = $tpl;
 	}
+
 
 	protected $id;
 
@@ -27,8 +28,11 @@ abstract class UIAbstractElement {
 		return $this->id;
 	}
 
-	protected function getContent($content): ?string {
-		if(is_string($content)){
+	/**
+	 * @return null|string|HtmlTag
+	 */
+	protected function getContent($content) {
+		if(is_string($content) || $content instanceof HtmlTag){
 			return $content;
 		}
 
@@ -69,7 +73,7 @@ abstract class UIAbstractElement {
 
 	public function __toString(){
 		return $this->getContent(function(){ 
-			return $this->render(); 
+			echo $this->render(); 
 		});
 	}
 }

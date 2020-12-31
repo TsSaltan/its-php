@@ -1,9 +1,8 @@
 <?php
 namespace tsframe\view\UI;
 
-use HtmlGenerator\HtmlTag;
+use tsframe\view\HtmlTag;
 use tsframe\view\UI\UIAbstractElement;
-
 
 class UIDashboardNavbar extends UIAbstractElement {
 	protected $nav;
@@ -25,7 +24,7 @@ class UIDashboardNavbar extends UIAbstractElement {
 		return $this;
 	}
 
-	public function render(){
+	public function render(): HtmlTag {
 		$this->nav->set('id', $this->getId());
 		return $this->nav;
 	}

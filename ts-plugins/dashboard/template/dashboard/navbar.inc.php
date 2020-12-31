@@ -1,1 +1,1 @@
-<?php $this->uiNavbar() ?>
+<?php echo $this->uiNavbar() ?>

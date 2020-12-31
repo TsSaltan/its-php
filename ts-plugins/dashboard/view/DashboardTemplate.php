@@ -1,9 +1,11 @@
 <?php
 namespace tsframe\view;
 
+use HtmlGenerator\HtmlTag;
 use tsframe\module\DashboardDesigner;
 use tsframe\module\Meta;
 use tsframe\module\menu\Menu;
+use tsframe\view\UI\UIDashboardNavbar;
 use tsframe\view\UI\UIDashboardPanel;
 use tsframe\view\UI\UIDashboardTabPanel;
 
@@ -45,14 +47,20 @@ class DashboardTemplate extends HtmlTemplate {
 	 * @param  bool|boolean $top  Показать верхний бар
 	 * @param  bool|boolean $side Показать боковой бар
 	 */
-	public function uiNavbar(bool $top = true, bool $side = true){
-	    ?>
-	    <!-- Navigation -->
-	    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-top" role="navigation">
-	        <?php if($top)  $this->incNavtop()?>
-	        <?php if($side) $this->incNavside()?>
-	    </nav>
-	    <?php
+	public function uiNavbar(bool $top = true, bool $side = true, string $id = "navbar-top"){
+		$nav = new UIDashboardNavbar($top, $side);
+		$nav->setId($id);
+		$nav->setTemplate($this);
+
+		if($top){
+			$nav->navtop();
+		}
+
+		if($side){
+			$nav->navside();
+		}
+
+		return $nav;
 	}
 
 	/**
@@ -103,7 +111,6 @@ class DashboardTemplate extends HtmlTemplate {
 	    <ul class="nav nav-tabs">
 	        <li class="active"><a href="#<?=$fieldID?>-visual" data-toggle="tab">Визуальный редактор</a></li>
 	        <li><a href="#<?=$fieldID?>-plain" data-toggle="tab">Исходный код</a></li>
-
 	    </ul>
 
 	    <div class="tab-content">
@@ -119,13 +126,13 @@ class DashboardTemplate extends HtmlTemplate {
 
 	    <script type="text/javascript">   
 	        $(function(){
-	            var $formGroup = $(<?=json_encode('#' . $fieldID . '-form-group')?>);
-	            var $textarea = $(<?=json_encode('#' . $fieldID . '-textarea')?>);
-	            var jeditor, data = <?=json_encode($data)?>;
-	            var container = document.getElementById(<?=json_encode($fieldID . '-editor')?>);
-	            var options = {
+	            let $formGroup = $(<?=json_encode('#' . $fieldID . '-form-group')?>);
+	            let $textarea = $(<?=json_encode('#' . $fieldID . '-textarea')?>);
+	            let jeditor, data = <?=json_encode($data)?>;
+	            let container = document.getElementById(<?=json_encode($fieldID . '-editor')?>);
+	            let options = {
 	                onChange: function(){
-	                    var sourceJson = jeditor.get();
+	                    let sourceJson = jeditor.get();
 	                    $textarea.val(JSON.stringify(sourceJson, null, 2));
 	                }
 	            };
@@ -135,7 +142,7 @@ class DashboardTemplate extends HtmlTemplate {
 
 	            // Обработчик редактора исходного JSON кода
 	            $textarea.change(function() {
-	                var val = $textarea.val();
+	                let val = $textarea.val();
 
 	                if (val) {
 	                    try { 
@@ -190,12 +197,36 @@ class DashboardTemplate extends HtmlTemplate {
 	    <?php
 	}
 
+	public function uiRow(): HtmlTag {
+		$tag = HtmlTag::createElement('div');
+		$tag->addClass('row');
+
+		return $tag;
+	}
+
+	/**
+	 * Row column
+	 * @param  int|integer $colsNum from 1 to 12
+	 * @param  string      $size    xs | sm | md | lg | xl
+	 * @return HtmlTag
+	 * @see https://getbootstrap.ru/docs/v4-alpha/layout/grid/#grid-options
+	 */
+	public function uiCol(int $colsNum = 12, string $size = 'lg'): HtmlTag {
+		$tag = HtmlTag::createElement('div');
+		$tag->addClass('col-' . $size . $colsNum);
+
+		return $tag;
+	}
+
 	/**
 	 * Отобразить футер для пагинатора (ссылки на страницы + выбор колчества элементов)
 	 * @param  Paginator $paginator 
 	 * @return null      Сразу выводит HTML-контент  
 	 */
 	public function uiPaginatorFooter($paginator){
+		$row = $this->uiRow();
+		$row->addElement();
+
 	    ?><div class="row">
 	        <div class="col-lg-6">
 	            <?php $this->uiPaginatorNav($paginator)?>
@@ -209,19 +240,19 @@ class DashboardTemplate extends HtmlTemplate {
 
 	/**
 	 * Отобразить панель
-	 * @param  string $panelClass
+	 * @param  string $panelType
 	 * @return UIDashboardPanel
 	 */
-	public function uiPanel(?string $panelClass = 'panel-default'): UIDashboardPanel {
-		return new UIDashboardPanel($panelClass);
+	public function uiPanel(?string $panelType = 'default'): UIDashboardPanel {
+		return new UIDashboardPanel($panelType);
 	}
 
 	/**
 	 * Отобразить панель с табами
-	 * @param  string $panelClass
+	 * @param  string $panelType
 	 * @return UIDashboardPanel
 	 */
-	public function uiTabPanel(?string $panelClass = 'panel-default'): UIDashboardTabPanel {
-		return new UIDashboardTabPanel($panelClass);
+	public function uiTabPanel(?string $panelType = 'default'): UIDashboardTabPanel {
+		return new UIDashboardTabPanel($panelType);
 	}
 }

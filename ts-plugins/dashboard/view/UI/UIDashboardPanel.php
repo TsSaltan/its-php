@@ -1,51 +1,64 @@
 <?php
 namespace tsframe\view\UI;
 
+use tsframe\view\HtmlTag;
 use tsframe\view\UI\UIAbstractElement;
 
-
 class UIDashboardPanel extends UIAbstractElement {
-	protected $panelClass;
-	protected $panelId;
-	protected $html = '';
+	protected $panel, $header, $body, $footer;
 
-	public function __construct($panelClass = null, ?string $panelId = null){
-		$this->panelClass = $panelClass;
-		$this->panelId = (strlen($panelId) == 0) ? uniqid('panel-'): $panelId;
+	public function __construct(string $panelType = null){
+		$this->panel = HtmlTag::createElement('div');
+		$this->panel->addClass('panel');
+
+		if(!is_null($panelType)){
+			$this->panel->addClass('panel-' . $panelType);
+		}
 	}
 
-	public function header($contentLeft = null, $contentRight = null, ?string $classes = null, ?string $contentLeftClasses = "panel-title", ?string $contentRightClasses = "panel-title"){
-		$this->html .= $this->getContent(function() use ($contentLeft, $contentRight, $classes, $contentLeftClasses, $contentRightClasses){
-			?><div class="<?=$this->getClassString('panel-heading', 'clearfix', $classes)?>"><?php
-            	if(!is_null($contentLeft)):?><div class="<?=$this->getClassString('pull-left', $contentLeftClasses)?>"><?=$this->getContent($contentLeft)?></div><?php endif;
-            	if(!is_null($contentRight)):?><div class="<?=$this->getClassString('pull-right', $contentRightClasses)?>"><?=$this->getContent($contentRight)?></div><?php endif;
-        	?></div><?php
-		});
+	public function header($contentLeft = null, $contentRight = null): HtmlTag {
+		$header = HtmlTag::createElement('div');
+		$header->addClass('panel-heading');
+		$header->addClass('clearfix');
 
-		return $this;
+        if(!is_null($contentLeft)){
+			$left = $header->addElement('div');
+			$left->addClass('pull-left');
+			$left->addClass('panel-title');
+			$left->text($this->getContent($contentLeft));
+        }
+
+        if(!is_null($contentRight)){
+			$right = $header->addElement('div');
+			$right->addClass('pull-right');
+			$right->addClass('panel-title');
+			$right->text($this->getContent($contentRight));
+        }
+
+		return $this->header = $header;
 	}
 
-	public function body($content = null, ?string $classes = null){
-		$this->html .= $this->getContent(function() use ($content, $classes){
-			?><div class="panel-body <?=$classes?>"><?=$this->getContent($content)?></div><?php
-		});
+	public function body($content = null): HtmlTag {
+		$body = HtmlTag::createElement('div');
+		$body->addClass('panel-body');
+		$body->text($this->getContent($content));
 
-		return $this;
+		return $this->body = $body;
 	}
 
-	public function footer($content = null, ?string $classes = null){
-		$this->html .= $this->getContent(function() use ($content, $classes){
-			?><div class="panel-footer <?=$classes?>"><?=$this->getContent($content)?></div><?php
-		});
+	public function footer($content = null): HtmlTag {
+		$footer = HtmlTag::createElement('div');
+		$footer->addClass('panel-footer');
+		$footer->text($this->getContent($content));
 
-		return $this;
+		return $this->footer = $footer;
 	}
 
-	public function render(){
-		return $this->getContent(function(){ 
-			?>
-			<!-- .panel --><div id="<?=$this->panelId?>" class="<?=$this->getClassString('panel', $this->panelClass)?>"><?=$this->html?></div><!-- /.panel -->
-			<?php
-		});
+	public function render(): HtmlTag {
+		$this->panel->set('id', $this->getId());
+		$this->panel->addElement($this->header);
+		$this->panel->addElement($this->body);
+		$this->panel->addElement($this->footer);
+		return $this->panel;
 	}
 }

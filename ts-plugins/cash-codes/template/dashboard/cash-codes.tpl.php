@@ -33,30 +33,33 @@
                 
 
                 <div class="col-lg-12">
-                    <?php echo $this->uiPanel('panel-primary')
-                                    ->header('Список платёжных кодов')
-                                    ->body(function(){
-                                        ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Код</th>
-                                                        <th>Сумма</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach($this->vars['codes'] as $code):?>
-                                                    <tr>
-                                                        <td><?=$code['code']?></td>
-                                                        <td><?=$code['balance']?></td>
-                                                    </tr>
-                                                    <?php endforeach?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <?php
-                                    });
+                    <?php 
+                    $panel = $this->uiPanel('default');
+                    $panel->header('Список платёжных кодов');
+                    $panel->body(function(){
+                        ?>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Код</th>
+                                        <th>Сумма</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($this->vars['codes'] as $code):?>
+                                    <tr>
+                                        <td><?=$code['code']?></td>
+                                        <td><?=$code['balance']?></td>
+                                    </tr>
+                                    <?php endforeach?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php
+                    });
+
+                    echo $panel;
                     ?>
                 </div>
             </div>
