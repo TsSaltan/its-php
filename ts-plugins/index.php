@@ -147,7 +147,7 @@ Hook::register('database.query', function(Query $query){
  *
  *   Страницы User
  *   - Редактирование пользователя
- *     template.dashboard.user.edit (Template $tpl, array &$configTabs, int|string &$activeTab)
+ *     template.dashboard.user.edit (Template $tpl, UIDashboardTabPanel $configTabs)
  *     
  *   - Редактирование пользователя: вкладка с балансом
  *     template.dashboard.user.edit.balance (Template $tpl, SingleUser $selectUser)

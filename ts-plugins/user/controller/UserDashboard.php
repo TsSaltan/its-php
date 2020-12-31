@@ -2,17 +2,18 @@
 namespace tsframe\controller;
 
 use tsframe\Config;
-use tsframe\Http;
-use tsframe\module\Meta;
 use tsframe\Hook;
-use tsframe\module\io\Input;
-use tsframe\module\user\User;
-use tsframe\module\user\UserConfig;
-use tsframe\module\user\UserAccess;
-use tsframe\module\user\SocialLogin;
-use tsframe\module\Paginator;
-use tsframe\view\HtmlTemplate;
+use tsframe\Http;
 use tsframe\exception\RouteException;
+use tsframe\module\Meta;
+use tsframe\module\Paginator;
+use tsframe\module\io\Input;
+use tsframe\module\user\SocialLogin;
+use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
+use tsframe\module\user\UserConfig;
+use tsframe\view\HtmlTemplate;
+use tsframe\view\UI\UIDashboardTabPanel;
 
 /**
  * @route GET /dashboard/profile -> /dashboard/user/me
@@ -75,8 +76,8 @@ class UserDashboard extends Dashboard {
 				}
 
 				// Включим таб со страницой соц сетей
-				Hook::register('template.dashboard.user.edit', function($tpl, &$configTabs, &$activeTab){
-					$activeTab = 3;
+				Hook::register('template.dashboard.user.edit', function($tpl, UIDashboardTabPanel $configTabs){
+					$configTabs->setActiveTab('social');
 				});
 			}
 		} else {

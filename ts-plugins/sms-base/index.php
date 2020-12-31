@@ -10,13 +10,14 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Plugins;
-use tsframe\module\menu\MenuItem;
-use tsframe\module\user\UserAccess;
-use tsframe\module\user\User;
 use tsframe\module\io\Input;
-use tsframe\view\TemplateRoot;
-use tsframe\view\Template;
+use tsframe\module\menu\MenuItem;
+use tsframe\module\user\User;
+use tsframe\module\user\UserAccess;
 use tsframe\view\HtmlTemplate;
+use tsframe\view\Template;
+use tsframe\view\TemplateRoot;
+use tsframe\view\UI\UIDashboardTabPanel;
 
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
@@ -43,19 +44,18 @@ Hook::registerOnce('plugin.load', function(){
 	});
 });
 
-Hook::register('template.dashboard.user.edit', function(Template $tpl, array &$configTabs, &$activeTab){
+Hook::register('template.dashboard.user.edit', function(Template $tpl, UIDashboardTabPanel $configTabs){
 	if(is_null($tpl->selectUser)) return;
 	$selectUser = $tpl->selectUser;
 
 	if($tpl->self || UserAccess::checkCurrentUser('user.edit')){
 		if(isset($_GET['phone'])){
-			$activeTab = 'phone';
+			$configTabs->setActiveTab('phone');
 		}
 
-		$configTabs['phone']['title'] = 'Телефон';
-		$configTabs['phone']['content'] = function() use ($tpl, $selectUser){
+		$configTabs->tab('phone', 'Телефон', function() use ($tpl, $selectUser){
 			$tpl->inc('user_phone');
-		};
+		});
 	}
 });
 

@@ -20,6 +20,7 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
+use tsframe\view\UI\UIDashboardTabPanel;
 
 class CashInstaller {
 	public static function install(){
@@ -67,13 +68,13 @@ class CashInstaller {
 		$menu->add(new MenuItem('Баланс: ' . Cash::currentUser()->getBalance() . ' ' . Cash::getCurrency(), ['url' => Http::makeURI('/dashboard/user/me/edit?balance'), 'fa' => 'money', 'access' => UserAccess::getAccess('user.self')]), -2);
 	}
 
-	public static function addEditTab(Template $tpl, array &$configTabs, &$activeTab){
+	public static function addEditTab(Template $tpl, UIDashboardTabPanel $configTabs){
 		if(is_null($tpl->selectUser)) return;
 		$selectUser = $tpl->selectUser;
 
 		if(($tpl->self && UserAccess::checkCurrentUser('cash.self')) || (!$tpl->self && UserAccess::checkCurrentUser('cash.view'))){
 			if(isset($_GET['balance'])){
-				$activeTab = 'balance';
+				$configTabs->setActiveTab('balance');
 
 				switch($_GET['balance']){
 					case 'frompay':
@@ -98,15 +99,14 @@ class CashInstaller {
 				}
 			}
 
-			$configTabs['balance']['title'] = 'Баланс';
-			$configTabs['balance']['content'] = function() use ($tpl, $selectUser){
+			$configTabs->tab('balance', 'Баланс', function() use ($tpl, $selectUser){
 				$cash = new Cash($selectUser);
 				$tpl->var('balance', $cash->getBalance());
 				$tpl->var('balanceCurrency',  Cash::getCurrency());
 				$tpl->var('balanceHistory', $cash->getHistory());
 
 				$tpl->inc('balance');
-			};
+			});
 		}
 	}
 

@@ -19,10 +19,9 @@
             <!-- /.row -->
 
             <?php 
-            $configTabs = [];
-            $configTabs['main']['title'] = 'Основные настройки';
-            $configTabs['main']['content'] = function() use ($user, $selectUser, $self, $loginEnabled){
-                $this->uiAlert();
+            $configTabs = $this->uiTabPanel();
+            $configTabs->tab('main', 'Основные настройки', function() use ($user, $selectUser, $self, $loginEnabled){
+                echo $this->uiAlert();
                 ?>
                 <form role="form" onsubmit="tsUser.edit(this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
@@ -54,15 +53,14 @@
                         <a href="<?=$this->makeURI('/dashboard/user/' . $selectUser->get('id') . '/delete')?>" class="btn btn-danger btn-outline btn-sm" title='Удалить'><i class='fa fa-remove'></i> Удалить профиль</a><?php endif?>
                     </div>
                 </form>
-                <?php 
-            };
+                <?php
+            });
 
-            $configTabs['password']['title'] = 'Изменение пароля';
-            $configTabs['password']['content'] = function() use ($selectUser, $self){
+            $configTabs->tab('password', 'Изменение пароля', function() use ($selectUser, $self){
                 if(isset($this->vars['tempPass']) && $this->vars['tempPass'] !== false){
-                    $this->uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b><br/>Рекомендуется его сменить', 'warning');
+                    echo $this->uiAlert('Вам установлен автоматически сгенерированный пароль: <b>'.$this->vars['tempPass'].'</b><br/>Рекомендуется его сменить', 'warning');
                 } else {
-                    $this->uiAlert();
+                    echo $this->uiAlert();
                 }
 
                 if($self): ?>
@@ -88,11 +86,10 @@
                     </form>
                 </p>
                 <?php 
-            };
+            });
 
-            $configTabs['sessions']['title'] = 'Сессии';
-            $configTabs['sessions']['content'] = function() use ($user, $selectUser){
-                $this->uiAlert();
+            $configTabs->tab('sessions', 'Сессии', function() use ($selectUser, $user){
+                echo $this->uiAlert();
                 ?>
                 <div class="table-responsive" id='sessions'>
                     <table class="table table-striped table-bordered table-hover">
@@ -123,12 +120,11 @@
                     <button type="submit" class="btn btn-primary">Закрыть все сессии</button>
                 </form>
                 <?php 
-            };
+            });
 
             if(isset($socialEnabled) && $socialEnabled){
-                $configTabs['social']['title'] = 'Социальные сети';
-                $configTabs['social']['content'] = function() use ($self, $social, $selectUser, $socialLoginTemplate) {
-                    $this->uiAlerts($this->vars['socialAlert'] ?? []);
+                $configTabs->tab('social', 'Социальные сети', function() use ($self, $social, $selectUser, $socialLoginTemplate) {
+                    echo $this->uiAlerts($this->vars['socialAlert'] ?? []);
                     ?>
 
                     <div class="panel-body col-lg-6">
@@ -165,17 +161,14 @@
                             </div> 
                         </div>
                         <?php endforeach?>
-
-                        
-
                     </div>                                        
                     <?php 
-                };
+                });
             }
 
-            $activeTab = 0;
-            $this->hook('user.edit', [&$configTabs, &$activeTab]);
-            uiTabPanel(null, $configTabs, $activeTab, 'panel-default');
+            $this->hook('user.edit', [$configTabs]);
+
+            echo $configTabs;
             ?>
         </div>
     </div>
