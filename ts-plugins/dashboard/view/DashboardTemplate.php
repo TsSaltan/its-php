@@ -1,10 +1,10 @@
 <?php
 namespace tsframe\view;
 
-use HtmlGenerator\HtmlTag;
 use tsframe\module\DashboardDesigner;
 use tsframe\module\Meta;
 use tsframe\module\menu\Menu;
+use tsframe\view\HtmlTag;
 use tsframe\view\UI\UIDashboardNavbar;
 use tsframe\view\UI\UIDashboardPanel;
 use tsframe\view\UI\UIDashboardTabPanel;
@@ -68,14 +68,29 @@ class DashboardTemplate extends HtmlTemplate {
 	 * @param string $message Текст сообщения
 	 * @param string $type=info|danger|warning|error|success
 	 */
-	public function uiAlert(string $message = null, string $type = 'info', bool $closable = true){
-	    $view = is_null($message) ? 'hidden' : '';
-	    ?>
-	    <div class="alert alert-<?=$type?> <?=$view?>">
-	        <?php if($closable): ?><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><?php endif ?>
-	        <p class='text'><?=$message?></p>
-	    </div>
-	    <?php
+	public function uiAlert(string $message = null, string $type = 'info', bool $closable = true): HtmlTag {
+	    $alert = HtmlTag::createElement('div');
+	    $alert->addClass('alert');
+	    $alert->addClass('alert-' . $type);
+
+	    if(is_null($message)){
+	    	$alert->addClass('hidden');
+	    }
+
+	    if($closable){
+	    	$close = $alert->addElement('button');
+	    	$close->addClass('close');
+	    	$close->set('type', 'button');
+	    	$close->set('data-dismiss', 'alert');
+	    	$close->set('aria-hidden', 'true');
+	    	$close->text('&times;');
+	    }
+	    
+	    $text = $alert->addElement('p');
+	    $text->addClass('text');
+	    $text->text($message);
+
+	    return $text;
 	}
 
 
@@ -84,18 +99,22 @@ class DashboardTemplate extends HtmlTemplate {
 	 * или массив уведомлений
 	 * @param  array|null $alerts [type=>[message1, message2], type2=>message3...]
 	 */
-	public function uiAlerts(array $alerts = []){
+	public function uiAlerts(array $alerts = []): HtmlTag {
+		$alertTags = HtmlTag::createElement('');
+
 	    if(sizeof($alerts) == 0){
-	        if(!is_array($this->alert)) return;
+	        if(!is_array($this->alert)) return $alertTags;
 	        $alerts = $this->alert;
 	    }
 
 	    foreach($alerts as $type => $messages){
 	        $messages = is_array($messages) ? $messages : [$messages];
 	        foreach ($messages as $message) {
-	            $this->uiAlert($message, $type);
+	            $alertTags->addElement($this->uiAlert($message, $type));
 	        }
 	    }
+
+	    return $alertTags;
 	}
 
 	/**

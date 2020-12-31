@@ -3,9 +3,9 @@
 
 function(){
     if(isset($_GET['sms']) && $_GET['sms'] == 'ok'):
-        $this->uiAlert('SMS отправлено!', 'success');
+        echo $this->uiAlert('SMS отправлено!', 'success');
     elseif(isset($_GET['sms']) && $_GET['sms'] == 'fail'):
-        $this->uiAlert('Ошибка при отправке SMS!', 'danger');
+        echo $this->uiAlert('Ошибка при отправке SMS!', 'danger');
     endif;
 
     uiPhoneField(null, 'phone');

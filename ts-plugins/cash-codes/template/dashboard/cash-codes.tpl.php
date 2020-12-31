@@ -13,7 +13,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-        			<?php $this->uiAlerts()?>
+        			<?php echo $this->uiAlerts()?>
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left">Добавить код</div>

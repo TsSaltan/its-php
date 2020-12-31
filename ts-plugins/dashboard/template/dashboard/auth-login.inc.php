@@ -1,5 +1,5 @@
-<?php $this->uiAlerts(); ?>
-<?php $this->uiAlert(); ?>
+<?php echo $this->uiAlerts(); ?>
+<?php echo $this->uiAlert(); ?>
 
 <form role="form" onsubmit="tsUser.login(this); return false;">
 	<div class="form-group">
