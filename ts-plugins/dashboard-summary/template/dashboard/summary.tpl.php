@@ -45,6 +45,14 @@
                             <div class="clearfix"></div>
                         </div>
                     </a>
+                    <a href="<?=$this->makeURI('/dashboard/summary', ['action' => 'reset-errors'])?>">
+                        <div class="panel-footer">
+                            <span class="pull-left">Сбросить счётчик ошибок</span>
+                            <span class="pull-right"><i class="fa fa-check-circle"></i></span>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
                 </div>
             </div>
             <?php endif ?>
