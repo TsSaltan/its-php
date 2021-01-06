@@ -27,6 +27,7 @@ class WebPushClientsDashboard extends UserDashboard {
 		$this->vars['clients'] = new Paginator(WebPushClient::class, 10);
 		$this->vars['location'] = WebPushClient::getUniqueValues();
 		$this->vars['queues'] = WebPushQueue::getList();
+		$this->vars['userAccesses'] = UserAccess::getArray();
 	}
 
 	public function postQueue(){
@@ -35,6 +36,7 @@ class WebPushClientsDashboard extends UserDashboard {
 		Input::post()
 			->name('country')->required()
 			->name('city')->required()
+			->name('user-group')->required()
 			->name('title')->required()->minLength(1)->maxLength(250)
 			->name('body')->required()->minLength(1)->maxLength(1000)
 			->name('icon')->required()->minLength(1)->maxLength(500)

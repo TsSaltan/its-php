@@ -50,6 +50,16 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>Группа пользователей</label>
+                                    <select class="form-control" name="user-group">
+                                        <option value="-1">Все, в т.ч. незарегистрированные пользователи</option>
+                                        <?php foreach($userAccesses as $accessName => $accessLevel):?>
+                                        <option value="<?=$accessLevel?>">Зарегистрированные с минимальным доступом <?=$accessName?></option>
+                                        <?php endforeach?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
                                     <label>Заголовок</label>
                                     <input class="form-control" placeholder="Максимум 250 символов" maxlength="250" name="title" type="text" required>
                                 </div>

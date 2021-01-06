@@ -27,25 +27,35 @@ class WebPushClient implements PaginatorInterface {
 
 	/**
 	 * Найти id клиентов по гео параметрам
-	 * @param  string|null $country 
-	 * @param  string|null $city    
+	 * @param  string|null 	$country 
+	 * @param  string|null 	$city    
+	 * @param  int 			$userAccess  Минимальный уровень доступа, см. UserAccess константы, -1 все пользователи, в т.ч. незарегистрированные 
 	 * @return array
 	 */
-	public static function findIdsByParams(?string $country = null, ?string $city = null): array {
-		$countryQuery = null;
-		$cityQuery = null;
+	public static function findIdsByParams(?string $country = null, ?string $city = null, int $userAccess = -1): array {
+		$condQuery = null;
 		$args = [];
+
 		if(!is_null($country) && $country !== '*'){
-			$countryQuery = ' AND `country` = :country';
+			$condQuery .= ' AND `country` = :country';
 			$args['country'] = $country;
 		}
 
 		if(!is_null($city) && $city !== '*'){
-			$cityQuery = ' AND `city` = :city';
+			$condQuery .= ' AND `city` = :city';
 			$args['city'] = $city;
 		}
 
-		$q = Database::exec('SELECT `id` FROM `web-push-clients` WHERE `id` > 0'.$countryQuery.$cityQuery, $args)->fetch();
+		if($userAccess > -1){
+			$args['access'] = $userAccess;
+			$q = Database::exec("SELECT wc.`id` 'id' FROM `web-push-clients` wc 
+								 INNER JOIN `users` u ON u.`access` >= :access
+								 INNER JOIN `web-push-user-to-clients` u2c ON u.`id` = u2c.`user`
+								 WHERE wc.`id` = u2c.`client`" . $condQuery, $args)->fetch();
+		} else {
+			$q = Database::exec('SELECT `id` FROM `web-push-clients` WHERE `id` > 0' . $condQuery, $args)->fetch();
+		}
+
 		return array_column($q, 'id');
 	}
 
@@ -235,7 +245,7 @@ class WebPushClient implements PaginatorInterface {
 
 	public function addUser(SingleUser $user){
 		$q = Database::exec('INSERT INTO `web-push-user-to-clients` (`user`, `client`) VALUES (:user, :client)', [
-			'endpoint' => $user->get('id'),
+			'user' => $user->get('id'),
 			'client' => $this->getId(),
 		]);
 
