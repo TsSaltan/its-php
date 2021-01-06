@@ -36,28 +36,33 @@ class Mailer extends PHPMailer {
 			$this->Port = Config::get('mailer.port');
 		}
 
-
 		$meta = new Meta('dashboard');
 		$sitename = $meta->get('sitename');
-		if(Config::isset('mailer.from')){
-			$this->setFrom(Config::get('mailer.from'), $sitename);   	
-		}
-		elseif(Config::isset('mailer.email')){
-			$this->setFrom(Config::get('mailer.email'), $sitename);   	
-		}else{
-			$this->setFrom('admin@'.$_SERVER['SERVER_NAME'], $sitename);  
+
+		// Params for SMTP connection
+		if(Config::isset('mailer.sender') && strtolower(Config::get('mailer.sender')) == 'smtp'){
+			$this->isSMTP();
+	   		$this->SMTPAuth = true;
+	    	$this->Username = Config::get('mailer.from.email');                                 
+	    	$this->Password = Config::get('mailer.smtp.password');
+
+	    	if(Config::isset('mailer.smtp.secure') && (Config::get('mailer.smtp.secure') != 'none')){
+    			$this->SMTPSecure = Config::get('mailer.smtp.secure');
+			}
 		}
 
-		if(Config::isset('mailer.email') && Config::isset('mailer.password')){
-    		$this->isSMTP();
-    		$this->SMTPAuth = true;
-    		$this->Username   = Config::get('mailer.email');                                 
-    		$this->Password   = Config::get('mailer.password');
+		$fromEmail = 'admin@'.$_SERVER['SERVER_NAME'];
+		$fromName = $sitename;
+		
+		if(Config::isset('mailer.from.email') && strlen(Config::get('mailer.from.email')) > 0) {
+			$fromEmail = Config::get('mailer.from.email');
+		}
+				
+		if(Config::isset('mailer.from.name') && strlen(Config::get('mailer.from.name')) > 0) {
+			$fromName = Config::get('mailer.from.name');
 		}
 
-		if(Config::isset('mailer.secure') && (Config::get('mailer.secure') != 'none')){
-    		$this->SMTPSecure = Config::get('mailer.secure');
-		}
+		$this->setFrom($fromEmail, $fromName);  
 	}
 
 	/**
