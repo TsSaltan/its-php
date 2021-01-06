@@ -26,7 +26,7 @@ use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('geodata', 'sheduler', 'user', 'dashboard');
+	Plugins::required('geodata', 'scheduler', 'user', 'dashboard');
 	
 	return [
 		PluginInstaller::withKey('push.publicKey')
@@ -73,10 +73,8 @@ Hook::registerOnce('app.install', function() {
  */
 Hook::register('scheduler.task.web-push-send', function(Task $task) {
 	$queues = WebPushQueue::getList();
-	
 	foreach ($queues as $queue) {
 		$queue->send();
-		break;
 	}
 
 	return true;

@@ -102,17 +102,35 @@ class WebPushQueue {
 			try {
 				$client = WebPushClient::byId($id);
 				$webPush->addPushMessage($client, $payload);
-			} catch (BaseException $e){
-				
+			} catch (\Throwable | \InvalidArgumentException | \Exception  $e){
+				Logger::webpush()->warning('Cannot add push message', [
+					'error_class' => get_class($e),
+					'error' => $e->getMessage(),
+					'client' => $client, 
+					'payload' => $payload,
+					'client_id' => $id,
+					'client_k' => $k,
+				]);
 			}
 
 			unset($this->clients[$k]);
 			if(++$i >= self::LIMIT)	break;
 		}
 
-		$result = $webPush->send();
-		foreach ($result as $item) {
-			Logger::webpush()->debug('WebPush sended', $item);
+		try {
+			$result = $webPush->send();
+
+			foreach ($result as $item) {
+				Logger::webpush()->debug('WebPush sended', $item);
+			}
+		} 
+		catch (\Throwable | \InvalidArgumentException | \Exception $e){
+			Logger::webpush()->warning('Cannot send webpush', [
+				'error_class' => get_class($e),
+				'error' => $e->getMessage(),
+				'client' => $client, 
+				'payload' => $payload
+			]);
 		}
 
 		if(sizeof($this->clients) == 0){

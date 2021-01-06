@@ -58,7 +58,7 @@ Hook::register('scheduler.task.summary-notify', function(Task $task) {
 	// 1. Уведомление на почту
 	if(Plugins::isEnabled('mailer')){
 		try {
-			$users = User::get(['access', $access]);
+			$users = User::get(['access' => $access]);
 			$mail = new Mailer;
 			foreach ($users as $user) {
 				$mail->addAddress($user->get('email'), $user->get('login'));
