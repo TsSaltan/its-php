@@ -21,7 +21,7 @@ class SummaryDashboard extends UserDashboard {
 
 		switch ($_GET['action'] ?? null) {
 			case 'reset-errors':
-				$this->resetErrorTs();
+				self::resetErrorTs();
 				return Http::redirect(Http::makeURI('/dashboard/summary'));
 				break;
 		}
@@ -29,7 +29,7 @@ class SummaryDashboard extends UserDashboard {
 		$this->vars['title'] = 'Сводка и статистика';
 
 		// Критические ошибки
-		$fromTs = $this->getErrorTs();
+		$fromTs = self::getErrorTs();
 		$this->vars['summary_critical_total'] = Logger::getCount('*', Logger::LEVEL_CRITICAL, $fromTs);
 		
 		// Пользователи
@@ -39,12 +39,12 @@ class SummaryDashboard extends UserDashboard {
 		$this->vars['summary_users_tomonth'] = Logger::getCount('user-registration', -1, (time()-24*60*60*date('j')));
 	}
 
-	protected function getErrorTs(): int {
+	public static function getErrorTs(): int {
 		$meta = new Meta('dashboard');
 		return intval($meta->get('summary-error-ts'));
 	}
 
-	protected function resetErrorTs(){
+	public static function resetErrorTs(){
 		$meta = new Meta('dashboard');
 		$meta->set('summary-error-ts', time());
 	}
