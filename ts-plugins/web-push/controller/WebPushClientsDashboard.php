@@ -36,14 +36,14 @@ class WebPushClientsDashboard extends UserDashboard {
 		Input::post()
 			->name('country')->required()
 			->name('city')->required()
-			->name('user-group')->required()
+			->name('user-group')->numeric()->required()
 			->name('title')->required()->minLength(1)->maxLength(250)
 			->name('body')->required()->minLength(1)->maxLength(1000)
 			->name('icon')->required()->minLength(1)->maxLength(500)
 			->name('link')->required()->minLength(1)->maxLength(500)
 		->assert();
 
-		$clients = WebPushClient::findIdsByParams($_POST['country'], $_POST['city']);
+		$clients = WebPushClient::findIdsByParams($_POST['country'], $_POST['city'], intval($_POST['user-group']));
 		WebPushQueue::add($clients, $_POST['title'], $_POST['body'], $_POST['link'], $_POST['icon']);
 
 		return Http::redirect(Http::makeURI('/dashboard/web-push-clients', ['queue' => 'added']));
