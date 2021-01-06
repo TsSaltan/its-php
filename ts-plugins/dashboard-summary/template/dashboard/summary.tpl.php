@@ -16,7 +16,7 @@
     
             <!-- Critical errors -->
             <?php if(isset($summary_critical_total)): ?>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4">
                 <div class="panel panel-<?=($summary_critical_total > 0) ? 'red' : 'green'?>">
                     <div class="panel-heading">
                         <div class="row">
@@ -26,7 +26,13 @@
                             <div class="col-xs-9 text-right">
                                 <div class="huge"><?=$summary_critical_total?></div>
                                 <div>
-                                    <p>Критические ошибки, требующие внимания</p>
+                                    <p>
+                                    <?php if($summary_critical_total == 0): ?>
+                                        Нет критических ошибок
+                                    <?php else: ?>
+                                        Есть критические ошибки, требующие внимания
+                                    <?php endif; ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +51,7 @@
 
             <!-- Users stats-->
             <?php if(isset($summary_users_total)): ?>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="row">
