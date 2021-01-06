@@ -2,6 +2,8 @@
 namespace tsframe\module\scheduler;
 
 use Cron\CronExpression;
+use tsframe\Hook;
+use tsframe\module\Logger;
 use tsframe\module\database\Database;
 
 class Task {
@@ -83,5 +85,42 @@ class Task {
      */
     public function getPeriod(): string {
         return $this->period;
+    }
+
+    /**
+     * Запустить задачу
+     * 
+     * @param   bool $ignoreLastExec    Если true, то не будет проверки даты запуска и задача будет запущена в любом случае
+     * @return  bool
+     */
+    public function run(bool $ignoreLastExec = false): bool {
+        if($this->runRequired() || $ignoreLastExec){
+            $this->update();
+
+            $logData = [
+                'now' => time(), 
+                'last-exec' => date('Y-m-d h:i:s', $this->getLastExec()),
+                'period' => $this->getPeriod(), 
+                'ignore-last-exec' => $ignoreLastExec
+            ];
+
+            Hook::call('scheduler.task.' . $this->getName(), [$this], function($return) use ($logData){
+                if($return !== false){
+                    $lresult = 'successfully';
+                } else {
+                    $lresult = 'unsuccessfully';
+                }
+                Logger::scheduler()->debug('Task "'.$this->getName().'" started ' . $lresult, $logData);
+
+            }, function($error) use ($logData){
+                $logData['error_message'] = $error->getMessage();
+                $logData['error_code'] = $error->getCode();
+                Logger::scheduler()->error('Task "' . $this->getName() . '" throws exception [' . get_class($error) . ']', $logData);
+            });
+
+            return true;
+        }
+
+        return false;
     }
 }
