@@ -168,7 +168,9 @@ class Dashboard extends AbstractController{
 		// Автоматическое перенаправление на первый пункт меню
 		if(strlen($this->getAction('')) == 0){
 			return Menu::render('dashboard-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
-				Http::redirect($menu->getData('url'));
+				if(UserAccess::checkCurrentUser($menu->getData('access'))){
+					Http::redirect($menu->getData('url'));
+				}
 			});
 		}
 
