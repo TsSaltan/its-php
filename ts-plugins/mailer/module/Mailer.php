@@ -70,7 +70,7 @@ class Mailer extends PHPMailer {
 	 * @override
 	 */
 	public function send(){
-		Logger::mail()->debug('Sending email #' . $this->MessageID, [
+		Logger::mail()->debug('Sending email #' . $this->uniqueid, [
 			'From' => $this->From . " (" . $this->FromName . ")",
 			'To' => $this->all_recipients,
 			'Subject' => $this->Subject,
@@ -85,9 +85,9 @@ class Mailer extends PHPMailer {
 		]);
 
 		if(parent::send()){
-			Logger::mail()->info('Mail #' . $this->MessageID . ' successfully send');
+			Logger::mail()->info('Mail #' . $this->uniqueid . ' successfully send');
 		} else {
-			Logger::mail()->error('Error on sending #' . $this->MessageID, [
+			Logger::mail()->error('Mail sending error #' . $this->uniqueid, [
 				'error' => $this->ErrorInfo
 			]);
 		}
