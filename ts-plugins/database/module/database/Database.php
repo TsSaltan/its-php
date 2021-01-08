@@ -135,4 +135,84 @@ class Database{
 		$result = $query->exec()->fetch();
 		return $result[0]['size'] ?? 0;
 	}
+
+	/**
+	 * Получить дамп / SQL-запрос создания таблиц и их содержимого
+	 * 
+	 * @param array|string 	$tables 		Список таблиц для дампа, * - все | таблица1, таблица2, ... | [table1, table2, ...]
+	 * @param bool 			$deleteQueries 	Использовать в дампе хапросы с удалением таблиц перед сохданием новых
+	 * @param bool|string 	$filePath 		Путь для сохранения SQL файла c дампом или false, если сохранение не нужно
+	 */
+	public static function dump($tables = '*', bool $deleteQueries = false, $filePath = false): ?string {
+	    $out = '';
+
+	    try {
+	        if ($tables == '*') {
+	            $tables = [];
+	            $query = self::$pdo->query('SHOW TABLES');
+	            while ($row = $query->fetch(\PDO::FETCH_NUM)) {
+	                $tables[] = $row[0];
+	            }
+	        } else {
+	            $tables = is_array($tables) ? $tables : explode(',', $tables);
+	        }
+	        
+	        if (empty($tables)) {
+	            return null;
+	        }
+	        
+	        // Loop through the tables
+	        foreach ($tables as $table) {
+	            $query = self::$pdo->query('SELECT * FROM `' . $table . '`');
+	            $numColumns = $query->columnCount();
+	            
+	            // Add DROP TABLE statement
+	            if($deleteQueries){
+	            	$out .= 'DROP TABLE `' . $table . '`;' . "\n\n";
+	            }
+	            
+	            // Add CREATE TABLE statement
+	            $query2 = self::$pdo->query('SHOW CREATE TABLE `' . $table . '`');
+	            $row2 = $query2->fetch(\PDO::FETCH_NUM);
+	            $out .= $row2[1] . ';' . "\n\n";
+	            
+	            // Add INSERT INTO statements
+	            for ($i = 0; $i < $numColumns; $i++) {
+	                while ($row = $query->fetch(\PDO::FETCH_NUM)) {
+	                    $out .= "INSERT INTO `$table` VALUES(";
+	                    for ($j = 0; $j < $numColumns; $j++) {
+	                        $row[$j] = addslashes($row[$j]);
+	                        $row[$j] = preg_replace("/\n/us", "\\n", $row[$j]);
+	                        if (isset($row[$j])) {
+	                            $out .= '"' . $row[$j] . '"';
+	                        } else {
+	                            $out .= '""';
+	                        }
+	                        if ($j < ($numColumns - 1)) {
+	                            $out .= ',';
+	                        }
+	                    }
+	                    $out .= ');' . "\n";
+	                }
+	            }
+	            $out .= "\n\n\n";
+	        }
+	        
+	        // Save file
+	        if($filePath != false){
+	        	$savePath = $filePath . time() . '-backup.sql';
+	        	file_put_contents($savePath, $out);
+	        }
+	        
+    	} catch (\Exception $e) {
+        	throw new DatabaseException("Error on dumping database", 0, [
+        		'error_class' => get_class($e),
+        		'error' => $e->getMessage(),
+        		'e' => $e,
+        	]);
+	        return null;
+    	}	
+    
+	    return $out;
+	}
 }
