@@ -3,6 +3,7 @@ namespace tsframe\view;
 
 use tsframe\module\DashboardDesigner;
 use tsframe\module\Meta;
+use tsframe\module\io\Output;
 use tsframe\module\menu\Menu;
 use tsframe\view\HtmlTag;
 use tsframe\view\UI\UIDashboardCollapsePanel;
@@ -204,6 +205,15 @@ class DashboardTemplate extends HtmlTemplate {
 	    <form action="" method="GET">
 	        <div class="input-group">
 	            <span class="input-group-addon">Элементов на странице</span>
+	            <?php 
+	            	foreach ($_GET as $key => $value) {
+	            		if($key == 'count') continue;
+	            		$k = Output::of($key)->quotes()->getData();
+	            		$v = Output::of($value)->quotes()->getData();
+
+	            		?><input type="hidden" name="<?=$k?>" value="<?=$v?>"><?php
+	            	}
+	            ?>
 	            <select class="form-control" name='count' onchange="this.parentElement.parentElement.submit()">
 	                <option value="<?=$paginator->getItemsNum()?>" selected style="display: none"><?=$paginator->getItemsNum()?></option>
 	                <option value="5">5</option>
