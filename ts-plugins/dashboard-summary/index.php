@@ -40,7 +40,7 @@ Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
 	$menu->add(new MenuItem('Сводка', ['url' => Http::makeURI('/dashboard/summary'), 'fa' => 'dashboard', 'access' => UserAccess::getAccess('summary')]));
 });
 
-// Задача для рассылки уведомлений (1 раз в полчаса)
+// Задача для рассылки уведомлений (1 раз в час)
 Hook::registerOnce('app.install', function() {
 	Scheduler::addTask('summary-notify', '30 * * * *');
 });
@@ -58,11 +58,19 @@ Hook::register('scheduler.task.summary-notify', function(Task $task) {
 	// 1. Уведомление на почту
 	if(Plugins::isEnabled('mailer')){
 		try {
-			$users = User::get(['access' => $access]);
 			$mail = new Mailer;
-			foreach ($users as $user) {
-				$mail->addAddress($user->get('email'), $user->get('login'));
+			$accesses = UserAccess::getArray();
+
+			// Email получат пользователи с уровнем минимально необходимым доступа или выше
+			foreach ($accesses as $accessName => $accessLevel) {
+				if($accessLevel < $access) continue;
+
+				$users = User::get(['access' => $accessLevel]);
+				foreach ($users as $user) {
+					$mail->addAddress($user->get('email'), $user->get('login'));
+				}
 			}
+
 			$mail->isHTML(true);
 			$mail->Subject = 'Уведомление об ошибках | ' . $_SERVER['HTTP_HOST'];
 	     	$mail->Body = "<p>На сайте обнаружены ошибки, пожалуйста, проверьте их: <a href='$link'>$link</a></p>";
