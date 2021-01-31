@@ -23,7 +23,7 @@ use tsframe\view\HtmlTemplate;
  * @route GET /dashboard/
  * @route GET /dashboard
  * 
- * @route GET /dashboard/[auth|index|logout|config|config:action]
+ * @route GET /dashboard/[auth|logout|config|config:action]
  * @route POST /dashboard/[config:action]
  * @route POST /dashboard/config/[theme|siteinfo:action]
  */
@@ -197,7 +197,7 @@ class Dashboard extends AbstractController{
 	}
 
 	// f.e. action tests/new -> template tests_new
-	protected function getAction(string $default = 'index') : string {
+	protected function getAction(string $default = '') : string {
 		return str_replace(['/', '\\', '|', '..'], '_', $this->params['action'] ?? $default);
 	}
 
