@@ -12,7 +12,7 @@
         </div>
 
         <div class="row">
-            <?php $this->hook('dashboard.stat.before') ?>
+            <?php $this->hook('summary.before') ?>
     
             <!-- Critical errors -->
             <?php if(isset($summary_critical_total)): ?>
@@ -105,7 +105,7 @@
             </div>
             <?php endif ?>
 
-            <?php $this->hook('dashboard.stat.after') ?>
+            <?php $this->hook('summary.after') ?>
         </div>
     </div>
 </div>
