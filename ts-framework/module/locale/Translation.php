@@ -1,42 +1,30 @@
 <?php
-use tsframe\Config;
-
 namespace tsframe\module\locale {
+
+	use tsframe\Config;
+
 	/**
 	 * Работа с языковым пакетом
 	 * Языковой пакет иммет структуру как у JSON-файла конфигурации
 	 */
-	class Translate extends Config {
+	class Translation extends Config {
 		protected static $separator = '/';
 
 		/**
-		 * Файл с настройками
-		 * @var string
-		 */
-		protected static $file;
-		
-		/**
-		 * Закешированные данные
-		 * @var array
-		 */
-		protected static $cache = [];
-
-		/**
-		 * Загрузить языковой файл
-		 * @param  string $lang 
-		 */
-		public static function loadLangFile(string $lang){
-			static::load(Lang::LANG_DIR . $lang . '.json');
-		}
-
-		/**
-		 * Импорт ключей в текущий языковой файл из другого файла
+		 * Импорт ключей из языкового файла
 		 * @param  string $path 
 		 */
-		public static function importFile(string $path){
-			$data = json_decode(file_get_contents($path), true);
-			static::$cache = array_merge(static::$cache, $data);
-			static::save();
+		public static function importFiles(array $paths, string $lang){
+			foreach ($paths as $path) {
+				$langFile = $path . $lang . '.json';
+				if(!file_exists($langFile)) continue;
+				$data = json_decode(file_get_contents($langFile), true);
+				static::$cache = array_merge(static::$cache, $data);
+			}
+		}
+
+		protected static function save(){
+			return false;
 		}
 
 		/**
@@ -106,28 +94,28 @@ namespace tsframe\module\locale {
 
 namespace {
 	/**
-	 * Alias Translate::text (return)
+	 * Alias Translation::text (return)
 	 */
 	function __(string $key, ...$args): string {
-		return call_user_func_array([tsframe\Translate::class, 'text'], func_get_args());
+		return call_user_func_array([tsframe\module\locale\Translation::class, 'text'], func_get_args());
 	}
 
 	/**
-	 * Alias Translate::text (echo)
+	 * Alias Translation::text (echo)
 	 */
 	function _e(string $key, ...$args){
 		echo call_user_func_array('__', func_get_args());
 	}
 
 	/**
-	 * Alias Translate::numCase (return)
+	 * Alias Translation::numCase (return)
 	 */
 	function _n(int $n, string $n1, string $n2, ?string $n5 = null){
-		return call_user_func_array([tsframe\Translate::class, 'numCase'], func_get_args());
+		return call_user_func_array([tsframe\module\locale\Translation::class, 'numCase'], func_get_args());
 	}
 
 	/**
-	 * Alias Translate::numCase (echo)
+	 * Alias Translation::numCase (echo)
 	 */
 	function _ne(int $n, string $n1, string $n2, ?string $n5 = null){
 		echo call_user_func_array('_e', func_get_args());

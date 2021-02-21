@@ -7,6 +7,7 @@ use tsframe\controller\InstallController;
 use tsframe\exception\BaseException;
 use tsframe\exception\PluginException;
 use tsframe\module\Crypto;
+use tsframe\module\locale\Lang;
 use tsframe\view\Template;
 
 class App {
@@ -66,6 +67,7 @@ class App {
 	 */
 	public static function load(){
 		Plugins::load();
+		Lang::detect();
 	}
 	
 	/**
