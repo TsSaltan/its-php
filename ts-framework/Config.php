@@ -9,6 +9,11 @@ namespace tsframe;
  * Config::set('param,path', 'value');
  */
 class Config {
+	/**
+	 * Разделитель для ключей
+	 * @var string
+	 */
+	protected static $separator = '.';
 
 	/**
 	 * Файл с настройками
@@ -26,7 +31,7 @@ class Config {
 		self::$file = $file;
 
 		if(file_exists(self::$file)){
-			self::$cache =  json_decode(file_get_contents(self::$file), true);
+			self::$cache = json_decode(file_get_contents(self::$file), true);
 		}
 	}
 
@@ -39,7 +44,7 @@ class Config {
 	 * Получить ссылку на раздел настроек
 	 */
 	protected static function &getPath(string $path){
-		$path = explode('.', $path);
+		$path = explode(self::$separator, $path);
 		$data = &self::$cache;
 
 		foreach ($path as $p) {
@@ -64,7 +69,7 @@ class Config {
 	}
 
 	public static function isset(string $path) {
-		$path = explode('.', $path);
+		$path = explode(self::$separator, $path);
 		$data = &self::$cache;
 
 		foreach ($path as $p) {
@@ -76,7 +81,7 @@ class Config {
 	}
 
 	public static function unset(string $path): bool {
-		$path = explode('.', $path);
+		$path = explode(self::$separator, $path);
 		$data = &self::$cache;
 		$len = sizeof($path);
 
