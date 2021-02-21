@@ -9,7 +9,7 @@
             $tabPane = $this->uiTabPanel('default');
             $tabPane->tab('login',
                 function(){
-                    ?><i class='fa fa-user-md'></i>&nbsp;Авторизация<?php
+                    ?><i class='fa fa-user-md'></i>&nbsp;<?=__('Auth')?><?php
                 }, 
                 
                 function() use ($socialLoginTemplate, $socialEnabled, $loginEnabled){ 
@@ -19,7 +19,7 @@
 
             $tabPane->tab('register', 
                 function(){
-                    ?><i class='fa fa-user-plus'></i>&nbsp;Регистрация<?php
+                    ?><i class='fa fa-user-plus'></i>&nbsp;<?=__('Register')?><?php
                 },
 
                 function() use ($loginEnabled, $passwordEnabled){                    

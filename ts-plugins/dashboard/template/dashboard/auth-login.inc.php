@@ -3,14 +3,14 @@
 
 <form role="form" onsubmit="tsUser.login(this); return false;">
 	<div class="form-group">
-		<input class="form-control" placeholder="<?=($loginEnabled ? 'Логин или ': '')?>E-mail" name="login" type="text" autofocus required>
+		<input class="form-control" placeholder="<?php ($loginEnabled ? _e('Login or e-mail') : _e('E-mail')); ?>" name="login" type="text" autofocus required>
     </div>
     
     <div class="form-group">
-    	<input class="form-control" placeholder="Пароль" name="password" type="password" required>
+    	<input class="form-control" placeholder="<?php _e('Password'); ?>" name="password" type="password" required>
     </div>
     <?php $this->hook('auth.login')?>
-    <button class="btn btn-lg col-md-6 btn-success btn-block">Войти</button>
+    <button class="btn btn-lg col-md-6 btn-success btn-block"><?php _e('Sign in'); ?></button>
 </form>
 
 <?php if($socialEnabled): ?>
