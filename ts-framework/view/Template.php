@@ -2,9 +2,10 @@
 namespace tsframe\view;
 
 use tsframe\App;
-use tsframe\Http;
 use tsframe\Hook;
+use tsframe\Http;
 use tsframe\exception\TemplateException;
+use tsframe\module\locale\Lang;
 
 class Template {
 	public static function error(){
@@ -38,6 +39,8 @@ class Template {
 	public function __construct(string $part, string $name){
 		$this->part = $part;
 		$this->name = $name;
+
+		$this->var('currentLang', Lang::getCurrent());
 	}
 
 	/**
