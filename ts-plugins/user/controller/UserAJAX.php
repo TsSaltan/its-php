@@ -175,14 +175,14 @@ class UserAJAX extends AbstractAJAXController{
 
 				case 'user/changePassword':
 					$this->access(UserAccess::getAccess('user.self'));
-					$data = $input->name('new_password')
+					$data = $input->name('password')
 									->required()
 									->minLength(1)
-					   			  ->name('current_password')
+					   			  ->name('password2')
 									->required()
 						  		  ->assert();
 
-					if(User::exists(['id' => $user->get('id'), 'password' => $data['current_password'] ], 'AND') && $user->set('password', $data['new_password'])){
+					if($data['password'] == $data['password2'] && User::exists(['id' => $user->get('id')], 'AND') && $user->set('password', $data['password'])){
 						$this->sendMessage('Password changed!', 2);
 					} else {
 						$this->sendError('Can not change password', 15);

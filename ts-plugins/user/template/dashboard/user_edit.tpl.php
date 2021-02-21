@@ -66,14 +66,15 @@
                 if($self): ?>
                 <form role="form" onsubmit="tsUser.query('changePassword', this); return false;">
                     <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                    <div class="form-group">
-                        <label>Текущий пароль</label>
-                        <input class="form-control" name='current_password' type='password' placeholder="">
-                    </div>                                              
-
+                                            
                     <div class="form-group">
                         <label>Новый пароль</label>
-                        <input class="form-control" name='new_password' type='password' placeholder="">
+                        <input class="form-control" name='password' type='password' placeholder="">
+                    </div> 
+
+                    <div class="form-group">
+                        <label>Повтор пароля</label>
+                        <input class="form-control" name='password2' type='password' placeholder="">
                     </div>                                          
                     
                     <button type="submit" class="btn btn-success">Изменить</button>
@@ -82,7 +83,7 @@
                 <p>
                     <form role="form" onsubmit="tsUser.query('resetPassword', this); return false;">
                         <input class="form-control" name='id' type='hidden' value="<?=$selectUser->get('id')?>">
-                        <button type="submit" class="btn btn-warning">Сбросить пароль</button>
+                        <button type="submit" class="btn btn-warning">Сгенерировать случайный пароль</button>
                     </form>
                 </p>
                 <?php 

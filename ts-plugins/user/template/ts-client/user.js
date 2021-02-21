@@ -98,7 +98,7 @@ var tsResponse = {
                     break;
 
                 case 15:
-                    this.setNotifyText(form, 'Неверный текущий пароль', type);
+                    this.setNotifyText(form, 'Не удалось изменить пароль', type);
                     break;  
 
                 case 16:
