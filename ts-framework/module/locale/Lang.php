@@ -84,7 +84,7 @@ class Lang {
 		}
 
 		if(is_null($lang) || !in_array($lang, self::$list)){
-			$lang = self::$defaultLoc;
+			$lang = self::$default;
 		}
 
 		self::setCurrent($lang);
