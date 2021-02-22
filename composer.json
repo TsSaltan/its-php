@@ -16,6 +16,7 @@
         "dragonmantank/cron-expression": "2.2",
         "minishlink/web-push": "5.2",
         "phpmailer/phpmailer": "6.1.6",
-        "airmanbzh/php-html-generator": "dev-master"
+        "airmanbzh/php-html-generator": "dev-master",
+        "telegram-bot/api": "^2.3"
     }
 }
