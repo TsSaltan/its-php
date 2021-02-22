@@ -11,6 +11,12 @@ namespace tsframe\module\locale {
 		protected static $separator = '/';
 
 		/**
+		 * Закешированные данные
+		 * @var array
+		 */
+		protected static $cache = [];
+
+		/**
 		 * Импорт ключей из языкового файла
 		 * @param  string $path 
 		 */
@@ -19,8 +25,12 @@ namespace tsframe\module\locale {
 				$langFile = $path . $lang . '.json';
 				if(!file_exists($langFile)) continue;
 				$data = json_decode(file_get_contents($langFile), true);
-				static::$cache = array_merge(static::$cache, $data);
+				self::$cache = array_merge(self::$cache, $data);
 			}
+		}
+
+		public static function load(string $file){
+			return false;
 		}
 
 		protected static function save(){
@@ -37,7 +47,7 @@ namespace tsframe\module\locale {
 		 * @return string
 		 */
 		public static function text(string $key, ...$args): string {
-			$item = static::get($key);
+			$item = self::get($key);
 			if(is_null($item) || !$item){
 				$item = $key;
 			}
