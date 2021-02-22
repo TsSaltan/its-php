@@ -28,24 +28,24 @@ class Config {
 	protected static $cache = [];
 
 	public static function load(string $file){
-		self::$file = $file;
+		static::$file = $file;
 
-		if(file_exists(self::$file)){
-			self::$cache = json_decode(file_get_contents(self::$file), true);
+		if(file_exists(static::$file)){
+			static::$cache = json_decode(file_get_contents(static::$file), true);
 		}
 	}
 
 	protected static function save(){
-		$data = json_encode(self::$cache, JSON_PRETTY_PRINT);
-		file_put_contents(self::$file, $data);
+		$data = json_encode(static::$cache, JSON_PRETTY_PRINT);
+		file_put_contents(static::$file, $data);
 	}
 
 	/**
 	 * Получить ссылку на раздел настроек
 	 */
 	protected static function &getPath(string $path){
-		$path = explode(self::$separator, $path);
-		$data = &self::$cache;
+		$path = explode(static::$separator, $path);
+		$data = &static::$cache;
 
 		foreach ($path as $p) {
 			$data = &$data[$p];
@@ -55,22 +55,22 @@ class Config {
 	}
 
 	public static function get(string $path = '*'){
-		if($path == '*') return self::$cache;
+		if($path == '*') return static::$cache;
 
-		$data = self::getPath($path);
+		$data = static::getPath($path);
 		return $data;
 	}	
 
 	public static function set(string $path = '*', $value){
-		if($path == '*') $data =& self::$cache;
-		else $data =& self::getPath($path);
+		if($path == '*') $data =& static::$cache;
+		else $data =& static::getPath($path);
 		$data = $value;
-		self::save();
+		static::save();
 	}
 
 	public static function isset(string $path) {
-		$path = explode(self::$separator, $path);
-		$data = &self::$cache;
+		$path = explode(static::$separator, $path);
+		$data = &static::$cache;
 
 		foreach ($path as $p) {
 			if(!isset($data[$p])) return false;
@@ -81,8 +81,8 @@ class Config {
 	}
 
 	public static function unset(string $path): bool {
-		$path = explode(self::$separator, $path);
-		$data = &self::$cache;
+		$path = explode(static::$separator, $path);
+		$data = &static::$cache;
 		$len = sizeof($path);
 
 		foreach ($path as $k => $p) {
@@ -95,7 +95,7 @@ class Config {
 			}
 		}
 
-		self::save();
+		static::save();
 		return true;
 	}
 }
