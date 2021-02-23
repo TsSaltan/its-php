@@ -8,6 +8,7 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Plugins;
+use tsframe\module\TelegramBot;
 use tsframe\module\io\Output;
 use tsframe\module\locale\Lang;
 use tsframe\module\scheduler\Scheduler;
@@ -24,7 +25,7 @@ Hook::registerOnce('plugin.load', function(){
 });
 
 Hook::register('template.dashboard.config', function(Template $tpl){
-	$tgbotapi_token = Config::get('telegram-bot-api.token');
+	$tgbotapi_token = TelegramBot::getDefaultToken();
 	$tgbotapi_token = Output::of($tgbotapi_token)->quotes()->getData();
 	$tpl->var('tgbotapi_token', $tgbotapi_token);
 

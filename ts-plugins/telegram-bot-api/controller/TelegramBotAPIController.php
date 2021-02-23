@@ -14,7 +14,16 @@ use tsframe\module\scheduler\Scheduler;
  */
 class TelegramBotAPIController extends AbstractController {
 	public function response(){
+		try {
+			$bot = TelegramBot::getDefaultBot();
+			$request = $bot->getRequest();
+			$client = $bot->getClient();
+			Hook::call('telegram-bot.query', [$request, $client]);
+		} catch (\Exception $e){
+
+		}
+
 		$this->responseCode = Http::CODE_OK;
-		$this->responseBody = "Meow";
+		$this->responseBody = "OK";
 	}
 }
