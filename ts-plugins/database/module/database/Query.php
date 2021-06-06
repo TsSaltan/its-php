@@ -9,13 +9,15 @@ define('TYPE_INT', \PDO::PARAM_INT);
 define('TYPE_STRING', \PDO::PARAM_STR);
 define('TYPE_BOOL', \PDO::PARAM_BOOL);
 
-	
 class Query {
 	public $sth;
-		
-	public function __construct($query){
-		if(!is_object(Database::$pdo)) throw new DatabaseException('Database connection does not initialized');
-		$this->sth = Database::$pdo->prepare($query);
+	public $pdo;
+	public $connection;
+
+	public function __construct(Connection $db, string $query){
+		$this->connection = $db;
+		$this->pdo = $db->getPDO();
+		$this->sth = $this->pdo->prepare($query);
 	}
 
 	public function exec($vars = false){
