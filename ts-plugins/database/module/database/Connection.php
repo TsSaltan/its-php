@@ -27,8 +27,11 @@ class Connection {
 		} catch( PDOException $e ) {
 			throw new DatabaseException( 
 				'Connect error: '.$e->getMessage(), 
-				$e->getCode(),
-				['dsn' => $dsn]
+				0,
+				[
+					'code' => $e->getCode(), 
+					'dsn' => $dsn
+				]
 			);
 		}
 	}
@@ -50,8 +53,9 @@ class Connection {
 		} catch( \PDOException $e ) {
 			throw new DatabaseException( 
 				$e->getMessage(), 
-				$e->getCode(),
+				0,
 				[
+					'code' => $e->getCode(),
 					'query' => $query,
 					'vars' => $vars,
 					'exception_class' => get_class($e)
@@ -76,8 +80,9 @@ class Connection {
 		}catch(\PDOException $e) {
 			throw new DatabaseException( 
 				$e->getMessage(), 
-				$e->getCode(),
+				0,
 				[
+					'exception_code' => $e->getCode(),
 					'query' => $query,
 					'vars' => $vars,
 					'exception_class' => get_class($e)
