@@ -83,7 +83,7 @@ class Input extends Filter {
 	 * @param  string $json 
 	 * @return Input
 	 */
-	public static function fromJson(string $json){
+	public static function fromJson(string $json): Input {
 		$data = json_decode($json, true);
 		if(json_last_error() != JSON_ERROR_NONE){
 			throw new InputException('JSON string parse error: ' . json_last_error_msg() );
@@ -97,7 +97,7 @@ class Input extends Filter {
 	 * @param  string $query 
 	 * @return Input
 	 */
-	public static function fromQuery(string $query){
+	public static function fromQuery(string $query): Input {
 		parse_str($query, $data);
 		return new self($data);
 	}

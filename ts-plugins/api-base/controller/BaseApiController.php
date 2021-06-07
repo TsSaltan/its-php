@@ -72,4 +72,13 @@ class BaseApiController extends AbstractAJAXController {
 	public function getInput(): Input {
 		return Input::stdin('json');
 	}
+
+	public function getInputData(){
+		try {
+			return $this->getInput()->assert();
+		}
+		catch (\BaseException $e){
+			return null;
+		}
+	}
 }
