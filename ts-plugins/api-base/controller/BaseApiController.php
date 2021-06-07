@@ -17,6 +17,8 @@ use tsframe\module\user\UserConfig;
 
 /**
  * routes @deprecated 
+ *
+ * f.e.
  * route POST /api/[login:action]
  * route POST /api/[register:action]
  * route GET|POST /api/[me:action]
@@ -39,13 +41,16 @@ class BaseApiController extends AbstractAJAXController {
 				$hookKey1 = 'api.' . $httpAction . '.' . $apiAction;
 				$hookKey2 = 'api.def.' . $apiAction;
 
+				// Этот хук для всех апи запросов (например для логирования)
+				Hook::call('api.*', [$this, $httpAction, $apiAction]);
+
 				if(Hook::exists($hookKey1)){
-					Hook::call($hookKey1, [$this]);
+					Hook::call($hookKey1, [$this, $httpAction, $apiAction]);
 					return;
 				}
 				
 				if(Hook::exists($hookKey2)){
-					Hook::call($hookKey2, [$this]);
+					Hook::call($hookKey2, [$this, $httpAction, $apiAction]);
 					return;
 				}
 				
@@ -56,119 +61,6 @@ class BaseApiController extends AbstractAJAXController {
 		} catch (BaseException $e){
 			$this->sendError($e->getMessage(), $e->getCode(), ['result' => 'error']);
 		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function defLogin(){
-		return $this->sendError('API method deprecated', -1);
-
-		$input = $this->getInput()
-					  ->name('login')->required()->minLength(1)
-					  ->name('password')->required()->minLength(1)
-					  ->assert();
-
-		$user = User::login($input['login'], $input['password']);
-		$session = $user->createSession(false);
-		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function defRegister(){
-		return $this->sendError('API method deprecated', -1);
-
-		if(!UserConfig::isRegisterEnabled()){
-			$this->sendError('User register error: registration disabled', 18);
-			return;
-		}
-
-		$input = $this->getInput();
-		$input->name('email')->email();
-
-
-		if(UserConfig::isLoginEnabled()){
-			$input->name('login')->login()->required();
-		}
-		
-		if(UserConfig::isPasswordEnabled()){
-			$input->name('password')->password();
-		}
-
-		$data = $input->assert();
-
-		if(User::exists(['email' => $data['email']])){
-			$this->sendError('Email already used', 10);
-			return;	
-		}
-
-		if(UserConfig::isLoginEnabled() && User::exists(['login' => $data['login']])){
-			$this->sendError('Login already used', 9);
-			return;
-		}
-
-		Hook::call(
-			'user.register.controller', 
-			[$data, $input], 
-			function($return) use ($data){
-				if($return === false) throw new UserException('User register error: cancelled by hook', 0, ['data' => $data]);
-			}, 
-
-			function($error) use ($data){
-				throw new UserException('User register error: error by hook', 0, ['error' => $error, 'data' => $data]);
-			}
-		);
-
-		$user = User::register(($data['login'] ?? null), $data['email'], $data['password']);
-		$session = $user->createSession(false);
-		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function defMe(){
-		return $this->sendError('API method deprecated', -1);
-		$user = $this->checkAuth();
-		$this->sendData(['result' => 'ok', 'user' => $this->dumpUser($user)]);
-	}
-
-	public function checkAuth(): SingleUser {
-		try {
-			$input = $this->getInput()->name('session_key')->required()->assert();
-			$user = User::current($input['session_key']);
-
-			if(!$user->isAuthorized()){
-				throw new AccessException('Invalid session_key', Http::CODE_UNAUTHORIZED);
-			}
-
-			return $user;
-
-		} catch (InputException $e){
-			throw new AccessException('Session_key required', Http::CODE_UNAUTHORIZED);
-		}
-	}
-
-	public function dumpUser(SingleUser $user): array {
-		$data = [
-			'id' => $user->get('id'),
-			'login' => $user->get('login'),
-			'email' => $user->get('email'),
-			'accessLevel' => $user->get('access'),
-			'access' => UserAccess::getAccessName($user->get('access')),
-		];
-
-		Hook::call('api.user.data', [$user, &$data], function($res) use (&$data){
-			if(is_array($res) && sizeof($res) > 0){
-				$data = array_merge($data, $res);
-			}
-		}, function(){
-			// error callback. nope.
-		});
-
-		return $data;
 	}
 
 	protected function getAction() : string {
