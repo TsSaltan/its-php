@@ -16,9 +16,10 @@ use tsframe\module\user\UserAccess;
 use tsframe\module\user\UserConfig;
 
 /**
- * @route POST /api/[login:action]
- * @route POST /api/[register:action]
- * @route GET|POST /api/[me:action]
+ * routes @deprecated 
+ * route POST /api/[login:action]
+ * route POST /api/[register:action]
+ * route GET|POST /api/[me:action]
  */
 class BaseApiController extends AbstractAJAXController {
 	use ActionToMethodTrait;
@@ -57,7 +58,12 @@ class BaseApiController extends AbstractAJAXController {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function defLogin(){
+		return $this->sendError('API method deprecated', -1);
+
 		$input = $this->getInput()
 					  ->name('login')->required()->minLength(1)
 					  ->name('password')->required()->minLength(1)
@@ -68,7 +74,12 @@ class BaseApiController extends AbstractAJAXController {
 		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function defRegister(){
+		return $this->sendError('API method deprecated', -1);
+
 		if(!UserConfig::isRegisterEnabled()){
 			$this->sendError('User register error: registration disabled', 18);
 			return;
@@ -115,8 +126,11 @@ class BaseApiController extends AbstractAJAXController {
 		$this->sendData(['result' => 'ok', 'session_key' => $session['session_key'], 'expires' => $session['expires']]);
 	}
 
-
+	/**
+	 * @deprecated
+	 */
 	public function defMe(){
+		return $this->sendError('API method deprecated', -1);
 		$user = $this->checkAuth();
 		$this->sendData(['result' => 'ok', 'user' => $this->dumpUser($user)]);
 	}
