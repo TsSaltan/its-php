@@ -45,7 +45,7 @@ class Http {
 	public static function acceptCORS(string $domain = null, array $methods = ['GET', 'POST', 'HEAD']){
 		$domain = is_null($domain) ? '//' . $_SERVER['HTTP_HOST'] : $domain;
 		header('Access-Control-Allow-Origin: ' , $domain);
-		header('Access-Control-Allow-Methods: '.implode($methods, ', '));
+		header('Access-Control-Allow-Methods: ' . implode(', ', $methods));
 	}
 
 	/**
