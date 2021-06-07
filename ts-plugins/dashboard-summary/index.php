@@ -43,7 +43,7 @@ Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
 // Задача для рассылки уведомлений (1 раз в час)
 Hook::registerOnce('app.install', function() {
 	Scheduler::addTask('summary-notify', '30 * * * *');
-});
+}, Hook::MIN_PRIORITY);
 
 // Уведомление админа о критических ошибках
 Hook::register('scheduler.task.summary-notify', function(Task $task) {

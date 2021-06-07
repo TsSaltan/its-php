@@ -65,7 +65,7 @@ Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $men
  */
 Hook::registerOnce('app.install', function() {
 	Scheduler::addTask('web-push-send', '*/5 * * * *');
-});
+}, Hook::MIN_PRIORITY);
 
 
 /**
