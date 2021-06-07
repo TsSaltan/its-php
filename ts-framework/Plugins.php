@@ -206,7 +206,7 @@ class Plugins {
 				}
 			}
 
-			Config::set('plugins.disabled', null);
+			Config::unset('plugins.disabled');
 			Config::set('plugins.enabled', $enabled);
 		}
 
