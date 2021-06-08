@@ -15,7 +15,9 @@ class Plugins {
 
 	public static function load(){
 		foreach (self::getList() as $pluginName => $pluginPath) {
-			self::loadPlugin($pluginName, $pluginPath);
+			if(!isset(self::$loaded[$pluginName])){
+				self::loadPlugin($pluginName, $pluginPath);
+			}
 		}
 
 		foreach (self::$loaded as $name => $path) {
@@ -59,7 +61,6 @@ class Plugins {
 				self::disable($pluginName);
 			}
 		}
-		
 
 		// 2. Получаем необходимые плагинам параметры
 		$requiredParams = [];

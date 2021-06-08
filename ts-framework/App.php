@@ -113,6 +113,9 @@ class App {
 		if(strlen(Config::get('appId')) < 64){
 			Config::set('appId', Crypto::generateString(64));
 		}
+
+		// После загрузки плагинов необходимо вызвать plugins::load, чтоб сработал хук для выполнения кода внутри каждого плагина
+		Plugins::load();	
 		
 		Hook::call('app.install');
 		return true;
