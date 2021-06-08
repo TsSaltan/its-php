@@ -53,6 +53,11 @@ class SingleUser {
 	protected $email;
 
 	/**
+	 * @var array
+	 */
+	protected $data;
+
+	/**
 	 * @var Meta
 	 */
 	protected $meta;
@@ -96,8 +101,15 @@ class SingleUser {
 		return $this->id >= 0;
 	}
 
-	public function get(string $data){
-		return $this->{$data} ?? null;
+	public function get(string $key){
+		if(property_exists($this, $key)){
+			return $this->{$key};
+		} 
+		elseif(isset($this->data[$key])) {
+			return $this->data[$key];
+		}
+
+		return null;
 	}
 
 	public function set(string $key, $value) : bool {
@@ -105,7 +117,7 @@ class SingleUser {
 			// Для пароля генерируем хеш
 			$value = User::getPasswordHash($this->id, $value);
 		}
-		elseif($key == 'id'){
+		elseif($key == 'id' || $key == 'accessText'){
 			// ID не меняем
 			return false;
 		}
@@ -115,6 +127,8 @@ class SingleUser {
 		
 		if(property_exists($this, $key)){
 			$this->{$key} = $value;
+		} else {
+			$this->data[$key] = $value;
 		}
 
 		return Database::prepare('UPDATE `users` SET `'.$key.'` = :value WHERE `id` = :id')
@@ -137,6 +151,12 @@ class SingleUser {
 			$this->email = $data[0]['email'];
 			$this->access = $data[0]['access'];
 			$this->password = $data[0]['password'];
+
+			unset($data[0]['login']);
+			unset($data[0]['email']);
+			unset($data[0]['access']);
+			unset($data[0]['password']);
+			$this->data = $data[0];
 		} else {
 			// Если данных нет в бд, значит пользователь не авторизован
 			$this->id = -1;
