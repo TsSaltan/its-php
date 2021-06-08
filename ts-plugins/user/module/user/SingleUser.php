@@ -105,15 +105,18 @@ class SingleUser {
 			// Для пароля генерируем хеш
 			$value = User::getPasswordHash($this->id, $value);
 		}
-		elseif($key == 'id' || !property_exists($this, $key)){
-			// ID и несуществующие поля не меняем
+		elseif($key == 'id'){
+			// ID не меняем
 			return false;
 		}
 		elseif($key == 'access'){
 			$this->accessText = array_flip(UserAccess::getArray())[$value];
 		}
 		
-		$this->{$key} = $value;
+		if(property_exists($this, $key)){
+			$this->{$key} = $value;
+		}
+
 		return Database::prepare('UPDATE `users` SET `'.$key.'` = :value WHERE `id` = :id')
 						->bind('value', $value)
 						->bind('id', $this->id)
