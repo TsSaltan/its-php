@@ -33,16 +33,18 @@ class BaseApiController extends AbstractAJAXController {
 	public function response(){
 		$apiAction = $this->getAction();
 		$httpAction = Http::getRequestMethod();
-		try{
-			try{
+		try {
+			// Этот хук для всех апи запросов (например для логирования)
+			Hook::call('api.*', [$this, $httpAction, $apiAction]);
+
+			try {
 				$this->callActionMethod();
-			} catch (ControllerException $e){
+			} 
+			catch (ControllerException $e){
 				// Если метод или контроллер не найдены, поищем в хуках
 				$hookKey1 = 'api.' . $httpAction . '.' . $apiAction;
 				$hookKey2 = 'api.def.' . $apiAction;
 
-				// Этот хук для всех апи запросов (например для логирования)
-				Hook::call('api.*', [$this, $httpAction, $apiAction]);
 
 				if(Hook::exists($hookKey1)){
 					Hook::call($hookKey1, [$this, $httpAction, $apiAction]);
@@ -77,7 +79,7 @@ class BaseApiController extends AbstractAJAXController {
 		try {
 			return $this->getInput()->assert();
 		}
-		catch (\BaseException $e){
+		catch (BaseException $e){
 			return null;
 		}
 	}
