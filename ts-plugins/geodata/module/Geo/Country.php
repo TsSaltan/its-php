@@ -3,6 +3,8 @@ namespace tsframe\module\Geo;
 
 use tsframe\exception\GeoException;
 use tsframe\module\database\Database;
+use tsframe\view\Template;
+use tsframe\view\TemplateRoot;
 
 class Country extends GeoItem {
 	/**
@@ -64,5 +66,26 @@ class Country extends GeoItem {
 
 	public function getRegions(): array {
 		return Region::getList($this->getId());
+	}
+
+	/**
+	 * Возвращает URL и путь к файлу с флагом
+	 * @return array ['url' => ..., 'filepath' => ...]
+	 */
+	public function getFlag(): array {
+		$alias = $this->getAlias();
+		$files = TemplateRoot::findFiles('geodata', 'flags' . DS . strtolower($alias) . '.png');
+		if(sizeof($files) == 0){
+			$files = TemplateRoot::findFiles('geodata', 'flags' . DS . 'empty.png');
+		}
+
+		$tpl = new Template('geo', 'geo');
+
+		if(isset($files[0])){
+			return [
+				'filepath' => $files[0],
+				'url' => $tpl->toURI($files[0])
+			];
+		}
 	}
 }
