@@ -138,7 +138,10 @@ class SingleUser {
 						->affectedRows() > 0;
 	}
 
-	protected function update(){
+	/**
+	 * Update user information from database
+	 */
+	public function update(){
 		if(!$this->isAuthorized()) return;
 
 		$data = Database::prepare('SELECT * FROM `users` WHERE `id` = :id')
