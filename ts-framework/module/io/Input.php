@@ -243,6 +243,10 @@ Input::addFilter('maxLength', function(Input $input, int $length){
 	return strlen($input->getCurrentData()) <= $length;
 });
 
+Input::addFilter('values', function(Input $input, array $values){
+	return in_array($input->getCurrentData(), $values);
+});
+
 Input::addFilter('length', function(Input $input, int $length){
 	return strlen($input->getCurrentData()) == $length;
 });
