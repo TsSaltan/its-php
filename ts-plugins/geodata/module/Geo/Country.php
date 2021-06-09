@@ -8,6 +8,20 @@ use tsframe\view\TemplateRoot;
 
 class Country extends GeoItem {
 	/**
+	 * Получить страну по id в базе
+	 * @return Country
+	 */
+	public static function getById(int $id): Country {
+		$query = Database::exec('SELECT * FROM `country` WHERE `id` = :id', ['id' => $id])->fetch();
+
+		foreach ($query as $value) {
+			return new self($value['id'], $value['name'], $value['alias']);
+		}
+
+		throw new GeoException("Invalid country id = '" . $id . "'");
+	}
+
+	/**
 	 * Получить список стран
 	 * @return Country[]
 	 */
