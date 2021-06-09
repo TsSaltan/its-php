@@ -300,3 +300,9 @@ Input::addFilter('ipv4', function(Input $input){
 Input::addFilter('ipv6', function(Input $input){
 	return filter_var($input->getCurrentData(), FILTER_FLAG_IPV6) !== false;
 });
+
+Input::addFilter('date', function(Input $input, string $format = 'Y-m-d'){
+	$date = $input->getCurrentData();
+	$d = \DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+});
