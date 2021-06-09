@@ -2,6 +2,7 @@
 namespace tsframe\module\Geo;
 
 use tsframe\exception\GeoException;
+use tsframe\exception\TemplateException;
 use tsframe\module\database\Database;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
@@ -88,9 +89,14 @@ class Country extends GeoItem {
 	 */
 	public function getFlag(): array {
 		$alias = $this->getAlias();
-		$files = TemplateRoot::findFiles('geodata', 'flags' . DS . strtolower($alias) . '.png');
-		if(sizeof($files) == 0){
-			$files = TemplateRoot::findFiles('geodata', 'flags' . DS . 'empty.png');
+		try {
+			$files = TemplateRoot::findFiles('geodata', 'flags' . DS . strtolower($alias) . '.png');
+		} catch (TemplateException $e){
+			try {
+				$files = TemplateRoot::findFiles('geodata', 'flags' . DS . 'empty.png');
+			} catch (TemplateException $e){
+				return ['filepath' => null, 'url' => null];
+			}
 		}
 
 		$tpl = new Template('geo', 'geo');
