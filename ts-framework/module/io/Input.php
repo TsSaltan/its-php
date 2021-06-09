@@ -5,6 +5,27 @@ use tsframe\exception\InputException;
 
 /**
  * Валидатор входящих данных
+ *
+ * @method Input referer() referer(string $currentDomain = null) Проверка реферера 
+ * @method Input optional() optional() Необязательное поле, если оно отсутствует, будет установлено как null
+ * @method Input required() required() Обязательное поле, если оно отсутствует, будет возвращена ошибка
+ * @method Input minLength() minLength(int $length) Минимальная длина
+ * @method Input maxLength() maxLength(int $length) Максимальная длина
+ * @method Input length() length(int $length) Указать точную длину строки
+ * @method Input values() values(array $values) Указать какие точные значения должны быть у элемента
+ * @method Input regexp() regexp(string $regexp) Элемент должен соответствовать регулярному выражению
+ * @method Input numeric() numeric() Элемент должен быть числовым выражением
+ * @method Input double() double()
+ * @method Input float() float()
+ * @method Input integer() integer()
+ * @method Input array() array()
+ * @method Input string() string()
+ * @method Input json() json()
+ * @method Input email() email()
+ * @method Input ip() ip()
+ * @method Input ipv4() ipv4()
+ * @method Input ipv6() ipv6()
+ * @method Input date() date(string $format = 'Y-m-d')
  */
 class Input extends Filter {
 	/**
