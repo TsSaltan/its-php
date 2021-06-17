@@ -4,6 +4,7 @@ define('DS', DIRECTORY_SEPARATOR);
 // Define roots
 define('APP_ROOT', 			__DIR__ . DS);
 define('APP_STORAGE', 		APP_ROOT . 'storage' . DS);
+define('APP_UPLOAD', 		APP_STORAGE . 'upload' . DS);
 define('APP_TEMP', 			APP_STORAGE . 'temp' . DS);
 define('APP_TRANSLATIONS', 	APP_STORAGE . 'translations' . DS);
 
@@ -11,6 +12,7 @@ define('APP_TRANSLATIONS', 	APP_STORAGE . 'translations' . DS);
 define('CD', APP_ROOT);	// Alias "current dir"
 define('STORAGE', APP_STORAGE);
 define('TEMP', APP_TEMP);
+define('UPLOAD', APP_UPLOAD);
 
 require 'ts-framework/Autoload.php';
 require 'vendor/autoload.php';
