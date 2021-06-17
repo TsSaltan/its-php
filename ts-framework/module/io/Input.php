@@ -127,7 +127,7 @@ class Input extends Filter {
 	 * Установка текущего ключа
 	 * @param  string $key
 	 */
-	public function key(string $key){
+	public function key(string $key): Input {
 		$this->currentKey = $key;
 		$this->varPostProcess = null;
 		return $this;
@@ -135,7 +135,7 @@ class Input extends Filter {
 	/**
 	 * @alias key
 	 */
-	public function name(string $key){
+	public function name(string $key): Input {
 		return $this->key($key);
 	}
 
@@ -198,6 +198,9 @@ class Input extends Filter {
 	 * @param  array  $params Дополнительные аргументы
 	 */
 	public function __call(string $method, array $params = []){
+		var_dump(['input data !' => $this->data]);
+		var_dump(['current key !' => $this->currentKey]);
+		var_dump(['current data !' => $this->getCurrentData()]);
 		$args = array_merge([$this], $params);		
 
 		$result = $this->callFilter($method, $args);
