@@ -27,7 +27,7 @@ trait ActionToMethodTrait {
 	function getActionMethod(): ?string {
 		$request = Http::getRequestMethod();
 		$action = (method_exists($this, 'getAction')) ? $this->getAction() : ($this->params['action'] ?? null);
-		$method = ucfirst(preg_replace('#([^\w\d]|[_])#Ui', '', $action));
+		$method = ucfirst(preg_replace('#([^\w\d]|[_\\\/])#Ui', '', $action));
 		
 		$methodName1 = strtolower($request) . $method;
 		if(method_exists($this, $methodName1)) return $methodName1;
