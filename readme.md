@@ -14,6 +14,7 @@
             "email": "..."
         }
     ],
+    "minimum-stability": "dev",
 
     "repositories": [
         {
