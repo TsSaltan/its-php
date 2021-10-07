@@ -198,9 +198,6 @@ class Input extends Filter {
 	 * @param  array  $params Дополнительные аргументы
 	 */
 	public function __call(string $method, array $params = []){
-		var_dump(['input data !' => $this->data]);
-		var_dump(['current key !' => $this->currentKey]);
-		var_dump(['current data !' => $this->getCurrentData()]);
 		$args = array_merge([$this], $params);		
 
 		$result = $this->callFilter($method, $args);
