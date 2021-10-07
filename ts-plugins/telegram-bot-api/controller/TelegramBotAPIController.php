@@ -21,7 +21,7 @@ class TelegramBotAPIController extends AbstractController {
 			$request = $bot->getRequest();
 			$client = $bot->getClient();
 			(new Logger('telegram-bot-api'))->debug('Incoming API request', $request);
-			Hook::call('telegram-bot-api.query', [$request, $client]);
+			Hook::call('telegram-bot-api.request', [$request, $client]);
 		} catch (BaseException $e){
 			(new Logger('telegram-bot-api'))->error('Telegram API exception', [
 				'exception_class' => get_class($e),
