@@ -5,6 +5,7 @@ use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Http;
 use tsframe\Plugins;
+use tsframe\exception\BaseException;
 use tsframe\module\Logger;
 use tsframe\module\scheduler\Scheduler;
 
@@ -20,6 +21,13 @@ class TelegramBotAPIController extends AbstractController {
 			$client = $bot->getClient();
 			(new Logger('telegram-bot'))->debug('Incoming request', $request);
 			Hook::call('telegram-bot.query', [$request, $client]);
+		} catch (BaseException $e){
+			(new Logger('telegram-bot'))->error('Catch exception', [
+				'exception_class' => get_class($e),
+				'message' => $e->getMessage(),
+				'debug' => $e->getDebug(),
+				'code' => $e->getCode()
+			]);
 		} catch (\Exception $e){
 			(new Logger('telegram-bot'))->error('Catch exception', [
 				'exception_class' => get_class($e),
