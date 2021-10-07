@@ -7,6 +7,7 @@ use tsframe\Http;
 use tsframe\Plugins;
 use tsframe\exception\BaseException;
 use tsframe\module\Logger;
+use tsframe\module\TelegramBot;
 use tsframe\module\scheduler\Scheduler;
 
 /**
