@@ -65,9 +65,10 @@ class App {
 	/**
 	 * Загрузка приложения
 	 */
-	public static function load(){
-		Plugins::load();
+	public static function init(){
 		Lang::detect();
+		Plugins::load();
+		Hook::call('app.init');
 	}
 	
 	/**
@@ -75,31 +76,19 @@ class App {
 	 * Поиск подходящего контроллера
 	 */
 	public static function start(){
-		self::load();
-		Hook::call('app.init');
-
-		Hook::registerOnce('router', function(string $method, string $uri){
-			if($uri == '/install.php' || $uri == '/install'){
-				if(App::isDev()){
-					return App::install();
-				}
-			} 
-			Hook::call('app.start');
-		}, Hook::MAX_PRIORITY);
-
-		try {
+		try {		
 			if(!App::isInstalled()){
-				// throw new BaseException("Framework installation required", 500);
+				$controller = App::install();
+			} else {
+				self::init();
+				$controller = Router::findController();
 			}
 
-			$controller = Router::findController();
 			$controller->send();
 		} catch(BaseException $e) {
 			$controller = new ErrorController($e);
 			$controller->send();
 		} 
-		
-		Hook::call('app.finish');
 	}
 
 	/**
@@ -134,6 +123,6 @@ class App {
 	}
 
 	public static function isInstalled(): bool {
-		return strlen(Config::get('appId')) > 0;
+		return strlen(Config::get('appId')) > 0 || Config::get('install_mode') !== true;
 	}
 }
