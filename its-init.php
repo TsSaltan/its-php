@@ -21,6 +21,9 @@ class itsFrame {
 		foreach($paths as $key => $path){
 			$pathKey = strtoupper('APP_' . $key);
 			if(!defined($pathKey)){
+				if(substr($path, -1, 1) !== DS){
+					$path .= DS;
+				}
 				define($pathKey, $path);
 			}
 		}
@@ -76,7 +79,7 @@ class itsFrame {
 	}
 
 	private static function registerMigrateHooks(){
-		Hook::registerOnce('app.install', function(){
+		Hook::registerOnce('app.installed', function(){
 			// Migrate from ts-framework v1.0
 			$canReg = Config::get('user.canRegister');
 			if(!is_null($canReg)){
