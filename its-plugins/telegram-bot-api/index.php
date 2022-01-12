@@ -19,7 +19,7 @@ Hook::registerOnce('plugin.install', function(){
 
 });
 
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template');
 	Lang::addTranslationPath( __DIR__ . DS . 'translates');
 });

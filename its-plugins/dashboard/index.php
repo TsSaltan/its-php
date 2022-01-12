@@ -25,7 +25,7 @@ Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database', 'user');
 });
 
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 	if(!defined('DASHBOARD_THEMES')){
 		define('DASHBOARD_THEMES', __DIR__ . DS . 'template' . DS . 'dashboard' . DS . 'themes' . DS);
 	}

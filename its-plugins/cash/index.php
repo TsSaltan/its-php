@@ -152,7 +152,7 @@ class CashInstaller {
 	}
 }
 
-Hook::registerOnce('app.start', [CashInstaller::class, 'load']);
+Hook::registerOnce('app.init', [CashInstaller::class, 'load']);
 Hook::registerOnce('plugin.install', [CashInstaller::class, 'install']);
 Hook::register('menu.render.dashboard-top', [CashInstaller::class, 'addMenuTop']);
 Hook::register('template.dashboard.user.edit', [CashInstaller::class, 'addEditTab']);

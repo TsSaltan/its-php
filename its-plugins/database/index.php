@@ -34,7 +34,7 @@ Hook::registerOnce('plugin.install', function(){
 	return $fields;
 });
 
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 	if(Config::get('database') !== null && Config::get('database.host') !== null && Config::get('database.user') !== null && Config::get('database.name') !== null){
 		Database::connect(
 			Config::get('database.host'), 

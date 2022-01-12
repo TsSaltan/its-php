@@ -48,7 +48,7 @@ Hook::registerOnce('plugin.install', function(){
 /**
  * Загрузка плагина
  */
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 	TemplateRoot::add('index', __DIR__ . DS . 'template' . DS . 'index');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });

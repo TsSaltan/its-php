@@ -8,6 +8,6 @@ namespace tsframe;
 use tsframe\module\Geo\GeoIP;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
     TemplateRoot::add('geodata', __DIR__ . DS . 'template');   
 });

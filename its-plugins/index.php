@@ -60,16 +60,16 @@ Hook::registerOnce('plugin.install', function(){
 
 /**
  * Установка приложения, после установки всех плагинов
- * @hook app.install
+ * @hook app.installed
  */
-Hook::registerOnce('app.install', function(){
+Hook::registerOnce('app.installed', function(){
 });
 
 /**
  * Начало работы приложения (после инициализации плагинов)
- * @hook app.start
+ * @hook app.init
  */
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 });
 
 /**

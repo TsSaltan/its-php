@@ -20,7 +20,7 @@ use tsframe\view\DashboardTemplate;
 use tsframe\view\Template;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('app.start', function(){
+Hook::registerOnce('app.init', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 
