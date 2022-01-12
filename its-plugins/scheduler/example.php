@@ -6,9 +6,9 @@ die;
  */
 
 // Добавление новой задачи (например при установке плагина)
-// app.install выполняется после установки всех плагинов !!!
+// app.installed выполняется после установки всех плагинов !!!
 // Если нужно прописать задание в планировщик Scheduler, то гнеобходимо указать минимальный уровень приоритета !!!
-Hook::registerOnce('app.install', function(){
+Hook::registerOnce('app.installed', function(){
 	Scheduler::addTask('my-super-task', '@daily');
 }, Hook::MIN_PRIORITY);
 
