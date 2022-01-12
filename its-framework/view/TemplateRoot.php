@@ -10,7 +10,7 @@ class TemplateRoot {
 	const DEFAULT = 'default';
 
 	protected static $roots = [
-		'default' => [CD . 'ts-template' . DS]
+		'default' => [ITS_TEMPLATES]
 	];
 
 	public static function addDefault(string $path){

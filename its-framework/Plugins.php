@@ -95,8 +95,14 @@ class Plugins {
 	 */
 	public static function getList(): array {
 		$return = [];
-		$files = glob(CD . 'ts-plugins' . DS . '*' . DS . 'index.php');
-		foreach ($files as $path) {
+		//$files = glob(CD . 'ts-plugins' . DS . '*' . DS . 'index.php');
+		$plugins = glob(ITS_PLUGINS . '*' . DS . 'index.php');
+		if(is_dir(APP_PLUGINS)){
+			$appPlugins = glob(APP_PLUGINS . '*' . DS . 'index.php');
+			$plugins = array_merge($plugins, $appPlugins);
+		}
+		
+		foreach ($plugins as $path) {
 			$parent = dirname($path);
 			$pluginName = basename($parent);
 			$return[$pluginName] = $parent;
