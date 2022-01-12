@@ -6,8 +6,9 @@ use tsframe\Hook;
 use tsframe\exception\BaseException;
 use tsframe\module\locale\Lang;
 
-define('DS', DIRECTORY_SEPARATOR);
-define('ITS_ROOT', __DIR__ . DS);	// Корневая директория фреймворка
+if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
+
+define('ITS_ROOT', 		__DIR__ . DS);						// Корневая директория фреймворка
 define('ITS_FRAME', 	ITS_ROOT . 'its-framework' . DS); 	// Директория с базовыми функциями фрейма
 define('ITS_PLUGINS', 	ITS_ROOT . 'its-plugins' . DS); 	// Директория с базовыми плагинами
 define('ITS_TEMPLATES', ITS_ROOT . 'its-templates' . DS); 	// Директория с базовыми шаблонами

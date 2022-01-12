@@ -18,5 +18,9 @@
         "phpmailer/phpmailer": "6.5.0",
         "airmanbzh/php-html-generator": "dev-master",
         "telegram-bot/api": "^2.3"
-    }
+    },
+
+    "autoload": {
+      "classmap": ["its-init.php"]
+   }
 }
