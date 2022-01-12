@@ -19,18 +19,14 @@ class Plugins {
 				self::loadPlugin($pluginName, $pluginPath);
 			}
 		}
-
-		foreach (self::$loaded as $name => $path) {
-			Hook::call('plugin.load', [$name, $path]);
-		}
 	}
 
 	protected static function loadPlugin(string $pluginName, string $pluginPath){
-		if(self::isDisabled($pluginName)) return;
-
-		Autoload::addRoot($pluginPath);
-		require $pluginPath . "/index.php";
-		self::$loaded[$pluginName] = $pluginPath;
+		if(self::isEnabled($pluginName)){
+			Autoload::addRoot($pluginPath);
+			require $pluginPath . "/index.php";
+			self::$loaded[$pluginName] = $pluginPath;
+		}
 	}
 
 	/**
@@ -101,7 +97,7 @@ class Plugins {
 			$appPlugins = glob(APP_PLUGINS . '*' . DS . 'index.php');
 			$plugins = array_merge($plugins, $appPlugins);
 		}
-		
+
 		foreach ($plugins as $path) {
 			$parent = dirname($path);
 			$pluginName = basename($parent);
@@ -167,16 +163,6 @@ class Plugins {
 		$enabled = self::getEnabled();
 		$enabled = array_merge($enabled, func_get_args());
 		Config::set('plugins.enabled', array_unique($enabled));
-	}
-
-	/**
-	 * Является ли плагин отключенным
-	 * @param string $pluginName
-	 * @return bool
-	 */
-	public static function isDisabled(string $pluginName): bool {
-		$enabled = self::getEnabled();
-		return !in_array($pluginName, $enabled);
 	}
 
 	/**

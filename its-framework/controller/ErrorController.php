@@ -29,7 +29,7 @@ class ErrorController extends AbstractController {
 		$tpl = Template::error();
 
 		$tpl->setHooksUsing(false);
-		$tpl->vars(['code' => $code, 'hasDashboard' => !Plugins::isDisabled('dashboard')]);
+		$tpl->vars(['code' => $code, 'hasDashboard' => Plugins::isEnabled('dashboard')]);
 
 		if(App::isDev()){
 			$tpl->vars(['debug' => $this->error->getDump()]);

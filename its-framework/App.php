@@ -76,15 +76,16 @@ class App {
 	 */
 	public static function start(){
 		self::load();
-		Hook::call('app.start');
+		Hook::call('app.init');
 
 		Hook::registerOnce('router', function(string $method, string $uri){
 			if($uri == '/install.php' || $uri == '/install'){
 				if(App::isDev()){
 					return App::install();
 				}
-			}
-		});
+			} 
+			Hook::call('app.start');
+		}, Hook::MAX_PRIORITY);
 
 		try {
 			if(!App::isInstalled()){
@@ -97,6 +98,7 @@ class App {
 			$controller = new ErrorController($e);
 			$controller->send();
 		} 
+		
 		Hook::call('app.finish');
 	}
 
@@ -125,7 +127,7 @@ class App {
 
 			// После загрузки плагинов необходимо вызвать plugins::load, чтоб сработал хук для выполнения кода внутри каждого плагина
 			Plugins::load();	
-			Hook::call('app.install');
+			Hook::call('app.installed');
 		}
 
 		return $controller;
