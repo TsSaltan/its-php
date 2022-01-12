@@ -15,7 +15,7 @@
         "andr-04/jquery.inputmask-multi": "1.2.0",
         "dragonmantank/cron-expression": "2.2",
         "minishlink/web-push": "6.0.5",
-        "phpmailer/phpmailer": "6.1.6",
+        "phpmailer/phpmailer": "6.5.0",
         "airmanbzh/php-html-generator": "dev-master",
         "telegram-bot/api": "^2.3"
     }
