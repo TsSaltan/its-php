@@ -153,6 +153,7 @@ class SingleUser {
 			$this->login = $data[0]['login'];
 			$this->email = $data[0]['email'];
 			$this->access = $data[0]['access'];
+			$this->accessText = array_flip(UserAccess::getArray())[$this->access];
 			$this->password = $data[0]['password'];
 
 			unset($data[0]['login']);
