@@ -77,7 +77,7 @@ Hook::register('template.render', function($tpl){
  * Сохраняем права для пользователей после установки скрипта
  */
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('cache', 'database', 'mailer');
+	Plugins::required('cache', 'database', 'mailer', 'logger');
 	return [
 		PluginInstaller::withKey('access.user.onRegister')
 					->setType('select')

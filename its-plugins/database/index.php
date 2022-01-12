@@ -48,17 +48,7 @@ Hook::registerOnce('app.init', function(){
 /**
  * Выполнение SQL запроса из install.sql
  */
-Hook::register('app.installed', function(){
-	// Из каждой папки плагина
-	foreach (Plugins::getList() as $name => $path) {
-		if(Plugins::isEnabled($name)){
-			importSql($path);
-		}
-	}
-
-	// Из корневой папки
-	importSql(CD);
-
+Hook::registerOnce('app.installed', function(){
 	/**
 	 * Хук для плагинов, работающих с базой
 	 * Установщик автоматически выполнит запросы из файлов install.sql
@@ -69,4 +59,15 @@ Hook::register('app.installed', function(){
 			Database::exec(file_get_contents($sql));
 		}
 	}
+
+	// Из каждой папки плагина
+	foreach (Plugins::getList() as $name => $path) {
+		if(Plugins::isEnabled($name)){
+			importSql($path);
+		}
+	}
+
+	// Из корневой папки
+	importSql(CD);
+
 });

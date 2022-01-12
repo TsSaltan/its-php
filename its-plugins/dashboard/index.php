@@ -22,7 +22,7 @@ use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('database', 'user');
+	Plugins::required('database', 'user', 'meta');
 });
 
 Hook::registerOnce('app.init', function(){
