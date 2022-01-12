@@ -21,18 +21,18 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\view\TemplateRoot;
 
-define('DASHBOARD_THEMES', __DIR__ . DS . 'template' . DS . 'dashboard' . DS . 'themes' . DS);
-
 Hook::registerOnce('plugin.install', function(){
 	Plugins::required('database', 'user');
 });
 
-Hook::registerOnce('plugin.load', function(){
-	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
-	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');	
-});
-
 Hook::registerOnce('app.start', function(){
+	if(!defined('DASHBOARD_THEMES')){
+		define('DASHBOARD_THEMES', __DIR__ . DS . 'template' . DS . 'dashboard' . DS . 'themes' . DS);
+	}
+	
+	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');	
+	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
+
 	Menu::create('dashboard-sidebar');
 	
 	Menu::create('dashboard-admin-sidebar')

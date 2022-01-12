@@ -27,7 +27,7 @@ use tsframe\view\TemplateRoot;
 /**
  * Загрузка плагина
  */
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');	
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 
@@ -132,7 +132,7 @@ Hook::registerOnce('plugin.install', function(){
 /**
  * После установки приложения создадим учётку администратора
  */
-Hook::registerOnce('app.install', function(){
+Hook::registerOnce('app.installed', function(){
 	if(!User::exists(['access' => UserAccess::Admin])){
 		$password = $login = 'admin';
 		$mail = 'change@admin.mail';

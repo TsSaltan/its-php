@@ -48,7 +48,7 @@ Hook::registerOnce('plugin.install', function(){
 /**
  * Загрузка плагина
  */
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	TemplateRoot::add('index', __DIR__ . DS . 'template' . DS . 'index');
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
@@ -63,7 +63,7 @@ Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $men
 /**
  * Очередь для рассылки пушей
  */
-Hook::registerOnce('app.install', function() {
+Hook::registerOnce('app.installed', function() {
 	Scheduler::addTask('web-push-send', '*/5 * * * *');
 }, Hook::MIN_PRIORITY);
 

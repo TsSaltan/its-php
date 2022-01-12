@@ -23,7 +23,7 @@ Hook::registerOnce('plugin.install', function(){
 	Plugins::required('dashboard', 'user', 'database', 'logger');
 });
 
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 	TemplateRoot::addDefault(__DIR__ . DS . 'template');
 	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');

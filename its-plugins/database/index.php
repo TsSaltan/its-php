@@ -34,8 +34,7 @@ Hook::registerOnce('plugin.install', function(){
 	return $fields;
 });
 
-
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	if(Config::get('database') !== null && Config::get('database.host') !== null && Config::get('database.user') !== null && Config::get('database.name') !== null){
 		Database::connect(
 			Config::get('database.host'), 
@@ -49,25 +48,25 @@ Hook::registerOnce('plugin.load', function(){
 /**
  * Выполнение SQL запроса из install.sql
  */
-Hook::register('app.install', function(){
+Hook::register('app.installed', function(){
 	// Из каждой папки плагина
 	foreach (Plugins::getList() as $name => $path) {
-		if(!Plugins::isDisabled($name)){
+		if(Plugins::isEnabled($name)){
 			importSql($path);
 		}
 	}
 
 	// Из корневой папки
 	importSql(CD);
-});
 
-/**
- * Хук для плагинов, работающих с базой
- * Установщик автоматически выполнит запросы из файлов install.sql
- */
-function importSql(string $parentDir){
-	$sql = $parentDir . DS . 'install.sql';
-	if(file_exists($sql)){
-		Database::exec(file_get_contents($sql));
+	/**
+	 * Хук для плагинов, работающих с базой
+	 * Установщик автоматически выполнит запросы из файлов install.sql
+	 */
+	function importSql(string $parentDir){
+		$sql = $parentDir . DS . 'install.sql';
+		if(file_exists($sql)){
+			Database::exec(file_get_contents($sql));
+		}
 	}
-}
+});

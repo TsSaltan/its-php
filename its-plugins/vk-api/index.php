@@ -18,7 +18,7 @@ use tsframe\view\TemplateRoot;
 /**
  * Загрузка плагина
  */
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 

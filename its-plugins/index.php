@@ -79,24 +79,6 @@ Hook::registerOnce('app.start', function(){
 Hook::registerOnce('app.finish', function(){
 });
 
-/**
- * Загрузка плагина (каждый запуск системы)
- * @hook plugin.load
- */
-Hook::registerOnce('plugin.load', function(){
-	// Если текущее приложение расположено не в корневой директории, указываем директорию
-	App::setBasePath('cp');
-
-	// Если плагин использует свои шаблоны - укажем в системе путь к ним
-	TemplateRoot::add('dashboard', __DIR__ . DS . 'template');
-
-	// Можно доавить свой фильтр данных
-	Input::addFilter('login', function($input){
-		$input->required();
-		$input->regexp('#[A-Za-z0-9-_\.]+#Ui');
-		return true;
-	});
-});
 
 /**
  * Добавляем свои пункты меню

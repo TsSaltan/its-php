@@ -32,7 +32,7 @@ Hook::registerOnce('plugin.install', function(){
 	];
 });
 
-Hook::registerOnce('plugin.load', function(){
+Hook::registerOnce('app.start', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
 });
 
@@ -41,7 +41,7 @@ Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
 });
 
 // Задача для рассылки уведомлений (1 раз в час)
-Hook::registerOnce('app.install', function() {
+Hook::registerOnce('app.installed', function() {
 	Scheduler::addTask('summary-notify', '30 * * * *');
 }, Hook::MIN_PRIORITY);
 

@@ -65,6 +65,6 @@ class CashInterkassaInstaller {
 	}
 }
 
-Hook::registerOnce('plugin.load', [CashInterkassaInstaller::class, 'load']);
+Hook::registerOnce('app.start', [CashInterkassaInstaller::class, 'load']);
 Hook::registerOnce('plugin.install', [CashInterkassaInstaller::class, 'install']);
 Hook::register('template.dashboard.user.edit.balance', [CashInterkassaInstaller::class, 'userBalance']);
