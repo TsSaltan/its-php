@@ -59,7 +59,6 @@ class Hook {
 	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
 		$name = strtolower($name);
 		if(!self::exists($name)) return;
-		
 		$hooks = self::$hooks[$name];
 		usort($hooks, function($a, $b){
 			if ($a['priority'] == $b['priority']) {

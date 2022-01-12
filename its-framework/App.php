@@ -117,12 +117,13 @@ class App {
 			// После загрузки плагинов необходимо вызвать plugins::load, чтоб сработал хук для выполнения кода внутри каждого плагина
 			Plugins::load();	
 			Hook::call('app.installed');
+			Config::set('install_mode', false);
 		}
 
 		return $controller;
 	}
 
 	public static function isInstalled(): bool {
-		return strlen(Config::get('appId')) > 0 || Config::get('install_mode') !== true;
+		return (strlen(Config::get('appId')) > 0) && (Config::get('install_mode') !== true);
 	}
 }
