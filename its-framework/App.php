@@ -91,7 +91,7 @@ class App {
 	 * Включен ли режим разработчика
 	 */
 	public static function isDev() : bool {
-		return Config::get('dev_mode') === true;
+		return Config::get('dev_mode') !== false;
 	}
 
 	/**
