@@ -50,7 +50,11 @@ class itsFrame {
 		define('UPLOAD', APP_UPLOAD);
 		
 		require ITS_FRAME . 'Autoload.php';
-		//require 'vendor/autoload.php';
+		
+		// Include composer
+		if(file_exists(ITS_ROOT . 'vendor/autoload.php')){
+			require ITS_ROOT . 'vendor/autoload.php';
+		}
 		
 		Autoload::init();
 		Autoload::addRoot(ITS_FRAME);
