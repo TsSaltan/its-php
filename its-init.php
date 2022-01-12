@@ -2,6 +2,7 @@
 use tsframe\App;
 use tsframe\Autoload;
 use tsframe\Config;
+use tsframe\exception\BaseException;
 use tsframe\module\locale\Lang;
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -61,8 +62,9 @@ class itsFrame {
 		Lang::addTranslationPath(APP_TRANSLATIONS);
 	}
 
-	public static function launch(array $paths = []){
+	public static function launch(array $paths = [], string $basePath = '/'){
 		self::init($paths);
+		App::setBasePath($basePath);
 		App::start();
 	}
 }
