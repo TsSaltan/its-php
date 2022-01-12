@@ -1,6 +1,6 @@
 {
-    "name": "tssaltan/ts-framework",
-    "description": "PHP framework",
+    "name": "tssaltan/its-php",
+    "description": "It's PHP framework",
     "type": "framework",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "email": "tssaltan@gmail.com"
         }
     ],
-    "version":"dev-3.0",
+    "version":"dev-1.0",
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",

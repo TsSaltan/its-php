@@ -1,5 +1,4 @@
-# PHP Framework
-[https://github.com/TsSaltan/ts-framework/wiki](Wiki)
+# It's PHP Framework
 
 ## Install
 ### Composer
