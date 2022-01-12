@@ -10,7 +10,7 @@ use tsframe\view\HtmlTemplate;
 /**
  * Контроллер для установщика фреймворка
  */
-class InstallController extends AbstractController{
+class InstallController extends AbstractController {
 	/**
 	 * Поля, которвые необходимо заполнить пользователю на шаге 2
 	 * @var PluginInstaller[]

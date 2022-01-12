@@ -2,6 +2,7 @@
 use tsframe\App;
 use tsframe\Autoload;
 use tsframe\Config;
+use tsframe\Hook;
 use tsframe\exception\BaseException;
 use tsframe\module\locale\Lang;
 
@@ -64,11 +65,36 @@ class itsFrame {
 
 		// Путь к директории с переводами
 		Lang::addTranslationPath(APP_TRANSLATIONS);
+
+		self::registerMigrateHooks();
 	}
 
 	public static function launch(array $paths = [], string $basePath = '/'){
 		self::init($paths);
 		App::setBasePath($basePath);
 		App::start();
+	}
+
+	private static function registerMigrateHooks(){
+		Hook::registerOnce('app.install', function(){
+			// Migrate from ts-framework v1.0
+			$canReg = Config::get('user.canRegister');
+			if(!is_null($canReg)){
+				Config::set('user.auth.register', $canReg);
+				Config::unset('user.canRegister');
+			}
+
+			$canSocial = Config::get('user.canSocial');
+			if(!is_null($canSocial)){
+				Config::set('user.auth.social', $canSocial);
+				Config::unset('user.canSocial');
+			}
+
+			$loginUsed = Config::get('user.loginUsed');
+			if(!is_null($loginUsed)){
+				Config::set('user.auth.login', $loginUsed);
+				Config::unset('user.loginUsed');
+			}
+		});
 	}
 }

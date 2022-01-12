@@ -77,7 +77,20 @@ class App {
 	public static function start(){
 		self::load();
 		Hook::call('app.start');
-		try{
+
+		Hook::registerOnce('router', function(string $method, string $uri){
+			if($uri == '/install.php' || $uri == '/install'){
+				if(App::isDev()){
+					return App::install();
+				}
+			}
+		});
+
+		try {
+			if(!App::isInstalled()){
+				// throw new BaseException("Framework installation required", 500);
+			}
+
 			$controller = Router::findController();
 			$controller->send();
 		} catch(BaseException $e) {
@@ -97,27 +110,28 @@ class App {
 	/**
 	 * Установка компонентов приложения
 	 */
-	public static function install(): bool {
+	public static function install(): InstallController {
 		$controller = new InstallController;
 		$controller->checkPost();
 
 		$install = Plugins::install();
 		$controller->setErrors($install['errors']);
 		$controller->setRequiredFields($install['params']);
-		$controller->send();
 
-		if(!$controller->isInstalled()){
-			return false;
+		if($controller->isInstalled()){
+			if(strlen(Config::get('appId')) < 64){
+				Config::set('appId', Crypto::generateString(64));
+			}
+
+			// После загрузки плагинов необходимо вызвать plugins::load, чтоб сработал хук для выполнения кода внутри каждого плагина
+			Plugins::load();	
+			Hook::call('app.install');
 		}
 
-		if(strlen(Config::get('appId')) < 64){
-			Config::set('appId', Crypto::generateString(64));
-		}
+		return $controller;
+	}
 
-		// После загрузки плагинов необходимо вызвать plugins::load, чтоб сработал хук для выполнения кода внутри каждого плагина
-		Plugins::load();	
-		
-		Hook::call('app.install');
-		return true;
+	public static function isInstalled(): bool {
+		return strlen(Config::get('appId')) > 0;
 	}
 }
