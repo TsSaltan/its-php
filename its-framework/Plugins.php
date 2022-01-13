@@ -8,10 +8,21 @@ use tsframe\exception\PluginException;
 
 class Plugins {
 	/**
-	 * Loaded plugins name => path
-	 * @var array
+	 * Loaded plugins 
+	 * @var array [name => path]
 	 */
 	protected static $loaded = [];
+
+	/**
+	 * List of plugins 
+	 * @var array [name => path]
+	 */
+	protected static $list = [];
+
+	/**
+	 * @var bool
+	 */
+	protected static $loadList = false;
 
 	public static function load(){
 		foreach (self::getList() as $pluginName => $pluginPath) {
@@ -90,20 +101,36 @@ class Plugins {
 	 * @return array [pluginName => path, ]
 	 */
 	public static function getList(): array {
-		$return = [];
-		//$files = glob(CD . 'ts-plugins' . DS . '*' . DS . 'index.php');
-		$plugins = glob(ITS_PLUGINS . '*' . DS . 'index.php');
-		if(is_dir(APP_PLUGINS)){
-			$appPlugins = glob(APP_PLUGINS . '*' . DS . 'index.php');
-			$plugins = array_merge($plugins, $appPlugins);
+		if(!self::$loadList){
+			$plugins = glob(ITS_PLUGINS . '*' . DS . 'index.php');
+			if(is_dir(APP_PLUGINS)){
+				$appPlugins = glob(APP_PLUGINS . '*' . DS . 'index.php');
+				$plugins = array_merge($plugins, $appPlugins);
+			}
+
+			foreach ($plugins as $path) {
+				$parent = dirname($path);
+				self::addPluginPath($parent);
+			}
+
+			self::$loadList = true;
 		}
 
-		foreach ($plugins as $path) {
-			$parent = dirname($path);
-			$pluginName = basename($parent);
-			$return[$pluginName] = $parent;
+		return self::$list;
+	}
+
+	public function addCustom(string $path): bool {
+		if(file_exists($path . DS . 'index.php')){
+			self::addPluginPath($path);
+			return true;
 		}
-		return $return;
+
+		return false;
+	}
+
+	protected static function addPluginPath(string $path){
+		$pluginName = basename($path);
+		self::$list[$pluginName] = $path;
 	}
 
 	/**
