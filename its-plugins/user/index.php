@@ -77,7 +77,7 @@ Hook::register('template.render', function($tpl){
  * Сохраняем права для пользователей после установки скрипта
  */
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('cache', 'database', 'mailer', 'logger');
+	Plugins::required('cache', 'database', 'mailer');
 	return [
 		PluginInstaller::withKey('access.user.onRegister')
 					->setType('select')
@@ -196,8 +196,10 @@ Hook::register('user.register', function(SingleUser $user){
  * Логирование регистрации пользователей
  */
 Hook::register('user.register', function(SingleUser $user){
-	(new Logger('user-registration'))->info('User "'. $user->get('login') .'" was registered', [
-		'id' => $user->get('id'), 
-		'email' => $user->get('email'),
-	]);
+	if(Plugins::isEnabled('logger')){
+		(new Logger('user-registration'))->info('User "'. $user->get('login') .'" was registered', [
+			'id' => $user->get('id'), 
+			'email' => $user->get('email'),
+		]);
+	}
 });
