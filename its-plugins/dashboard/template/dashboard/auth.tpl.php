@@ -27,6 +27,8 @@
                 }
             );  
 
+            $this->hook('auth', [$tabPane]);
+
             echo $tabPane->render()->addClass('login-panel');
             ?>
         </div>
