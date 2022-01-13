@@ -21,7 +21,7 @@ class Http {
 	const TYPE_JAVASCRIPT = 'text/javascript';
 
 	public static function sendBody(?string $body, int $code = 200, string $type = 'text/html', string $charset = 'utf-8', array $headers = []){
-		Hook::call('http.send', [&$body, &$headers]);
+		Hook::call('http.send', [&$body, &$headers, $code, $type]);
 		header('Content-type: ' . $type . '; charset=' . $charset, $code);
 		foreach ($headers as $key => $value) {
 			header(str_replace(["\r\n", "\n", "\r"], " ", $key . ': ' . $value));
