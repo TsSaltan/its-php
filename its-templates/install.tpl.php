@@ -185,9 +185,15 @@
 			padding: 5px 10px;
 			margin: 0;
 		}
+
+		#logo {
+			width: 150px;
+			float: left;
+		}
 	</style>
 </head>
 <body>
+	<img src="<?=$this->getURI('its-logo.png')?>" id="logo"/>
 	<form action="?step=<?=(1+$step)?>" method="POST" id="installPane">
 		<ul id="nav">
 			<li class="<?=($step==1) ? "active" : ""?>">1. Выбор плагинов</li>
