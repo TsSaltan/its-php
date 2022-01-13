@@ -190,6 +190,15 @@
 			width: 150px;
 			float: left;
 		}
+
+		td.pluginName span {
+  			color: #777;
+  			font-size: 10px;
+  			float: left;
+  			display: block;
+  			text-align: right;
+  			width: 100%;
+		}
 	</style>
 </head>
 <body>
@@ -212,10 +221,11 @@
 							<td colspan="3"><p class="error">Решите ошибки, возникшие во врем установки. Возможно, необходимо отключить конфликтующие плагины!</p></td>	
 						</tr>
 					<?php endif?>
-					<?php foreach ($plugins as $pluginName => $value):?>
+					<?php foreach ($plugins as $pluginName => $pluginPath):?>
 						<tr>	
 							<td class="pluginName">
-							<?=ucfirst(str_replace('-', ' ', $pluginName))?>
+								<?=$pluginName?>
+								<span><?=$pluginPath?></span>
 							</td>
 							<td class="pluginSlider">
 								<label class="switch">
