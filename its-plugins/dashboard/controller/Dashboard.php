@@ -25,7 +25,7 @@ use tsframe\view\HtmlTemplate;
  * 
  * @route GET /dashboard/[auth|logout|config|config:action]
  * @route POST /dashboard/[config:action]
- * @route POST /dashboard/config/[theme|siteinfo:action]
+ * @route POST /dashboard/config/[theme|siteinfo|setmode:action]
  */
 class Dashboard extends AbstractController{
 	use ActionToMethodTrait;
@@ -146,6 +146,24 @@ class Dashboard extends AbstractController{
 
 	/**
 	 * Сохранение файла настроек
+	 * @uri POST /dashboard/config/setmode
+	 * @access user.editConfig
+	 **/
+	public function postSetmode(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		$data = Input::post()
+			->name('dev_mode')->required()->minLength(0)->numeric()
+			->name('install_mode')->required()->minLength(0)->numeric()
+		->assert();
+
+		Config::set('dev_mode', $_POST['dev_mode'] == 1);
+		Config::set('install_mode', $_POST['install_mode'] == 1);
+
+		return Http::redirect(Http::makeURI('/dashboard/config#setmode'));
+	}
+
+	/**
+	 * Сохранение файла настроек
 	 * @uri POST /dashboard/config/siteinfo
 	 * @access user.editConfig
 	 **/
@@ -180,6 +198,9 @@ class Dashboard extends AbstractController{
 		$this->vars['loginEnabled'] = UserConfig::isLoginEnabled();
 		$this->vars['passwordEnabled'] = UserConfig::isPasswordEnabled();
 		$this->vars['socialLoginTemplate'] = (UserConfig::isSocialEnabled()) ? SocialLogin::getWidgetCode() : null;
+
+		$this->vars['dev_mode'] = Config::get('dev_mode');
+		$this->vars['install_mode'] = Config::get('install_mode');
 
 		$action = $this->getAction();
 

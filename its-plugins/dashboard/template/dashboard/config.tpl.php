@@ -10,6 +10,30 @@
                     <?php echo $this->uiAlerts(); ?>
                 </div>
             </div>
+            <div class="row">
+                <form id="setmode_form" action="<?=$this->makeURI('/dashboard/config/setmode')?>" method="POST">  
+                    <div class="col-lg-3">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon" style="width:150px">Dev mode</span>
+                            <select class="form-control" name="dev_mode" onchange="$('#setmode_form').submit()">
+                                <option value="0">False</option>
+                                <option value="1" <?php if($dev_mode === true){ echo "selected"; }?>>True</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon" style="width:150px">Install mode</span>
+                            <select class="form-control" name="install_mode" onchange="$('#setmode_form').submit()">
+                                <option value="0">False</option>
+                                <option value="1"<?php if($install_mode === true){ echo "selected"; }?>>True</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
             <?php $this->hook('config')?>
             
             <form action="<?=$this->makeURI('/dashboard/config/theme')?>" method="POST">
