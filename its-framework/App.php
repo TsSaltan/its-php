@@ -102,6 +102,7 @@ class App {
 	 * Установка компонентов приложения
 	 */
 	public static function install(): InstallController {
+		Hook::call('app.install');
 		$controller = new InstallController;
 		$controller->checkPost();
 
