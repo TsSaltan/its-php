@@ -65,7 +65,7 @@ class itsFrame {
 		Autoload::addRoot(ITS_FRAME);
 
 		// Путь к файлу настрек
-		Config::load(APP_ROOT . 'ts-config.json');
+		Config::load(APP_ROOT . 'its-config.json');
 
 		// Путь к директории с переводами
 		Lang::addTranslationPath(APP_TRANSLATIONS);
@@ -80,6 +80,18 @@ class itsFrame {
 	}
 
 	private static function registerMigrateHooks(){
+		Hook::registerOnce('app.install', function(){
+			// Migrate from ts-frame
+			$oldCfg = APP_ROOT . 'ts-config.json';
+
+			if(isset($oldCfg)){
+				$data = json_decode(file_get_contents($oldCfg), true);
+				Config::set('*', $data);
+				@unlink($oldCfg);
+				Config::set('install_mode', true);
+			}
+		});
+
 		Hook::registerOnce('app.installed', function(){
 			// Migrate from ts-framework v1.0
 			$canReg = Config::get('user.canRegister');
