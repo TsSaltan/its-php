@@ -84,7 +84,7 @@ class itsFrame {
 			// Migrate from ts-frame
 			$oldCfg = APP_ROOT . 'ts-config.json';
 
-			if(isset($oldCfg)){
+			if(file_exists($oldCfg)){
 				$data = json_decode(file_get_contents($oldCfg), true);
 				Config::set('*', $data);
 				@unlink($oldCfg);
