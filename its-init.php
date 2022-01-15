@@ -8,10 +8,14 @@ use tsframe\module\locale\Lang;
 
 if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 
-define('ITS_ROOT', 		__DIR__ . DS);						// Корневая директория фреймворка
-define('ITS_FRAME', 	ITS_ROOT . 'its-framework' . DS); 	// Директория с базовыми функциями фрейма
-define('ITS_PLUGINS', 	ITS_ROOT . 'its-plugins' . DS); 	// Директория с базовыми плагинами
-define('ITS_TEMPLATES', ITS_ROOT . 'its-templates' . DS); 	// Директория с базовыми шаблонами
+define('ITS_ROOT', 			__DIR__ . DS);						// Корневая директория фреймворка
+define('ITS_FRAME', 		ITS_ROOT . 'its-framework' . DS); 	// Директория с базовыми функциями фрейма
+define('ITS_PLUGINS', 		ITS_ROOT . 'its-plugins' . DS); 	// Директория с базовыми плагинами
+define('ITS_TEMPLATES', 	ITS_ROOT . 'its-templates' . DS); 	// Директория с базовыми шаблонами
+define('ITS_STORAGE', 		ITS_ROOT . 'storage' . DS); 		// Директория c временной папкой, переводами и пр.
+define('ITS_TEMP', 			ITS_STORAGE . 'temp' . DS); 		
+define('ITS_UPLOAD', 		ITS_STORAGE . 'upload' . DS); 		
+define('ITS_TRANSLATIONS', 	ITS_STORAGE . 'translations' . DS); 
 
 class itsFrame {
 	/**
@@ -37,7 +41,7 @@ class itsFrame {
 			define('APP_PLUGINS', APP_ROOT . 'its-plugins' . DS);
 
 		if(!defined('APP_STORAGE'))		
-			define('APP_STORAGE', ITS_ROOT . 'storage' . DS);
+			define('APP_STORAGE', APP_ROOT . 'storage' . DS);
 
 		if(!defined('APP_UPLOAD'))		
 			define('APP_UPLOAD', APP_STORAGE . 'upload' . DS);
@@ -50,9 +54,27 @@ class itsFrame {
 
 		// Aliases for roots
 		define('CD', APP_ROOT);	// Alias "current dir"
-		define('STORAGE', APP_STORAGE);
-		define('TEMP', APP_TEMP);
-		define('UPLOAD', APP_UPLOAD);
+
+		if(is_dir(APP_STORAGE)){
+			define('STORAGE', APP_STORAGE);
+		}
+		else {
+			define('STORAGE', ITS_STORAGE);
+		}
+
+		if(is_dir(APP_TEMP)){
+			define('TEMP', APP_TEMP);
+		}
+		else {
+			define('TEMP', ITS_TEMP);
+		}
+
+		if(is_dir(APP_UPLOAD)){
+			define('UPLOAD', APP_UPLOAD);
+		}
+		else {
+			define('UPLOAD', ITS_UPLOAD);
+		}
 		
 		require ITS_FRAME . 'Autoload.php';
 		
@@ -68,7 +90,10 @@ class itsFrame {
 		Config::load(APP_ROOT . 'its-config.json');
 
 		// Путь к директории с переводами
-		Lang::addTranslationPath(APP_TRANSLATIONS);
+		if(APP_TRANSLATIONS != ITS_TRANSLATIONS){
+			Lang::addTranslationPath(APP_TRANSLATIONS);
+		}
+		Lang::addTranslationPath(ITS_TRANSLATIONS);
 
 		self::registerMigrateHooks();
 	}
