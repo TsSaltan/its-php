@@ -25,7 +25,9 @@ namespace tsframe\module\locale {
 				$langFile = $path . $lang . '.json';
 				if(!file_exists($langFile)) continue;
 				$data = json_decode(file_get_contents($langFile), true);
-				self::$cache = array_merge(self::$cache, $data);
+				if(is_array($data)){
+					self::$cache = array_merge(self::$cache, $data);
+				}
 			}
 		}
 
