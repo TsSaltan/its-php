@@ -29,6 +29,10 @@ class Http {
 		echo $body;
 	}
 
+	public static function redirectURI(string $uriPath, int $code = self::CODE_MOVED_TEMPORARILY){
+		return self::redirect(self::makeURI($uriPath), $code);
+	}
+
 	public static function redirect(string $path, int $code = self::CODE_MOVED_TEMPORARILY){
 		header('Location: '.$path, $code);
 		?>
