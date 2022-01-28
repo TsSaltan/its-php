@@ -185,7 +185,14 @@ class Dashboard extends AbstractController{
 	public function response(){
 		// Автоматическое перенаправление на первый пункт меню
 		if(strlen($this->getAction('')) == 0){
-			return Menu::render('dashboard-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
+			Menu::render('dashboard-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
+				if(UserAccess::checkCurrentUser($menu->getData('access'))){
+					Http::redirect($menu->getData('url'));
+				}
+			});
+
+			// Если не будет пользовательских пунктов меню, то будет перенаправление на админское меню (если доступно)
+			Menu::render('dashboard-admin-sidebar', function(){}, function(MenuItem $menu, string $subMenu, int $level){ 
 				if(UserAccess::checkCurrentUser($menu->getData('access'))){
 					Http::redirect($menu->getData('url'));
 				}

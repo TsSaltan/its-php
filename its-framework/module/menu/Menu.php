@@ -19,7 +19,7 @@ class Menu {
 	 * @param  callable $onItem   function(MenuItem $menu, string $subMenu, int $level){ return '<li><a href="'. $menu->getData('url') .'">'. $menu->getTitle() .'</a>'. $subMenu .'</li>'; }
 	 * @return string
 	 */
-	public static function render(string $menuName, callable $onParent, callable $onItem): string {
+	public static function render(string $menuName, callable $onParent, callable $onItem): ?string {
 		if(!isset(self::$menus[$menuName])){
 			throw new MenuException('Menu '.$menuName.' does not exist', 0, [
 				'menuName' => $menuName,
