@@ -194,4 +194,12 @@ class Template {
 	public function setHooksUsing(bool $enable){
 		$this->useHooks = $enable;
 	}
+
+	public function getTemplatePart(): string {
+		return $this->part;
+	}
+
+	public function getTemplateName(): string {
+		return $this->name;
+	}
 }
