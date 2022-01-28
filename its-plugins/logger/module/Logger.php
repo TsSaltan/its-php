@@ -8,6 +8,11 @@ use tsframe\module\database\Database;
 
 /**
  * @see https://habr.com/ru/post/456676/
+ * @example (new Logger('logs-section'))->add(Logger::LEVEL_DEBUG, $message, ['debug' => 'data']);
+ * @example Logger::section()->add(Logger::LEVEL_DEBUG, $message, ['debug' => 'data']);
+ * @example Logger::section()->debug($message, ['debug' => 'data']);
+ * @example Logger::section()->notice($message, ['debug' => 'data']);
+ * @example Logger::section()->error($message, ['debug' => 'data']);
  */
 class Logger {
 	/**
