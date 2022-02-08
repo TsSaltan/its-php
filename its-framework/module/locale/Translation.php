@@ -51,7 +51,8 @@ namespace tsframe\module\locale {
 		public static function text(string $key, ...$args): string {
 			$item = self::get($key);
 			if(is_null($item) || !$item){
-				$item = $key;
+				$items = explode(self::$separator, $key);
+				$item = last($items);
 			}
 
 			// Ищем ключи для sprintf
