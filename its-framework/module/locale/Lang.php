@@ -1,6 +1,8 @@
 <?php
 namespace tsframe\module\locale;
 
+use tsframe\Http;
+
 /**
  * Набор функций для определения и выбора текущего языка
  */
@@ -49,7 +51,7 @@ class Lang {
 
 	public static function setCurrent(string $lang){
 		self::$current = $lang;
-		setcookie(self::COOKIE_NAME, $lang, time()+60*60*24, '/');
+		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24]);
 	}
 
 	public static function addTranslationPath(string $path): bool {

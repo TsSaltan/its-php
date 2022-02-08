@@ -17,7 +17,8 @@
         "minishlink/web-push": "6.0.5",
         "phpmailer/phpmailer": "6.5.0",
         "airmanbzh/php-html-generator": "dev-master",
-        "telegram-bot/api": "^2.3"
+        "telegram-bot/api": "^2.3",
+        "ovunctukenmez/samesite-cookie-setter": "dev-master"
     },
 
     "autoload": {

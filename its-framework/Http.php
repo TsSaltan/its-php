@@ -2,6 +2,7 @@
 namespace tsframe;
 
 use tsframe\Hook;
+use ovunctukenmez\SameSiteCookieSetter;
 
 class Http {
 
@@ -127,5 +128,13 @@ class Http {
 
 	public static function getRequestMethod(): string {
 		return isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
+	}
+
+	public static function setCookie(string $key, string $value, array $params = []){
+		if(!isset($params['httponly'])) $params['httponly'] = true;
+		if(!isset($params['secure'])) $params['secure'] = true;
+		if(!isset($params['samesite'])) $params['samesite'] = 'None';
+
+		SameSiteCookieSetter::setcookie($key, $value, $params);		
 	}
 }
