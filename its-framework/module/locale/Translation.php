@@ -52,7 +52,7 @@ namespace tsframe\module\locale {
 			$item = self::get($key);
 			if(is_null($item) || !$item){
 				$items = explode(self::$separator, $key);
-				$item = last($items);
+				$item = end($items);
 			}
 
 			// Ищем ключи для sprintf
