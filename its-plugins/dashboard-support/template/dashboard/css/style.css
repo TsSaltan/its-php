@@ -1,4 +1,3 @@
-<style type="text/css">
 .chat-item {
     cursor: pointer;
 }
@@ -30,4 +29,3 @@ td.chat-open {
 td.chat-close{
 	color: darkred;
 }
-</style>
