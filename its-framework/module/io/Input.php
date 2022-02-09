@@ -244,7 +244,8 @@ Input::addFilter(['referer', 'referrer'], function(Input $input, string $current
 });
 
 Input::addFilter('optional', function(Input $input){
-	if(is_null($input->getCurrentData()) || strlen($input->getCurrentData()) == 0){
+	$currentData = $input->getCurrentData();
+	if(is_null($currentData) || (is_string($currentData) && strlen($currentData) == 0) || is_array($currentData) && sizeof($currentData) == 0){
 		$input->varProcess(function() use ($input){
 			$input->clearInvalidKey($input->getCurrentKey());
 		});
