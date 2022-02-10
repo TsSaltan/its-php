@@ -75,7 +75,7 @@ class Router {
 			return $hookController;
 		}
 
-		throw new RouteException('Controller does not found', 404);
+		throw new RouteException('Controller does not found', 404, ['routes' => $routes->routes, 'redirects' => $routes->redirects]);
 	}
 
 	/**
