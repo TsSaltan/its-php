@@ -226,7 +226,9 @@
                                         <!--th>Мета</th-->
                                     </thead>
                                     <tbody>
-                                        <?php foreach($logs->getData() as $i => $log): ?>
+                                        <?php 
+                                            $i = 0;
+                                            foreach($logs->getData() as $log): ?>
                                         <?php
                                         $logMessage = null;
                                         if(isset($log['data']['message'])){
@@ -255,7 +257,7 @@
                                                 <?php 
                                                     $debugPane = $this->uiCollapsePanel(); 
                                                     $debugPane->header($this->uiIcon('code') . ' Debug data');
-                                                    $debugPane->body(function() use ($log, $i){
+                                                    $debugPane->body(function() use ($log, &$i){
                                                         ?>
                                                         <table class="table log-meta">
                                                             <?php foreach ($log['data'] as $key => $value): $i++;?>
