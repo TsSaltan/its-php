@@ -156,15 +156,15 @@
                     <?php if($logs->isData()):?>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table id="table-logger" class="table table-striped table-bordered table-hover">
+                                <table id="table-logger" class="table table-striped table-bordered">
                                     <thead>
                                         <th width="40px">Тип</th>
                                         <th width="135px">Дата / Раздел</th>
-                                        <th width="300px">Сообщение</th>
-                                        <th>Мета</th>
+                                        <th width="auto">Сообщение</th>
+                                        <!--th>Мета</th-->
                                     </thead>
                                     <tbody>
-                                        <?php foreach($logs->getData() as $log): ?>
+                                        <?php foreach($logs->getData() as $i => $log): ?>
                                         <?php
                                         $logMessage = null;
                                         if(isset($log['data']['message'])){
@@ -173,7 +173,7 @@
                                         }
                                         ?>
                                         <tr class="log-entry">
-                                            <td class="log-type log-<?=$log['levelName']?>">
+                                            <td class="log-type log-<?=$log['levelName']?>" rowspan='2'>
                                                 <?=ucfirst($log['levelName'])?>
                                             </td>
 
@@ -185,27 +185,63 @@
                                             <td class="log-message">
                                                 <p><?=$logMessage?></p>
                                             </td>
-                                            <td>
-                                            <?php if(sizeof($log['data'])>0):?>
-                                                <table class="table log-meta">
-                                                    <?php foreach ($log['data'] as $key => $value):?>
-                                                        <tr>
-                                                            <td width="100px"><?=$key?></td>
-                                                            <td>
-                                                                <?php if(is_array($value) || is_object($value)): ?>
-                                                                <pre><?php var_export($value)?></pre>
-                                                                <?php elseif(is_string($value) && strlen($value) == 0): ?>
-                                                                <span>NULL</span>
-                                                                <?php else: ?>
-                                                                <pre><?=($value)?></pre>
-                                                                <?php endif ?>
-                                                            </td>
-                                                        </tr>
-                                                    <?php endforeach?>
-                                                </table>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">
+                                                <?php if(sizeof($log['data']) > 0): ?>
+                                                <?php 
+                                                    $debugPane = $this->uiCollapsePanel(); 
+                                                    $debugPane->header($this->uiIcon('eye') . ' Debug data');
+                                                    $debugPane->body(function() use ($log, $i){
+                                                        ?>
+                                                        <table class="table log-meta">
+                                                            <?php foreach ($log['data'] as $key => $value): $i++;?>
+                                                            <tr>
+                                                                <td width="120px" align="center"><strong><pre class="source"><?=$key?></pre></strong></td>
+                                                                <td>
+                                                                    <?php if(is_array($value) || is_object($value)): ?>
+                                                                        <?php 
+                                                                        $tabs = $this->uiTabPanel();
+                                                                        $tabs->tab("log-dump-" . $i, 'Dump', function() use ($value){
+                                                                            ?>
+                                                                            <pre class='source'><?php var_dump($value);?></pre>
+                                                                            <?php
+                                                                        });
+
+                                                                        $tabs->tab("log-export-" . $i, 'Export', function() use ($value){
+                                                                            ?>
+                                                                            <pre class='source'><?php var_export($value);?></pre>
+                                                                            <?php
+                                                                        });
+
+                                                                        if(is_array($value) || is_object($value)){
+                                                                        $tabs->tab("log-json-" . $i, 'JSON', function() use ($value, $i){
+                                                                            ?>
+                                                                            <pre><?=json_encode($value, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);?></pre>
+                                                                            <?php
+                                                                        });
+                                                                        }
+
+                                                                        echo $tabs;
+                                                                        ?>
+                                                                    <?php elseif(is_string($value) && strlen($value) == 0): ?>
+                                                                        <span>NULL</span>
+                                                                    <?php else: ?>
+                                                                        <pre class='source'><?=($value)?></pre>
+                                                                    <?php endif ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php endforeach?>
+                                                        </table>
+                                                        <?php 
+                                                    });
+                                                    echo $debugPane;
+                                                ?>
                                             <?php endif?>
+
+
                                             </td>
-                     
                                         </tr>
                                         <?php endforeach?>
                                     </tbody>

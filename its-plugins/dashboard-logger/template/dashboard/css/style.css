@@ -1,17 +1,22 @@
 #table-logger .log-meta,
 #table-logger .log-meta td,
-#table-logger .log-meta pre {
-    padding: 3px 5px;
+#table-logger .log-meta pre.source {
     margin: 0;
 }
 
-#table-logger .log-meta pre {
+#table-logger .log-meta pre.source {
     white-space: pre-wrap;       /* css-3 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
     white-space: -pre-wrap;      /* Opera 4-6 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
     overflow-y: auto;
+
+    padding: 5px 8px;
+}
+
+#table-logger tr.log-entry {
+    border-top: 2px dashed #aaa;
 }
 
 .log-section {
@@ -25,11 +30,11 @@
     text-align: center;
 }
 
-.log-type {
-    padding: 3px;
+#table-logger .log-type {
     text-align: center;
     writing-mode: sideways-lr;
-    vertical-align: middle !important;
+    vertical-align: top !important;
+    padding-top: 20px;
 }
 /**
  * Log entries colors
