@@ -29,7 +29,7 @@
                         <div class="panel-heading clearfix">
                             <form action="" method="GET">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Раздел</label>
                                             <select class="form-control" name="section">
@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Минимальный уровень критичности</label>
                                             <select class="form-control" name="level">
@@ -53,27 +53,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Интервал времени</label>
-  
-                                            <div class="row">
-                                                <div class="col-md-1"><p class="form-control-static">От</p></div>
-                                                <div class="col-md-6"><input type="date" class="form-control" name="ts_from_date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsFrom)?>"/></div>
-                                                <div class="col-md-5"><input type="time" class="form-control" name="ts_from_time" value="<?=date('H:i', $logTsFrom)?>"/></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-1"><p class="form-control-static">До</p></div>
-                                                <div class="col-md-6"><input type="date" class="form-control" name="ts_to_date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsTo)?>"/></div>
-                                                <div class="col-md-5"><input type="time" class="form-control" name="ts_to_time" value="<?=date('H:i', $logTsTo)?>"/></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>&nbsp;</label>
                                             <button class="form-control btn btn-block btn-primary">Применить фильтр</button>
@@ -81,6 +61,80 @@
                                                 Фильтру соответствует <b><?=$logs->getDataSize()?></b> записей
                                             </p>
                                         </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <?php 
+                                            $timePane = $this->uiCollapsePanel(); 
+                                            $timePane->setId('interval-setter');
+                                            $timePane->header($this->uiIcon('clock-o') . ' Временной интервал');
+                                            $timePane->body(function() use ($logTsFrom, $logTsTo){ 
+                                        ?>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Интервал времени</label>
+      
+                                                <div class="row">
+                                                    <div class="col-md-1"><p class="form-control-static">От</p></div>
+                                                    <div class="col-md-6"><input type="date" class="form-control" name="ts_from_date" id="ts-from-date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsFrom)?>"/></div>
+                                                    <div class="col-md-5"><input type="time" class="form-control" name="ts_from_time" id="ts-from-time" value="<?=date('H:i', $logTsFrom)?>"/></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-1"><p class="form-control-static">До</p></div>
+                                                    <div class="col-md-6"><input type="date" class="form-control" name="ts_to_date" id="ts-to-date" format="yyyy-mm-dd" value="<?=date('Y-m-d', $logTsTo)?>"/></div>
+                                                    <div class="col-md-5"><input type="time" class="form-control" name="ts_to_time" id="ts-to-time" value="<?=date('H:i', $logTsTo)?>"/></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">                      
+                                            <div class="col-lg-6">                      
+                                                <a href="#" class="btn btn-default btn-block" onclick="
+                                                    $('#ts-from-date').val('1970-01-01');
+                                                    $('#ts-from-time').val('00:00');
+                                                    $('#ts-to-date').val('<?=date('Y-m-d')?>');
+                                                    $('#ts-to-time').val('23:59');
+                                                ">Записи за всё время</a>
+
+                                                <a href="#" class="btn btn-default btn-block" onclick="
+                                                    $('#ts-from-date').val('<?=date('Y-m-d')?>');
+                                                    $('#ts-from-time').val('00:00');
+                                                    $('#ts-to-date').val('<?=date('Y-m-d')?>');
+                                                    $('#ts-to-time').val('23:59');
+                                                ">Записи за сегодня</a>
+
+                                                <a href="#" class="btn btn-default btn-block" onclick="
+                                                    $('#ts-from-date').val('<?=date('Y-m-d', time() - (60*60*24))?>');
+                                                    $('#ts-from-time').val('00:00');
+                                                    $('#ts-to-date').val('<?=date('Y-m-d')?>');
+                                                    $('#ts-to-time').val('00:00');
+                                                ">Записи за вчера</a>
+
+                                            </div>                      
+                                            <div class="col-lg-6">                      
+                                                <a href="#" class="btn btn-default btn-block" onclick="
+                                                    $('#ts-from-date').val('<?=date('Y-m')?>-01');
+                                                    $('#ts-from-time').val('00:00');
+                                                    $('#ts-to-date').val('<?=date('Y-m-d')?>');
+                                                    $('#ts-to-time').val('23:59');
+                                                ">Записи за этот месяц</a>
+
+                                                <a href="#" class="btn btn-default btn-block" onclick="
+                                                    $('#ts-from-date').val('<?=date('Y-m', time()-(60*60*24*30))?>-01');
+                                                    $('#ts-from-time').val('00:00');
+                                                    $('#ts-to-date').val('<?=date('Y-m')?>-01');
+                                                    $('#ts-to-time').val('00:00');
+                                                ">Записи за прошлый месяц</a>
+                                            </div>
+                                        </div>
+                                        <?php
+                                            });
+
+                                            echo $timePane;
+                                        ?>
                                     </div>
                                 </div>
                             </form>
@@ -129,17 +183,25 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Выберите время и дату, до которой будет проведено удаление</label>
-                                                <input class="form-control" id="clearDate" name="date" type="datetime-local" value="<?=date('Y-m-d')?>T<?=date('H:i')?>:00"/>
-                                                <ul>
-                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d', time()+60*60*24)?>T00:00:00')">Удалить записи за всё время</a></li>
-                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m-d')?>T00:00:00')">Оставить записи за сегодня</a></li>
-                                                    <li><a href="#" onclick="$('#clearDate').val('<?=date('Y-m')?>-01T00:00:00')">Оставить записи этого месяца</a></li>
-                                                </ul>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label>Выберите время и дату, до которой будет проведено удаление</label>
+                                                        <input class="form-control" id="clearDate" name="date" type="datetime-local" value="<?=date('Y-m-d')?>T<?=date('H:i')?>:00"/>
+                                                    </div>
+                                                </div>
                                             </div>
-
+                                                
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <a href="#" class="btn btn-warning btn-sm" onclick="$('#clearDate').val('<?=date('Y-m-d', time()+60*60*24)?>T00:00:00')">Удалить все логи</a>
+                                                    <a href="#" class="btn btn-warning btn-sm" onclick="$('#clearDate').val('<?=date('Y-m-d')?>T00:00:00')">Оставить логи за сегодня</a>
+                                                    <a href="#" class="btn btn-warning btn-sm" onclick="$('#clearDate').val('<?=date('Y-m')?>-01T00:00:00')">Оставить логи  этого месяца</a>
+                                                </div>
+                                            </div>
                                         </div>
+
+
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
@@ -192,7 +254,7 @@
                                                 <?php if(sizeof($log['data']) > 0): ?>
                                                 <?php 
                                                     $debugPane = $this->uiCollapsePanel(); 
-                                                    $debugPane->header($this->uiIcon('eye') . ' Debug data');
+                                                    $debugPane->header($this->uiIcon('code') . ' Debug data');
                                                     $debugPane->body(function() use ($log, $i){
                                                         ?>
                                                         <table class="table log-meta">
