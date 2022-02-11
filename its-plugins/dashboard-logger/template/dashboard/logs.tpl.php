@@ -280,7 +280,7 @@
                                                                         if(is_array($value) || is_object($value)){
                                                                         $tabs->tab("log-json-" . $i, 'JSON', function() use ($value, $i){
                                                                             ?>
-                                                                            <pre><?=json_encode($value, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);?></pre>
+                                                                            <pre class='source'><?=json_encode($value, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);?></pre>
                                                                             <?php
                                                                         });
                                                                         }
