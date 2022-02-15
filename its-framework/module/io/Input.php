@@ -302,7 +302,10 @@ Input::addFilter('string', function(Input $input){
 });
 
 Input::addFilter('json', function(Input $input){
-	json_decode($input->getCurrentData());
+	$data = $input->getCurrentData();
+	if(!is_string($data) && !is_null($data)) return false;
+	
+	json_decode($data);
 	return json_last_error() == JSON_ERROR_NONE;
 });
 
