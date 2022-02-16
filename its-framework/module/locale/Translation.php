@@ -65,7 +65,7 @@ namespace tsframe\module\locale {
 						$params = explode('|', $matches[3]);
 						array_unshift($params, intval($current));
 						$params[] = false;
-						return sprintf($matches[1], $current) . ' ' . call_user_func_array([Translate::class, 'numCase'], $params);
+						return sprintf($matches[1], $current) . ' ' . call_user_func_array([Translation::class, 'numCase'], $params);
 					} else {
 						return sprintf($matches[0], $current);
 					}
@@ -89,12 +89,12 @@ namespace tsframe\module\locale {
 			if(strlen($n5) == 0 && $n > 1){
 				$ns = $n2;
 			} 
-			else if(strlen($n5) > 0){
+			elseif(strlen($n5) > 0){
 				if($n == 0 || $n % 10 == 9 || $n % 10 == 8 || $n % 10 == 7 || $n % 10 == 6 || $n % 10 == 5 || $n % 10 == 0 || $n % 100 == 11 || $n % 100 == 12 || $n % 100 == 13){
 					$ns = $n5;
 				}
 
-				if($n % 2 == 0 || $n % 10 == 3){
+				if($n != 0 && ($n % 2 == 0 || $n % 10 == 3)){
 					$ns = $n2;
 				}
 			}
