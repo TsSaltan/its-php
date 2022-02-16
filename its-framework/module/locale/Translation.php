@@ -85,21 +85,10 @@ namespace tsframe\module\locale {
 		 * @return string
 		 */
 		public static function numCase(int $n, string $n1, string $n2, ?string $n5 = null, bool $addNumber = false): string {
-			$ns = $n1;
-			if(strlen($n5) == 0 && $n > 1){
-				$ns = $n2;
-			} 
-			elseif(strlen($n5) > 0){
-				if($n == 0 || $n % 10 == 9 || $n % 10 == 8 || $n % 10 == 7 || $n % 10 == 6 || $n % 10 == 5 || $n % 10 == 0 || $n % 100 == 11 || $n % 100 == 12 || $n % 100 == 13){
-					$ns = $n5;
-				}
-
-				if($n != 0 && ($n % 2 == 0 || $n % 10 == 3)){
-					$ns = $n2;
-				}
-			}
-
-			return ($addNumber) ? $n . ' ' . $ns : $ns;
+			$cases = array(2, 0, 1, 1, 1, 2);
+			$titles = [$n1, $n2, strlen($n5) > 0 ? $n5 : $n2];
+  			$word = $titles[($n % 100 > 4 && $n % 100 < 20) ? 2 : $cases[min($n % 10, 5)]];
+			return ($addNumber) ? $n . ' ' . $word : $word;
 		}
 	}
 
