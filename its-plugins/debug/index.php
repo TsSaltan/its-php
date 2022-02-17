@@ -13,8 +13,9 @@ if(App::isDev()){
 
 	Hook::register('http.send', function(&$body, &$headers, $code, $type) use ($debug){
 		$data = $debug->getData();
+		$i = 0;
 		foreach ($data as $key => $value) {
-			$headers['X-Debug-' . $key] = $value;
+			$headers['X-Debug-' . sprintf('%02d', ++$i)] = $key . ': ' . $value;
 		}
 
 		if(stripos($type, 'html') !== false){
