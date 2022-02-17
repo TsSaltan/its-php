@@ -119,7 +119,7 @@ class Plugins {
 		return self::$list;
 	}
 
-	public function addCustom(string $path): bool {
+	public static function addCustom(string $path): bool {
 		if(file_exists($path . DS . 'index.php')){
 			self::addPluginPath($path);
 			return true;
