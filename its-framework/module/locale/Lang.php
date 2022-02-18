@@ -12,7 +12,7 @@ class Lang {
 	 * Список доступных языков
 	 * @var array
 	 */
-	public static $list = ['en', 'ru'];
+	protected static $list = ['en', 'ru'];
 
 	/**
 	 * Имя куки, где хранятся данные о текущем языке
@@ -41,8 +41,27 @@ class Lang {
 	 * Установить язык по умолчанию
 	 * @param string $lang
 	 */
-	public static function setDefault(string $lang): bool {
-		self::$default = strtolower($lang);
+	public static function setDefault(?string $lang = null): bool {
+		if(is_null($lang)){
+			self::$default = current(self::$list);
+		}
+
+		$lang = strtolower($lang);
+		if(!in_array($lang, self::$list)) return false;
+
+		self::$default = $lang;
+		return true;
+	}
+
+	public static function setList(array $list = [], ?string $default = null): bool {
+		if(sizeof($list) == 0) return false;
+
+		self::$list = $list;
+		return self::setDefault($default);
+	}
+
+	public static function getList(): array {
+		return self::$list;
 	}
 
 	public static function getCurrent(): ?string {
