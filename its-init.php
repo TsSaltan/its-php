@@ -3,6 +3,7 @@ use tsframe\App;
 use tsframe\Autoload;
 use tsframe\Config;
 use tsframe\Hook;
+use tsframe\Plugins;
 use tsframe\exception\BaseException;
 use tsframe\module\locale\Lang;
 
@@ -20,10 +21,23 @@ define('ITS_TRANSLATIONS', 	ITS_STORAGE . 'translations' . DS);
 class itsFrame {
 	/**
 	 * Инициализация путей фреймврока
-	 * @param array $paths Массив с путями, доступные ключи: root, plugins, storage, upload, temp, translations
+	 * @param array $paths Массив с путями, доступные ключи: 
+	 * - root, 
+	 * - plugins, 
+	 * - storage, 
+	 * - upload, 
+	 * - temp, 
+	 * - translations
+	 * - basePath
 	 */
 	public static function init(array $paths = []){
+		$basePath = '/';
 		foreach($paths as $key => $path){
+			if(strtolower($key) == 'basepath'){
+				$basePath = $path;
+				continue;
+			}
+
 			$pathKey = strtoupper('APP_' . $key);
 			if(!defined($pathKey)){
 				if(substr($path, -1, 1) !== DS){
@@ -89,6 +103,9 @@ class itsFrame {
 		// Путь к файлу настрек
 		Config::load(APP_ROOT . 'its-config.json');
 
+		// Базовая директория скрипта
+		App::setBasePath($basePath);
+
 		// Путь к директории с переводами
 		if(APP_TRANSLATIONS != ITS_TRANSLATIONS){
 			Lang::addTranslationPath(APP_TRANSLATIONS);
@@ -96,12 +113,8 @@ class itsFrame {
 		Lang::addTranslationPath(ITS_TRANSLATIONS);
 
 		self::registerMigrateHooks();
-	}
 
-	public static function launch(array $paths = [], string $basePath = '/'){
-		self::init($paths);
-		App::setBasePath($basePath);
-		App::start();
+		return new self;
 	}
 
 	private static function registerMigrateHooks(){
@@ -137,5 +150,19 @@ class itsFrame {
 				Config::unset('user.loginUsed');
 			}
 		});
+	}
+
+	public function setLanguages(array $langs = [], ?string $default = null){
+		Lang::setList($langs, $default);
+		return $this;
+	}
+
+	public function addPlugin(string $path){
+		Plugins::addCustom($path);
+		return $this;
+	}
+
+	public function start(){
+		App::start();
 	}
 }
