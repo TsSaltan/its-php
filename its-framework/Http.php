@@ -134,6 +134,7 @@ class Http {
 		if(!isset($params['httponly'])) $params['httponly'] = true;
 		if(!isset($params['secure'])) $params['secure'] = true;
 		if(!isset($params['samesite'])) $params['samesite'] = 'None';
+		if(!isset($params['path'])) $params['path'] = '/';
 
 		SameSiteCookieSetter::setcookie($key, $value, $params);		
 	}
