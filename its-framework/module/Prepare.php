@@ -148,7 +148,7 @@ class Prepare {
     }
 
     public function setReplaceEmpty($replaceTo = false): Prepare {
-        if(!$replaceTo){
+        if($replaceTo === false){
             $this->replaceEmpty = false;
         } else {
             $this->replaceEmpty = true;
