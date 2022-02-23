@@ -22,6 +22,12 @@ class Prepare {
     private $safeQuery;
     
     /**
+     * Триммить строку перед выводом
+     * @var boolean
+     */
+    public $autoTrim = true;
+
+    /**
      * Обрамлять переменную кавычками
      * @var boolean
      */
@@ -44,6 +50,12 @@ class Prepare {
     public $replaceEmpty = false;
 
     /**
+     * На что будет заменены отсутствующие переменные (при replaceEmpty === true)
+     * @var mixed
+     */
+    public $replaceEmptyTo = 'NULL';
+
+    /**
      * Регулярное выражение для поиска переменных
      * Для значения используются константы VARTYPE_*
      * @var string
@@ -58,7 +70,7 @@ class Prepare {
     /**
      * @param array $bindParams [key => value] || [key => [value, type]]
      */
-    public function bindAll($bindParams){
+    public function bindAll($bindParams): Prepare {
         foreach($bindParams as $key => $value){
             if(is_array($value)){
                 $this->bind($key, $value[0], $value[1]);
@@ -66,9 +78,11 @@ class Prepare {
                 $this->bind($key, $value);
             }
         }
+
+        return $this;
     }
 
-    public function bind($key, $value, $type = 'STRING'){
+    public function bind($key, $value, $type = 'STRING'): Prepare {
         //$key = (mb_substr($key, 0, 1) == ':') ? mb_substr($key, 1) : $key;
         if(preg_match('#' . $this->varType . '#Ui', $key, $m)){
             $key = $m[1];
@@ -110,26 +124,61 @@ class Prepare {
                 $this->vars[$key] = boolval($value);
             break;
         }
+
+        return $this;
     }
     
-    public function getQuery($bindParams = []){
+    public function getQuery($bindParams = []): ?string {
         $this->bindAll($bindParams);
 
-        return preg_replace_callback('#' . $this->varType . '#Uis', function(array $matches){
+        $result = preg_replace_callback('#' . $this->varType . '#Uis', function(array $matches){
             $key = mb_strtolower($matches[1]);
    
             if(isset($this->vars[$key])){
                 return $this->vars[$key];
             }
             
-            if($this->replaceEmpty === true){
-                return 'NULL';
+            if($this->replaceEmpty){
+                return $this->replaceEmptyTo;
             }   
             else return $matches[0];
         }, $this->source);
+
+        return $this->autoTrim ? trim($result) : $result ;
+    }
+
+    public function setReplaceEmpty($replaceTo = false): Prepare {
+        if(!$replaceTo){
+            $this->replaceEmpty = false;
+        } else {
+            $this->replaceEmpty = true;
+            $this->replaceEmptyTo = $replaceTo;
+        }
+
+        return $this;
+    }
+
+    public function setVarType(string $varType): Prepare {
+        $this->varType = $varType;
+        return $this;
+    }
+
+    public function setAddingStringQuotes(bool $addStringQuotes): Prepare {
+        $this->addStringQuotes = $addStringQuotes;
+        return $this;
+    }
+
+    public function setQuotesPolicy(int $quotesPolicy): Prepare {
+        $this->quotesPolicy = $quotesPolicy;
+        return $this;
+    }
+
+    public function setAutoTrim(bool $autoTrim): Prepare {
+        $this->autoTrim = $autoTrim;
+        return $this;
     }
     
-    public static function Query($query, $params = []){
+    public static function query($query, $params = []){
         return (new self($query))->getQuery($params);
     }
 }
