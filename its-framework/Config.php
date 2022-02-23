@@ -86,13 +86,12 @@ class Config {
 		$len = sizeof($path);
 
 		foreach ($path as $k => $p) {
-			if(!isset($data[$p])) return false;
-
-			if($k == $len-1){
+			if( !isset($data[$p]) || $k == $len-1 ){
 				unset($data[$p]);
-			} else {
-				$data = &$data[$p];
+				break;
 			}
+				
+			$data = &$data[$p];
 		}
 
 		static::save();

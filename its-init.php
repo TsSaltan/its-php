@@ -135,20 +135,20 @@ class itsFrame {
 			$canReg = Config::get('user.canRegister');
 			if(!is_null($canReg)){
 				Config::set('user.auth.register', $canReg);
-				Config::unset('user.canRegister');
 			}
+			Config::unset('user.canRegister');
 
 			$canSocial = Config::get('user.canSocial');
 			if(!is_null($canSocial)){
 				Config::set('user.auth.social', $canSocial);
-				Config::unset('user.canSocial');
 			}
+			Config::unset('user.canSocial');
 
 			$loginUsed = Config::get('user.loginUsed');
 			if(!is_null($loginUsed)){
 				Config::set('user.auth.login', $loginUsed);
-				Config::unset('user.loginUsed');
 			}
+			Config::unset('user.loginUsed');
 		});
 	}
 
