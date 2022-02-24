@@ -21,8 +21,9 @@ class Task {
      * Обновить параметры из базы данных
      */
     public function refreshParams(): bool {
-        $query = Database::exec("SELECT *, UNIX_TIMESTAMP(`last-exec`) ts FROM `tasks` WHERE `name` = :name")
+        $query = Database::prepare("SELECT *, UNIX_TIMESTAMP(`last-exec`) ts FROM `tasks` WHERE `name` = :name")
                         ->bind('name', $this->name)
+                        ->exec()
                         ->fetch();
 
         foreach ($query as $task) {
