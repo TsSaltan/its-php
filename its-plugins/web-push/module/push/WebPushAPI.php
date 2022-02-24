@@ -49,7 +49,7 @@ class WebPushAPI {
 	 */
 	public function addPushMessage(WebPushClient $client, $payload){
 		$payload = is_array($payload) ? json_encode($payload) : $payload;
-		$this->webPush->sendNotification(
+		$this->webPush->sendOneNotification(
 	        $client->getSubscription(),
         	$payload
     	);
