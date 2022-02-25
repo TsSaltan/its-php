@@ -2,14 +2,29 @@
 namespace tsframe\module\Geo;
 
 use tsframe\exception\GeoException;
+use tsframe\module\Cache;
 
-class GeoIP{
+class GeoIP {
+	public static function getServerIP(){
+		return $_SERVER['SERVER_ADDR'];
+	}
+
+	public static function getClientIP(){
+		return $_SERVER['REMOTE_ADDR'];
+	}
+
 	public static function getLocation(?string $ip = null): Location {
-		if(rand(1, 2) == 1){
-			$data = self::ipinfo($ip);
-		} else {
-			$data = self::ipapi($ip);
-		}
+		$ip = (is_null($ip) || strlen($ip) < 7) ? self::getClientIP() : $ip;
+
+		$data = Cache::toDatabase('geoip-' . $ip, function() use ($ip){
+			if(rand(1, 2) == 1){
+				$data = self::ipinfo($ip);
+			} else {
+				$data = self::ipapi($ip);
+			}
+
+			return $data;
+		});
 
 		return new Location($data['country'], $data['region'], $data['city'], $data['lat'], $data['lon']);
 	}
