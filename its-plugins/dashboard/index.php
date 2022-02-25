@@ -7,6 +7,9 @@
  * @hook template.dashboard.header
  * @hook template.dashboard.footer
  * @hook template.dashboard.auth
+ * 
+ * Html template:
+ * @link https://test.tssaltan.top/templates/?demo=startmin
  */
 namespace tsframe;
 
