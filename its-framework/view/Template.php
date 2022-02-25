@@ -184,7 +184,12 @@ class Template {
 
 	public function hook(string $name, array $params = []){
 		if(!$this->useHooks) return;
-		return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
+		
+		if(strpos($name, 'template.') === 0){
+			return Hook::call($name, array_merge([$this], $params));
+		} else {
+			return Hook::call('template.' . $this->part . '.' . $name, array_merge([$this], $params));
+		}
 	}
 
 	public function makeURI(string $uri, array $queryParams = [], string $hashString = null){
