@@ -31,7 +31,7 @@ class Country extends GeoItem {
 		$countries = [];
 
 		foreach ($query as $value) {
-			$countries[] = new self($value['id'], $value['name'], $value['alias']);
+			$countries[] = new self($value['id'], $value['name'], $value['alias'], $value['phone_prefix'], $value['phone_mask']);
 		}
 
 		return $countries;
@@ -66,10 +66,17 @@ class Country extends GeoItem {
 	 */
 	protected $alias;
 
-	public function __construct(int $id, string $name, ?string $alias = null){
+	/**
+	 * Данные о префиксе и маске номера телефона страны 
+	 * @var array ['prefix' => '+123', 'mask' => '+123(###)-##-##']
+	 */
+	protected $phone;
+
+	public function __construct(int $id, string $name, ?string $alias = null, ?string $phonePrefix = null, ?string $phoneMask = null){
 		$this->id = $id;
 		$this->name = $name;
 		$this->alias = $alias;
+		$this->phone = ['prefix' => $phonePrefix, 'mask' => $phoneMask];
 	}
 
 	/**
@@ -77,6 +84,10 @@ class Country extends GeoItem {
 	 */
 	public function getAlias(): string {
 	    return $this->alias;
+	}
+
+	public function getPhone(): ?array {
+	    return $this->phone;
 	}
 
 	public function getRegions(): array {
