@@ -20,7 +20,8 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 
     <script type="text/javascript">
     	$(function(){
-    		var maskList = $.masksSort($.masksLoad("<?=$tpl->getURI("data/phone-codes.json")?>"), ['#'], /[0-9]|#/, "mask");
+    		var phonesDatabase = <?php if(isset($tpl->vars['phonesJsonDatabase'])): echo $tpl->vars['phonesJsonDatabase']; else :?> $.masksLoad("<?=$tpl->getURI("data/phone-codes.json")?>") <?php endif; ?>;
+    		var maskList = $.masksSort(phonesDatabase, ['#'], /[0-9]|#/, "mask");
 			var maskOpts = {
 				inputmask: {
 					definitions: {
@@ -39,11 +40,21 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 				listKey: "mask",
 				onMaskChange: function(maskObj, completed) {
 					if (completed) {
-						var hint = maskObj.name_ru;
-						if (maskObj.desc_ru && maskObj.desc_ru != "") {
-							hint += " (" + maskObj.desc_ru + ")";
+
+						if(typeof(maskObj.name_ru) != 'undefined'){
+							var hint = maskObj.name_ru;
+							if (maskObj.desc_ru && maskObj.desc_ru != "") {
+								hint += " (" + maskObj.desc_ru + ")";
+							}
+							$("#country_<?=$id?>").html(hint);
 						}
-						$("#country_<?=$id?>").html(hint);
+						else if(typeof(maskObj.name) != 'undefined'){
+							var hint = maskObj.name;
+							if (typeof(maskObj.flag) != 'undefined') {
+								hint += " <img src='" + maskObj.flag + "' alt='flag'/>";
+							}
+							$("#country_<?=$id?>").html(hint);
+						}
 					} else {
 						$("#country_<?=$id?>").html("&nbsp;");
 					}

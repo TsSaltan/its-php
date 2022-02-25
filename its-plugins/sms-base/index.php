@@ -10,6 +10,7 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\Hook;
 use tsframe\Plugins;
+use tsframe\module\Geo\PhoneData;
 use tsframe\module\io\Input;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\User;
@@ -20,7 +21,7 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\UI\UIDashboardTabPanel;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('dashboard', 'user', 'database', 'logger');
+	Plugins::required('dashboard', 'user', 'database', 'logger', 'geodata');
 });
 
 Hook::registerOnce('app.init', function(){
@@ -54,6 +55,8 @@ Hook::register('template.dashboard.user.edit', function(Template $tpl, UIDashboa
 		}
 
 		$configTabs->tab('phone', 'Телефон', function() use ($tpl, $selectUser){
+			$phonesData = PhoneData::load(true);
+			$tpl->var('phonesJsonDatabase', (string) $phonesData);
 			$tpl->inc('user_phone');
 		});
 	}
