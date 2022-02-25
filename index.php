@@ -1,3 +1,5 @@
 <?php  
 require 'its-init.php';
-tsframe\App::start();
+
+header('Content-type: text/plain', 403);
+die('Access denied');
