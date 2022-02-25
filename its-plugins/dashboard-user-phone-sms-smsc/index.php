@@ -17,7 +17,7 @@ use tsframe\view\Template;
 use tsframe\view\HtmlTemplate;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('sms-base');
+	Plugins::required('dashboard-user-phone-base');
 	return [
 		PluginInstaller::withKey('smsc.login')
 					->setType('text')

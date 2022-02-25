@@ -9,8 +9,8 @@ use tsframe\Hook;
 use tsframe\Plugins;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('sms-base');
-	Plugins::conflict('sms-smsc');
+	Plugins::required('dashboard-user-phone-base');
+	Plugins::conflict('dashboard-user-phone-sms-smsc');
 	return [
 		PluginInstaller::withKey('twilio.account')
 					->setType('text')
