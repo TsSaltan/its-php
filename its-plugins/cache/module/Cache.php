@@ -98,6 +98,11 @@ class Cache{
 	 * @param int    $update = Live time + now
 	 */
 	protected static function setCached(string $type, string $key, $data, int $update){
+		// Если в данных null, то не будем их сохранять
+		if(is_null($data) || (is_string($data) && strlen($data) == 0)){
+			return;
+		}
+
 		switch($type) {
 			case self::TYPE_VAR :
 				self::$cachedVars[$key] = [
