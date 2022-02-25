@@ -1,8 +1,7 @@
 <?php
 /**
- * Система отправки смс
- * Основа для провайдеров
  * Номер телефона в аккаунте пользователя
+ * Основа для смс-провайдеров
  */
 namespace tsframe;
 
@@ -21,28 +20,11 @@ use tsframe\view\TemplateRoot;
 use tsframe\view\UI\UIDashboardTabPanel;
 
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('dashboard', 'user', 'database', 'logger', 'geodata');
+	Plugins::required('dashboard', 'user', 'database', 'logger', 'geodata', 'phone-input');
 });
 
 Hook::registerOnce('app.init', function(){
 	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
-	TemplateRoot::addDefault(__DIR__ . DS . 'template');
-	TemplateRoot::addDefault(CD . 'vendor' . DS . 'andr-04' . DS . 'jquery.inputmask-multi');
-
-	Input::addFilter('phone', function(Input $input){
-		$phone = $input->getCurrentData();
-		$phone = str_replace(['+', ' ', '-', '(', ')', '.', "\t", '_'], '', $phone);
-		
-		if(is_numeric($phone)){
-			$input->varProcess(function() use ($phone){
-				return '+' . $phone;
-			});
-
-			return true;
-		}
-
-		return false;
-	});
 });
 
 Hook::register('template.dashboard.user.edit', function(Template $tpl, UIDashboardTabPanel $configTabs){
@@ -55,8 +37,6 @@ Hook::register('template.dashboard.user.edit', function(Template $tpl, UIDashboa
 		}
 
 		$configTabs->tab('phone', 'Телефон', function() use ($tpl, $selectUser){
-			$phonesData = PhoneData::load(true);
-			$tpl->var('phonesJsonDatabase', (string) $phonesData);
 			$tpl->inc('user_phone');
 		});
 	}
@@ -67,8 +47,7 @@ Hook::register('template.render', function(Template $tpl){
 });
 
 Hook::register('template.dashboard.header', function(HtmlTemplate $tpl){
-	$tpl->js('js/jquery.inputmask.bundle.min.js');
-	$tpl->js('js/jquery.inputmask-multi.js');
+	$tpl->hook('template.phone-input.script');
 });
 
 Hook::register('template.dashboard.config', function(HtmlTemplate $tpl){

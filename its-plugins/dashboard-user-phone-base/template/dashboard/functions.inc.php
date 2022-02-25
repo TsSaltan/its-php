@@ -20,8 +20,6 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 
     <script type="text/javascript">
     	$(function(){
-    		var phonesDatabase = <?php if(isset($tpl->vars['phonesJsonDatabase'])): echo $tpl->vars['phonesJsonDatabase']; else :?> $.masksLoad("<?=$tpl->getURI("data/phone-codes.json")?>") <?php endif; ?>;
-    		var maskList = $.masksSort(phonesDatabase, ['#'], /[0-9]|#/, "mask");
 			var maskOpts = {
 				inputmask: {
 					definitions: {
@@ -36,7 +34,7 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 				},
 				match: /[0-9]/,
 				replace: '#',
-				list: maskList,
+				list: phoneInputMask,
 				listKey: "mask",
 				onMaskChange: function(maskObj, completed) {
 					if (completed) {
