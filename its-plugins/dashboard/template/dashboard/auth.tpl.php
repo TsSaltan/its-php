@@ -17,15 +17,17 @@
                 }
             );
 
-            $tabPane->tab('register', 
-                function(){
-                    ?><i class='fa fa-user-plus'></i>&nbsp;<?=__('Register')?><?php
-                },
+            if($registerEnabled){
+                $tabPane->tab('register', 
+                    function(){
+                        ?><i class='fa fa-user-plus'></i>&nbsp;<?=__('Register')?><?php
+                    },
 
-                function() use ($loginEnabled, $passwordEnabled){                    
-                    $this->inc('auth-register');              
-                }
-            );  
+                    function() use ($loginEnabled, $passwordEnabled){                    
+                        $this->inc('auth-register');              
+                    }
+                );  
+            }
 
             $this->hook('auth', [$tabPane]);
 
