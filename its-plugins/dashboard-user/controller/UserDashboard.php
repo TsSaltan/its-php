@@ -19,7 +19,6 @@ use tsframe\view\UI\UIDashboardTabPanel;
  * @route GET /dashboard/profile -> /dashboard/user/me
  * @route GET /dashboard/user -> /dashboard/user/list
  * 
- * @route GET /dashboard/[logout:action]
  * @route GET /dashboard/user/[list:action]
  * @route GET /dashboard/user/[me:user_id]
  * @route GET /dashboard/user/[me:user_id]/[profile|edit:action]
