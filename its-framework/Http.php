@@ -130,7 +130,7 @@ class Http {
 		return isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
 	}
 
-	public static function setCookie(string $key, string $value, array $params = []){
+	public static function setCookie(string $key, ?string $value, array $params = []){
 		if(!isset($params['httponly'])) $params['httponly'] = true;
 		if(!isset($params['secure'])) $params['secure'] = true;
 		if(!isset($params['samesite'])) $params['samesite'] = 'None';

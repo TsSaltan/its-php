@@ -94,7 +94,7 @@ class Dashboard extends AbstractController{
 	 **/
 	public function getLogout(){
 		$this->currentUser->closeSession();
-		return Http::redirect(Http::makeURI('/dashboard/'));
+		return Http::redirectURI('/dashboard/');
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\module\user;
 
+use tsframe\Http;
 use tsframe\exception\AccessException;
 use tsframe\module\Crypto;
 use tsframe\module\IP;
@@ -178,7 +179,7 @@ class SingleUser {
 
 		if($setCookies){
 			$_COOKIE[self::SESSION_KEY] = $sessionId;
-			setcookie(self::SESSION_KEY, $sessionId, time()+self::SESSION_EXPIRES, '/');
+			Http::setCookie(self::SESSION_KEY, $sessionId, ['expires' => time()+self::SESSION_EXPIRES]);
 		}
 
 		$res = Database::prepare('INSERT INTO `sessions` (`key`, `user_id`, `expires`, `ip`) VALUES (:key, :id, CURRENT_TIMESTAMP + INTERVAL :expires SECOND, :ip)')
@@ -206,7 +207,7 @@ class SingleUser {
 	 * @return bool
 	 */
 	public function closeSession() : bool {
-		setcookie(self::SESSION_KEY, null, -1, '/');		
+		Http::setCookie(self::SESSION_KEY, null, ['expires' => -1]);
 		return Database::prepare('DELETE FROM `sessions` WHERE `user_id` = :id AND `key` = :key')
 				->bind('id', $this->id)
 				->bind('key', $_COOKIE[self::SESSION_KEY])
