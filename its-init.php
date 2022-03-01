@@ -16,7 +16,7 @@ define('ITS_TEMPLATES', 	ITS_ROOT . 'its-templates' . DS); 	// Директор�
 define('ITS_STORAGE', 		ITS_ROOT . 'storage' . DS); 		// Директория c временной папкой, переводами и пр.
 define('ITS_TEMP', 			ITS_STORAGE . 'temp' . DS); 		
 define('ITS_UPLOAD', 		ITS_STORAGE . 'upload' . DS); 		
-define('ITS_TRANSLATIONS', 	ITS_STORAGE . 'translations' . DS); 
+define('ITS_TRANSLATIONS', 	ITS_STORAGE . 'locale' . DS); 
 
 class itsFrame {
 	/**
