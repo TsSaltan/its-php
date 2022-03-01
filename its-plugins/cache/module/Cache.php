@@ -172,4 +172,28 @@ class Cache{
 
 		return false;
 	}
+
+	public static function getSizes(): array {
+		$cachedFiles = glob(TEMP . 'cached_*.json');
+		$cachedSize = 0;
+		foreach ($cachedFiles as $file) {
+			$cachedSize += filesize($file);
+		}
+
+		$dbSize = Database::getSize('cache');
+
+		return [
+			'fs' => $cachedSize,
+			'db' => $dbSize
+		];
+	}
+
+	public static function clear(){
+		$cachedFiles = glob(TEMP . 'cached_*.json');
+		foreach ($cachedFiles as $file) {
+			@unlink($file);
+		}
+
+		Database::exec('TRUNCATE `cache`;');
+	}
 }
