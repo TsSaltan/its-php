@@ -50,9 +50,17 @@ namespace tsframe\module\locale {
 		 */
 		public static function text(string $key, ...$args): string {
 			$item = self::get($key);
+
+			if(is_array($item) && isset($item[0]) && (is_string($item[0]) || is_numeric($item[0]))){
+				$item = $item[0];
+			} 
+
 			if(is_null($item) || !$item){
 				$items = explode(self::$separator, $key);
 				$item = end($items);
+			} 
+			elseif(is_array($item)){
+				$item = var_export($item, true);
 			}
 
 			// Ищем ключи для sprintf
