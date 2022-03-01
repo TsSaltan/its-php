@@ -68,9 +68,12 @@ class Lang {
 		return self::$current;
 	}
 
-	public static function setCurrent(string $lang){
+	public static function setCurrent(string $lang): bool {
+		if(!in_array($lang, self::$list)) return false;
+
 		self::$current = $lang;
 		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24]);
+		return true;
 	}
 
 	public static function addTranslationPath(string $path): bool {
@@ -86,34 +89,42 @@ class Lang {
 	 * Определить текущий язык пользователя
 	 * @return string
 	 */
-	public static function detect(): string {
-		$lang = null;
+	public static function detect(): ?string {
+		$langs = [];
+
+		// 0. Опредеяем по домену (например ru.localhost)
+		$host = Http::getHostName();
+		$parts = explode('.', $host);
+		$langs[] = $parts[0];
+
 
 		// 1. Смотрим запись в $_GET
 		if(isset($_GET[self::COOKIE_NAME])){
-			$lang = $_GET[self::COOKIE_NAME];
+			$langs[] = $_GET[self::COOKIE_NAME];
 		}
 
 		// 2. Ниже приоритет у куков
-		elseif(isset($_COOKIE[self::COOKIE_NAME])){
-			$lang = $_COOKIE[self::COOKIE_NAME];
+		if(isset($_COOKIE[self::COOKIE_NAME])){
+			$langs[] = $_COOKIE[self::COOKIE_NAME];
 		}
 		
-		// Если ничего нет, ищем в заголовках браузера
-		elseif(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-			$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		// 3. Если ничего нет, ищем в заголовках браузера
+		if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+			$langs[] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 		}
 
-		if(is_null($lang) || !in_array($lang, self::$list)){
-			$lang = self::$default;
+		// Если ничего не найдено - берём язык по умолчанию
+		$langs[] = self::$default;
+
+		foreach($langs as $lang){
+			if(self::setCurrent($lang)){
+				// Загрузить языковые файлы из путей
+				Translation::importFiles(self::$translationPaths, $lang);
+				return $lang;
+			}
 		}
 
-		self::setCurrent($lang);
-
-		// Загрузить языковые файлы из путей
-		Translation::importFiles(self::$translationPaths, $lang);
-		
-		return $lang;
+		return null;
 	}
 
 /////////////
