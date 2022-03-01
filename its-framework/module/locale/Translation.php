@@ -26,7 +26,7 @@ namespace tsframe\module\locale {
 				if(!file_exists($langFile)) continue;
 				$data = json_decode(file_get_contents($langFile), true);
 				if(is_array($data)){
-					self::$cache = array_merge(self::$cache, $data);
+					self::$cache = array_merge_recursive(self::$cache, $data);
 				}
 			}
 		}
