@@ -157,6 +157,11 @@ class itsFrame {
 		return $this;
 	}
 
+	public function setLanguageAutoRedirect(bool $redirect){
+		Lang::setAutoRedirectToSubdomain($redirect);
+		return $this;
+	}
+
 	public function addPlugin(string $path){
 		Plugins::addCustom($path);
 		return $this;

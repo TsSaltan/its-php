@@ -38,6 +38,16 @@ class Lang {
 	private static $translationPaths = [];
 
 	/**
+	 * Автоматический редирект на поддомен с языком
+	 * Например localhost -> ru.localhost
+	 */
+	private static $autoRedirectToSubdomain = false;
+	
+	public static function setAutoRedirectToSubdomain(bool $redirect){
+		self::$autoRedirectToSubdomain = $redirect;
+	}
+
+	/**
 	 * Установить язык по умолчанию
 	 * @param string $lang
 	 */
@@ -73,6 +83,22 @@ class Lang {
 
 		self::$current = $lang;
 		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24]);
+
+		if(self::$autoRedirectToSubdomain){
+			$host = Http::getHostName();
+			$parts = explode('.', $host);
+			
+			if(in_array($parts[0], self::$list)){
+				if($parts[0] == $lang) return true;
+				$parts[0] = $lang;
+				$domain = implode('.', $parts);
+			} else {
+				$domain = $lang . '.' . $host;
+			}
+
+			Http::redirect(Http::getProtocol() . '://' . $domain . $_SERVER['REQUEST_URI']);
+		}
+
 		return true;
 	}
 
