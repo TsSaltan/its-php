@@ -103,6 +103,56 @@
                     </a>
                 </div>
             </div>
+            <?php endif ?>            
+
+            <?php if(isset($summary_cache) && is_array($summary_cache)): ?>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-tasks fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?=round(array_sum($summary_cache) / 1024 / 1024, 2)?> MiB</div>
+                                <div>
+                                    <p><?=__('file-cache')?>: <strong><?=round(($summary_cache['fs'] ?? 0) / 1024 / 1024, 2)?> MiB</strong></p>
+                                    <p><?=__('database-cache')?>: <strong><?=round(($summary_cache['db'] ?? 0) / 1024 / 1024, 2)?> MiB</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" data-toggle="modal" data-target="#modal-clear-cache">
+                        <div class="panel-footer">
+                            <span class="pull-left"><?=__('button/clear-cache')?></span>
+                            <span class="pull-right"><i class="fa fa-trash"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modal-clear-cache" tabindex="-1" role="dialog" aria-labelledby="modal-clear-cache-label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="modal-clear-cache-label"><?=__('confirm-clear-cache-title')?></h4>
+                        </div>
+                        <div class="modal-body"><?=__('confirm-clear-cache')?></div>
+                        <div class="modal-footer">
+                            <form action="<?=$this->makeURI('/dashboard/summary-clear-cache')?>" method="POST">
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('button/cancel')?></button>
+                                <button type="submit" class="btn btn-danger"><?=__('button/clear')?></button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
             <?php endif ?>
 
             <?php $this->hook('summary.after') ?>

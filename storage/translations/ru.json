@@ -1,4 +1,10 @@
 {
+	"button": {
+		"clear-cache": "Очистить кэш",
+		"close": "Закрыть",
+		"cancel": "Отменить",
+		"clear": "Очистить"
+	},
 	"Auth": "Авторизация",
 	"Register": "Регистрация",
 	"Login or e-mail": "Логин или e-mail",
@@ -8,9 +14,10 @@
 	"Sign up": "Зарегистрироваться",
 	"Password will be generated automatically": "Пароль будет создан автоматически",
 	"Save": "Сохранить",
+	"file-cache": "Файловый кэш",
+	"database-cache": "Кэш в базе данных",
+	"confirm-clear-cache-title": "Очистить кэш?",
+	"confirm-clear-cache": "Удалить закешированные файлы и записи в базе данных?",
 	"": "",
-	"": "",
-
-
 	"": ""
 }

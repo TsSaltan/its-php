@@ -3,6 +3,7 @@ namespace tsframe\controller;
 
 use tsframe\Http;
 use tsframe\controller\UserDashboard;
+use tsframe\module\Cache;
 use tsframe\module\Logger;
 use tsframe\module\Meta;
 use tsframe\module\user\User;
@@ -10,6 +11,7 @@ use tsframe\module\user\UserAccess;
 
 /**
  * @route GET  /dashboard/[summary:action]
+ * @route POST  /dashboard/[summary-clear-cache:action]
  */ 
 class SummaryDashboard extends UserDashboard {
 	public function __construct(){
@@ -37,6 +39,16 @@ class SummaryDashboard extends UserDashboard {
 		$this->vars['summary_users_total'] = sizeof($users);
 		$this->vars['summary_users_today'] = Logger::getCount('user-registration', -1, (time()-24*60*60));
 		$this->vars['summary_users_tomonth'] = Logger::getCount('user-registration', -1, (time()-24*60*60*date('j')));
+
+
+		$this->vars['summary_cache'] = Cache::getSizes();
+	}
+
+	public function postSummaryClearCache(){
+		UserAccess::assertCurrentUser('summary');
+		Cache::clear();
+
+		return Http::redirectURI('/dashboard/summary', ['from' => 'clear-cache']);
 	}
 
 	public static function getErrorTs(): int {
