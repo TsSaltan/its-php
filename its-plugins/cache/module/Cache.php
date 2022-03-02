@@ -126,7 +126,38 @@ class Cache{
 
 				break;
 		}
+	}
+
+	public static function removeCached(string $type, string $key){
+		switch($type) {
+			case self::TYPE_VAR :
+				unset(self::$cachedVars[$key]);
+				break;
+			
+			case self::TYPE_FILE :
+				$cacheFile = TEMP . 'cached_' . md5($key) . '.json';
+				if(file_exists($cacheFile)) @unlink($cacheFile);
+				break;
+
+			case self::TYPE_DATABASE :
+				Database::prepare('DELETE FROM `cache` WHERE `key` = :key')
+						->bind('key', $key)
+						->exec();
+				break;
+		}
 	}	
+
+	public static function removeVar(string $key){
+		return self::removeCached(self::TYPE_VAR, $key);
+	}
+
+	public static function removeDatabase(string $key){
+		return self::removeCached(self::TYPE_DATABASE, $key);
+	}
+
+	public static function removeFile(string $key){
+		return self::removeCached(self::TYPE_FILE, $key);
+	}
 
 	/**
 	 * Get data from cache
