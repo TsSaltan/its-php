@@ -42,6 +42,7 @@ class SummaryDashboard extends UserDashboard {
 
 
 		$this->vars['summary_cache'] = Cache::getSizes();
+		$this->vars['summary_logs_size'] = Logger::getSize();
 	}
 
 	public function postSummaryClearCache(){

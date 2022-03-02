@@ -114,10 +114,11 @@
                                 <i class="fa fa-tasks fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge"><?=round(array_sum($summary_cache) / 1024 / 1024, 2)?> MiB</div>
+                                <div class="huge"><?=round(($summary_logs_size + array_sum($summary_cache)) / 1024 / 1024, 2)?> MiB</div>
                                 <div>
                                     <p><?=__('file-cache')?>: <strong><?=round(($summary_cache['fs'] ?? 0) / 1024 / 1024, 2)?> MiB</strong></p>
                                     <p><?=__('database-cache')?>: <strong><?=round(($summary_cache['db'] ?? 0) / 1024 / 1024, 2)?> MiB</strong></p>
+                                    <p><?=__('logs-size')?>: <strong><?=round($summary_logs_size / 1024 / 1024, 2)?> MiB</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -125,6 +126,13 @@
                     <a href="#" data-toggle="modal" data-target="#modal-clear-cache">
                         <div class="panel-footer">
                             <span class="pull-left"><?=__('button/clear-cache')?></span>
+                            <span class="pull-right"><i class="fa fa-trash"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                    <a href="<?=$this->makeURI('/dashboard/logs', [], 'logs-delete')?>">
+                        <div class="panel-footer">
+                            <span class="pull-left"><?=__('button/clear-logs')?></span>
                             <span class="pull-right"><i class="fa fa-trash"></i></span>
                             <div class="clearfix"></div>
                         </div>

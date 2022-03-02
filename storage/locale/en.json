@@ -1,6 +1,7 @@
 {
 	"button": {
 		"clear-cache": "Clear cache",
+		"clear-logs": "Clear logs",
 		"close": "Close",
 		"cancel": "Cancel",
 		"clear": "Clear"
@@ -8,5 +9,6 @@
 	"file-cache": "File cache",
 	"database-cache": "Database cache",
 	"confirm-clear-cache-title": "Clear cache?",
-	"confirm-clear-cache": "Clear cached data at files and database?"
+	"confirm-clear-cache": "Clear cached data at files and database?",
+	"logs-size": "Log size"
 }
