@@ -14,6 +14,16 @@ use tsframe\module\user\UserAccess;
  * @route POST  /dashboard/[summary-clear-cache:action]
  */ 
 class SummaryDashboard extends UserDashboard {
+	protected static $config = [
+		'show-errors' => true,
+		'show-users' => true,
+		'show-sizes' => true
+	];
+
+	public static function setConfig(string $key, $value){
+		self::$config[$key] = $value;
+	}
+
 	public function __construct(){
 		$this->setActionPrefix(null);
 	}
@@ -39,10 +49,9 @@ class SummaryDashboard extends UserDashboard {
 		$this->vars['summary_users_total'] = sizeof($users);
 		$this->vars['summary_users_today'] = Logger::getCount('user-registration', -1, (time()-24*60*60));
 		$this->vars['summary_users_tomonth'] = Logger::getCount('user-registration', -1, (time()-24*60*60*date('j')));
-
-
 		$this->vars['summary_cache'] = Cache::getSizes();
 		$this->vars['summary_logs_size'] = Logger::getSize();
+		$this->vars['config'] = self::$config;
 	}
 
 	public function postSummaryClearCache(){

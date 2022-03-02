@@ -15,7 +15,7 @@
             <?php $this->hook('summary.before') ?>
     
             <!-- Critical errors -->
-            <?php if(isset($summary_critical_total)): ?>
+            <?php if($config['show-errors'] && isset($summary_critical_total)): ?>
             <div class="col-lg-4">
                 <div class="panel panel-<?=($summary_critical_total > 0) ? 'red' : 'green'?>">
                     <div class="panel-heading">
@@ -58,7 +58,7 @@
             <?php endif ?>
 
             <!-- Users stats-->
-            <?php if(isset($summary_users_total)): ?>
+            <?php if($config['show-users'] && isset($summary_users_total)): ?>
             <div class="col-lg-4">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -105,7 +105,7 @@
             </div>
             <?php endif ?>            
 
-            <?php if(isset($summary_cache) && is_array($summary_cache)): ?>
+            <?php if($config['show-sizes'] && isset($summary_cache) && is_array($summary_cache) && isset($summary_logs_size)): ?>
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
