@@ -82,20 +82,35 @@ class Lang {
 		if(!in_array($lang, self::$list)) return false;
 
 		self::$current = $lang;
-		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24]);
 
-		if(self::$autoRedirectToSubdomain){
-			$host = Http::getHostName();
-			$parts = explode('.', $host);
-			
-			if(in_array($parts[0], self::$list)){
-				if($parts[0] == $lang) return true;
+		$host = Http::getHostName();
+		$parts = explode('.', $host);
+		$redirectRequired = false;
+		
+		if(in_array($parts[0], self::$list)){
+			// if subdomain eq lang.domain.com
+			if($parts[0] == $lang){
+				// if lang subdomain eq current language
+				$redirectRequired = false;
+				$domain = $host;
+			}
+			else {
 				$parts[0] = $lang;
 				$domain = implode('.', $parts);
-			} else {
-				$domain = $lang . '.' . $host;
+				$redirectRequired = true;
 			}
+			unset($parts[0]);
+			$baseDomain = implode('.', $parts);
+		} else {
+			// if subdomain eq domain.com
+			$redirectRequired = true;
+			$baseDomain = $host;
+			$domain = $lang . '.' . $host;
+		}
 
+		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24, 'domain' => '.' . $baseDomain]);
+
+		if(!filter_var($host, FILTER_VALIDATE_IP) && $redirectRequired && self::$autoRedirectToSubdomain){
 			Http::redirect(Http::getProtocol() . '://' . $domain . $_SERVER['REQUEST_URI']);
 		}
 
