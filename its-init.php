@@ -167,6 +167,11 @@ class itsFrame {
 		return $this;
 	}
 
+	public function onAppInit(callable $func){
+		Hook::registerOnce('app.init', $func);
+		return $this;
+	}
+
 	public function start(){
 		App::start();
 	}
