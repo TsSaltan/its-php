@@ -10,8 +10,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
   <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <?php $this->css('push/styles/index.css')?>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <?php $this->css('styles/index.css')?>
+
+  <?php $this->hook('template.web-push.script')?>
+
 </head>
 
 <body>
@@ -26,15 +29,9 @@
         <p id="description">Во всплывающем окне нажмите "Разрешить"</p>
     </main>
 
-    <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
-
-    <?php $this->js('push/scripts/main.js')?>
     <script type="text/javascript">
         var btn = document.querySelector('#access-btn');
         var descript = document.querySelector('#description');
-
-        WebPush.publicKey = "<?=$publicKey?>";
-        WebPush.swPath = "<?=$this->makeURI('/service-worker.js')?>";
         
         WebPush.init(function(){
             checkPush();
@@ -47,7 +44,8 @@
             if(WebPush.isSubscribed){
                 // Если разрешено - шлём ключи на сервер
                 btn.textContent = 'Доступ к push-уведомлениям получен';
-                btn.className += ' access-granted';
+                btn.classList.remove('access-denied');
+                btn.classList.add('access-granted');
                 descript.textContent = 'Вы подписаны на web-push уведомления';
 
                 console.log(JSON.stringify(WebPush.subscriptionData));
@@ -63,10 +61,13 @@
                         checkPush();
                     }, function(err){
                         btn.textContent = 'Доступ к push-уведомлениям не получен';
-                        btn.className += ' access-denied';
+                        btn.classList.add('access-denied');
+                        btn.classList.remove('access-granted');
                         descript.textContent = 'Ошибка: ' + err.message;
+
+                        checkPush();
                     });
-                }, 1500);
+                }, 700);
             }
         }
     </script>

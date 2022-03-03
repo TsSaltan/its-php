@@ -18,7 +18,7 @@ class WebPushDemo extends AbstractController {
 	public function response(){
 		$this->responseType = Http::TYPE_HTML;
 		
-		$jsFile = new HtmlTemplate('index', 'push/index');
+		$jsFile = new HtmlTemplate('web-push', 'index');
 		$jsFile->var('publicKey', WebPushAPI::getPublicKey());
 
 		return $jsFile->render();

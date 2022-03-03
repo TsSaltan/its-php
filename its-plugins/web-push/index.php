@@ -7,8 +7,32 @@
  * @link https://github.com/web-push-libs/web-push-php
  * @link https://github.com/GoogleChromeLabs/web-push-codelab
  *
- * - Необходимо добавить в крон выполнение sheduler, т.к. очередь зависит от крона
- * - 
+ * Использование WebPush скрипта:
+ * 1. Вызвать в head шаблона хук template.web-push.script
+ * $tpl->hook('template.web-push.script');
+ * 
+ * 2. После инициализации скриптов выполнить скрипт:
+<script type="text/javascript">
+ 	WebPush.init(function(){
+        checkPush();
+    });
+
+    function checkPush(){
+        if(WebPush.isSubscribed){
+            // Если пуши разрешены, получаем ключи доступа
+        } else {
+            // Если нет доступа к пушам, через некоторое время отправляем пользователю запрос
+            setTimeout(function(){
+                WebPush.subscribe(function(){
+                    checkPush();
+                }, function(err){
+					console.log('WebPush access error: ' + err.message);
+                    checkPush(); // Try again
+                });
+            }, 1000);
+        }
+    }
+</script>
  */
 
 namespace tsframe;
@@ -19,15 +43,15 @@ use tsframe\App;
 use tsframe\Config;
 use tsframe\Http;
 use tsframe\module\menu\MenuItem;
+use tsframe\module\push\WebPushAPI;
 use tsframe\module\push\WebPushQueue;
 use tsframe\module\scheduler\Scheduler;
 use tsframe\module\scheduler\Task;
 use tsframe\module\user\UserAccess;
+use tsframe\view\HtmlTemplate;
 use tsframe\view\TemplateRoot;
 
-Hook::registerOnce('plugin.install', function(){
-	Plugins::required('geodata', 'scheduler', 'user', 'dashboard');
-	
+Hook::registerOnce('plugin.install', function(){	
 	return [
 		PluginInstaller::withKey('push.publicKey')
 					->setType('text')
@@ -35,13 +59,7 @@ Hook::registerOnce('plugin.install', function(){
 
 		PluginInstaller::withKey('push.privateKey')
 					->setType('text')
-					->setDescription("<u>Приватный</u> ключ для Web Push"),
-
-		PluginInstaller::withKey('access.webpush')
-					->setType('select')
-					->setDescription("Права доступа: доступ к базе данных web-push клиентов")
-					->setDefaultValue(UserAccess::Admin)
-					->setValues(array_flip(UserAccess::getArray())),
+					->setDescription("<u>Приватный</u> ключ для Web Push")
 	];
 });
 
@@ -49,33 +67,17 @@ Hook::registerOnce('plugin.install', function(){
  * Загрузка плагина
  */
 Hook::registerOnce('app.init', function(){
-	TemplateRoot::add('index', __DIR__ . DS . 'template' . DS . 'index');
-	TemplateRoot::add('dashboard', __DIR__ . DS . 'template' . DS . 'dashboard');
+	TemplateRoot::addDefault(__DIR__ . DS . 'template');
+	TemplateRoot::add('web-push', __DIR__ . DS . 'template' . DS . 'web-push');
 });
 
-/**
- * Добавляем пункт меню
- */
-Hook::registerOnce('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem('Web-Push клиенты', ['url' => Http::makeURI('/dashboard/web-push-clients'), 'fa' => 'commenting', 'access' => UserAccess::getAccess('webpush')]));
-});
-
-/**
- * Очередь для рассылки пушей
- */
-Hook::registerOnce('app.installed', function() {
-	Scheduler::addTask('web-push-send', '*/5 * * * *');
-}, Hook::MIN_PRIORITY);
-
-
-/**
- * Разбор очереди пушей
- */
-Hook::register('scheduler.task.web-push-send', function(Task $task) {
-	$queues = WebPushQueue::getList();
-	foreach ($queues as $queue) {
-		$queue->send();
-	}
-
-	return true;
+Hook::register('template.web-push.script', function(HtmlTemplate $tpl){
+	$publicKey = WebPushAPI::getPublicKey();
+	$tpl->js('web-push/main.js');
+	?>
+	<script type="text/javascript">
+		WebPush.publicKey = "<?=$publicKey?>";
+        WebPush.swPath = "<?=$tpl->makeURI('/service-worker.js')?>";
+	</script>
+    <?php
 });

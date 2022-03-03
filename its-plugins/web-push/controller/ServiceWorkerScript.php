@@ -14,7 +14,7 @@ class ServiceWorkerScript extends AbstractController {
 	public function response(){
 		$this->responseType = Http::TYPE_JAVASCRIPT;
 		
-		$jsFile = new Template('index', 'push/service-worker');
+		$jsFile = new Template('web-push', 'service-worker');
 		$jsFile->var('publicKey', WebPushAPI::getPublicKey());
 
 		return $jsFile->render();

@@ -12,10 +12,11 @@ use tsframe\module\IP;
 use tsframe\module\PaginatorInterface;
 use tsframe\module\database\Database;
 use tsframe\module\push\WebPushAPI;
+use tsframe\module\push\WebPushQuery;
 use tsframe\module\user\SingleUser;
 
 /**
- * Работа с Push-клиентами
+ * WebPush-клиентам с привязкой к пользователю и к геолокации
  */
 class WebPushClient implements PaginatorInterface {
 	/**
@@ -122,20 +123,20 @@ class WebPushClient implements PaginatorInterface {
 		throw new BaseException('Invalid WebPush client_id = ' . $id);
 	}
 
-	private $authKey;
-	private $p256Key;
-	private $endpoint;
+	private $query;
 	private $ip;
 	private $location;
 	private $userAgent;
 	private $id = -1;
 
 	public function __construct(string $endpoint, string $p256Key, string $authKey, ?string $ip = null, ?string $userAgent = null){
-		$this->authKey = $authKey;
-		$this->p256Key = $p256Key;
-		$this->endpoint = $endpoint;
+		$this->query = new WebPushQuery($endpoint, $p256Key, $authKey);
 		$this->ip = is_null($ip) ? IP::current() : $ip;
 		$this->userAgent = is_null($userAgent) ? ($_SERVER['HTTP_USER_AGENT'] ?? null) : $userAgent;
+	}
+
+	public function getQuery(): WebPushQuery {
+		return $this->query;
 	}
 
 	/**
@@ -183,7 +184,7 @@ class WebPushClient implements PaginatorInterface {
 	 * @return string JSON-строка
 	 */
 	public function getPushKeys(): string {
-		return json_encode(['endpoint' => $this->endpoint, 'keys' => ['p256dh' => $this->p256Key, 'auth' => $this->authKey]]);
+		return $this->query->getPushKeys();
 	}
 
 	/**
@@ -223,14 +224,7 @@ class WebPushClient implements PaginatorInterface {
 	 * @return Subscription
 	 */
 	public function getSubscription(): Subscription {
-		// this is the structure for the working draft from october 2018 (https://www.w3.org/TR/2018/WD-push-api-20181026/) 
-		return Subscription::create([ 
-        	"endpoint" => $this->endpoint,
-            "keys" => [
-            	"p256dh" => $this->p256Key,
-                "auth" => $this->authKey 
-            ],
-        ]);
+		return $this->query->getSubscription();
 	}
 
 	public function delete(){
