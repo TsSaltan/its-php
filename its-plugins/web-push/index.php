@@ -20,6 +20,7 @@
     function checkPush(){
         if(WebPush.isSubscribed){
             // Если пуши разрешены, получаем ключи доступа
+             console.log(JSON.stringify(WebPush.subscriptionData));
         } else {
             // Если нет доступа к пушам, через некоторое время отправляем пользователю запрос
             setTimeout(function(){
