@@ -53,6 +53,8 @@ use tsframe\view\HtmlTemplate;
 use tsframe\view\TemplateRoot;
 
 Hook::registerOnce('plugin.install', function(){	
+	Plugins::required('logger');
+
 	return [
 		PluginInstaller::withKey('push.publicKey')
 					->setType('text')

@@ -9,6 +9,7 @@ use tsframe\exception\GeoException;
 use tsframe\module\Geo\GeoIP;
 use tsframe\module\Geo\Location;
 use tsframe\module\IP;
+use tsframe\module\Logger;
 use tsframe\module\PaginatorInterface;
 use tsframe\module\database\Database;
 use tsframe\module\push\WebPushAPI;
@@ -63,11 +64,27 @@ class WebPushQuery {
         ]);
 	}
 
-	public function send(string $body, string $title, string $link, ?string $icon){
+	public function send(string $title, string $body, string $link, ?string $icon){
 		if(strlen($icon) == 0) $icon = self::DEFAULT_ICON;
-		
+		$data = ['body' => $body, 'title' => $title, 'link' => $link, 'icon' => $icon];
+		$subscription = [ 
+        	"endpoint" => $this->endpoint,
+            "keys" => [
+            	"p256dh" => $this->p256Key,
+                "auth" => $this->authKey 
+            ],
+        ];
+
 		$api = new WebPushAPI;
-		$api->addPushMessage($this, ['body' => $body, 'title' => $title, 'link' => $link, 'icon' => $icon]);
-		return $api->send();
+
+		try {
+			$api->addPushMessage($this, $data);
+			$result = $api->send();
+			Logger::WebPush()->debug('Send web-push message', ['data' => $data, 'subscription' => $subscription, 'result' => $result]);
+		} catch (\ErrorException $e){
+			Logger::WebPush()->notice('Error on sending web-push message', ['data' => $data, 'subscription' => $subscription, 'error' => $e->getMessage()]);
+		}
+
+		return $result;
 	}
 }
