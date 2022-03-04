@@ -18,7 +18,8 @@
         "phpmailer/phpmailer": "6.5.0",
         "airmanbzh/php-html-generator": "dev-master",
         "telegram-bot/api": "^2.3",
-        "ovunctukenmez/samesite-cookie-setter": "dev-master"
+        "ovunctukenmez/samesite-cookie-setter": "dev-master",
+        "spomky-labs/base64url": "^2.0"
     },
 
     "autoload": {
