@@ -39,10 +39,10 @@ Hook::registerOnce('app.init', function(){
 	Menu::create('dashboard-sidebar');
 	
 	Menu::create('dashboard-admin-sidebar')
-		->add(new MenuItem('Системные настройки', ['url' => Http::makeURI('/dashboard/config'), 'fa' => 'wrench', 'access' => UserAccess::getAccess('user.editConfig')]), 0);
+		->add(new MenuItem('Системные настройки', ['url' => Http::makeURI('/dashboard/config'), 'fa' => 'wrench', 'access' => UserAccess::getAccess('user.editConfig')], 'system-configs'), -1);
 
 	Menu::create('dashboard-top')
-		->add(new MenuItem('Выход', ['url' => Http::makeURI('/dashboard/logout'), 'fa' => 'sign-out', 'access' => UserAccess::Guest]));
+		->add(new MenuItem('Выход', ['url' => Http::makeURI('/dashboard/logout'), 'fa' => 'sign-out', 'access' => UserAccess::Guest], 'exit'), 999);
 });
 
 Hook::register('template.render', function($tpl){

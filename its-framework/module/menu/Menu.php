@@ -12,6 +12,10 @@ class Menu {
 		return self::$menus[$menuName];
 	}
 
+	public static function getByName(string $menuName): MenuItem {
+		return self::$menus[$menuName] ?? (self::$menus[$menuName] = new MenuItem);
+	}
+
 	/**
 	 * Отрисовка меню
 	 * @param  string   $menuName Имя меню
