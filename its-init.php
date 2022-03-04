@@ -168,7 +168,7 @@ class itsFrame {
 	}
 
 	public function onAppInit(callable $func){
-		Hook::registerOnce('app.init', $func);
+		Hook::registerOnce('app.init', $func, Hook::MIN_PRIORITY);
 		return $this;
 	}
 
