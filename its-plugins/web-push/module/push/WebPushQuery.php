@@ -19,9 +19,20 @@ use tsframe\module\user\SingleUser;
  */
 class WebPushQuery {
 
+	const DEFAULT_ICON = 'https://raw.githubusercontent.com/GoogleChromeLabs/web-push-codelab/master/app/images/icon.png';
+
 	private $authKey;
 	private $p256Key;
 	private $endpoint;
+
+	public static function ofString(string $json){
+		$data = json_decode($json, true);
+		if(isset($data['endpoint']) && isset($data['keys']['auth']) && isset($data['keys']['p256dh'])){
+			return new self($data['endpoint'], $data['keys']['p256dh'], $data['keys']['auth']);
+		}
+
+		throw new BaseException('Invalid input JSON string', 0, ['input_string' => $json]);
+	}
 
 	public function __construct(string $endpoint, string $p256Key, string $authKey){
 		$this->authKey = $authKey;
@@ -50,5 +61,13 @@ class WebPushQuery {
                 "auth" => $this->authKey 
             ],
         ]);
+	}
+
+	public function send(string $body, string $title, string $link, ?string $icon){
+		if(strlen($icon) == 0) $icon = self::DEFAULT_ICON;
+		
+		$api = new WebPushAPI;
+		$api->addPushMessage($this, ['body' => $body, 'title' => $title, 'link' => $link, 'icon' => $icon]);
+		return $api->send();
 	}
 }
