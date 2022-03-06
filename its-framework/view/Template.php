@@ -114,6 +114,7 @@ class Template {
 
 		if(substr($path, 0, 4) == 'http' || substr($path, 0, 2) == '//'){
 			// Абсолютные ссылки оставляем без изменения
+			$files[] = $path;
 		} else {
 			try{
 				$files = TemplateRoot::findFiles($this->part, $path);
