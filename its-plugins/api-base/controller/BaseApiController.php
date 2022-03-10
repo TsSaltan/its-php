@@ -15,14 +15,6 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 use tsframe\module\user\UserConfig;
 
-/**
- * routes @deprecated 
- *
- * f.e.
- * route POST /api/[login:action]
- * route POST /api/[register:action]
- * route GET|POST /api/[me:action]
- */
 class BaseApiController extends AbstractAJAXController {
 	use ActionToMethodTrait;
 
@@ -44,7 +36,6 @@ class BaseApiController extends AbstractAJAXController {
 				// Если метод или контроллер не найдены, поищем в хуках
 				$hookKey1 = 'api.' . $httpAction . '.' . $apiAction;
 				$hookKey2 = 'api.def.' . $apiAction;
-
 
 				if(Hook::exists($hookKey1)){
 					Hook::call($hookKey1, [$this, $httpAction, $apiAction]);
