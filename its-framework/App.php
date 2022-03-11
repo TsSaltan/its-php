@@ -87,6 +87,7 @@ class App {
 			$controller->send();
 		} catch(BaseException $e) {
 			$controller = new ErrorController($e);
+			Hook::call('app.error', [$e, &$controller]);
 			$controller->send();
 		} 
 	}
