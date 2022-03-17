@@ -36,6 +36,19 @@
             
             <?php $this->hook('config')?>
             
+            <form action="<?=$this->makeURI('/dashboard/config/lang')?>" method="POST">
+                <?php 
+                $langPane = $this->uiCollapsePanel('default');
+                $langPane->setId('lang');
+                $langPane->header($this->uiIcon('language') . '&nbsp;' . __('lang-editor'));
+                $langPane->body(function(){ 
+                    $this->inc('config-lang');
+                });
+                $langPane->footer(function(){ ?><button class='btn btn-primary'><?=__('button/save')?></button><?php });
+                echo $langPane;
+                ?>
+            </form> 
+
             <form action="<?=$this->makeURI('/dashboard/config/theme')?>" method="POST">
                 <?php 
                 $themePane = $this->uiCollapsePanel('default');

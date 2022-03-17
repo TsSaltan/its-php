@@ -10,5 +10,9 @@
 	"database-cache": "Database cache",
 	"confirm-clear-cache-title": "Clear cache?",
 	"confirm-clear-cache": "Clear cached data at files and database?",
-	"logs-size": "Log size"
+	"logs-size": "Log size",
+	"lang-editor": "Language files editor",
+	"lang-list": "Languages list",
+	"lang-key": "Language key",
+	"empty": "Empty"
 }

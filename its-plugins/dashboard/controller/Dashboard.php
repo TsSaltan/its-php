@@ -7,6 +7,7 @@ use tsframe\exception\ControllerException;
 use tsframe\module\Meta;
 use tsframe\module\io\Input;
 use tsframe\module\io\Output;
+use tsframe\module\locale\Lang;
 use tsframe\module\menu\Menu;
 use tsframe\module\menu\MenuItem;
 use tsframe\module\user\SocialLogin;
@@ -25,7 +26,7 @@ use tsframe\view\HtmlTemplate;
  * 
  * @route GET /dashboard/[auth|logout|config|config:action]
  * @route POST /dashboard/[config:action]
- * @route POST /dashboard/config/[theme|siteinfo|setmode:action]
+ * @route POST /dashboard/config/[theme|siteinfo|setmode|lang:action]
  */
 class Dashboard extends AbstractController{
 	use ActionToMethodTrait;
@@ -106,10 +107,120 @@ class Dashboard extends AbstractController{
 		UserAccess::assertCurrentUser('user.editConfig');
 		$this->vars['title'] = 'Редактирование системных настроек';
 		$this->vars['systemConfigs'] = Config::get('*');
+		$this->vars['langList'] = Lang::getList();
+
+		$this->vars['langData'] = [];
+		$this->vars['langEditor'] = false;
+		$this->vars['langDataKeys'] = [];
+		$this->vars['langDataDelimeter'] = '/';
+
+		if(is_dir(APP_TRANSLATIONS)){
+			$this->vars['langEditor'] = true;
+			$this->vars['langData'] = $this->loadLangFiles();
+
+			foreach(Lang::getList() as $lang){
+				$this->vars['langData'][$lang] = $this->getMultilevelKeys($this->vars['langData'][$lang]);
+				$this->vars['langDataKeys'] = array_merge($this->vars['langDataKeys'], array_keys($this->vars['langData'][$lang]));
+			}		
+
+			$this->vars['langData'] = Output::of($this->vars['langData'])->quotes()->getData();
+			$this->vars['langDataKeys'] = array_unique($this->vars['langDataKeys']);	
+			$this->vars['langDataKeys'] = Output::of($this->vars['langDataKeys'])->quotes()->getData();
+			sort($this->vars['langDataKeys']);
+		}
 
 		if(isset($_GET['save']) && $_GET['save'] == 'success'){
 			$this->vars['alert']['success'][] = 'Настройки успешно сохранены';
 		}
+	}
+
+	protected function loadLangFiles(): array {
+		$data = [];
+		foreach(Lang::getList() as $lang){
+			$data[$lang] = [];
+			$file = APP_TRANSLATIONS . $lang . '.json';
+
+			if(file_exists($file)){
+				$langData = json_decode(file_get_contents($file), true);
+				if(is_array($langData)){
+					$data[$lang] = $langData;
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	protected function getMultilevelKeys(array $array, array $prevKeys = [], string $delimeter = '/'){
+		$return = [];
+		foreach($array as $k => $v){
+			$keys = $prevKeys;
+			$keys[] = $k;
+			$key = implode($delimeter, $keys);
+
+			if(is_array($v)){
+				$return += $this->getMultilevelKeys($v, $keys, $delimeter);				
+			} else {
+				$return[$key] = $v;				
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Сохранение файла настроек
+	 * @uri POST /dashboard/lang
+	 * @access user.editConfig
+	 **/
+	public function postLang(){
+		UserAccess::assertCurrentUser('user.editConfig');
+		if(is_dir(APP_TRANSLATIONS)){
+			$data = Input::post()
+						->name('translate')
+							->array()
+						->assert();
+
+			$langs = Lang::getList();
+			$langData = $this->loadLangFiles();
+
+			foreach($langs as $lang){
+				if(!isset($data['translate'][$lang])) continue;
+
+				foreach($data['translate'][$lang] as $lKey => $lVal){
+					$keys = explode('/', $lKey);
+					$item = &$langData[$lang];
+
+					foreach($keys as $i => $k){
+						$isLast = $i == (sizeof($keys)-1);
+
+						if(!isset($item[$k])){
+							$item[$k] = ($isLast) ? $lVal : [];
+						}
+
+						if($isLast){
+							if((is_array($lVal) && sizeof($lVal) == 0) || (strlen($lVal) == 0)){
+								unset($item[$k]);
+							} else {
+								$item[$k] = $lVal;
+							}
+							break;
+						}
+
+						$item = &$item[$k];					
+					}
+				}
+			}
+
+			foreach($langs as $lang){
+				$file = APP_TRANSLATIONS . strtolower($lang) . '.json';
+				if(isset($langData[$lang])){
+					file_put_contents($file, json_encode($langData[$lang], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+				}
+			}
+		}
+
+		return Http::redirect(Http::makeURI('/dashboard/config', ['save' => 'success'], 'lang'));
 	}
 
 	/**
