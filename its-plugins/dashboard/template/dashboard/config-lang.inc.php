@@ -31,7 +31,10 @@ $langDataKeys = $tpl->vars['langDataKeys'];
             </th>
         <?php foreach($langList as $lang):?>
             <td <?php if(!isset($langData[$lang][$key])): ?>class="danger"<?php endif; ?>>                   
-                <input type="text" class="form-control" name="translate[<?=$lang?>][<?=$key?>]" placeholder="<?=__('empty')?>" value="<?=$langData[$lang][$key] ?? null ?>"> 
+                <div class="input-group">
+                    <span class="input-group-addon"><?=strtoupper($lang)?></span>
+                    <input type="text" class="form-control" name="translate[<?=$lang?>][<?=$key?>]" placeholder="<?=__('empty')?>" value="<?=$langData[$lang][$key] ?? null ?>"> 
+                </div>
             </td>
         <?php endforeach; ?>
         </tr>
@@ -43,7 +46,10 @@ $langDataKeys = $tpl->vars['langDataKeys'];
             </td>
             <?php foreach($langList as $lang):?>
             <td>
-                <input type="text" class="form-control" name="new[<?=$lang?>]" placeholder="<?=__('empty')?>"> 
+                <div class="input-group">
+                    <span class="input-group-addon"><?=strtoupper($lang)?></span>
+                    <input type="text" class="form-control" name="new[<?=$lang?>]" placeholder="<?=__('empty')?>"> 
+                </div>
             </td>
             <?php endforeach; ?>
         </tr>
