@@ -184,6 +184,15 @@ class Dashboard extends AbstractController{
 			$langs = Lang::getList();
 			$langData = $this->loadLangFiles();
 
+
+			if(isset($_POST['newkey']) && strlen($_POST['newkey']) > 0 && isset($_POST['new']) && is_array($_POST['new'])){
+				foreach($langs as $lang){
+					if(!isset($_POST['new'][$lang]) || strlen($_POST['new'][$lang]) == 0) continue;
+
+					$data['translate'][$lang][$_POST['newkey']] = $_POST['new'][$lang];
+				}
+			}
+
 			foreach($langs as $lang){
 				if(!isset($data['translate'][$lang])) continue;
 

@@ -37,5 +37,16 @@ $langDataKeys = $tpl->vars['langDataKeys'];
         </tr>
     <?php endforeach; ?>
 
+        <tr class='info'>
+            <td>
+                <input type="text" class="form-control" name="newkey" placeholder="<?=__('lang-new-key')?>"> 
+            </td>
+            <?php foreach($langList as $lang):?>
+            <td>
+                <input type="text" class="form-control" name="new[<?=$lang?>]" placeholder="<?=__('empty')?>"> 
+            </td>
+            <?php endforeach; ?>
+        </tr>
+
     </table>
 <?php endif; ?>
