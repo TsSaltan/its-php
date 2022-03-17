@@ -1,19 +1,29 @@
 {
-	"button": {
-		"clear-cache": "Clear cache",
-		"clear-logs": "Clear logs",
-		"close": "Close",
-		"cancel": "Cancel",
-		"clear": "Clear"
-	},
-	"file-cache": "File cache",
-	"database-cache": "Database cache",
-	"confirm-clear-cache-title": "Clear cache?",
-	"confirm-clear-cache": "Clear cached data at files and database?",
-	"logs-size": "Log size",
-	"lang-editor": "Language files editor",
-	"lang-list": "Languages list",
-	"lang-key": "Language key",
-	"lang-new-key": "New language key",
-	"empty": "Empty"
+    "button": {
+        "clear-cache": "Clear cache",
+        "clear-logs": "Clear logs",
+        "close": "Close",
+        "cancel": "Cancel",
+        "clear": "Clear",
+        "save": "Save",
+        "sign-in": "Sign in",
+        "sign-up": "Sign up"
+    },
+    "file-cache": "File cache",
+    "database-cache": "Database cache",
+    "confirm-clear-cache-title": "Clear cache?",
+    "confirm-clear-cache": "Clear cached data at files and database?",
+    "logs-size": "Log size",
+    "lang-editor": "Language files editor",
+    "lang-list": "Languages list",
+    "lang-key": "Language key",
+    "lang-new-key": "New language key",
+    "empty": "Empty",
+    "authorization": "Authorization",
+    "registration": "Registration",
+    "login-or-mail": "Login or e-mail",
+    "e-mail": "E-mail",
+    "password": "Password",
+    "password-auto": "Password will be generated automatically",
+    "login": "Login"
 }

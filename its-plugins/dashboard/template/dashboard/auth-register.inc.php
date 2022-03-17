@@ -4,7 +4,7 @@
 
 <?php if(!$passwordEnabled): ?>
 <div class="alert alert-info">
-    <p class='text'><?php _e('Password will be generated automatically'); ?></p>   
+    <p class='text'><?php _e('password-auto'); ?></p>   
 </div>
 <?php endif; ?>
 
@@ -12,20 +12,20 @@
     <fieldset>
         <?php if($loginEnabled): ?>
         <div class="form-group">
-            <input class="form-control" placeholder="<?php _e('Login'); ?>" name="login" type="text" required>
+            <input class="form-control" placeholder="<?php _e('login'); ?>" name="login" type="text" required>
         </div>          
         <?php endif; ?>
         <div class="form-group">
-            <input class="form-control" placeholder="<?php _e('E-mail'); ?>" name="email" type="email" required>
+            <input class="form-control" placeholder="<?php _e('e-mail'); ?>" name="email" type="email" required>
         </div>
 
         <?php if($passwordEnabled): ?>
         <div class="form-group">
-            <input class="form-control" placeholder="<?php _e('Password'); ?>" name="password" type="password" value="" required>
+            <input class="form-control" placeholder="<?php _e('password'); ?>" name="password" type="password" value="" required>
         </div>
         <?php endif; ?>
 
         <?php $this->hook('auth.register'); ?>
-        <button class="btn btn-lg col-md-6 btn-success btn-block"><?php _e('Sign up'); ?></button>
+        <button class="btn btn-lg col-md-6 btn-success btn-block"><?php _e('button/sign-up'); ?></button>
     </fieldset>
 </form>
