@@ -69,6 +69,19 @@ class Blog {
 		return new Post($post[0]['id'], $post[0]['alias'], $post[0]['title'], $post[0]['content'], $post[0]['create_ts'], $post[0]['update_ts'], $post[0]['author_id'], $post[0]['type']);
 	}
 
+	public static function getPostByAlias(string $alias): Post {
+		$post = Database::prepare('SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' FROM `blog-posts` WHERE `alias` = :alias')
+						->bind('alias', $alias)
+						->exec()
+					->fetch();
+
+		if(!isset($post[0])){
+			throw new PostNotFoundException('Post (alias=' . $alias . ') not found');
+		}		
+
+		return new Post($post[0]['id'], $post[0]['alias'], $post[0]['title'], $post[0]['content'], $post[0]['create_ts'], $post[0]['update_ts'], $post[0]['author_id'], $post[0]['type']);
+	}
+
 	public static function getPostsNum(): int {
 		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts`')->fetch();
 		return $q[0]['c'] ?? 0;
