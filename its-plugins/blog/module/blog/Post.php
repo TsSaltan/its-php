@@ -53,7 +53,7 @@ class Post {
 					Hook::call('blog.post.' . $filterName, [$this, $params], function(?string $result, ?string $output) use (&$replacingTo){
 						if(strlen($result) > 0)	$replacingTo = $result;
 						if(strlen($output) > 0)	$replacingTo = $output;
-					}, false, false);
+					}, null, false, false);
 					$content = str_replace($replacingFrom, $replacingTo, $content);
 				}
 			}
