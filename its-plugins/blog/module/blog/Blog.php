@@ -1,12 +1,21 @@
 <?php
 namespace tsframe\module\blog;
 
+use tsframe\exception\PostNotFoundException;
 use tsframe\module\database\Database;
 
 class Blog {
-	public static function createPost(string $alias, string $title, string $content, int $authorId, int $type): Post {
-		if(self::isPostAliasExists($alias)){
-			$alias = uniqid($alias);
+	public static function createPost(string $title, string $content, int $authorId, int $type, ?string $alias = null): Post {
+		if(strlen($alias) == 0){
+			$alias = self::generateAlias($title);
+		} else {
+			$alias = self::generateAlias($alias);
+		}
+
+		$originalAlias = $alias;
+		$ai = 0;
+		while(self::isPostAliasExists($alias)){
+			$alias = $originalAlias . '-' . ++$ai;
 		}
 
 		$postId = Database::prepare('INSERT INTO `blog-posts` (`alias`, `title`, `content`, `author_id`, `type`) VALUES (:alias, :title, :content, :author_id, :type)')
@@ -18,7 +27,27 @@ class Blog {
 			->exec()
 			->lastInsertId();
 
+		if($postId == 0){
+			throw new BlogException('Cannot create blog post', 0, [
+				'alias' => $alias,
+				'title' => $title,
+				'content' => $content,
+				'author_id' => $authorId,
+				'type' => $type,
+			]);
+		}
+
 		return self::getPostById($postId);
+	}
+
+	public static function generateAlias(string $title){
+		$string = mb_ereg_replace('([^0-9a-zа-яё\-]{1})', '-', mb_strtolower($title));
+		$len = 0;
+		while($len != strlen($string)){
+			$len = strlen($string);
+			$string = str_replace('--', '-', $string);
+		}
+		return trim($string, '-');
 	}
 
 	public static function getPostById(int $id): Post {
@@ -34,12 +63,18 @@ class Blog {
 		return new Post($post[0]['id'], $post[0]['alias'], $post[0]['title'], $post[0]['content'], $post[0]['create_ts'], $post[0]['update_ts'], $post[0]['author_id'], $post[0]['type']);
 	}
 
-	public static function getPosts(): array {
+	public static function getPosts(int $offset = 0, int $limit = 10): array {
+		$posts = Database::exec('SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' FROM `blog-posts` ORDER BY `create_time` DESC LIMIT ' . $offset . ',' . $limit)->fetch();
+		$return = [];
+		foreach($posts as $post){
+			$return[] = new Post($post['id'], $post['alias'], $post['title'], $post['content'], $post['create_ts'], $post['update_ts'], $post['author_id'], $post['type']);
+		}
 
+		return $return;
 	}
 
-	public static function isPostAliasExists(string $alias): bool {
-		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts` WHERE `alias` = :alias')->fetch();
+	public static function isPostAliasExists(string $alias) {
+		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts` WHERE `alias` = :alias', ['alias' => $alias])->fetch();
 		return ($q[0]['c'] ?? 0) > 0;
 	}
 }
