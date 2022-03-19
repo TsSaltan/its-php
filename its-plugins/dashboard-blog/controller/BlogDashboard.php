@@ -18,6 +18,11 @@ use tsframe\module\user\UserAccess;
  * @route POST  	/dashboard/blog/post/[i:post]/[save|delete:action]
  */ 
 class BlogDashboard extends UserDashboard {
+	protected static $linkMaker;
+	public static function linkMaker(?callable $func){
+		self::$linkMaker = $func;
+	}
+
 	public function __construct(){
 		$this->setActionPrefix(null);
 	}
@@ -53,6 +58,11 @@ class BlogDashboard extends UserDashboard {
 			$this->vars['author'] = SingleUser::unauthorized();
 		}
 		$this->vars['title'] = __('menu/edit-blog-post');
+
+		$this->vars['postLink'] = false;
+		if(is_callable(self::$linkMaker)){
+			$this->vars['postLink'] = call_user_func(self::$linkMaker, $post);
+		}
 	}
 
 	public function getNew(){

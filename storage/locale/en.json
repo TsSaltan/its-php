@@ -9,7 +9,8 @@
         "sign-in": "Sign in",
         "sign-up": "Sign up",
         "post": "Post",
-        "delete": "Delete"
+        "delete": "Delete",
+        "open-link": "Open link"
     },
     "file-cache": "File cache",
     "database-cache": "Database cache",

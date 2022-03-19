@@ -14,7 +14,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <div class="panel-title pull-left">#<?=$post->getId();?>&nbsp;<strong><?=$post->getTitle()?></strong></div>
-                        <div class="panel-title pull-right"><a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a></div>
+                        <div class="panel-title pull-right">
+                            <?php if(isset($postLink) && is_string($postLink) && strlen($postLink) > 0): ?>
+                            <a href="<?=$postLink?>" class="btn btn-default btn-xs btn-outline"><i class="fa fa-link"></i>&nbsp;<?=__('button/open-link')?></a>
+                            <?php endif; ?>
+                            <a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a>
+                        </div>
                     </div>
 
                     <form action="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId() . '/save')?>" method="POST">                    
