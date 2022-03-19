@@ -70,10 +70,12 @@ class Hook {
 		foreach ($hooks as $key => $hook) {
 			$func = $hook['function'];
 			try{
+				ob_start();
 				$result = call_user_func_array($func, $params);
+				$output = ob_get_clean();
 
 				if(is_callable($return)){
-					call_user_func($return, $result);
+					call_user_func($return, $result, $output);
 				}
 			} catch(\Exception|\Error $e){
 				if(is_callable($error)){
