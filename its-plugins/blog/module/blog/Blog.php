@@ -12,11 +12,7 @@ class Blog {
 			$alias = self::generateAlias($alias);
 		}
 
-		$originalAlias = $alias;
-		$ai = 0;
-		while(self::isPostAliasExists($alias)){
-			$alias = $originalAlias . '-' . ++$ai;
-		}
+		$alias = self::getFreeAlias($alias);
 
 		$postId = Database::prepare('INSERT INTO `blog-posts` (`alias`, `title`, `content`, `author_id`, `type`) VALUES (:alias, :title, :content, :author_id, :type)')
 				->bind('alias', $alias)
@@ -38,6 +34,16 @@ class Blog {
 		}
 
 		return self::getPostById($postId);
+	}
+
+	public static function getFreeAlias(string $alias){
+		$originalAlias = $alias;
+		$ai = 0;
+		while(self::isPostAliasExists($alias)){
+			$alias = $originalAlias . '-' . ++$ai;
+		}
+
+		return $alias;
 	}
 
 	public static function generateAlias(string $title){

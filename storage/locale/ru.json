@@ -40,5 +40,9 @@
     "post-author-undefined": "Не определён",
     "post-timestamp": "Временные метки",
     "post-create-time": "Создано",
-    "post-update-time": "Обновлено"
+    "post-update-time": "Обновлено",
+    "post-content": "Содержимое публикации",
+    "post-type": "Тип публикации",
+    "post-type-draft": "Черновик",
+    "post-type-production": "Опубликованный"
 }

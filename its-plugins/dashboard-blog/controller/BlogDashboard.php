@@ -12,15 +12,16 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 
 /**
- * @route GET  /dashboard/[blog:action]
- * @route GET  /dashboard/[blog-post:action]/[:post]
+ * @route GET 	/dashboard/blog/[posts:action]
+ * @route GET  	/dashboard/blog/[post:action]/[:post]
+ * @route POST  /dashboard/blog/post/[:post]/[save:action]
  */ 
 class BlogDashboard extends UserDashboard {
 	public function __construct(){
 		$this->setActionPrefix(null);
 	}
 
-	public function getBlog(){
+	public function getPosts(){
 		UserAccess::assertCurrentUser('blog');
 
 		$this->vars['title'] = __('menu/blog-writes');
@@ -38,7 +39,7 @@ class BlogDashboard extends UserDashboard {
 		$this->vars['postsNum'] = $count;
 	}
 
-	public function getBlogPost(){
+	public function getPost(){
 		UserAccess::assertCurrentUser('blog');
 
 		$postId = $this->params['post'];
@@ -51,5 +52,21 @@ class BlogDashboard extends UserDashboard {
 			$this->vars['author'] = SingleUser::unauthorized();
 		}
 		$this->vars['title'] = __('menu/edit-blog-post');
+	}
+
+	public function postSave(){
+		UserAccess::assertCurrentUser('blog');
+		$postId = $this->params['post'];
+		$post = Blog::getPostById($postId);
+
+		$data = Input::post()
+			->name('title')->string()->required()
+			->name('alias')->string()->required()
+			->name('content')->string()->required()
+			->name('type')->values(['0', '1'])->required()
+		->assert();
+
+		$res = $post->update($data['alias'], $data['title'], $data['content'], User::current()->get('id'), $data['type']);
+		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['result' => $res ? 'success' : 'fail']);
 	}
 }

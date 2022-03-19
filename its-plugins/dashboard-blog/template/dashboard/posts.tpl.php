@@ -21,7 +21,7 @@
                         <div class="panel-body">
                             <div class="list-group">
                             <?php foreach($posts->getData() as $post): ?>
-                                <a href="<?=$this->makeURI('/dashboard/blog-post/' . $post->getId())?>" class="list-group-item">
+                                <a href="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId())?>" class="list-group-item">
                                     <span class="pull-left text-muted">#<?=$post->getId()?></span>
                                     &nbsp;
                                     <strong><?=$post->getTitle()?></strong>

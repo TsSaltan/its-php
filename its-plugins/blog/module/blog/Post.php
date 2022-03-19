@@ -5,8 +5,8 @@ use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 
 class Post {
-	const TYPE_TEMPLATE = 0;
-	const TYPE_POST = 1;
+	const TYPE_DRAFT = 0;
+	const TYPE_PRODUCTION = 1;
 
 	protected $id;
 	protected $alias;
@@ -40,8 +40,13 @@ class Post {
 		return Output::of($this->title)->specialChars()->quotes()->getData();
 	}
 
-	public function getContent(): string {
-		return $this->content;
+	public function getContent(bool $processHtml): string {
+		if($processHtml){
+			$content = nl2br($this->content);
+			return Output::of($content)->xss()->getData();
+		}
+
+		return Output::of($this->content)->specialChars()->getData();
 	}
 
 	public function getAuthorId(): int {
@@ -60,9 +65,13 @@ class Post {
 		return date($format, $this->updateTime);
 	}
 
-	public function update(string $alias, string $title, string $content, int $authorId, int $type): bool {
-		$alias = Blog::generateAlias($alias);
+	public function update(?string $alias, string $title, string $content, int $authorId, int $type): bool {
+		$alias = strlen($alias) == 0 ? Blog::generateAlias($title) : Blog::generateAlias($alias);
 		
+		if($alias != $this->alias){
+			$alias = Blog::getFreeAlias($alias);
+		}
+
 		if( Database::exec(
 			'UPDATE `blog-posts` SET `alias` = :alias, `title` = :title, `content` = :content, `author_id` = :authorId,  `type` = :type, `update_time` = CURRENT_TIMESTAMP WHERE `id` = :id', 
 			[
@@ -74,10 +83,24 @@ class Post {
 				'type' => $type
 			]
 		)->affectedRows() > 0 ){
-			$this->updateTs();
+			$this->alias = $alias;
+			$this->title = $title;
+			$this->content = $content;
+			$this->authorId = $authorId;
+			$this->type = $type;
+			$this->updateTime = time();
+
 			return true;
 		}
 
 		return false;
+	}
+
+	public function isDraft(): bool {
+		return $this->getType() == self::TYPE_DRAFT;
+	}
+
+	public function isProduction(): bool {
+		return $this->getType() == self::TYPE_PRODUCTION;
 	}
 }

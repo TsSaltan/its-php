@@ -24,5 +24,5 @@ Hook::registerOnce('app.init', function(){
 });
 
 Hook::register('menu.render.dashboard-sidebar', function(MenuItem $menu){
-	$menu->add(new MenuItem(__('menu/blog-writes'), ['url' => Http::makeURI('/dashboard/blog'), 'fa' => 'list', 'access' => UserAccess::getAccess('blog')], 'blog'), 10);
+	$menu->add(new MenuItem(__('menu/blog-writes'), ['url' => Http::makeURI('/dashboard/blog/posts'), 'fa' => 'list', 'access' => UserAccess::getAccess('blog')], 'blog'), 10);
 });

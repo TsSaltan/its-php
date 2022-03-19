@@ -40,5 +40,9 @@
     "post-author-undefined": "Undefined",
     "post-timestamp": "Timestamps",
     "post-create-time": "Created at",
-    "post-update-time": "Updated at"
+    "post-update-time": "Updated at",
+    "post-content": "Post content",
+    "post-type": "Post type",
+    "post-type-draft": "Draft",
+    "post-type-production": "Published"
 }
