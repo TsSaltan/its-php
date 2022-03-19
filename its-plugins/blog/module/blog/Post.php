@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\module\blog;
 
+use tsframe\Hook;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 
@@ -43,6 +44,19 @@ class Post {
 	public function getContent(bool $processHtml): string {
 		if($processHtml){
 			$content = nl2br($this->content);
+
+			if(preg_match_all('#<!--\s*hook:([^\s]+?)\s*([^\s]+?)?\s*-->#Ui', $content, $find)){
+				foreach($find[1] as $i => $filterName){
+					$replacingFrom = $find[0][$i];
+					$replacingTo = null;
+					parse_str($find[2][$i], $params);
+					Hook::call('blog.post.' . $filterName, [$this, $params], function(?string $result) use (&$replacingTo){
+						$replacingTo = $result;
+					});
+					$content = str_replace($replacingFrom, $replacingTo, $content);
+				}
+			}
+
 			return Output::of($content)->xss()->getData();
 		}
 
