@@ -55,8 +55,9 @@ class Hook {
 	 * @param  callable|null $return Функция для возвращения результата
 	 * @param  callable|null $error  Функция для возвращения исключения
 	 * @param  bool|boolean  $once   Если true, то любой хук считается как "одноразовый"
+	 * @param  bool|boolean  $sendOutput   Если true, то данные, отправленные внутри хука будут отданы на вывод
 	 */
-	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false){
+	public static function call(string $name, array $params = [], ?callable $return = null, ?callable $error = null, bool $once = false, bool $sendOutput = true){
 		$name = strtolower($name);
 		if(!self::exists($name)) return;
 		$hooks = self::$hooks[$name];
@@ -72,7 +73,11 @@ class Hook {
 			try{
 				ob_start();
 				$result = call_user_func_array($func, $params);
-				$output = ob_get_clean();
+				if($sendOutput){
+					$output = ob_get_flush();
+				} else {
+					$output = ob_get_clean();
+				}
 
 				if(is_callable($return)){
 					call_user_func($return, $result, $output);
