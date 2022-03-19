@@ -15,7 +15,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left"><?=__('blog-posts')?>: <b><?=__('blog-posts-num', $postsNum)?></b></div>
-                            <div class="panel-title pull-right"><a href="<?=$this->makeURI('/dashboard/blog/post/new')?>" class="btn btn-success btn-xs"><?=__('menu/new-blog-post')?></a></div>
+                            <div class="panel-title pull-right"><a href="<?=$this->makeURI('/dashboard/blog/post/new')?>" class="btn btn-success btn-xs btn-outline"><i class="fa fa-pencil"></i>&nbsp;<?=__('menu/new-blog-post')?></a></div>
                         </div>
 
                     <?php if($posts->isData()):?>

@@ -12,10 +12,10 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 
 /**
- * @route GET 	/dashboard/blog/[posts:action]
- * @route GET  	/dashboard/blog/[post:action]/[i:post]
- * @route GET|POST  	/dashboard/blog/post/[new:action]
- * @route POST  /dashboard/blog/post/[i:post]/[save:action]
+ * @route GET 		/dashboard/blog/[posts:action]
+ * @route GET  		/dashboard/blog/[post:action]/[i:post]
+ * @route GET|POST 	/dashboard/blog/post/[new:action]
+ * @route POST  	/dashboard/blog/post/[i:post]/[save|delete:action]
  */ 
 class BlogDashboard extends UserDashboard {
 	public function __construct(){
@@ -88,5 +88,14 @@ class BlogDashboard extends UserDashboard {
 
 		$res = $post->update($data['alias'], $data['title'], $data['content'], User::current()->get('id'), $data['type']);
 		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['from' => 'edit', 'result' => $res ? 'success' : 'fail']);
+	}
+
+	public function postDelete(){
+		UserAccess::assertCurrentUser('blog');
+		$postId = $this->params['post'];
+		$post = Blog::getPostById($postId);
+		$post->delete();
+		
+		return Http::redirectURI('/dashboard/blog/posts', ['from' => 'delete']);
 	}
 }

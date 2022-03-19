@@ -8,7 +8,8 @@
         "save": "Save",
         "sign-in": "Sign in",
         "sign-up": "Sign up",
-        "post": "Post"
+        "post": "Post",
+        "delete": "Delete"
     },
     "file-cache": "File cache",
     "database-cache": "Database cache",
@@ -45,5 +46,7 @@
     "post-content": "Post content",
     "post-type": "Post type",
     "post-type-draft": "Draft",
-    "post-type-production": "Published"
+    "post-type-production": "Published",
+    "blog-post-delete-title": "Post deleting",
+    "blog-post-delete-confirm": "Do you really want to delete this post?"
 }

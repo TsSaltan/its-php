@@ -14,6 +14,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <div class="panel-title pull-left">#<?=$post->getId();?>&nbsp;<strong><?=$post->getTitle()?></strong></div>
+                        <div class="panel-title pull-right"><a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a></div>
                     </div>
 
                     <form action="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId() . '/save')?>" method="POST">                    
@@ -72,4 +73,27 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modal-delete-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modal-delete-label"><?=__('blog-post-delete-title')?></h4>
+                </div>
+                <div class="modal-body"><?=__('blog-post-delete-confirm')?></div>
+                <div class="modal-footer">
+                    <form action="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId() . '/delete')?>" method="POST">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('button/cancel')?></button>
+                        <button type="submit" class="btn btn-danger"><?=__('button/delete')?></button>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 <?php $this->incFooter()?>

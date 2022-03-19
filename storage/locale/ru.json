@@ -8,7 +8,8 @@
         "clear": "Очистить",
         "sign-in": "Войти",
         "sign-up": "Создать аккаунт",
-        "post": "Опубликовать"
+        "post": "Опубликовать",
+        "delete": "Удалить"
     },
     "file-cache": "Файловый кэш",
     "database-cache": "Кэш в базе данных",
@@ -45,5 +46,7 @@
     "post-content": "Содержимое публикации",
     "post-type": "Тип публикации",
     "post-type-draft": "Черновик",
-    "post-type-production": "Опубликованный"
+    "post-type-production": "Опубликованный",
+    "blog-post-delete-title": "Удаление публикации",
+    "blog-post-delete-confirm": "Вы действительно хотите удалить эту публикацию?"
 }

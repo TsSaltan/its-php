@@ -117,4 +117,10 @@ class Post {
 	public function isProduction(): bool {
 		return $this->getType() == self::TYPE_PRODUCTION;
 	}
+
+	public function delete(): bool {
+		return Database::exec(
+			'DELETE FROM `blog-posts` WHERE `id` = :id', ['id' => $this->getId()]
+		)->affectedRows() > 0;
+	}
 }
