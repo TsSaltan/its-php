@@ -50,9 +50,10 @@ class Post {
 					$replacingFrom = $find[0][$i];
 					$replacingTo = null;
 					parse_str($find[2][$i], $params);
-					Hook::call('blog.post.' . $filterName, [$this, $params], function(?string $result) use (&$replacingTo){
-						$replacingTo = $result;
-					});
+					Hook::call('blog.post.' . $filterName, [$this, $params, $context], function(?string $result, ?string $output) use (&$replacingTo){
+						if(strlen($result) > 0)	$replacingTo = $result;
+						if(strlen($output) > 0)	$replacingTo = $output;
+					}, false, false);
 					$content = str_replace($replacingFrom, $replacingTo, $content);
 				}
 			}
