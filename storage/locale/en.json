@@ -35,5 +35,10 @@
     "blog-posts": "At blog",
     "post-title": "Post title",
     "post-alias": "Alias",
-    "post-alias-description": "URL-like alias"
+    "post-alias-description": "URL-like alias",
+    "post-author": "Author",
+    "post-author-undefined": "Undefined",
+    "post-timestamp": "Timestamps",
+    "post-create-time": "Created at",
+    "post-update-time": "Updated at"
 }

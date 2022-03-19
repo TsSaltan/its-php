@@ -35,5 +35,10 @@
     "blog-posts": "В блоге",
     "post-title": "Заголовок публикации",
     "post-alias": "Алиас",
-    "post-alias-description": "Алиас может использоваться в URL"
+    "post-alias-description": "Алиас может использоваться в URL",
+    "post-author": "Автор",
+    "post-author-undefined": "Не определён",
+    "post-timestamp": "Временные метки",
+    "post-create-time": "Создано",
+    "post-update-time": "Обновлено"
 }

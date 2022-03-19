@@ -18,14 +18,12 @@
 
                     <form action="<?=$this->makeURI('/dashboard/post-save/' . $post->getId())?>" method="POST">                    
                         <div class="panel-body">
-                            <div class="col-12">  
+                            <div class="col-12 col-lg-8">  
                                 <div class="form-group">
                                     <label><?=__('post-title')?></label>
                                     <input class="form-control" name="title" type="text" value="<?=$post->getTitle()?>">
                                 </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6">  
+          
                                 <div class="form-group">
                                     <label><?=__('post-alias')?></label>
                                     <input class="form-control" name="title" type="text" value="<?=$post->getAlias()?>">
@@ -33,10 +31,26 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-lg-3">  
-                                <div class="form-group">
-                                    <label><?=__('post-author')?></label>
-                                    <p class="help-block"><?=$author->get('login')?></p>
+                            <div class="col-12 col-lg-4">  
+                                <div class="col-12 col-lg-12">  
+                                    <div class="form-group">
+                                        <label><?=__('post-author')?></label>
+                                        <p>
+                                            <?php if($author->isAuthorized()): ?>
+                                            <a href="<?=$this->makeURI('/dashboard/user/' . $author->get('id'))?>" class="btn btn-default"><?=$author->get('login')?></a>
+                                            <?php else: ?>
+                                            <a href="#" class="btn btn-default btn-disabled" disabled><?=__('post-author-undefined')?></a>
+                                            <?php endif; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 col-lg-12">  
+                                    <div class="form-group">
+                                        <label><?=__('post-timestamp')?></label>
+                                        <p class="help-block"><strong><?=__('post-create-time')?></strong>:<em><?=$post->getCreateTime()?></em></p>
+                                        <p class="help-block"><strong><?=__('post-update-time')?></strong>:<em><?=$post->getUpdateTime()?></em></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -7,6 +7,7 @@ use tsframe\module\Paginator;
 use tsframe\module\blog\Blog;
 use tsframe\module\io\Input;
 use tsframe\module\io\Output;
+use tsframe\module\user\SingleUser;
 use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 
@@ -47,7 +48,7 @@ class BlogDashboard extends UserDashboard {
 		try {
 			$this->vars['author'] = User::getById($post->getAuthorId());
 		} catch (UserException $e){
-			$this->vars['author'] = User::unauthorized();
+			$this->vars['author'] = SingleUser::unauthorized();
 		}
 		$this->vars['title'] = __('menu/edit-blog-post');
 	}
