@@ -25,5 +25,15 @@
     "e-mail": "E-mail",
     "password": "Пароль",
     "password-auto": "Пароль будет создан автоматически",
-    "login": "Логин"
+    "login": "Логин",
+    "menu": {
+        "blog-writes": "Публикации блога",
+        "new-blog-post": "Новая публикация блога",
+        "edit-blog-post": "Редактирование публикации"
+    },
+    "blog-posts-num": "%d[публикация|публикации|публикаций]",
+    "blog-posts": "В блоге",
+    "post-title": "Заголовок публикации",
+    "post-alias": "Алиас",
+    "post-alias-description": "Алиас может использоваться в URL"
 }

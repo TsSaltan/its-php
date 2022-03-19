@@ -25,5 +25,15 @@
     "e-mail": "E-mail",
     "password": "Password",
     "password-auto": "Password will be generated automatically",
-    "login": "Login"
+    "login": "Login",
+    "menu": {
+        "blog-writes": "Blog posts",
+        "new-blog-post": "New blog post",
+        "edit-blog-post": "Post editing"
+    },
+    "blog-posts-num": "%d[write|writes]",
+    "blog-posts": "At blog",
+    "post-title": "Post title",
+    "post-alias": "Alias",
+    "post-alias-description": "URL-like alias"
 }

@@ -63,6 +63,11 @@ class Blog {
 		return new Post($post[0]['id'], $post[0]['alias'], $post[0]['title'], $post[0]['content'], $post[0]['create_ts'], $post[0]['update_ts'], $post[0]['author_id'], $post[0]['type']);
 	}
 
+	public static function getPostsNum(): int {
+		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts`')->fetch();
+		return $q[0]['c'] ?? 0;
+	}
+
 	public static function getPosts(int $offset = 0, int $limit = 10): array {
 		$posts = Database::exec('SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' FROM `blog-posts` ORDER BY `create_time` DESC LIMIT ' . $offset . ',' . $limit)->fetch();
 		$return = [];
@@ -73,7 +78,7 @@ class Blog {
 		return $return;
 	}
 
-	public static function isPostAliasExists(string $alias) {
+	public static function isPostAliasExists(string $alias): bool {
 		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts` WHERE `alias` = :alias', ['alias' => $alias])->fetch();
 		return ($q[0]['c'] ?? 0) > 0;
 	}

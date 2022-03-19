@@ -2,6 +2,7 @@
 namespace tsframe\module\blog;
 
 use tsframe\module\database\Database;
+use tsframe\module\io\Output;
 
 class Post {
 	const TYPE_TEMPLATE = 0;
@@ -36,19 +37,11 @@ class Post {
 	}
 
 	public function getTitle(): string {
-		return $this->title;
+		return Output::of($this->title)->specialChars()->quotes()->getData();
 	}
 
 	public function getContent(): string {
 		return $this->content;
-	}
-
-	public function getCreateTime(): int {
-		return $this->createTime;
-	}
-
-	public function getUpdateTime(): int {
-		return $this->updateTime;
 	}
 
 	public function getAuthorId(): int {
@@ -59,7 +52,17 @@ class Post {
 		return $this->type;
 	}
 
+	public function getCreateTime(string $format = 'Y-m-d H:i:s'){
+		return date($format, $this->createTime);
+	}
+
+	public function getUpdateTime(string $format = 'Y-m-d H:i:s'){
+		return date($format, $this->updateTime);
+	}
+
 	public function update(string $alias, string $title, string $content, int $authorId, int $type): bool {
+		$alias = Blog::generateAlias($alias);
+		
 		if( Database::exec(
 			'UPDATE `blog-posts` SET `alias` = :alias, `title` = :title, `content` = :content, `author_id` = :authorId,  `type` = :type, `update_time` = CURRENT_TIMESTAMP WHERE `id` = :id', 
 			[
