@@ -83,13 +83,4 @@
             </div>
         </div>
     </div>
-<script type="text/javascript">
-    // При клике выделяем содержимое pre
-    $('.log-meta pre').dblclick(function(e){ 
-        var range = document.createRange(); 
-        range.selectNode($(this)[0]); 
-        window.getSelection().removeAllRanges(); 
-        window.getSelection().addRange(range); 
-    });
-</script>
 <?php $this->incFooter()?>

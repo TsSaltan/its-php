@@ -7,7 +7,8 @@
         "clear": "Clear",
         "save": "Save",
         "sign-in": "Sign in",
-        "sign-up": "Sign up"
+        "sign-up": "Sign up",
+        "post": "Post"
     },
     "file-cache": "File cache",
     "database-cache": "Database cache",

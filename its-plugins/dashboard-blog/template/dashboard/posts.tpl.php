@@ -15,6 +15,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left"><?=__('blog-posts')?>: <b><?=__('blog-posts-num', $postsNum)?></b></div>
+                            <div class="panel-title pull-right"><a href="<?=$this->makeURI('/dashboard/blog/post/new')?>" class="btn btn-success btn-xs"><?=__('menu/new-blog-post')?></a></div>
                         </div>
 
                     <?php if($posts->isData()):?>
@@ -39,13 +40,4 @@
             </div>
         </div>
     </div>
-<script type="text/javascript">
-    // При клике выделяем содержимое pre
-    $('.log-meta pre').dblclick(function(e){ 
-        var range = document.createRange(); 
-        range.selectNode($(this)[0]); 
-        window.getSelection().removeAllRanges(); 
-        window.getSelection().addRange(range); 
-    });
-</script>
 <?php $this->incFooter()?>

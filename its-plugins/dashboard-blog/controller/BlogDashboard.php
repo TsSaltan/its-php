@@ -13,8 +13,9 @@ use tsframe\module\user\UserAccess;
 
 /**
  * @route GET 	/dashboard/blog/[posts:action]
- * @route GET  	/dashboard/blog/[post:action]/[:post]
- * @route POST  /dashboard/blog/post/[:post]/[save:action]
+ * @route GET  	/dashboard/blog/[post:action]/[i:post]
+ * @route GET|POST  	/dashboard/blog/post/[new:action]
+ * @route POST  /dashboard/blog/post/[i:post]/[save:action]
  */ 
 class BlogDashboard extends UserDashboard {
 	public function __construct(){
@@ -54,6 +55,25 @@ class BlogDashboard extends UserDashboard {
 		$this->vars['title'] = __('menu/edit-blog-post');
 	}
 
+	public function getNew(){
+		UserAccess::assertCurrentUser('blog');
+		$this->vars['title'] = __('menu/new-blog-post');
+	}
+
+	public function postNew(){
+		UserAccess::assertCurrentUser('blog');
+		
+		$data = Input::post()
+			->name('title')->string()->required()
+			->name('alias')->string()->required()
+			->name('content')->string()->required()
+			->name('type')->values(['0', '1'])->required()
+		->assert();
+
+		$post = Blog::createPost($data['title'], $data['content'], User::current()->get('id'), $data['type'], $data['alias']);
+		return Http::redirectURI('/dashboard/blog/post/' . $post->getId(), ['from' => 'post']);
+	}
+
 	public function postSave(){
 		UserAccess::assertCurrentUser('blog');
 		$postId = $this->params['post'];
@@ -67,6 +87,6 @@ class BlogDashboard extends UserDashboard {
 		->assert();
 
 		$res = $post->update($data['alias'], $data['title'], $data['content'], User::current()->get('id'), $data['type']);
-		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['result' => $res ? 'success' : 'fail']);
+		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['from' => 'edit', 'result' => $res ? 'success' : 'fail']);
 	}
 }
