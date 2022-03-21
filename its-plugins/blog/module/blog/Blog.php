@@ -14,7 +14,7 @@ class Blog {
 
 		$alias = self::getFreeAlias($alias);
 
-		$postId = Database::prepare('INSERT INTO `blog-posts` (`alias`, `title`, `content`, `author_id`, `type`) VALUES (:alias, :title, :content, :author_id, :type)')
+		$postId = Database::prepare('INSERT INTO `blog-posts` (`alias`, `title`, `content`, `author_id`, `type`, `create_time`, `update_time`) VALUES (:alias, :title, :content, :author_id, :type, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)')
 				->bind('alias', $alias)
 				->bind('title', $title)
 				->bind('content', $content)

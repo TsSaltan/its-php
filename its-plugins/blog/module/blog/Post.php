@@ -18,13 +18,13 @@ class Post {
 	protected $authorId;
 	protected $type;
 
-	public function __construct(int $id, string $alias, string $title, string $content, int $createTime, int $updateTime, int $authorId, int $type){
+	public function __construct(int $id, string $alias, string $title, string $content, ?int $createTime, ?int $updateTime, int $authorId, int $type){
 		$this->id = $id;
 		$this->alias = $alias;
 		$this->title = $title;
 		$this->content = $content;
-		$this->createTime = $createTime;
-		$this->updateTime = $updateTime;
+		$this->createTime = is_null($createTime) ? time() : $createTime;
+		$this->updateTime = is_null($updateTime) ? time() : $updateTime;
 		$this->authorId = $authorId;
 		$this->type = $type;
 	}

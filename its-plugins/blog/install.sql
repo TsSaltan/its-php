@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS `blog-posts` (
 	`title` VARCHAR(255) NOT NULL, 
 	`content` TEXT NOT NULL , 
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+	`update_time` TIMESTAMP NULL, 
 	`author_id` INT NOT NULL, 
 	`type` VARCHAR(1) NOT NULL, 
 	UNIQUE KEY (`alias`),
 	PRIMARY KEY (`id`)
-) ENGINE = InnoDB; 
+) CHARACTER SET utf8 COLLATE utf8_general_ci; 
