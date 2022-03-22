@@ -54,7 +54,11 @@
                                                 <tr>  
                                                     <th class="key-label"><?=$key?></th>    
                                                     <td>
+                                                        <?php if(strpos($value, "\n") === false): ?>
                                                         <input class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" value="<?=$value?>" placeholder="delete"/>
+                                                        <?php else: ?>
+                                                        <textarea class="form-control meta-field" data-parent="<?=$m['parent']?>" data-key="<?=$key?>" placeholder="delete"><?=$value?></textarea>
+                                                        <?php endif; ?>
                                                     </td>    
                                                 </tr>    
                                                 <?php endforeach?>
@@ -84,7 +88,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Value</label>
-                                            <input class="form-control" name='value' required/>
+                                            <!--input class="form-control" name='value' required/-->
+                                            <textarea class="form-control" name='value' rows='2' required></textarea>
                                         </div>
                                         <button class="btn btn-primary">Добавить</button>
                                     </form>
@@ -102,7 +107,7 @@
         let $form = $(form);
         var parent = document.querySelector('input[name=parent]').value;
         let key = document.querySelector('input[name=key]').value;
-        let value = document.querySelector('input[name=value]').value;
+        let value = document.querySelector('[name=value]').value;
 
         saveMeta(
             parent, key, value, 

@@ -27,7 +27,7 @@ class MetaDashboard extends UserDashboard {
 		$pages->setDataCallback(function($data){
 			$m = new Meta($data);
 			$metaData = $m->getData();
-			return ['parent' => $data, 'data' => Output::of($metaData)->quotes()->getData()];
+			return ['parent' => $data, 'data' => Output::of($metaData)->specialchars()->quotes()->getData()];
 		});
 
 		$this->vars['metaData'] = $pages;
