@@ -6,15 +6,9 @@ $langData = $tpl->vars['langData'];
 $langDataDelimeter = $tpl->vars['langDataDelimeter']; 
 $langDataKeys = $tpl->vars['langDataKeys']; 
 ?>
-<style type="text/css">
-    span.delimeter {
-        color:  rgb(100, 100, 200);
-        padding: 0 2px;
-        font-size: 14px;
-    }
-</style>
 
 <?php if($langEditor): ?>
+<div class="col-lg-12 table-lang-container">
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -55,4 +49,5 @@ $langDataKeys = $tpl->vars['langDataKeys'];
         </tr>
 
     </table>
+</div>
 <?php endif; ?>

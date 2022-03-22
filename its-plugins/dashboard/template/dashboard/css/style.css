@@ -209,3 +209,35 @@ progress {
 .w-100 {
   width: 100% !important;
 }
+
+/** Lang config styles **/
+.table-lang-container span.delimeter {
+ color:  rgb(100, 100, 200);
+ padding: 0 2px;
+ font-size: 14px;
+}
+
+.table-lang-container {
+ overflow-x: auto;
+}
+
+.table-lang-container thead th {
+ min-width: 150px;
+}
+
+@media (max-width: 650px){
+ .table-lang-container .input-group .input-group-addon {
+     display: inline-block;
+     border-radius: 4px 4px 0 0;
+     border: 1px solid #ccc;
+     font-size: 12px;
+     width: 100%;
+ }
+
+ .table-lang-container .input-group .form-control {
+     border-radius: 0 0 4px 4px;
+     height: 27px;
+     padding: 4px 8px;
+     font-size: 12px;
+ }
+}
