@@ -58,10 +58,10 @@ class Post {
 				}
 			}
 
-			return Output::of($content)->xss()->getData();
+			return $content;
 		}
 
-		return Output::of($this->content)->specialChars()->getData();
+		return $this->content;
 	}
 
 	public function getAuthorId(): int {
