@@ -208,11 +208,15 @@ class SingleUser {
 	 */
 	public function closeSession() : bool {
 		Http::setCookie(self::SESSION_KEY, null, ['expires' => -1]);
-		return Database::prepare('DELETE FROM `sessions` WHERE `user_id` = :id AND `key` = :key')
-				->bind('id', $this->id)
-				->bind('key', $_COOKIE[self::SESSION_KEY])
-				->exec()
-				->affectedRows() > 0;
+		if(isset($_COOKIE[self::SESSION_KEY])){
+			return Database::prepare('DELETE FROM `sessions` WHERE `user_id` = :id AND `key` = :key')
+					->bind('id', $this->id)
+					->bind('key', $_COOKIE[self::SESSION_KEY])
+					->exec()
+					->affectedRows() > 0;
+		}
+
+		return false;
 	}
 
 	/**
