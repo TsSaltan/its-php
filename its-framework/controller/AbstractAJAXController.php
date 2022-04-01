@@ -32,7 +32,7 @@ abstract class AbstractAJAXController extends AbstractController{
 		$this->responseCode = Http::CODE_OK;
 	}
 
-	public function sendData(array $data, int $messageCode = Http::CODE_OK){
+	public function sendData($data, int $messageCode = Http::CODE_OK){
 		$this->responseBody = $data;
 		$this->responseCode = $messageCode;
 	}
