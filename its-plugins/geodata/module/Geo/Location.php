@@ -26,16 +26,16 @@ class Location {
 	protected $city;
 
 	/**
-	 * @var int
+	 * @var float
 	 */
 	protected $lat;
 
 	/**
-	 * @var int
+	 * @var float
 	 */
 	protected $lon;
 
-	public function __construct(?string $country, ?string $region, ?string $city, ?int $lat = null, ?int $lon = null){
+	public function __construct(?string $country, ?string $region, ?string $city, ?float $lat = null, ?float $lon = null){
 		if(is_null($country)){
 			$this->country = new Country(-1, '');
 		} else {
@@ -89,16 +89,16 @@ class Location {
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getLat(): int {
+	public function getLat(): float {
 	    return $this->lat;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getLon(): int {
+	public function getLon(): float {
 	    return $this->lon;
 	}
 }
