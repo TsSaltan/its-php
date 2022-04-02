@@ -17,12 +17,19 @@ class GeoIP {
 		$ip = (is_null($ip) || strlen($ip) < 7) ? self::getClientIP() : $ip;
 
 		$data = Cache::toDatabase('geoip-' . $ip, function() use ($ip){
-			if(rand(1, 2) == 1){
-				$data = self::ipinfo($ip);
-			} else {
-				$data = self::ipapi($ip);
-			}
+			switch(rand(1, 3)){
+				case 1:
+					$data = self::ipinfo($ip);	
+					break;
 
+				case 2:
+					$data = self::ipapi($ip);
+					break;
+
+				case 3:
+					$data = self::ifconfig($ip);
+					break;
+			}
 			return $data;
 		});
 
@@ -84,6 +91,33 @@ class GeoIP {
 			'lon' => $json['lon'] ?? -1,
 			'org' => $json['isp'] ?? null,
 			'source' => 'ip-api.com',
+		];
+	}
+
+	/**
+	 * @link http://ifconfig.co/json
+	 */
+	public static function ifconfig(?string $ip = null){
+		$url = 'http://ifconfig.co/json' . (!is_null($ip) ? '?ip=' . $ip : '');
+		$data = file_get_contents($url);
+		$json = json_decode($data, true);
+
+		if(!is_array($json) || !isset($json['ip'])){
+			throw new GeoException('Invalid geo query (via ifconfig.co)', 0, [
+				'url' => $url,
+				'answer' => $data
+			]);
+		}
+
+		return [
+			'ip' => $json['ip'],
+			'country' => $json['country'] ?? null,
+			'city' => $json['city'] ?? null,
+			'region' => $json['region_name'] ?? null,
+			'lat' => $json['latitude'] ?? -1,
+			'lon' => $json['longitude'] ?? -1,
+			'org' => $json['asn_org'] ?? null,
+			'source' => 'ifconfig.co',
 		];
 	}
 }
