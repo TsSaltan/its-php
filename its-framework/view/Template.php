@@ -131,21 +131,25 @@ class Template {
 					$file .= '?';
 				}
 
-				
-				// По умолчанию версия файла (=кеширование) равно текущему месяцу (менее ресурсозатратно)
-				$version = date('my');
-
 				// Если включен режим разработчика, добавляем версию файла, чтоб измененный файл не кешировался
 				if(App::isDev()){
 					$ftime = 0;
 					if(file_exists($fileOring)){
 						// В некоторых случаях невозможно получить точное время изменения файла, поэтому нужно подавление warning
 						$ftime = @filemtime($fileOring);
-					}
 
-					if(!is_null($ftime) && $ftime > 0){
-						$version = implode('-', str_split($ftime, 4));
+						if(!is_null($ftime) && $ftime > 0){
+							$version = implode('-', str_split($ftime, 4));
+						} 
+						else {
+							$version = md5_file($fileOring);	
+						}
+					} else {
+						$version = date('hd-my');
 					}
+				} else {
+					// По умолчанию версия файла (=кеширование) равно текущему месяцу (менее ресурсозатратно)
+					$version = date('my');
 				}
 
 				$files[$key] = $file . 'v=' . $version;
