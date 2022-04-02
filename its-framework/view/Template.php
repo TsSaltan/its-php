@@ -111,6 +111,13 @@ class Template {
 	 */
 	public function getURIs(string $path): array {
 		$files = [];
+		$break = false;
+
+		Hook::call('template.resource', [$this, &$path, &$files, &$break]);
+		
+		if($break){
+			return $files;
+		}
 
 		if(substr($path, 0, 4) == 'http' || substr($path, 0, 2) == '//'){
 			// Абсолютные ссылки оставляем без изменения
