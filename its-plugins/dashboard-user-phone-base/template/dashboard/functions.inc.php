@@ -30,7 +30,8 @@ function uiPhoneField(string $value = null, string $name = 'phone', string $id =
 					},
 					//clearIncomplete: true,
 					showMaskOnHover: false,
-					autoUnmask: true
+					autoUnmask: true,
+					greedy: false
 				},
 				match: /[0-9]/,
 				replace: '#',

@@ -17322,7 +17322,7 @@ CREATE TABLE `country` (
   `id` bigint(20) NOT NULL,
   `name` varchar(52) NOT NULL,
   `alias` varchar(3) NOT NULL,
-  `phone_mask` VARCHAR(20) NULL DEFAULT NULL,
+  `phone_mask` VARCHAR(40) NULL DEFAULT NULL,
   `phone_prefix` VARCHAR(10) NULL DEFAULT NULL, 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -17384,7 +17384,7 @@ INSERT INTO `country` (`id`, `name`, `alias`, `phone_mask`, `phone_prefix`) VALU
 (49, 'Guatemala', 'GT', '+502-#-###-####', '+502'),
 (50, 'Guinea', 'GN', '+224-##-###-###', '+224'),
 (51, 'Guinea-Bissau', 'GW', '+245-#-######', '+245'),
-(52, 'Germany', 'DE', '+49-###-###', '+49'),
+(52, 'Germany', 'DE', '+49-###-###[-###][##]', '+49'),
 (53, 'Guernsey Island', 'GG', '+44-1481-#######', '+441481'),
 (54, 'Gibraltar', 'GI', '+350-###-#####', '+350'),
 (55, 'Honduras', 'HN', '+504-####-####', '+504'),
