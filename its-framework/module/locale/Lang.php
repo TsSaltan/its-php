@@ -42,9 +42,20 @@ class Lang {
 	 * Например localhost -> ru.localhost
 	 */
 	private static $autoRedirectToSubdomain = false;
+
+	/**
+	 * Если true, при автоматическом редиректе на языковой поддомен
+	 * будет убран поддомен www  
+	 * Например www.localhost -> ru.localhost
+	 */
+	private static $autoRedirectWithoutWWW = true;
 	
 	public static function setAutoRedirectToSubdomain(bool $redirect){
 		self::$autoRedirectToSubdomain = $redirect;
+	}
+
+	public static function setAutoRedirectWithoutWWW(bool $redirect){
+		self::$autoRedirectWithoutWWW = $redirect;
 	}
 
 	/**
@@ -84,8 +95,18 @@ class Lang {
 		self::$current = $lang;
 
 		$host = Http::getHostName();
-		$parts = explode('.', $host);
+		$subdomain = null;
 		$redirectRequired = false;
+		$parts = explode('.', $host);
+
+		if($parts[0] == 'www'){
+			if(!self::$autoRedirectWithoutWWW){
+				$subdomain = 'www.';
+			}
+			unset($parts[0]);
+			$parts = array_values($parts);
+			$host = str_replace('www.', null, $host);
+		}
 		
 		if(in_array($parts[0], self::$list)){
 			// if subdomain eq lang.domain.com
@@ -111,7 +132,7 @@ class Lang {
 		Http::setCookie(self::COOKIE_NAME, $lang, ['expires' => time() + 60*60*24, 'domain' => '.' . $baseDomain]);
 
 		if(!filter_var($host, FILTER_VALIDATE_IP) && $redirectRequired && self::$autoRedirectToSubdomain){
-			Http::redirect(Http::getProtocol() . '://' . $domain . $_SERVER['REQUEST_URI']);
+			Http::redirect(Http::getProtocol() . '://' . $subdomain . $domain . $_SERVER['REQUEST_URI']);
 		}
 
 		return true;
@@ -136,7 +157,7 @@ class Lang {
 		// 0. Опредеяем по домену (например ru.localhost)
 		$host = Http::getHostName();
 		$parts = explode('.', $host);
-		$langs[] = $parts[0];
+		$langs[] = $parts[0] == 'www' ? $parts[1] : $parts[0];
 
 
 		// 1. Смотрим запись в $_GET
