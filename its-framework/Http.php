@@ -17,6 +17,7 @@ class Http {
 	const CODE_SERVER_ERROR = 	500;
 
 	const TYPE_HTML = 'text/html';
+	const TYPE_XML = 'text/xml';
 	const TYPE_PLAIN = 'text/plain';
 	const TYPE_JSON = 'application/json';
 	const TYPE_JAVASCRIPT = 'text/javascript';
