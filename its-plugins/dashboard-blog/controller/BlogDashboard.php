@@ -2,8 +2,11 @@
 namespace tsframe\controller;
 
 use tsframe\Http;
+use tsframe\Plugins;
 use tsframe\exception\UserException;
 use tsframe\module\Paginator;
+use tsframe\module\SitemapGenerator;
+use tsframe\module\SitemapItem;
 use tsframe\module\blog\Blog;
 use tsframe\module\io\Input;
 use tsframe\module\io\Output;
@@ -62,6 +65,11 @@ class BlogDashboard extends UserDashboard {
 		$this->vars['postLink'] = false;
 		if(is_callable(self::$linkMaker)){
 			$this->vars['postLink'] = call_user_func(self::$linkMaker, $post);
+
+			if(Plugins::isEnabled('sitemap')){
+				$item = new SitemapItem($this->vars['postLink'], $post->getUpdateTime(SitemapItem::DATE_FORMAT), 'monthly', 0.8);
+				$item->addToGenerator();
+			}
 		}
 	}
 
@@ -105,6 +113,14 @@ class BlogDashboard extends UserDashboard {
 		$postId = $this->params['post'];
 		$post = Blog::getPostById($postId);
 		$post->delete();
+
+		if(is_callable(self::$linkMaker)){
+			$this->vars['postLink'] = call_user_func(self::$linkMaker, $post);
+
+			if(Plugins::isEnabled('sitemap')){
+				SitemapGenerator::removeUrl($this->vars['postLink']);
+			}
+		}
 		
 		return Http::redirectURI('/dashboard/blog/posts', ['from' => 'delete']);
 	}

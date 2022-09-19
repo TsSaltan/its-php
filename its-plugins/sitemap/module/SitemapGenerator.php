@@ -53,6 +53,12 @@ class SitemapGenerator {
 		self::saveData();
 	}
 
+	public static function removeUrl($url){
+		self::loadData();
+		unset(self::$items[$url]);
+		self::saveData();
+	}
+
 	public static function isItemExists(SitemapItem $item): bool {
 		return isset(self::$items[$item->getLoc()]);
 	}
