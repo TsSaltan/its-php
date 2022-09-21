@@ -11,8 +11,9 @@ class SitemapItem {
 	protected $lastmod = 0;
 	protected $changefreq = 'monthly';
 	protected $priority = 0.8;
+	protected $alternate = [];
 
-	public function __construct(string $loc, $lastmod, string $changefreq, float $priority){
+	public function __construct(string $loc, $lastmod = 0, string $changefreq = 'monthly', float $priority = 0.8){
 		$this->setLoc($loc);
 		
 		if(is_int($lastmod)){
@@ -90,11 +91,36 @@ class SitemapItem {
 			'loc' => $this->getLoc(),
 			'changefreq' => $this->getChangefreq(),
 			'priority' => $this->getPriority(),
-			'lastmod' => $this->getLastmodTs()
+			'lastmod' => $this->getLastmodTs(),
+			'alternate' => $this->getAlternate()
 		];
+	}
+
+	public function addAlternate(string $lang, string $url){
+		if(!filter_var($url, FILTER_VALIDATE_URL)){
+			throw new SitemapException('Invalid alternate "url" value: ' . $url);
+		}
+		
+		$this->alternate[$lang] = $url;
+	}
+
+	public function removeAlternate(string $lang){
+		unset($this->alternate[$lang]);
+	}
+
+	public function getAlternate(): array {
+		return $this->alternate;
+	}
+
+	public function hasAlternate(): bool {
+		return sizeof($this->alternate) > 0;
 	}
 
 	public function addToGenerator(){
 		SitemapGenerator::addItem($this);
+	}
+
+	public function removeFromGenerator(){
+		SitemapGenerator::removeUrl($this->getLoc());
 	}
 }

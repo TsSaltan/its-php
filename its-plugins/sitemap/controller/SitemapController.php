@@ -25,7 +25,8 @@ class SitemapController extends AbstractController {
 				$this->responseType = Http::TYPE_XML;
 				$dom = new \DOMDocument('1.0', 'utf-8');
 				$urlset = $dom->createElement('urlset');
-				$urlset->setAttribute('xmlns','http://www.sitemaps.org/schemas/sitemap/0.9');
+				$urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+				$urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 
 				foreach($sitemap as $item){
 					$url = $dom->createElement('url');
@@ -36,6 +37,16 @@ class SitemapController extends AbstractController {
 					);
 					$loc->appendChild($text);
 					$url->appendChild($loc);
+
+					if($item->hasAlternate()){
+						foreach($item->getAlternate() as $lang => $href){
+							$alt = $dom->createElement('xhtml:link');
+							$alt->setAttribute('rel', 'alternate');
+							$alt->setAttribute('hreflang', $lang);
+							$alt->setAttribute('href', $href);
+							$url->appendChild($alt);
+						}
+					}
 
 					$changefreq = $dom->createElement('changefreq');
 					$text = $dom->createTextNode($item->getChangefreq());

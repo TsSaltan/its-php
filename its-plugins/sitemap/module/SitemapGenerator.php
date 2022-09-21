@@ -22,6 +22,11 @@ class SitemapGenerator {
 		foreach($items as $item){
 			try {
 				$i = new SitemapItem($item['loc'], $item['lastmod'], $item['changefreq'], $item['priority']);
+				if(isset($item['alternate']) && sizeof($item['alternate']) > 0){
+					foreach($item['alternate'] as $lang => $href){
+						$i->addAlternate($lang, $href);
+					}
+				}
 			} catch (SitemapException $e){
 				continue;
 			}
