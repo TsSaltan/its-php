@@ -39,6 +39,7 @@ class UserAJAX extends AbstractAJAXController{
 			switch ($action) {
 				case 'user/login':
 				case 'user/register':
+				case 'user/restore':
 					if($user->isAuthorized()){
 						return $this->sendError('You already authorized', 1);
 					}
@@ -51,6 +52,31 @@ class UserAJAX extends AbstractAJAXController{
 			}
 
 			switch ($action) {
+				case 'user/restore':
+					$data = $input->name('email')->required()
+						  	  	  ->assert();
+
+					$users = User::get(['email' => $data['email']]);
+					if(sizeof($users) > 0){
+						/* @var SingleUser $u*/
+						$u = array_values($users)[0];
+						try {
+							$session = $u->createSession(false);
+							Hook::call('user.restore-password', [$u, $session['session_key']], function($result){
+								if($result){
+									$this->sendOK();
+								} else {
+									throw new UserException('Password restoring calcelled');
+								}
+							});
+						} catch(UserException $e){
+							$this->sendError('Password restoring calcelled', 20);
+						}
+					}
+
+					$this->sendError('Cannot restore password', 21);
+					break;
+
 				case 'user/login':
 					$data = $input->name('login')->required()
 								  ->name('password')->password()

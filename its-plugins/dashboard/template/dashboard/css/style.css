@@ -241,3 +241,9 @@ progress {
      font-size: 12px;
  }
 }
+
+a.forgot-link {
+    display: block;
+    margin: 1px auto;
+    text-align: center;
+}

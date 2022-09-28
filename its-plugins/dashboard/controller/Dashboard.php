@@ -25,6 +25,8 @@ use tsframe\view\HtmlTemplate;
  * @route GET /dashboard
  * 
  * @route GET /dashboard/[auth|logout|config|config:action]
+ * @route GET /dashboard/[auth-restore:action]
+ * @route GET /dashboard/[auth-restore:action]/[:sessionKey]
  * @route POST /dashboard/[config:action]
  * @route POST /dashboard/config/[theme|siteinfo|setmode|lang:action]
  */
@@ -52,12 +54,12 @@ class Dashboard extends AbstractController{
 		$this->currentUser = User::current();
 
 		// Неавторизованных на авторизацию
-		if(!$this->currentUser->isAuthorized() && $action != 'auth'){
+		if(!$this->currentUser->isAuthorized() && !($action == 'auth' || $action == 'auth-restore')){
 			$currentUrl = $_SERVER['REQUEST_URI'];
 			Http::redirect(Http::makeURI('/dashboard/auth', ['redirect' => $currentUrl]));
 		} 
 		// Если авторизованный открывает страницу логина - перекидываем на redirect или на главную
-		elseif($this->currentUser->isAuthorized() && $action == 'auth'){
+		elseif($this->currentUser->isAuthorized() && ($action == 'auth' || $action == 'auth-restore')){
 			// Редирект только внутри домена
 			if(isset($_GET['redirect']) && strpos($_GET['redirect'], '://') === false){
 				$url = $_GET['redirect'];
@@ -131,6 +133,21 @@ class Dashboard extends AbstractController{
 
 		if(isset($_GET['save']) && $_GET['save'] == 'success'){
 			$this->vars['alert']['success'][] = 'Настройки успешно сохранены';
+		}
+	}
+
+	public function getAuthRestore(){
+		if(isset($this->params['sessionKey'])){
+			$user = User::current($this->params['sessionKey']);
+			if($user->isAuthorized()){
+				$user->closeSession();
+				$user->createSession(true);
+				return Http::redirectURI('/dashboard/user/me/edit', [], 'password');
+			}
+		}
+
+		if(isset($_GET['from']) && $_GET['from'] == 'auth'){
+			$this->vars['alert']['info'] = __('message/auth-link-sent');
 		}
 	}
 

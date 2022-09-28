@@ -10,7 +10,8 @@
         "sign-up": "Sign up",
         "post": "Post",
         "delete": "Delete",
-        "open-link": "Open link"
+        "open-link": "Open link",
+        "restore-password": "Restore password"
     },
     "file-cache": "File cache",
     "database-cache": "Database cache",
@@ -50,5 +51,10 @@
     "post-type-production": "Published",
     "blog-post-delete-title": "Post deleting",
     "blog-post-delete-confirm": "Do you really want to delete this post?",
-    "unnamed": "[Unnamed user]"
+    "unnamed": "[Unnamed user]",
+    "forgot-password": "Forgot password?",
+    "password-restore": "Restore password",
+    "message": {
+        "auth-link-sent": "Your authorization link for password changing was sent to email"
+    }
 }

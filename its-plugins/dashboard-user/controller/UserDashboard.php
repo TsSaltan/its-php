@@ -117,6 +117,7 @@ class UserDashboard extends Dashboard {
 			  ->name('passwordEnabled')->required()
 			  ->name('emailOnRegister')->required()
 			  ->name('loginOnRegister')->required()
+			  ->name('isRestorePassword')->required()
 			  ->name('access')->required()->array()
 			 ->assert();
 
@@ -126,6 +127,7 @@ class UserDashboard extends Dashboard {
 		UserConfig::setPasswordEnabled(boolval($_POST['passwordEnabled']));
 		UserConfig::setEmailOnRegister(boolval($_POST['emailOnRegister']));
 		UserConfig::setLoginOnRegister(boolval($_POST['loginOnRegister']));
+		UserConfig::setRestorePassword(boolval($_POST['isRestorePassword']));
 
 		Config::set('access', $_POST['access']);
 

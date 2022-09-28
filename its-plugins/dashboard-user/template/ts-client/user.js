@@ -3,6 +3,10 @@ var tsUser = {
          this.query('login', form);
      },
 
+     restore: function(form){
+         this.query('restore', form);
+     },
+
     register: function(form){
         this.query('register', form);
     },

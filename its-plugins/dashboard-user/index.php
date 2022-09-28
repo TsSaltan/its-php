@@ -6,7 +6,6 @@
  */
 namespace tsframe;
 
-use PHPMailer\PHPMailer\PHPMailer;
 use tsframe\Config;
 use tsframe\Http;
 use tsframe\controller\Dashboard;
@@ -49,7 +48,7 @@ Hook::register('menu.render.dashboard-admin-sidebar', function(MenuItem $menu){
  * Сохраняем права для пользователей после установки скрипта
  */
 Hook::registerOnce('plugin.install', function(){
-	Plugins::required('dashboard', 'user');
+	Plugins::required('dashboard', 'user', 'mailer');
 	return [
 		
 		PluginInstaller::withKey('access.user.self')
@@ -115,6 +114,27 @@ Hook::register('template.dashboard.config', function(Template $tpl){
 	$tpl->var('loginEnabled', UserConfig::isLoginEnabled());
 	$tpl->var('emailOnRegister', UserConfig::isEmailOnRegister());
 	$tpl->var('loginOnRegister', UserConfig::isLoginOnRegister());
+	$tpl->var('isRestorePassword', UserConfig::isRestorePassword());
 	$tpl->var('accesses', Config::get('access'));
 	$tpl->inc('user_config');
 });
+
+/**
+ * Отправка e-mail при восстановлении пароля
+ */
+Hook::register('user.restore-password', function(SingleUser $user, $sessionKey){
+	if(UserConfig::isRestorePassword()){
+		$mail = new Mailer;
+		$mail->addAddress($user->get('email'));
+		$mail->isHTML(true);
+    	$mail->Subject = "Данные авторизации " . $_SERVER['HTTP_HOST'];
+    	$link = Http::makeURI('/dashboard/auth-restore/' . $sessionKey);
+    	$message = "<p>Для авторизации и смены пароля перейдите по ссылке: <a href='$link'>$link</a></p>";
+    	$mail->Body = $message;
+    	$mail->send();
+    	var_dump('SEND !!!');
+    	return true;
+	}
+
+	return false;
+}, Hook::MIN_PRIORITY);

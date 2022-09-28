@@ -3,7 +3,7 @@
     $userPane = $this->uiCollapsePanel();
     $userPane->setId('user');
     $userPane->header($this->uiIcon('user') . ' Настройки пользователей');
-    $userPane->body(function() use ($registerEnabled, $socialEnabled, $loginEnabled, $passwordEnabled, $emailOnRegister, $loginOnRegister, $accesses){
+    $userPane->body(function() use ($isRestorePassword, $registerEnabled, $socialEnabled, $loginEnabled, $passwordEnabled, $emailOnRegister, $loginOnRegister, $accesses){
     ?>
         <h3 style="margin: 0 10px 10px 0;">Настройка авторизации</h3>
         <div class="row">
@@ -79,6 +79,20 @@
                     </div>
                     <div class="radio">
                         <label><input type="radio" name="emailOnRegister" value="0" <?=(!$emailOnRegister)?'checked':''?>> Не отправлять письмо</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label>Восстановление пароля через e-mail</label>
+                    <div class="radio">
+                        <label><input type="radio" name="isRestorePassword" value="1" <?=($isRestorePassword)?'checked':''?>> Включено</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="isRestorePassword" value="0" <?=(!$isRestorePassword)?'checked':''?>> Отключено</label>
                     </div>
                 </div>
             </div>

@@ -34,6 +34,18 @@
             echo $tabPane->render()->addClass('login-panel');
             ?>
         </div>
+
+        <div class="col-md-4 col-md-offset-4">
+            <?php 
+            $forgot = $this->uiPanel('default');
+            $forgot->body(function(){
+                ?>
+                    <a href="<?=$this->makeURI('/dashboard/auth-restore')?>" class="forgot-link"><?=__('forgot-password')?></a>
+                <?php
+            });
+            echo $forgot->render();
+            ?>
+        </div>
     </div>
 </div>
 <?php $this->incFooter(); ?>

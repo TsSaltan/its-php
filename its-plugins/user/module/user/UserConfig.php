@@ -81,4 +81,18 @@ class UserConfig {
 	public static function setLoginOnRegister(bool $value) {
 		Config::set('user.auth.loginOnRegister', $value);
 	}
+
+	/**
+	 * Включить возможность восстанавливать пароль
+	 * @return boolean (default: false)
+	 */
+	public static function isRestorePassword(): bool {
+		$restore = Config::get('user.auth.restorePassword');
+		return is_null($restore) ? false : boolval($restore);
+	}
+
+	
+	public static function setRestorePassword(bool $value) {
+		Config::set('user.auth.restorePassword', $value);
+	}
 }

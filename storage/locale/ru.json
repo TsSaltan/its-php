@@ -10,7 +10,8 @@
         "sign-up": "Создать аккаунт",
         "post": "Опубликовать",
         "delete": "Удалить",
-        "open-link": "Перейти по ссылке"
+        "open-link": "Перейти по ссылке",
+        "restore-password": "Восстановить пароль"
     },
     "file-cache": "Файловый кэш",
     "database-cache": "Кэш в базе данных",
@@ -50,5 +51,10 @@
     "post-type-production": "Опубликованный",
     "blog-post-delete-title": "Удаление публикации",
     "blog-post-delete-confirm": "Вы действительно хотите удалить эту публикацию?",
-    "unnamed": "[Без имени]"
+    "unnamed": "[Без имени]",
+    "forgot-password": "Забыли пароль?",
+    "password-restore": "Восстановление пароля",
+    "message": {
+        "auth-link-sent": "Ссылка для авторизации и смены пароля отправлена на указанный e-mail"
+    }
 }
