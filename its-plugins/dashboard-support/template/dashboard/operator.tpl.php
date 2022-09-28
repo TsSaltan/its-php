@@ -37,8 +37,18 @@
                                                 <?php foreach ($chats->getData() as $chat):?>
                                                 <tr class="chat-item <?=((!$chat->isAnswered() && $chat->getStatus() > 0) ? 'chat-danger' : '')?>" onclick="document.location.replace('<?=$this->makeURI('/dashboard/operator/chat/' . $chat->getId())?>')">
                                                     <td>
-                                                        <?php $owner = $chat->getOwner()?>
+                                                        <?php 
+                                                        $owner = $chat->getOwner();
+                                                        if($owner->get('id') > -1):
+                                                    ?>
                                                         <a href="<?=$this->makeURI('/dashboard/user/' . $owner->get('id'))?>" class='btn btn-default btn-block' target="_blank"><?=$owner->get('login')?></a>
+                                                    <?php 
+                                                        else: 
+                                                    ?>
+                                                        <a href="#" class='btn btn-default btn-block btn-disabled'><?=__('unnamed')?></a>
+                                                    <?php 
+                                                        endif; 
+                                                    ?>
                                                     </td>
                                                     <td><?=$chat->getTitle()?></td>
                                                     <?php if($chat->getStatus() == 1):?>

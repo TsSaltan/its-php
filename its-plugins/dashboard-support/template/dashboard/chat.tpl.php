@@ -75,12 +75,7 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body" id="chat-container">
                         <ul class="chat" id="chat-content">
-                            <?php foreach($chatMessages as $message):?>
-                                <?php  $this->vars['messageAuthor'] = $message->getOwner()->get('login') ?>
-                                <?php  $this->vars['messageTime'] = date('Y-m-d h:i:s', $message->getDate()) ?>
-                                <?php  $this->vars['messageText'] = $message->getMessage() ?>
-                                <?php  $this->incMessage() ?>
-                            <?php endforeach?>
+                            <?php $this->inc('chat-messages'); ?>
                         </ul>
                     </div>
                     <!-- /.panel-body -->

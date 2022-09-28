@@ -2,6 +2,7 @@
 namespace tsframe\controller;
 
 use tsframe\Http;
+use tsframe\exception\AccessException;
 use tsframe\module\Log;
 use tsframe\module\Paginator;
 use tsframe\module\io\Input;
