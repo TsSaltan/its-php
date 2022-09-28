@@ -128,7 +128,7 @@ class User{
 	 * @return SingleUser
 	 */
 	public static function current(?string $sessionKey = null) : SingleUser {
-		return Cache::toVar('currentUser', function() use ($sessionKey){
+		return Cache::toVar('currentUser_'.$sessionKey, function() use ($sessionKey){
 			return SingleUser::current($sessionKey);
 		});
 	}
