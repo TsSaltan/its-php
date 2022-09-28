@@ -34,7 +34,7 @@
             echo $tabPane->render()->addClass('login-panel');
             ?>
         </div>
-
+        <?php if($isRestorePassword): ?>
         <div class="col-md-4 col-md-offset-4">
             <?php 
             $forgot = $this->uiPanel('default');
@@ -46,6 +46,7 @@
             echo $forgot->render();
             ?>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 <?php $this->incFooter(); ?>

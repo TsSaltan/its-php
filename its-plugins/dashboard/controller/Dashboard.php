@@ -341,6 +341,7 @@ class Dashboard extends AbstractController{
 		$this->vars['socialEnabled'] = UserConfig::isSocialEnabled();
 		$this->vars['loginEnabled'] = UserConfig::isLoginEnabled();
 		$this->vars['passwordEnabled'] = UserConfig::isPasswordEnabled();
+		$this->vars['isRestorePassword'] = UserConfig::isRestorePassword();
 		$this->vars['socialLoginTemplate'] = (UserConfig::isSocialEnabled()) ? SocialLogin::getWidgetCode() : null;
 
 		$this->vars['dev_mode'] = Config::get('dev_mode');
