@@ -49,5 +49,6 @@
     "post-type-draft": "Черновик",
     "post-type-production": "Опубликованный",
     "blog-post-delete-title": "Удаление публикации",
-    "blog-post-delete-confirm": "Вы действительно хотите удалить эту публикацию?"
+    "blog-post-delete-confirm": "Вы действительно хотите удалить эту публикацию?",
+    "unnamed": "[Без имени]"
 }

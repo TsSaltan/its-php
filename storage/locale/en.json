@@ -49,5 +49,6 @@
     "post-type-draft": "Draft",
     "post-type-production": "Published",
     "blog-post-delete-title": "Post deleting",
-    "blog-post-delete-confirm": "Do you really want to delete this post?"
+    "blog-post-delete-confirm": "Do you really want to delete this post?",
+    "unnamed": "[Unnamed user]"
 }
