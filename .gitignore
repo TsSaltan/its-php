@@ -4,3 +4,4 @@ ts-config.json
 vendor/*
 test.*
 .phpintel/*
+.idea/*
