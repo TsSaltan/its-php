@@ -15,7 +15,10 @@
     <!-- Bootstrap Core CSS -->
     <?php $this->css(
         "css/style.css", 
-        "cdn:bootstrap@3.3.2/dist/css/bootstrap.min.css", 
+        
+        //"cdn:bootstrap@3.3.2/dist/css/bootstrap.min.css", 
+        "cdn:bootstrap@4.6.2/dist/css/bootstrap.min.css", 
+
         "cdn:metismenu@1.1.3/dist/metisMenu.min.css", 
         "css/timeline.css", 
         "css/startmin.css",
@@ -38,7 +41,9 @@
     <?php $this->js("cdn:jquery@2.1.3/dist/jquery.min.js"); ?>
 
     <!-- Bootstrap Core JavaScript -->
-    <?php $this->js("cdn:bootstrap@3.3.2/dist/js/bootstrap.min.js"); ?>
+    <?php /*$this->js("cdn:bootstrap@3.3.2/dist/js/bootstrap.min.js");*/ ?>
+    <?php $this->js("cdn:bootstrap@4.6.2/dist/js/bootstrap.min.js"); ?>
+    <?php /*$this->js("cdn:bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js");*/ ?>
 
     <!-- Metis Menu Plugin JavaScript -->
     <?php $this->js("cdn:metismenu@1.1.3/dist/metisMenu.min.js"); ?>

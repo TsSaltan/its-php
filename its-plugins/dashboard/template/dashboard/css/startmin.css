@@ -115,8 +115,18 @@ body {
     padding: 15px;
 }
 
+.sidebar ul{
+    flex-direction: column;
+}
+
 .sidebar ul li {
     border-bottom: 1px solid #e7e7e7;
+}
+
+.sidebar .nav li a{
+    position: relative;
+    display: block;
+    padding: 10px 15px;
 }
 
 .sidebar ul li a.active {
@@ -153,7 +163,8 @@ body {
         z-index: 1;
         position: absolute;
         width: 250px;
-        margin-top: 51px;
+        top: 51px;
+        left: 0px;
     }
 
     .navbar-top-links .dropdown-messages,
