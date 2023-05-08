@@ -36,10 +36,10 @@ class Blog {
 		return self::getPostById($postId);
 	}
 
-	public static function getFreeAlias(string $alias){
+	public static function getFreeAlias(string $alias, string $type = 'post'){
 		$originalAlias = $alias;
 		$ai = 0;
-		while(self::isPostAliasExists($alias)){
+		while(self::isAliasExists($alias, $type)){
 			$alias = $originalAlias . '-' . ++$ai;
 		}
 
@@ -97,8 +97,15 @@ class Blog {
 		return $return;
 	}
 
-	public static function isPostAliasExists(string $alias): bool {
-		$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts` WHERE `alias` = :alias', ['alias' => $alias])->fetch();
+	public static function isAliasExists(string $alias, string $type = 'post'): bool {
+		if($type == 'post'){
+			$q = Database::exec('SELECT COUNT(*) as c FROM `blog-posts` WHERE `alias` = :alias', ['alias' => $alias])->fetch();
+		}
+		elseif($type == 'category'){
+			$q = Database::exec('SELECT COUNT(*) as c FROM `blog-categories` WHERE `alias` = :alias', ['alias' => $alias])->fetch();
+		} else {
+			return false;
+		}
 		return ($q[0]['c'] ?? 0) > 0;
 	}
 }
