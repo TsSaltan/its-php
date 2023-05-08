@@ -8,6 +8,7 @@ use tsframe\module\Paginator;
 use tsframe\module\SitemapGenerator;
 use tsframe\module\SitemapItem;
 use tsframe\module\blog\Blog;
+use tsframe\module\blog\Category;
 use tsframe\module\io\Input;
 use tsframe\module\io\Output;
 use tsframe\module\user\SingleUser;
@@ -15,7 +16,7 @@ use tsframe\module\user\User;
 use tsframe\module\user\UserAccess;
 
 /**
- * @route GET 		/dashboard/blog/[posts:action]
+ * @route GET 		/dashboard/blog/[posts|categories:action]
  * @route GET  		/dashboard/blog/[post:action]/[i:post]
  * @route GET|POST 	/dashboard/blog/post/[new:action]
  * @route POST  	/dashboard/blog/post/[i:post]/[save|delete:action]
@@ -30,12 +31,25 @@ class BlogDashboard extends UserDashboard {
 		$this->setActionPrefix(null);
 	}
 
+	public function getCategories(){
+		UserAccess::assertCurrentUser('blog');
+		$this->vars['title'] = __('menu/blog-categories');
+
+		$count = Category::getNum();
+		$pages = new Paginator([], 10);
+		$pages->setDataSize($count);
+
+		$pages->setTotalDataCallback(function($offset, $limit){
+			return Category::getList($offset, $limit);
+		});
+
+		$this->vars['categories'] = $pages;
+		$this->vars['catsNum'] = $count;
+	}
+
 	public function getPosts(){
 		UserAccess::assertCurrentUser('blog');
-
 		$this->vars['title'] = __('menu/blog-writes');
-		
-		// Count and pages
 		$count = Blog::getPostsNum();
 		$pages = new Paginator([], 10);
 		$pages->setDataSize($count);

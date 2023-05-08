@@ -32,6 +32,7 @@
     "login": "Логин",
     "menu": {
         "blog-writes": "Публикации",
+        "blog-categories": "Категории публикаций",
         "new-blog-post": "Новая публикация",
         "edit-blog-post": "Редактирование публикации"
     },

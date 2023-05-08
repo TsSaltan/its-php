@@ -7,6 +7,22 @@ use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 
 class Category {
+	public static function getNum(): int {
+		$c = Database::exec('SELECT COUNT(*) as c FROM `blog-post-to-category`')->fetch();
+		return $c[0]['c'] ?? -1;
+	}
+
+	public static function getList($offset, $limit): array {
+		$datas = Database::exec('SELECT * FROM `blog-categories` ORDER BY `title` ASC LIMIT ' . $offset . ',' . $limit)->fetch();
+		$cats = [];
+		foreach($datas as $data){
+			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
+		}
+
+		return $cats;
+
+	}
+
 	public static function getById(int $id){
 		$data = Database::exec(
 			'SELECT * FROM `blog-categories` WHERE `id` = :id', ['id' => $id]

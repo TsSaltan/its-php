@@ -32,6 +32,7 @@
     "login": "Login",
     "menu": {
         "blog-writes": "Blog posts",
+        "blog-categories": "Post categories",
         "new-blog-post": "New blog post",
         "edit-blog-post": "Post editing"
     },
