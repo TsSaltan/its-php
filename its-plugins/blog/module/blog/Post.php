@@ -2,6 +2,7 @@
 namespace tsframe\module\blog;
 
 use tsframe\Hook;
+use tsframe\module\blog\Category;
 use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 
@@ -17,6 +18,7 @@ class Post {
 	protected $updateTime;
 	protected $authorId;
 	protected $type;
+	protected $categories = [];
 
 	public function __construct(int $id, string $alias, string $title, string $content, ?int $createTime, ?int $updateTime, int $authorId, int $type){
 		$this->id = $id;
@@ -35,6 +37,19 @@ class Post {
 
 	public function getAlias(): string {
 		return $this->alias;
+	}
+
+	public function getCategories(): array {
+		if(sizeof($this->categories) == 0){
+			$this->categories = Category::getById($this->getId());
+		}
+
+		return $this->categories;
+	}
+
+	public function setCategories(array $categories){
+		$this->categories = [];
+		Category::setPostCategories($categories, $this);
 	}
 
 	public function getTitle(): string {
