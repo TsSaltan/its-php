@@ -7,6 +7,14 @@ use tsframe\module\database\Database;
 use tsframe\module\io\Output;
 
 class Category {
+	public static function create(string $title, ?string $alias = null): Category {
+		$alias = strlen($alias) == 0 ? Blog::generateAlias($title) : Blog::generateAlias($alias);
+		$alias = Blog::getFreeAlias($alias, 'category');
+		$id = Database::exec('INSERT INTO `blog-categories` (`title`, `alias`) VALUES (:title, :alias)', ['title' => $title, 'alias' => $alias])->lastInsertId();
+
+		return self::getById($id);
+	}
+
 	public static function getNum(): int {
 		$c = Database::exec('SELECT COUNT(*) as c FROM `blog-post-to-category`')->fetch();
 		return $c[0]['c'] ?? -1;

@@ -20,6 +20,7 @@ use tsframe\module\user\UserAccess;
  * @route GET  		/dashboard/blog/[post:action]/[i:post]
  * @route GET|POST 	/dashboard/blog/post/[new:action]
  * @route POST  	/dashboard/blog/post/[i:post]/[save|delete:action]
+ * @route POST  	/dashboard/blog/[create-category:action]
  */ 
 class BlogDashboard extends UserDashboard {
 	protected static $linkMaker;
@@ -137,5 +138,22 @@ class BlogDashboard extends UserDashboard {
 		}
 		
 		return Http::redirectURI('/dashboard/blog/posts', ['from' => 'delete']);
+	}
+
+	public function postCreateCategory(){
+		UserAccess::assertCurrentUser('blog');
+
+		try {
+			$data = Input::post()
+				->name('title')->string()->notEmpty()->required()
+				->name('alias')->string()->optional()
+			->assert();
+			
+			$category = Category::create($data['title'], $data['alias']);
+		} catch (\Exception $e){
+			return Http::redirectURI('/dashboard/blog/categories', ['create' => 'fail']);
+		}
+
+		return Http::redirectURI('/dashboard/blog/categories', ['create' => 'success'], 'category' . $category->getId());
 	}
 }
