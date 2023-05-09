@@ -20,6 +20,8 @@ use tsframe\module\user\UserAccess;
  * @route GET  		/dashboard/blog/[post:action]/[i:post]
  * @route GET|POST 	/dashboard/blog/post/[new:action]
  * @route POST  	/dashboard/blog/post/[i:post]/[save|delete:action]
+ * @route GET|POST	/dashboard/blog/[category:action]/[i:category]
+ * @route POST  	/dashboard/blog/[delete-category:action]/[i:category]
  * @route POST  	/dashboard/blog/[create-category:action]
  */ 
 class BlogDashboard extends UserDashboard {
@@ -46,6 +48,11 @@ class BlogDashboard extends UserDashboard {
 
 		$this->vars['categories'] = $pages;
 		$this->vars['catsNum'] = $count;
+
+		if(isset($_GET['action']) && in_array($_GET['action'], ['create', 'edit', 'delete']) && isset($_GET['result']) && in_array($_GET['result'], ['success', 'error'])){
+			$type = $_GET['result'] == 'error' ? 'danger' : 'success';
+			$this->vars['alert'][$type] = __('blog-category-result-' . $_GET['action'] . '-' . $_GET['result']);
+		}
 	}
 
 	public function getPosts(){
@@ -148,12 +155,60 @@ class BlogDashboard extends UserDashboard {
 				->name('title')->string()->notEmpty()->required()
 				->name('alias')->string()->optional()
 			->assert();
-			
+
 			$category = Category::create($data['title'], $data['alias']);
 		} catch (\Exception $e){
-			return Http::redirectURI('/dashboard/blog/categories', ['create' => 'fail']);
+			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'create', 'result' => 'error']);
 		}
 
-		return Http::redirectURI('/dashboard/blog/categories', ['create' => 'success'], 'category' . $category->getId());
+		return Http::redirectURI('/dashboard/blog/categories', ['action' => 'create', 'result' => 'success'], 'category' . $category->getId());
+	}
+
+	public function getCategory(){
+		UserAccess::assertCurrentUser('blog');
+
+		try {
+			$cid = $this->params['category'] ?? null;
+			$category = Category::getById($cid);
+		} catch (\Exception $e){
+			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'edit', 'result' => 'error', 'requestId' => $cid]);
+		}
+
+		$this->vars['category'] = $category;
+	}
+
+	public function postCategory(){
+		UserAccess::assertCurrentUser('blog');
+
+		try {
+			$cid = $this->params['category'] ?? null;
+			$category = Category::getById($cid);
+
+			$data = Input::post()
+				->name('title')->string()->notEmpty()->required()
+				->name('alias')->string()->optional()
+			->assert();
+
+			$category->update($data['title'], $data['alias']);
+
+		} catch (\Exception $e){
+			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'edit', 'result' => 'error', 'requestId' => $cid]);
+		}
+		
+		return Http::redirectURI('/dashboard/blog/categories', ['action' => 'edit', 'result' => 'success', 'requestId' => $cid]);
+	}
+
+	public function postDeleteCategory(){
+		UserAccess::assertCurrentUser('blog');
+
+		try {
+			$cid = $this->params['category'] ?? null;
+			$category = Category::getById($cid);
+			$category->delete();
+		} catch (\Exception $e){
+			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'delete', 'result' => 'error', 'requestId' => $cid]);
+		}
+
+		return Http::redirectURI('/dashboard/blog/categories', ['action' => 'delete', 'result' => 'success']);
 	}
 }
