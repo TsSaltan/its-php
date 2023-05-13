@@ -124,7 +124,8 @@ class Category {
 	}
 
 	public function delete(): bool {
-		Database::exec('DELETE FROM `blog-post-to-category` WHERE `category-id` = :id', ['id' => $this->getId()])->affectedRows();
+		Database::exec('DELETE FROM `blog-post-to-category` WHERE `category-id` = :id', ['id' => $this->getId()]);
+		Database::exec('UPDATE `blog-categories` SET `parent-id` = -1 WHERE `parent-id` = :id', ['id' => $this->getId()]);
 		return Database::exec('DELETE FROM `blog-categories` WHERE `id` = :id', ['id' => $this->getId()])->affectedRows() > 0;
 	}
 }
