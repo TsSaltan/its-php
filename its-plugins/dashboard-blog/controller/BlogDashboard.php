@@ -37,13 +37,16 @@ class BlogDashboard extends UserDashboard {
 	public function getCategories(){
 		UserAccess::assertCurrentUser('blog');
 		$this->vars['title'] = __('menu/blog-categories');
+		$this->viewCategories(-1);
+	}
 
-		$count = Category::getNum();
+	protected function viewCategories(int $parentId){
+		$count = Category::getNum($parentId);
 		$pages = new Paginator([], 10);
 		$pages->setDataSize($count);
 
-		$pages->setTotalDataCallback(function($offset, $limit){
-			return Category::getList($offset, $limit);
+		$pages->setTotalDataCallback(function($offset, $limit) use ($parentId){
+			return Category::getList($offset, $limit, $parentId);
 		});
 
 		$this->vars['categories'] = $pages;
@@ -153,15 +156,26 @@ class BlogDashboard extends UserDashboard {
 		try {
 			$data = Input::post()
 				->name('title')->string()->notEmpty()->required()
+				->name('parent-id')->int()->notEmpty()->required()
 				->name('alias')->string()->optional()
 			->assert();
 
 			$category = Category::create($data['title'], $data['alias']);
+			if($data['parent-id'] != -1){
+				$parent = Category::getById($data['parent-id']);
+				$category->setParent($parent);
+			}
 		} catch (\Exception $e){
+			var_dump($e->getMessage());
+			die;
 			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'create', 'result' => 'error']);
 		}
 
-		return Http::redirectURI('/dashboard/blog/categories', ['action' => 'create', 'result' => 'success'], 'category' . $category->getId());
+		if(isset($parent) && is_object($parent)){
+			return Http::redirectURI('/dashboard/blog/category/' . $parent->getId(), ['action' => 'create', 'result' => 'success'], 'category' . $category->getId());
+		} else {
+			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'create', 'result' => 'success'], 'category' . $category->getId());
+		}
 	}
 
 	public function getCategory(){
@@ -175,6 +189,7 @@ class BlogDashboard extends UserDashboard {
 		}
 
 		$this->vars['category'] = $category;
+		$this->viewCategories($cid);
 	}
 
 	public function postCategory(){

@@ -15,13 +15,13 @@ class Category {
 		return self::getById($id);
 	}
 
-	public static function getNum(): int {
-		$c = Database::exec('SELECT COUNT(*) as c FROM `blog-post-to-category`')->fetch();
+	public static function getNum(int $parentId = -1): int {
+		$c = Database::exec('SELECT COUNT(*) as c FROM `blog-categories` WHERE `parent-id` = :pid', ['pid' => $parentId])->fetch();
 		return $c[0]['c'] ?? -1;
 	}
 
-	public static function getList($offset, $limit): array {
-		$datas = Database::exec('SELECT * FROM `blog-categories` ORDER BY `title` ASC LIMIT ' . $offset . ',' . $limit)->fetch();
+	public static function getList(int $offset, int $limit, int $parentId): array {
+		$datas = Database::exec('SELECT * FROM `blog-categories` WHERE `parent-id` = :pid ORDER BY `title` ASC LIMIT ' . $offset . ',' . $limit, ['pid' => $parentId])->fetch();
 		$cats = [];
 		foreach($datas as $data){
 			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
@@ -97,6 +97,21 @@ class Category {
 
 	public function getTitle(): string {
 		return Output::of($this->title)->specialChars()->quotes()->getData();
+	}
+
+	public function setParent(Category $parent): bool {
+		if( Database::exec(
+			'UPDATE `blog-categories` SET `parent-id` = :pid WHERE `id` = :id', 
+			[
+				'id' => $this->getId(),
+				'pid' => $parent->getId(),
+			]
+		)->affectedRows() > 0 ){
+			$this->parent = $parent;
+			return true;
+		}
+
+		return false;
 	}
 
 	public function update(string $title, ?string $alias = null): bool {

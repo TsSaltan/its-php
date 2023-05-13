@@ -41,6 +41,8 @@
                 </div>
                 <!-- /.panel -->
             </div>
+
+            <?php $this->incCategories()?>
         </div>
     </div>
 
