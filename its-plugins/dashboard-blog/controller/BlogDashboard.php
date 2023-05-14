@@ -216,7 +216,6 @@ class BlogDashboard extends UserDashboard {
 			}
 
 		} catch (\Exception $e){
-			var_dump($e->getMessage()); die;
 			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'edit', 'result' => 'error', 'requestId' => $cid]);
 		}
 		
