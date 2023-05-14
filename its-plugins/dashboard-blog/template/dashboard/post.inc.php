@@ -89,6 +89,7 @@
                 <div class="panel-body">
                     <div class="form-group" style="max-height: 180px; overflow-y: auto;">
                         <?php 
+                            $postCategories = isset($postCategories) ? $postCategories : [];
                             $catViewer = function($items, $viewer, $level) use ($postCategories){
                                 foreach ($items as $i){
                                     $cat = $i['category'];
