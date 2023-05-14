@@ -68,6 +68,8 @@
     "blog-subcategories": "Подкатегории",
     "blog-subcategories-num": "%s[подкатегория|подкатегории|подкатегорий]",
     "blog-new-subcategory": "Новая подкатегория",
+    "blog-category-delete-title": "Удаление категории",
+    "blog-category-delete-confirm": "Вы действительно хотите удалить категорию?",
     "placeholder-optional": "(необязательно)",
     "category-parent": "Родительская категория",
     "no-parent-category": "[Без родительской категории]",

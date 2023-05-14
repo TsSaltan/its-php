@@ -68,6 +68,8 @@
     "blog-subcategories": "Subcategories",
     "blog-subcategories-num": "%s[subcategory|subcategories]",
     "blog-new-subcategory": "New subcategory",
+    "blog-category-delete-title": "Deleting category",
+    "blog-category-delete-confirm": "Are you sure want to delete this category?",
     "placeholder-optional": "(optional)",
     "category-parent": "Parent category",
     "no-parent-category": "[Without parent category]",
