@@ -30,14 +30,31 @@ class Category {
 		return $cats;
 	}
 
-	public static function getAll(): array {
+	public static function getAll(bool $structured = false): array {
 		$datas = Database::exec('SELECT * FROM `blog-categories`')->fetch();
 		$cats = [];
 		foreach($datas as $data){
-			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
+			$cats[$data['id']] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
 		}
 
-		return $cats;
+		if(!$structured){
+			return $cats;
+		}
+		else return self::getChilds($cats, -1);
+	}
+
+	protected static function getChilds($items, $parentId): array {
+		$r = [];
+		foreach($items as $i){
+			if($i->getParentId() == $parentId){
+				$r[$i->getId()] = [
+					'category' => $i,
+					'children' => self::getChilds($items, $i->getId())
+				];
+			}
+		}
+
+		return $r;
 	}
 
 	public static function getById(int $id){
@@ -52,19 +69,20 @@ class Category {
 		return new self($data[0]['id'], $data[0]['parent-id'], $data[0]['title'], $data[0]['alias']);
 	}
 
-	public static function setPostCategories(array $categories, Post $post){
+	public static function setPostCategories(Post $post, array $categories){
 		Database::exec('DELETE FROM `blog-post-to-category` WHERE `post-id` = :pid', ['pid' => $post->getId()]);
 		foreach($categories as $category){
-			Database::exec('INSERT INTO `blog-post-to-category` (`post-id`, `category-id`) VALUES (:pid, :cid)', ['pid' => $post->getId(), 'cid' => $category->getId()]);
+			$cid = ($category instanceof Category) ? $category->getId() : $category;
+			Database::exec('INSERT INTO `blog-post-to-category` (`post-id`, `category-id`) VALUES (:pid, :cid)', ['pid' => $post->getId(), 'cid' => $cid]);
 		}
 
 	}
 
-	public static function getPostCategories(int $postId): array {
+	public static function getPostCategories(Post $post): array {
 		$categories = Database::exec(
 			'SELECT * FROM `blog-categories` as bc
 				LEFT JOIN `blog-post-to-category` as p2c ON p2c.`category-id` = bc.`id`
-				WHERE p2c.`post-id` = :pid', ['pid' => $postId]
+				WHERE p2c.`post-id` = :pid', ['pid' => $post->getId()]
 		)->fetch();
 
 		if(sizeof($categories) == 0){
@@ -76,7 +94,7 @@ class Category {
 			$cats[$category['category-id']] = new self($category['category-id'], $category['parent-id'], $category['title'], $category['alias']);
 		}
 
-		return array_values($cats);
+		return $cats;
 	}
 
 	protected $id;

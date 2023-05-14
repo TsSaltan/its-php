@@ -86,8 +86,10 @@ class BlogDashboard extends UserDashboard {
 			$this->vars['author'] = SingleUser::unauthorized();
 		}
 		$this->vars['title'] = __('menu/edit-blog-post');
-
+		$this->vars['catsStruct'] = Category::getAll(true);
+		$this->vars['postCategories'] = array_keys($post->getCategories()); // contains only ids of category
 		$this->vars['postLink'] = false;
+
 		if(is_callable(self::$linkMaker)){
 			$this->vars['postLink'] = call_user_func(self::$linkMaker, $post);
 
@@ -101,6 +103,7 @@ class BlogDashboard extends UserDashboard {
 	public function getNew(){
 		UserAccess::assertCurrentUser('blog');
 		$this->vars['title'] = __('menu/new-blog-post');
+		$this->vars['catsStruct'] = Category::getAll(true);
 	}
 
 	public function postNew(){
@@ -111,9 +114,16 @@ class BlogDashboard extends UserDashboard {
 			->name('alias')->string()->required()
 			->name('content')->string()->required()
 			->name('type')->values(['0', '1'])->required()
+			->name('categories')->array()->optional()
 		->assert();
 
 		$post = Blog::createPost($data['title'], $data['content'], User::current()->get('id'), $data['type'], $data['alias']);
+
+		$cats = $data['categories'];
+		if(is_array($cats) && sizeof($cats) > 0){
+			$post->setCategories($cats);
+		}
+
 		return Http::redirectURI('/dashboard/blog/post/' . $post->getId(), ['from' => 'post']);
 	}
 
@@ -127,9 +137,14 @@ class BlogDashboard extends UserDashboard {
 			->name('alias')->string()->required()
 			->name('content')->string()->required()
 			->name('type')->values(['0', '1'])->required()
+			->name('categories')->array()->optional()
 		->assert();
 
 		$res = $post->update($data['alias'], $data['title'], $data['content'], User::current()->get('id'), $data['type']);
+		$cats = $data['categories'];
+		if(is_array($cats) && sizeof($cats) > 0){
+			$post->setCategories($cats);
+		}
 		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['from' => 'edit', 'result' => $res ? 'success' : 'fail']);
 	}
 

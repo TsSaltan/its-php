@@ -71,6 +71,7 @@
     "placeholder-optional": "(необязательно)",
     "category-parent": "Родительская категория",
     "no-parent-category": "[Без родительской категории]",
+    "post-categories": "Категории",
     "unnamed": "[Без имени]",
     "forgot-password": "Забыли пароль?",
     "password-restore": "Восстановление пароля",

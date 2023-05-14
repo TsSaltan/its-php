@@ -41,7 +41,7 @@ class Post {
 
 	public function getCategories(): array {
 		if(sizeof($this->categories) == 0){
-			$this->categories = Category::getById($this->getId());
+			$this->categories = Category::getPostCategories($this);
 		}
 
 		return $this->categories;
@@ -49,7 +49,7 @@ class Post {
 
 	public function setCategories(array $categories){
 		$this->categories = [];
-		Category::setPostCategories($categories, $this);
+		Category::setPostCategories($this, $categories);
 	}
 
 	public function getTitle(): string {

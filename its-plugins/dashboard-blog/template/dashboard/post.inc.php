@@ -1,27 +1,21 @@
+<?php if(isset($post)): ?>
+<form action="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId() . '/save')?>" method="POST">                    
+<?php else: ?>
+<form action="<?=$this->makeURI('/dashboard/blog/post/new')?>" method="POST">
+<?php endif; ?>
 
-<div class="row">
-    <div class="panel panel-default">
-        <div class="panel-heading clearfix">
-            <?php if(isset($post)): ?>
-            <div class="panel-title pull-left">#<?=$post->getId();?>&nbsp;<strong><?=$post->getTitle()?></strong></div>                
-            <div class="panel-title pull-right">
-                <?php if(isset($postLink) && is_string($postLink) && strlen($postLink) > 0): ?>
-                <a href="<?=$postLink?>" class="btn btn-default btn-xs btn-outline"><i class="fa fa-link"></i>&nbsp;<?=__('button/open-link')?></a>
-                <?php endif; ?>
-                <a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a>
-            </div>
-            <?php else: ?>
-            <div class="panel-title pull-left"><?=$this->title?></div>
-            <?php endif; ?>
-        </div>
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <?php if(isset($post)): ?>
+                    <div class="panel-title pull-left"><strong><?=$post->getTitle()?></strong></div>                
+                    <?php else: ?>
+                    <div class="panel-title pull-left"><?=$this->title?></div>
+                    <?php endif; ?>
+                </div>
 
-        <?php if(isset($post)): ?>
-        <form action="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId() . '/save')?>" method="POST">                    
-        <?php else: ?>
-        <form action="<?=$this->makeURI('/dashboard/blog/post/new')?>" method="POST">
-        <?php endif; ?>
-            <div class="panel-body">
-                <div class="col-12 col-lg-8">  
+                <div class="panel-body">
                     <div class="form-group">
                         <label><?=__('post-title')?></label>
                         <input class="form-control" name="title" type="text" value="<?=(isset($post)) ? $post->getTitle() : null?>" required>
@@ -35,11 +29,28 @@
 
                     <div class="form-group">
                         <label><?=__('post-content')?></label>
-                        <textarea class="form-control" name="content" rows="10" type="text" required><?=(isset($post)) ? $post->getContent(false) : null ?></textarea>
+                        <textarea class="form-control" name="content" rows="16" type="text" required><?=(isset($post)) ? $post->getContent(false) : null ?></textarea>
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-4">  
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary"><?= isset($post) ? __('button/save') : __('button/post')?></button>
+                </div>
+            </div>
+            <!-- /.panel -->
+        </div>
+
+        <div class="col-12 col-lg-4"> 
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <?php if(isset($post)): ?>
+                    <div class="panel-title pull-left" title="Post ID">#<?=$post->getId();?></div>                
+                    <div class="panel-title pull-right">
+                        <a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="panel-body">
                     <?php if(isset($post) && isset($author)): ?>
                     <div class="form-group">
                         <label><?=__('post-author')?></label>
@@ -68,15 +79,45 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary"><?= isset($post) ? __('button/save') : __('button/post')?></button>
+        <div class="col-12 col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="panel-title pull-left"><?=__('post-categories')?></div>                
+                </div>
+                <div class="panel-body">
+                    <div class="form-group" style="max-height: 180px; overflow-y: auto;">
+                        <?php 
+                            $catViewer = function($items, $viewer, $level) use ($postCategories){
+                                foreach ($items as $i){
+                                    $cat = $i['category'];
+                                    ?>
+                                    <div class="checkbox">
+                                        <label>
+                                            <?=str_repeat('&nbsp;', 3*$level)?>
+                                            <input type="checkbox" name="categories[]" value="<?=$cat->getId();?>" <?php if(isset($postCategories) && in_array($cat->getId(), $postCategories)):?>checked<?php endif; ?>><?=$cat->getTitle();?>
+                                        </label>
+                                    </div>
+                                    <?
+                                    $viewer($i['children'], $viewer, $level+1);
+                                }
+                            };
+
+                            $catViewer($catsStruct, $catViewer, 0);
+                        ?>
+                        
+
+                        <!--label><?=__('post-type')?></label-->
+                        <!--select class="form-control" name="categories" multiple>
+                            <option value="0" <?php if(isset($post) && $post->isDraft()): ?>selected<?php endif; ?>><?=__('post-type-draft')?></option>
+                        </select-->
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-    <!-- /.panel -->
-</div>
-
+</form>
 
 <?php if(isset($post)): ?>
 <!-- Modal -->
