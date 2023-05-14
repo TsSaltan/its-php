@@ -2,6 +2,7 @@
 namespace tsframe\module\blog;
 
 use tsframe\exception\PostNotFoundException;
+use tsframe\module\blog\Category;
 use tsframe\module\database\Database;
 
 class Blog {
@@ -107,5 +108,33 @@ class Blog {
 			return false;
 		}
 		return ($q[0]['c'] ?? 0) > 0;
+	}
+
+	public static function getPostsInCategory(array $categories){
+		$catList = [];
+		foreach($categories as $cat){
+			if($cat instanceof Category){
+				$catList[] = $cat->getId();
+			} else {
+				$catList[] = (int) $cat;
+			}
+		}
+		$count = sizeof($catList);
+
+		$p = Database::exec(
+			'SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' 
+			 FROM `blog-posts` p 
+			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 GROUP BY p.id 
+			 HAVING COUNT(*) = :count', 
+			['count' => $count]
+		)->fetch();	
+
+		$return = [];
+		foreach($p as $post){
+			$return[] = new Post($post['id'], $post['alias'], $post['title'], $post['content'], $post['create_ts'], $post['update_ts'], $post['author_id'], $post['type']);
+		}
+
+		return $return;
 	}
 }
