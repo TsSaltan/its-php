@@ -118,6 +118,10 @@
             </div>
         </div>
     </div>
+    <?php 
+        // @hook template.post.edit
+        $this->hook('post.edit', [(isset($post) ? $post : null), (isset($author) ? $author : null)]); 
+    ?>
 </form>
 
 <?php if(isset($post)): ?>

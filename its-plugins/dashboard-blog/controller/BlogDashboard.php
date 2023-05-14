@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\controller;
 
+use tsframe\Hook;
 use tsframe\Http;
 use tsframe\Plugins;
 use tsframe\exception\UserException;
@@ -123,7 +124,7 @@ class BlogDashboard extends UserDashboard {
 		if(is_array($cats) && sizeof($cats) > 0){
 			$post->setCategories($cats);
 		}
-
+		Hook::call('post.save', [$post]);
 		return Http::redirectURI('/dashboard/blog/post/' . $post->getId(), ['from' => 'post']);
 	}
 
@@ -145,6 +146,7 @@ class BlogDashboard extends UserDashboard {
 		if(is_array($cats) && sizeof($cats) > 0){
 			$post->setCategories($cats);
 		}
+		Hook::call('post.save', [$post]);
 		return Http::redirectURI('/dashboard/blog/post/' . $postId, ['from' => 'edit', 'result' => $res ? 'success' : 'fail']);
 	}
 
