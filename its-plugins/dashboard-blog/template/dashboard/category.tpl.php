@@ -33,6 +33,18 @@
                                         <input class="form-control" name="alias" type="text" value="<?=$category->getAlias()?>">
                                         <p class="help-block"><?=__('category-alias-description')?></p>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label><?=__('category-parent')?></label>
+                                        <select class="form-control" name="parent-id">
+                                            <option value="-1"><?=__('no-parent-category')?></option>
+
+                                        <?php foreach($allCategories as $cat): ?>
+                                            <?php if($cat->getId() == $category->getId()) continue;?>
+                                            <option value="<?=$cat->getId()?>"<?=($cat->getId() == $category->getParentId()) ? ' selected' : ''?>>[#<?=$cat->getId()?>] <?=$cat->getTitle()?></option>
+                                        <?php endforeach; ?>
+                                        </select>
+                                    </div>
                                 </div>
 
                             </div>

@@ -28,7 +28,16 @@ class Category {
 		}
 
 		return $cats;
+	}
 
+	public static function getAll(): array {
+		$datas = Database::exec('SELECT * FROM `blog-categories`')->fetch();
+		$cats = [];
+		foreach($datas as $data){
+			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
+		}
+
+		return $cats;
 	}
 
 	public static function getById(int $id){
@@ -99,19 +108,28 @@ class Category {
 		return Output::of($this->title)->specialChars()->quotes()->getData();
 	}
 
-	public function setParent(Category $parent): bool {
+	public function setParent(?Category $parent): bool {
+		$pid = is_null($parent) ? -1 : $parent->getId();
 		if( Database::exec(
 			'UPDATE `blog-categories` SET `parent-id` = :pid WHERE `id` = :id', 
 			[
 				'id' => $this->getId(),
-				'pid' => $parent->getId(),
+				'pid' => $pid,
 			]
 		)->affectedRows() > 0 ){
-			$this->parent = $parent;
+			$this->parent = is_null($parent) ? null : $parent;
 			return true;
 		}
 
 		return false;
+	}
+
+	public function getParentId(): int {
+		if($this->parent instanceof Category){
+			return $this->parent->getId();
+		}
+
+		return -1;
 	}
 
 	public function update(string $title, ?string $alias = null): bool {

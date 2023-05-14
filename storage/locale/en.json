@@ -69,6 +69,8 @@
     "blog-subcategories-num": "%s[subcategory|subcategories]",
     "blog-new-subcategory": "New subcategory",
     "placeholder-optional": "(optional)",
+    "category-parent": "Parent category",
+    "no-parent-category": "[Without parent category]",
     "unnamed": "[Unnamed user]",
     "forgot-password": "Forgot password?",
     "password-restore": "Restore password",

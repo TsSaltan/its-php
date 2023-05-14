@@ -156,7 +156,7 @@ class BlogDashboard extends UserDashboard {
 		try {
 			$data = Input::post()
 				->name('title')->string()->notEmpty()->required()
-				->name('parent-id')->int()->notEmpty()->required()
+				->name('parent-id')->numeric()->notEmpty()->required()
 				->name('alias')->string()->optional()
 			->assert();
 
@@ -190,6 +190,7 @@ class BlogDashboard extends UserDashboard {
 
 		$this->vars['category'] = $category;
 		$this->viewCategories($cid);
+		$this->vars['allCategories'] = Category::getAll();
 	}
 
 	public function postCategory(){
@@ -201,12 +202,21 @@ class BlogDashboard extends UserDashboard {
 
 			$data = Input::post()
 				->name('title')->string()->notEmpty()->required()
+				->name('parent-id')->numeric()->notEmpty()->required()
 				->name('alias')->string()->optional()
 			->assert();
 
 			$category->update($data['title'], $data['alias']);
 
+			if($data['parent-id'] == -1){
+				$category->setParent(null);
+			} else {
+				$parent = Category::getById($data['parent-id']); 
+				$category->setParent($parent);
+			}
+
 		} catch (\Exception $e){
+			var_dump($e->getMessage()); die;
 			return Http::redirectURI('/dashboard/blog/categories', ['action' => 'edit', 'result' => 'error', 'requestId' => $cid]);
 		}
 		
@@ -215,7 +225,6 @@ class BlogDashboard extends UserDashboard {
 
 	public function postDeleteCategory(){
 		UserAccess::assertCurrentUser('blog');
-
 		try {
 			$cid = $this->params['category'] ?? null;
 			$category = Category::getById($cid);

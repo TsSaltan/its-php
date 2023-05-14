@@ -69,6 +69,8 @@
     "blog-subcategories-num": "%s[подкатегория|подкатегории|подкатегорий]",
     "blog-new-subcategory": "Новая подкатегория",
     "placeholder-optional": "(необязательно)",
+    "category-parent": "Родительская категория",
+    "no-parent-category": "[Без родительской категории]",
     "unnamed": "[Без имени]",
     "forgot-password": "Забыли пароль?",
     "password-restore": "Восстановление пароля",
