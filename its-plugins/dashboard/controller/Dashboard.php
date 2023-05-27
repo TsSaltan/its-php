@@ -30,7 +30,7 @@ use tsframe\view\HtmlTemplate;
  * @route POST /dashboard/[config:action]
  * @route POST /dashboard/config/[theme|siteinfo|setmode|lang:action]
  */
-class Dashboard extends AbstractController{
+class Dashboard extends AbstractController {
 	use ActionToMethodTrait;
 
 	/**

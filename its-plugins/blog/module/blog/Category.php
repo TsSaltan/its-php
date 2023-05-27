@@ -69,6 +69,18 @@ class Category {
 		return new self($data[0]['id'], $data[0]['parent-id'], $data[0]['title'], $data[0]['alias']);
 	}
 
+	public static function getByAlias(string $alias){
+		$data = Database::exec(
+			'SELECT * FROM `blog-categories` WHERE `alias` = :alias', ['alias' => $alias]
+		)->fetch();
+
+		if(!isset($data[0])){
+			throw new CategoryNotFoundException('Category (alias='.$alias.') does not found');
+		}
+
+		return new self($data[0]['id'], $data[0]['parent-id'], $data[0]['title'], $data[0]['alias']);
+	}
+
 	public static function setPostCategories(Post $post, array $categories){
 		Database::exec('DELETE FROM `blog-post-to-category` WHERE `post-id` = :pid', ['pid' => $post->getId()]);
 		foreach($categories as $category){
