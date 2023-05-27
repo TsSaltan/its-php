@@ -46,6 +46,11 @@
                     <?php if(isset($post)): ?>
                     <div class="panel-title pull-left" title="Post ID">#<?=$post->getId();?></div>                
                     <div class="panel-title pull-right">
+
+                        <?php if(isset($postLink) && is_string($postLink) && strlen($postLink) > 0): ?>
+                            <a href="<?=$postLink?>" class="btn btn-default btn-xs btn-outline"><i class="fa fa-link"></i>&nbsp;<?=__('button/open-link')?></a>
+                        <?php endif; ?>
+
                         <a href="#" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-xs btn-outline"><i class="fa fa-trash"></i>&nbsp;<?=__('button/delete')?></a>
                     </div>
                     <?php endif; ?>
@@ -107,12 +112,6 @@
 
                             $catViewer($catsStruct, $catViewer, 0);
                         ?>
-                        
-
-                        <!--label><?=__('post-type')?></label-->
-                        <!--select class="form-control" name="categories" multiple>
-                            <option value="0" <?php if(isset($post) && $post->isDraft()): ?>selected<?php endif; ?>><?=__('post-type-draft')?></option>
-                        </select-->
                     </div>
                 </div>
             </div>
