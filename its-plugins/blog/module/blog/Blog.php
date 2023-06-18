@@ -122,14 +122,15 @@ class Blog {
 		$count = sizeof($catList);
 
 		$p = Database::exec(
-			'SELECT COUNT(*) as c,
+			'SELECT COUNT(*)
 			 FROM `blog-posts` p 
 			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
 			 GROUP BY p.id 
 			 HAVING COUNT(*) = :count', 
 			['count' => $count]
 		)->fetch();	
-		return $p[0]['c'];
+
+		return sizeof($p);
 	}
 
 	public static function getPostsInCategory(array $categories){
