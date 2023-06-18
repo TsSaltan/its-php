@@ -110,6 +110,28 @@ class Blog {
 		return ($q[0]['c'] ?? 0) > 0;
 	}
 
+	public static function getPostsInCategoryCount(array $categories){
+		$catList = [];
+		foreach($categories as $cat){
+			if($cat instanceof Category){
+				$catList[] = $cat->getId();
+			} else {
+				$catList[] = (int) $cat;
+			}
+		}
+		$count = sizeof($catList);
+
+		$p = Database::exec(
+			'SELECT COUNT(*) as c,
+			 FROM `blog-posts` p 
+			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 GROUP BY p.id 
+			 HAVING COUNT(*) = :count', 
+			['count' => $count]
+		)->fetch();	
+		return $p[0]['c'];
+	}
+
 	public static function getPostsInCategory(array $categories){
 		$catList = [];
 		foreach($categories as $cat){
