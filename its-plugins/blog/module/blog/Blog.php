@@ -133,7 +133,7 @@ class Blog {
 		return sizeof($p);
 	}
 
-	public static function getPostsInCategory(array $categories){
+public static function getPostsInCategory(array $categories, int $offset = 0, int $limit = -1){
 		$catList = [];
 		foreach($categories as $cat){
 			if($cat instanceof Category){
@@ -149,7 +149,7 @@ class Blog {
 			 FROM `blog-posts` p 
 			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
 			 GROUP BY p.id 
-			 HAVING COUNT(*) = :count', 
+			 HAVING COUNT(*) = :count ' . ($limit > 0 ? ' LIMIT ' . $limit . ' ': '') . ($offset > 0 ? 'OFFSET ' . $offset: ''), 
 			['count' => $count]
 		)->fetch();	
 
