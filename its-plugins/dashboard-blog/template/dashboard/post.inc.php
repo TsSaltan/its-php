@@ -105,7 +105,7 @@
                                             <input type="checkbox" name="categories[]" value="<?=$cat->getId();?>" <?php if(isset($postCategories) && in_array($cat->getId(), $postCategories)):?>checked<?php endif; ?>><?=$cat->getTitle();?>
                                         </label>
                                     </div>
-                                    <?
+                                    <?php
                                     $viewer($i['children'], $viewer, $level+1);
                                 }
                             };
