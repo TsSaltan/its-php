@@ -124,7 +124,7 @@ class Blog {
 		$p = Database::exec(
 			'SELECT COUNT(*)
 			 FROM `blog-posts` p 
-			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
 			 GROUP BY p.id 
 			 HAVING COUNT(*) = :count', 
 			['count' => $count]
@@ -147,7 +147,7 @@ public static function getPostsInCategory(array $categories, int $offset = 0, in
 		$p = Database::exec(
 			'SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' 
 			 FROM `blog-posts` p 
-			 LEFT JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
 			 GROUP BY p.id 
 			 HAVING COUNT(*) = :count ' . ($limit > 0 ? ' LIMIT ' . $limit . ' ': '') . ($offset > 0 ? 'OFFSET ' . $offset: ''), 
 			['count' => $count]
