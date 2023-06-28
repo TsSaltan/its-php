@@ -116,6 +116,11 @@
                 </div>
             </div>
         </div>
+
+            <?php 
+        // @hook template.post.edit-inner
+        $this->hook('post.edit-inner', [(isset($post) ? $post : null), (isset($author) ? $author : null)]); 
+    ?>
     </div>
     <?php 
         // @hook template.post.edit
@@ -146,3 +151,16 @@
 </div>
 <!-- /.modal -->
 <?php endif; ?>
+
+<script type="text/javascript">
+    function insertTextToContent(text){
+        let cursorPos = $("textarea[name=content]").prop('selectionStart');
+
+        let v = $('textarea[name=content]').val();
+        let textBefore = v.substring(0,  cursorPos);
+        let textAfter  = v.substring(cursorPos, v.length);
+
+        $('textarea[name=content]').val(textBefore + text + textAfter);
+        return false;
+    }
+</script>
