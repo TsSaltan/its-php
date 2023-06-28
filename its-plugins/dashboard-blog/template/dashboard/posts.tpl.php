@@ -23,10 +23,24 @@
                             <div class="list-group">
                             <?php foreach($posts->getData() as $post): ?>
                                 <a href="<?=$this->makeURI('/dashboard/blog/post/' . $post->getId())?>" class="list-group-item">
-                                    <span class="pull-left text-muted">#<?=$post->getId()?></span>
-                                    &nbsp;
-                                    <strong><?=$post->getTitle()?></strong>
-                                    <span class="pull-right text-muted"><em><?=$post->getCreateTime()?></em></span>
+                                    <p>
+                                        <span class="pull-left text-muted">#<?=$post->getId()?></span>
+                                        &nbsp;
+                                        <strong><?=$post->getTitle(80)?></strong>
+                                        &nbsp;
+                                        <?php if($post->isDraft()): ?>
+                                        <span class="text-muted"><code><?=__('post-type-draft')?></code></span>
+                                        <?php endif; ?>
+                                        <span class="pull-right text-muted"><i class="fa fa-clock-o"></i>&nbsp;<em><?=$post->getCreateTime()?></em></span>
+                                    </p>
+                                    <?php $cats = $post->getCategories(); ?>
+                                    <?php if(sizeof($cats) > 0): ?>
+                                    <span>
+                                        <?php foreach($cats as $cat): ?>
+                                        <button type="button" class="btn btn-default btn-xs disabled"><?=$cat->getTitle();?></button>
+                                        <?php endforeach; ?>
+                                    </span>
+                                    <?php endif; ?>
                                 </a>
                             <?php endforeach; ?>
                             </div>

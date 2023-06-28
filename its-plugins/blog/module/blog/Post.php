@@ -52,8 +52,13 @@ class Post {
 		Category::setPostCategories($this, $categories);
 	}
 
-	public function getTitle(): string {
-		return Output::of($this->title)->specialChars()->quotes()->getData();
+	public function getTitle(int $maxLength = 0): string {
+		$title = Output::of($this->title)->specialChars()->quotes()->getData();
+		if(strlen($title) > $maxLength){
+			return mb_substr($title, 0, $maxLength) . ' ...';
+		}
+
+		return $title;
 	}
 
 	public function getContent(bool $processHtml): string {
