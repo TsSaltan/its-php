@@ -11,6 +11,8 @@
         "sign-up": "Sign up",
         "post": "Post",
         "delete": "Delete",
+        "upload": "Upload",
+        "insert-link": "Insert link",
         "open-link": "Open link",
         "restore-password": "Restore password"
     },
@@ -79,5 +81,8 @@
     "password-restore": "Restore password",
     "message": {
         "auth-link-sent": "Your authorization link for password changing was sent to email"
-    }
+    },
+    "blog-upload-media": "Media uploader",
+    "media-url": "File URL",
+    "media-file": "Select file for uploading"
 }
