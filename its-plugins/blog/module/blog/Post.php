@@ -54,7 +54,7 @@ class Post {
 
 	public function getTitle(int $maxLength = 0): string {
 		$title = Output::of($this->title)->specialChars()->quotes()->getData();
-		if(strlen($title) > $maxLength){
+		if($maxLength > 0 && strlen($title) > $maxLength){
 			return mb_substr($title, 0, $maxLength) . ' ...';
 		}
 
