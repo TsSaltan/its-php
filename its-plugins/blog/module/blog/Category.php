@@ -21,7 +21,7 @@ class Category {
 	}
 
 	public static function getList(int $offset, int $limit, int $parentId): array {
-		$datas = Database::exec('SELECT * FROM `blog-categories` WHERE `parent-id` = :pid ORDER BY `title` ASC LIMIT ' . $offset . ',' . $limit, ['pid' => $parentId])->fetch();
+		$datas = Database::exec('SELECT * FROM `blog-categories` WHERE `parent-id` = :pid ORDER BY `title` ASC ' . ($limit > -1 ? ' LIMIT ' . $limit . ' ': ''). 'OFFSET ' . $offset , ['pid' => $parentId])->fetch();
 		$cats = [];
 		foreach($datas as $data){
 			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
@@ -190,5 +190,9 @@ class Category {
 		Database::exec('DELETE FROM `blog-post-to-category` WHERE `category-id` = :id', ['id' => $this->getId()]);
 		Database::exec('UPDATE `blog-categories` SET `parent-id` = -1 WHERE `parent-id` = :id', ['id' => $this->getId()]);
 		return Database::exec('DELETE FROM `blog-categories` WHERE `id` = :id', ['id' => $this->getId()])->affectedRows() > 0;
+	}
+
+	public function getChildren(): array {
+		return self::getList(0, -1, $this->getId());
 	}
 }
