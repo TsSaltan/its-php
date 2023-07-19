@@ -21,7 +21,7 @@ class Category {
 	}
 
 	public static function getList(int $offset, int $limit, int $parentId): array {
-		$datas = Database::exec('SELECT * FROM `blog-categories` WHERE `parent-id` = :pid ORDER BY `title` ASC ' . ($limit > -1 ? ' LIMIT ' . $limit . ' ': ''). 'OFFSET ' . $offset , ['pid' => $parentId])->fetch();
+		$datas = Database::exec('SELECT * FROM `blog-categories` WHERE `parent-id` = :pid ORDER BY `title` ASC' . ($limit > -1 ? (' LIMIT ' . $limit . ' OFFSET ' . $offset) : ''), ['pid' => $parentId])->fetch();
 		$cats = [];
 		foreach($datas as $data){
 			$cats[] = new self($data['id'], $data['parent-id'], $data['title'], $data['alias']);
