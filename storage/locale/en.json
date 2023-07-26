@@ -1,5 +1,6 @@
 {
     "button": {
+        "checkout": "Checkout",
         "clear-cache": "Clear cache",
         "clear-logs": "Clear logs",
         "close": "Close",
@@ -84,5 +85,7 @@
     },
     "blog-upload-media": "Media uploader",
     "media-url": "File URL",
-    "media-file": "Select file for uploading"
+    "media-file": "Select file for uploading",
+    "input-amount": "Enter the amount to replenish",
+    "top-up-balance": "Top up balance"
 }
