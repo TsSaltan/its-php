@@ -19,7 +19,8 @@
         "airmanbzh/php-html-generator": "dev-master",
         "telegram-bot/api": "^2.3",
         "ovunctukenmez/samesite-cookie-setter": "dev-master",
-        "spomky-labs/base64url": "^2.0"
+        "spomky-labs/base64url": "^2.0",
+        "stripe/stripe-php": "^10.18"
     },
 
     "autoload": {
