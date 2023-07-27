@@ -61,6 +61,7 @@ class Stripe {
             return Http::makeURI('/dashboard/');
         }
 
+        $user->getMeta()->set('stripe_last_session_id', $session->id);
         return $session->url;
     }
 
@@ -73,7 +74,11 @@ class Stripe {
         ]);
     }
 
-    public function checkPayment(string $sessionId, SingleUser $user): bool {
+    public function checkPayment(?string $sessionId, SingleUser $user): bool {
+        if(is_null($sessionId) || $sessionId == '{CHECKOUT_SESSION_ID}'){
+            $sessionId = $user->getMeta()->get('stripe_last_session_id');
+        }
+
         $cash = new Cash($user);
         try {    
             $session = $this->client->checkout->sessions->retrieve($sessionId);
