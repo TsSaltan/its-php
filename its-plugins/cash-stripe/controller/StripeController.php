@@ -25,23 +25,16 @@ class StripeController extends AbstractController {
 					  ->required()
 				->assert();
 
-		try {
-			$stripe = new Stripe;
-			$payment = $stripe->checkPayment($input['session_id']);
-			var_dump($payment['session']->payment_status);
-			var_dump($payment['session']->amount_total);
-			var_dump($payment['customer']->metadata->user_id);
-			var_dump($payment);
-		} catch (\Error $e){
-			var_dump($e->getMessage());
+		$stripe = new Stripe;
+		$payment = $stripe->checkPayment($input['session_id'], User::current());
+		if($payment){
+			return Http::redirectURI('/dashboard/user/me/edit', ['balance' => 'true', 'from' => 'stripe', 'result' => 'success'], 'balance');
+		} else {
+			return Http::redirectURI('/dashboard/user/me/edit', ['balance' => 'true', 'from' => 'stripe', 'result' => 'fail'], 'balance');
 		}
 	}
 
 	public function defCheckout(){
-		if(!User::current()->isAuthorized()){
-			throw new BaseException('Authorized users only', Http::CODE_UNAUTHORIZED);
-		}
-
 		$input = Input::request()
 					  ->name('amount')
 					  ->numeric()
@@ -55,6 +48,10 @@ class StripeController extends AbstractController {
 	}
 
 	public function response(){
+		if(!User::current()->isAuthorized()){
+			throw new BaseException('Only authorized users', Http::CODE_UNAUTHORIZED);
+		}
+
 		try {
 			$this->callActionMethod();
 		} catch (ControllerException $e){
