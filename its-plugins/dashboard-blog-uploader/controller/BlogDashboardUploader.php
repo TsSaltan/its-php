@@ -1,6 +1,7 @@
 <?php
 namespace tsframe\controller;
 
+use tsframe\Hook;
 use tsframe\Http;
 use tsframe\controller\BaseApiController;
 use tsframe\module\io\Input;
@@ -44,20 +45,12 @@ class BlogDashboardUploader extends BaseApiController {
         $ext = end($tmpExt);
 
         $filename = APP_MEDIA . DS . md5_file($data['media-file']['tmp_name']) . '.' . $ext;
+        Hook::call('dashboard.upload-file.before', [$data['media-file'], &$filename]);
         if(file_exists($filename) || move_uploaded_file($data['media-file']['tmp_name'], $filename)){
         	$fileURI = str_replace([APP_ROOT, '\\', '//'], '/', $filename);
         	return $this->sendData(['file' => $data['media-file'], 'uri' => Http::makeURI($fileURI)]);
         } else {
             return $this->sendError('Undefined error on uploading file');
         }
-
-        //$this->sendData(['file' => $data['media-file']]);
-
-      /*  try {
-            $mask = FFDump::makeMask($data['file-errored']['tmp_name'], $data['file-cleared']['tmp_name']);
-            $this->sendData(['mask' => $mask, 'encoded' => base64_encode(gzencode($mask, 9))]);
-        } catch (FFDumpException $e){
-            $this->sendError('Error on creating mask: ' . $e->getMessage());
-        }*/
     }
 }
