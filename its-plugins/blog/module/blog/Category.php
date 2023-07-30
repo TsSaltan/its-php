@@ -162,6 +162,14 @@ class Category {
 		return -1;
 	}
 
+	public function getParent(): ?Category {
+		if($this->parent instanceof Category){
+			return $this->parent;
+		}
+
+		return null;
+	}
+
 	public function update(string $title, ?string $alias = null): bool {
 		$alias = strlen($alias) == 0 ? Blog::generateAlias($title) : Blog::generateAlias($alias);
 		
