@@ -30,8 +30,12 @@ var tsResponse = {
         processResponse: function(response, form){
 
         if(response == 'OK'){
-            //window.location.reload();
-            window.location.replace('?from=auth');
+            let url = new URL(window.location.href);
+            if (url.searchParams.has('redirect')){
+                window.location.reload();
+            } else {
+                window.location.replace('?redirect=./?from=auth');
+            }
         }
 
         if(response.message && response.code){

@@ -54,7 +54,7 @@ class Dashboard extends AbstractController {
 		$this->currentUser = User::current();
 
 		// Неавторизованных на авторизацию
-		if(!$this->currentUser->isAuthorized() && !($action == 'auth' || $action == 'auth-restore')){
+		if(!$this->currentUser->isAuthorized() && $action != 'auth' && $action != 'auth-restore'){
 			$currentUrl = $_SERVER['REQUEST_URI'];
 			Http::redirect(Http::makeURI('/dashboard/auth', ['redirect' => $currentUrl]));
 		} 
