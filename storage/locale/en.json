@@ -14,6 +14,7 @@
         "delete": "Delete",
         "upload": "Upload",
         "insert-link": "Insert link",
+        "insert-img": "Insert &lt;img&gt;",
         "open-link": "Open link",
         "restore-password": "Restore password"
     },

@@ -1,6 +1,5 @@
 <div class="col-12 col-lg-4" id="media-uploader">
     <form action="<?=$this->makeURI('/dashboard/blog/media-upload')?>" method="POST">   
-        
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="panel-title pull-left"><?=__('blog-upload-media')?></div>
@@ -23,7 +22,10 @@
 
             <div class="panel-footer">
                 <button id="upload-media" class="btn btn-default"><?=__('button/upload')?></button>
-                <button id="insert-media" class="btn btn-info hidden"><?=__('button/insert-link')?></button>
+                <span id="insert-media" class="hidden">
+                    <button id="insert-link" class="btn btn-info"><?=__('button/insert-link')?></button>
+                    <button id="insert-img" class="btn btn-info"><?=__('button/insert-img')?></button>
+                </span>
             </div>
         </div>
     </form>
@@ -31,8 +33,12 @@
 </div>
 
 <script type="text/javascript">
-    $('#insert-media').on('click', function(e){
+    $('#insert-link').on('click', function(e){
         return insertTextToContent($('#media-url').val());
+    });
+
+    $('#insert-img').on('click', function(e){
+        return insertTextToContent("<img src=\"" + $('#media-url').val() + "\" alt=\"\" />");
     });
 
     $('#upload-media').on('click', function(e){
