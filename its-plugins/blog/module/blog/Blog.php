@@ -133,7 +133,7 @@ class Blog {
 		return sizeof($p);
 	}
 
-public static function getPostsInCategory(array $categories, int $offset = 0, int $limit = -1){
+	public static function getPostsInCategory(array $categories, int $offset = 0, int $limit = -1){
 		$catList = [];
 		foreach($categories as $cat){
 			if($cat instanceof Category){
@@ -159,5 +159,58 @@ public static function getPostsInCategory(array $categories, int $offset = 0, in
 		}
 
 		return $return;
+	}
+
+	public static function searchPostsInCategory(string $search, array $categories, int $offset = 0, int $limit = -1){
+		$catList = [];
+		foreach($categories as $cat){
+			if($cat instanceof Category){
+				$catList[] = $cat->getId();
+			} else {
+				$catList[] = (int) $cat;
+			}
+		}
+		$count = sizeof($catList);
+		$search = str_replace([' ', '_', "\n", "\r"], '%', mb_strtolower($search));
+		$p = Database::exec(
+			'SELECT *, UNIX_TIMESTAMP(`create_time`) as \'create_ts\', UNIX_TIMESTAMP(`update_time`) as \'update_ts\' 
+			 FROM `blog-posts` p 
+			 JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 WHERE p.`title` LIKE :search OR p.`content` LIKE :search
+			 GROUP BY p.id 
+			 HAVING COUNT(*) = :count ' . ($limit > 0 ? ' LIMIT ' . $limit . ' ': '') . ($offset > 0 ? 'OFFSET ' . $offset: ''), 
+			['count' => $count, 'search' => '%' . $search . '%']
+		)->fetch();	
+
+		$return = [];
+		foreach($p as $post){
+			$return[] = new Post($post['id'], $post['alias'], $post['title'], $post['content'], $post['create_ts'], $post['update_ts'], $post['author_id'], $post['type']);
+		}
+
+		return $return;
+	}
+
+	public static function searchPostsInCategoryCount(string $search, array $categories){
+		$catList = [];
+		foreach($categories as $cat){
+			if($cat instanceof Category){
+				$catList[] = $cat->getId();
+			} else {
+				$catList[] = (int) $cat;
+			}
+		}
+		$count = sizeof($catList);
+		$search = str_replace([' ', '_', "\n", "\r"], '%', mb_strtolower($search));
+		$p = Database::exec(
+			'SELECT COUNT(*)
+			 FROM `blog-posts` p 
+			 JOIN `blog-post-to-category` pc ON p.`id` = pc.`post-id` AND pc.`category-id` IN ('. implode(', ', $catList) .') 
+			 WHERE p.`title` LIKE :search OR p.`content` LIKE :search
+			 GROUP BY p.id 
+			 HAVING COUNT(*) = :count ', 
+			['count' => $count, 'search' => '%' . $search . '%']
+		)->fetch();	
+
+		return sizeof($p);
 	}
 }
