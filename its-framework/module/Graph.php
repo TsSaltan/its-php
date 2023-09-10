@@ -37,7 +37,7 @@
  * @return array [r=>, b=> ,g=>]
  */
 
-namespace tsframe;
+namespace tsframe\module;
 
 use tsframe\exception\GraphException;
 
@@ -163,7 +163,6 @@ class Graph{
 	}	
 		
 	public function save($file = NULL, $type = 'auto', $quality = 100){
-		//$this->file = $file;
 		if($type=='auto'){
 			if($this->type === 0) $this->type = IMAGETYPE_JPEG;
 			$type = $this->types[$this->type];
@@ -194,15 +193,10 @@ class Graph{
 	4 | 5 | 6
 	7 | 8 | 9
 	*/
-	public function resizeTo($toWidth, $toHeight, $area = 5){
-		$q = $toHeight / $toWidth;
-
-		
+	public function resizeTo($toWidth, $toHeight, $area = 5){		
 		if(abs($this->width - $toWidth) > abs($this->height - $toHeight)){
 			$newHeight = $toHeight;
 			$newWidth = $newHeight / $this->height * $this->width;
-			
-			$k = $this->height / $toHeight;
 
 			$hFix = 0;
 			$yFix = 0;
