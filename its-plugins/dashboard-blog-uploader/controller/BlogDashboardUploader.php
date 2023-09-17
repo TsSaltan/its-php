@@ -12,11 +12,11 @@ use tsframe\module\user\UserAccess;
  * @route POST /api/blog/[upload-media:action]
  */ 
 class BlogDashboardUploader extends BaseApiController {
-    public static $makeThumbs = true;
-    public static $thumbsSizes = ['240x320', '640x480', '720x540'];
-    public static $imageExts = ['jpg', 'jpeg', 'png', 'gif'];
+    private static $makeThumbs = true;
+    private static $thumbsSizes = ['240x320', '640x480', '720x540'];
     private static $maxFileSize = 10 * 1024 * 1024; // 10 MiB
-	private static $avaliableTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
+	private static $checkFileType = true;
+    private static $avaliableTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
 
 	public static function setMaxFileSize(int $filesize){
 		self::$maxFileSize = $filesize;
@@ -25,6 +25,18 @@ class BlogDashboardUploader extends BaseApiController {
 	public static function setAvaliableTypes(array $types = []){
 		self::$avaliableTypes = $types;
 	}
+    
+    public static function setCheckFileType(bool $check){
+        self::$checkFileType = $check;
+    }
+
+    public static function setMakeThubms(bool $thumbs){
+        self::$makeThumbs = $thumbs;
+    }
+
+    public static function setThubmSizes(array $sizes){
+        self::$thumbsSizes = $sizes;
+    }
 
 	public function postUploadMedia(){
 		if(!UserAccess::checkCurrentUser('blog')){
@@ -39,7 +51,7 @@ class BlogDashboardUploader extends BaseApiController {
             return $this->sendError('Uploaded file so large (' . round($data['media-file']['size']/1024, 2) . ' KiB), maximum file size: ' . round(self::$maxFileSize/1024, 2) . ' KiB');
         }
 
-        if(!in_array($data['media-file']['type'], self::$avaliableTypes)){
+        if(self::$checkFileType && !in_array($data['media-file']['type'], self::$avaliableTypes)){
             return $this->sendError('Uploaded file type not supported (' . $data['media-file']['type'] . ')');
         }
 
