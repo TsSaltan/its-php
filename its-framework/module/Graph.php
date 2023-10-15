@@ -48,19 +48,19 @@ class Graph{
 			$im = NULL,
 			$file = NULL;
 	
-	private $types;
+	private $types = [
+		0 => 'string',
+		IMAGETYPE_GIF => 'gif',
+		IMAGETYPE_JPEG => 'jpeg',
+		IMAGETYPE_PNG => 'png',
+		IMAGETYPE_WBMP => 'wbmp',
+	];
 
 	
-	public function __construct($file = false){
-		$this->types = [
-			0=>'string',
-			IMAGETYPE_GIF=>'gif',
-			IMAGETYPE_JPEG=>'jpeg',
-			IMAGETYPE_PNG=>'png',
-			IMAGETYPE_WBMP=>'wbmp',
-		];
-		
-		if($file!==false) return $this->loadFile($file);
+	public function __construct(?string $filepath = null){
+		if(!is_null($filepath) && file_exists($filepath)){
+			$this->loadFile($filepath);
+		} 
 	}
 	
 	public function loadString($s){ 
@@ -79,23 +79,34 @@ class Graph{
 	}
 	
 	public function loadFile($file){
-		if(!file_exists($file))throw new GraphException('File "'.$file.'" does not exists');
-		if(!($info = getimagesize($file)))throw new GraphException('File "'.$file.'" is not image');
+		if(!file_exists($file)) throw new GraphException('File "'.$file.'" does not exists');
+		if(!($info = getimagesize($file))) throw new GraphException('File "'.$file.'" is not image');
 		
 		$this->file = realpath($file);
 		$this->width = $info[0];
 		$this->height = $info[1];
 	
-		
 		$this->type = (isset($this->types[$info[2]]))?$info[2]:0;
 		$func = 'imagecreatefrom'.$this->types[$this->type];
 		
-		if(!function_exists($func))throw new GraphException('Can not call function "'.$func.'", image type: '.$info[2]);
+		if(!function_exists($func)) throw new GraphException('Can not call function "'.$func.'", image type: '.$info[2]);
 		$this->im = $func($file);
 		return $this;
 	}
+
+	public function fixOrientationFromExif(){
+		if(!file_exists($this->file)) throw new GraphException('Image does not created from file. Cannot read exif data.');
+		if(!function_exists('exif_read_data')) throw new GraphException('Function "exif_read_data" not exists');
+
+    	
+	    $this->im = imagerotate($this->im, array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[@exif_read_data($this->file)['Orientation'] ?: 0], 0);
+
+
+    	$this->width = imagesx($this->im);
+    	$this->height = imagesy($this->im);
+	}
 	
-	public function Create($width, $height){
+	public function create($width, $height){
 		$this->width = $width;
 		$this->height = $height;
 		$this->im = imagecreatetruecolor($width, $height);

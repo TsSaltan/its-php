@@ -58,7 +58,7 @@ class BlogDashboardUploader extends BaseApiController {
         $tmpExt = explode('.', $data['media-file']['name']);
         $ext = end($tmpExt);
 
-        $filename = APP_MEDIA . DS . md5_file($data['media-file']['tmp_name']) . '.' . $ext;
+        $filename = APP_MEDIA . DS . md5_file($data['media-file']['tmp_name']) . '.' . strtolower($ext);
         Hook::call('dashboard.upload-file.before', [$data['media-file'], &$filename]);
         if(file_exists($filename) || move_uploaded_file($data['media-file']['tmp_name'], $filename)){
             $uploaded = [/*'file' => $data['media-file'], */'uri' => self::makeFileURI($filename), 'image' => false];
@@ -100,11 +100,12 @@ class BlogDashboardUploader extends BaseApiController {
         try {
             $graph = new Graph;
             $graph->loadFile($filepath);
+            $graph->fixOrientationFromExif();
             
             foreach(self::$thumbsSizes as $size){
                 list($width, $height) = explode('x', $size);
                 $thumb = $graph->resizeTo($width, $height, 5);
-                $thumbPath = $filedir . DS . $fileNoExt . '-' . $size . '.' . $fileExt;
+                $thumbPath = $filedir . DS . $fileNoExt . '-' . $size . '.jpg';
                 $thumb->save($thumbPath, 'jpeg', 90);
                 $thumbs[$size] = self::makeFileURI($thumbPath);
             }
