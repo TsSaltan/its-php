@@ -51,14 +51,14 @@ class BlogDashboardUploader extends BaseApiController {
             return $this->sendError('Uploaded file so large (' . round($data['media-file']['size']/1024, 2) . ' KiB), maximum file size: ' . round(self::$maxFileSize/1024, 2) . ' KiB');
         }
 
-        if(self::$checkFileType && !in_array($data['media-file']['type'], self::$avaliableTypes)){
+        if(self::$checkFileType && !in_array(strtolower($data['media-file']['type'], self::$avaliableTypes))){
             return $this->sendError('Uploaded file type not supported (' . $data['media-file']['type'] . ')');
         }
 
         $tmpExt = explode('.', $data['media-file']['name']);
-        $ext = end($tmpExt);
+        $ext = strtolower(end($tmpExt));
 
-        $filename = APP_MEDIA . DS . md5_file($data['media-file']['tmp_name']) . '.' . strtolower($ext);
+        $filename = APP_MEDIA . DS . md5_file($data['media-file']['tmp_name']) . '.' . $ext;
         Hook::call('dashboard.upload-file.before', [$data['media-file'], &$filename]);
         if(file_exists($filename) || move_uploaded_file($data['media-file']['tmp_name'], $filename)){
             $uploaded = [/*'file' => $data['media-file'], */'uri' => self::makeFileURI($filename), 'image' => false];
