@@ -13,7 +13,7 @@ use tsframe\module\user\UserAccess;
  */ 
 class BlogDashboardUploader extends BaseApiController {
     private static $makeThumbs = true;
-    private static $thumbsSizes = ['240x320', '640x480', '720x540'];
+    private static $thumbsSizes = ['240x320', '640x480', '520x680', '720x540'];
     private static $maxFileSize = 10 * 1024 * 1024; // 10 MiB
 	private static $checkFileType = true;
     private static $avaliableTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
