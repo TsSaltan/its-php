@@ -42,13 +42,7 @@ namespace tsframe\module;
 use tsframe\exception\GraphException;
 
 class Graph{
-	public 	$width = 0,
-			$height = 0,
-			$type = 0,
-			$im = NULL,
-			$file = NULL;
-	
-	private $types = [
+	const TYPES = [
 		0 => 'string',
 		IMAGETYPE_GIF => 'gif',
 		IMAGETYPE_JPEG => 'jpeg',
@@ -56,38 +50,47 @@ class Graph{
 		IMAGETYPE_WBMP => 'wbmp',
 	];
 
+	private
+		$im = NULL,
+		$file = NULL,
+	 	$type = 0;
 	
 	public function __construct(?string $filepath = null){
 		if(!is_null($filepath) && file_exists($filepath)){
 			$this->loadFile($filepath);
 		} 
 	}
+
+	public function __get(string $name){
+		switch($name){
+			case 'width':
+				return is_null($this->im) ? 0 : imagesx($this->im);
+
+			case 'height':
+				return is_null($this->im) ? 0 : imagesy($this->im);
+
+			default:
+				return null;
+		}
+	}
 	
 	public function loadString($s){ 
 		if(!($info = getimagesizefromstring($s)))throw new GraphException('String does not include the image');
-		$this->width = $info[0];
-		$this->height = $info[1];
 		$this->im = imagecreatefromstring($s);
 		return $this;
 	}
 	
 	public function loadGD($res){
 		$this->im = $res;
-		$this->width = imagesx($this->im);
-		$this->height = imagesy($this->im);
 		return $this;
 	}
 	
 	public function loadFile($file){
 		if(!file_exists($file)) throw new GraphException('File "'.$file.'" does not exists');
 		if(!($info = getimagesize($file))) throw new GraphException('File "'.$file.'" is not image');
-		
 		$this->file = realpath($file);
-		$this->width = $info[0];
-		$this->height = $info[1];
-	
-		$this->type = (isset($this->types[$info[2]]))?$info[2]:0;
-		$func = 'imagecreatefrom'.$this->types[$this->type];
+		$this->type = (isset(self::TYPES[$info[2]]))?$info[2]:0;
+		$func = 'imagecreatefrom'.self::TYPES[$this->type];
 		
 		if(!function_exists($func)) throw new GraphException('Can not call function "'.$func.'", image type: '.$info[2]);
 		$this->im = $func($file);
@@ -98,17 +101,10 @@ class Graph{
 		if(!file_exists($this->file)) throw new GraphException('Image does not created from file. Cannot read exif data.');
 		if(!function_exists('exif_read_data')) throw new GraphException('Function "exif_read_data" not exists');
 
-    	
 	    $this->im = imagerotate($this->im, array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[@exif_read_data($this->file)['Orientation'] ?: 0], 0);
-
-
-    	$this->width = imagesx($this->im);
-    	$this->height = imagesy($this->im);
 	}
 	
 	public function create($width, $height){
-		$this->width = $width;
-		$this->height = $height;
 		$this->im = imagecreatetruecolor($width, $height);
 		return $this;
 	}
@@ -123,7 +119,7 @@ class Graph{
 		$this->Save();
 		$data = ob_get_clean();
 
-		return 'data:image/'.$this->types[$type].';base64,'.base64_encode($data);
+		return 'data:image/'.self::TYPES[$type].';base64,'.base64_encode($data);
 	}
 
 
@@ -176,7 +172,7 @@ class Graph{
 	public function save($file = NULL, $type = 'auto', $quality = 100){
 		if($type=='auto'){
 			if($this->type === 0) $this->type = IMAGETYPE_JPEG;
-			$type = $this->types[$this->type];
+			$type = self::TYPES[$this->type];
 		}
 
 		$func = 'image'.$type;
