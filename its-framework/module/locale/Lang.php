@@ -65,9 +65,10 @@ class Lang {
 	public static function setDefault(?string $lang = null): bool {
 		if(is_null($lang)){
 			self::$default = current(self::$list);
+		} else {
+			$lang = strtolower($lang);
 		}
 
-		$lang = strtolower($lang);
 		if(!in_array($lang, self::$list)) return false;
 
 		self::$default = $lang;
@@ -105,7 +106,7 @@ class Lang {
 			}
 			unset($parts[0]);
 			$parts = array_values($parts);
-			$host = str_replace('www.', null, $host);
+			$host = str_replace('www.', '', $host);
 		}
 		
 		if(in_array($parts[0], self::$list)){

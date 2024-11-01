@@ -2,7 +2,7 @@
 namespace tsframe\module\user;
 
 use tsframe\Http;
-use tsframe\exception\AccessException;
+use tsframe\exception\UserException;
 use tsframe\module\Crypto;
 use tsframe\module\IP;
 use tsframe\module\Meta;
@@ -71,7 +71,7 @@ class SingleUser {
 	 * Use User::current() instead this method!
 	 */
 	public static function current(?string $sessionKey = null): SingleUser {
-		$sessionKey = (strlen($sessionKey) == 0) ? ($_COOKIE[self::SESSION_KEY] ?? null) : $sessionKey;
+		$sessionKey = (is_null($sessionKey) || strlen($sessionKey) == 0) ? ($_COOKIE[self::SESSION_KEY] ?? null) : $sessionKey;
 		if(strlen($sessionKey) > 0){
 			$data = Database::prepare('SELECT * FROM `sessions` WHERE `key` = :key AND `expires` > CURRENT_TIMESTAMP')
 					->bind('key', $sessionKey )

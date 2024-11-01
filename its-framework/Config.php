@@ -61,7 +61,7 @@ class Config {
 		return $data;
 	}	
 
-	public static function set(string $path = '*', $value){
+	public static function set(string $path, $value){
 		if($path == '*') $data =& static::$cache;
 		else $data =& static::getPath($path);
 		$data = $value;

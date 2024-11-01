@@ -9,6 +9,13 @@
         }
     ],
     "version":"dev-1.0",
+    "repositories":
+    [
+        {
+            "type": "git",
+            "url": "https://github.com/tssaltan/php-html-generator"
+        }
+    ],
     "require": {
     	"php":">=7.1",
         "altorouter/altorouter": "1.1.0",
@@ -16,7 +23,7 @@
         "dragonmantank/cron-expression": "2.2",
         "minishlink/web-push": "6.0.5",
         "phpmailer/phpmailer": "6.5.0",
-        "airmanbzh/php-html-generator": "dev-master",
+        "tssaltan/php-html-generator": "dev-master",
         "telegram-bot/api": "^2.3",
         "ovunctukenmez/samesite-cookie-setter": "dev-master",
         "spomky-labs/base64url": "^2.0",
