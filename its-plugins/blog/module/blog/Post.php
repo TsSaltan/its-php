@@ -68,11 +68,11 @@ class Post {
 			if(preg_match_all('#<!--\s*hook:([^\s]+?)\s*([^\s]+?)?\s*-->#Ui', $content, $find)){
 				foreach($find[1] as $i => $filterName){
 					$replacingFrom = $find[0][$i];
-					$replacingTo = null;
+					$replacingTo = '';
 					parse_str($find[2][$i], $params);
 					Hook::call('blog.post.' . $filterName, [$this, $params], function(?string $result, ?string $output) use (&$replacingTo){
-						if(strlen($result) > 0)	$replacingTo = $result;
-						if(strlen($output) > 0)	$replacingTo = $output;
+						if(!is_null($result) && strlen($result) > 0)	$replacingTo = $result;
+						if(!is_null($output) && strlen($output) > 0)	$replacingTo = $output;
 					}, null, false, false);
 					$content = str_replace($replacingFrom, $replacingTo, $content);
 				}
@@ -101,7 +101,7 @@ class Post {
 	}
 
 	public function update(?string $alias, string $title, string $content, int $authorId, int $type): bool {
-		$alias = strlen($alias) == 0 ? Blog::generateAlias($title) : Blog::generateAlias($alias);
+		$alias = (is_null($alias) || strlen($alias) == 0) ? Blog::generateAlias($title) : Blog::generateAlias($alias);
 		
 		if($alias != $this->alias){
 			$alias = Blog::getFreeAlias($alias);
