@@ -72,7 +72,7 @@ class SingleUser {
 	 */
 	public static function current(?string $sessionKey = null): SingleUser {
 		$sessionKey = (is_null($sessionKey) || strlen($sessionKey) == 0) ? ($_COOKIE[self::SESSION_KEY] ?? null) : $sessionKey;
-		if(strlen($sessionKey) > 0){
+		if(!is_null($sessionKey) && strlen($sessionKey) > 0){
 			$data = Database::prepare('SELECT * FROM `sessions` WHERE `key` = :key AND `expires` > CURRENT_TIMESTAMP')
 					->bind('key', $sessionKey )
 					->exec()
