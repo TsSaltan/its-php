@@ -21,7 +21,7 @@ abstract class UIAbstractElement {
 	}
 
 	public function getId(): string {
-		if(strlen($this->id) == 0){
+		if(is_null($this->id) || strlen($this->id) == 0){
 			$this->id = uniqid('ui-');
 		}
 
