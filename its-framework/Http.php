@@ -24,6 +24,7 @@ class Http {
 
 	public static function sendBody(?string $body, int $code = 200, string $type = 'text/html', string $charset = 'utf-8', array $headers = []){
 		Hook::call('http.send', [&$body, &$headers, $code, $type]);
+		http_response_code($code);
 		header('Content-type: ' . $type . '; charset=' . $charset, $code);
 		foreach ($headers as $key => $value) {
 			header(str_replace(["\r\n", "\n", "\r"], " ", $key . ': ' . $value));
@@ -36,6 +37,7 @@ class Http {
 	}
 
 	public static function redirect(string $path, int $code = self::CODE_MOVED_TEMPORARILY){
+		http_response_code($code);
 		header('Location: '.$path, $code);
 		?>
 			<meta http-equiv="refresh" content="0; url=<?=$path?>">
